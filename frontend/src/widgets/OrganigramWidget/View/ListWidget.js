@@ -42,7 +42,6 @@ export default class OrganigramList extends React.PureComponent {
     }
 
     render() {
-        console.warn(this.props.attribute);
         const { attribute: { values = [] } = {} } = this.props;
 
         return (

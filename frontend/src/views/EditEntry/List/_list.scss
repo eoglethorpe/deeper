@@ -1,3 +1,5 @@
+$height-header: 48px;
+
 .list {
     display: flex;
     flex-direction: column;
@@ -5,14 +7,13 @@
     height: 100%;
 
     .header {
+        @include background-color($color-background-header);
         display: flex;
-        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        border-bottom: $width-separator-thin solid $color-separator;
-        background-color: $color-background-header;
-        padding: $spacing-small $spacing-medium;
-        width: 100%;
+        border-bottom: $width-separator-medium solid $color-separator;
+        padding: 0 $spacing-medium;
+        height: $height-header;
 
         .action-buttons {
             .primary-link-button {
@@ -34,12 +35,12 @@
     }
 
     .entry-list {
-        flex-grow: 1;
-        overflow: auto;
         position: relative;
+        height: calc(100% - #{$height-header});
+        overflow: auto;
 
         .entry {
-            background-color: $color-background-row;
+            @include background-color($color-background-row);
             display: inline-block;
             position: relative;
 
@@ -55,16 +56,16 @@
             .action-buttons {
                 @include transition-medium;
                 position: absolute;
-                bottom: 0;
                 right: 0;
-                padding: $spacing-extra-small;
+                bottom: 0;
                 opacity: 0;
+                padding: $spacing-extra-small;
 
                 >* {
                     margin: $spacing-extra-small;
                 }
 
-                .editLink {
+                .edit-link {
                     @extend %button-like-link;
                     @include background-color($color-warning);
                 }

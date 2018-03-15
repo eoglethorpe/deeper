@@ -128,23 +128,25 @@ export default class NumberMatrixOverview extends React.PureComponent {
     render() {
         const { data } = this.props;
         return (
-            <table className={styles['number-matrix-overview']}>
-                <tbody>
-                    <tr>
-                        <td className={styles['table-header']} />
+            <div className={styles.overview}>
+                <table>
+                    <tbody>
+                        <tr>
+                            <td />
+                            <List
+                                data={data.columnHeaders || emptyList}
+                                modifier={this.renderColHeader}
+                                keyExtractor={NumberMatrixOverview.rowKeyExtractor}
+                            />
+                        </tr>
                         <List
-                            data={data.columnHeaders || emptyList}
-                            modifier={this.renderColHeader}
+                            data={data.rowHeaders || emptyList}
+                            modifier={this.renderRow}
                             keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                         />
-                    </tr>
-                    <List
-                        data={data.rowHeaders || emptyList}
-                        modifier={this.renderRow}
-                        keyExtractor={NumberMatrixOverview.rowKeyExtractor}
-                    />
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         );
     }
 }

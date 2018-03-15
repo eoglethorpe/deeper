@@ -15,8 +15,8 @@
     overflow: auto;
 
     .table-header {
-        background-color: $color-foreground-alt;
-        padding: $spacing-small $spacing-medium;
+        @include background-color($color-foreground);
+        padding: $spacing-small;
     }
 
     .table-cell {

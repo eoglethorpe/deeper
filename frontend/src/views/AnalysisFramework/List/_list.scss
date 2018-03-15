@@ -17,6 +17,14 @@
 
                 :global .grid-item {
                     @extend %grid-item;
+
+                    .header {
+                        @include background-color($color-background-header);
+                    }
+
+                    .content {
+                        @include background-color($color-foreground-alt);
+                    }
                 }
             }
         }
