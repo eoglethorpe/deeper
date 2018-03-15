@@ -1,11 +1,12 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
     Redirect,
     Route,
     HashRouter,
     Prompt,
+    Switch,
 } from 'react-router-dom';
 
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
@@ -439,69 +440,72 @@ export default class EditEntry extends React.PureComponent {
         );
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
-        return ([
-            <Prompt
-                key="prompt"
-                when={!isSaveAllDisabled}
-                message={
-                    location => (
-                        location.pathname === this.props.routeUrl ? (
-                            true
-                        ) : (
-                            this.props.commonStrings('youHaveUnsavedChanges')
+        return (
+            <Fragment>
+                <Prompt
+                    when={!isSaveAllDisabled}
+                    message={
+                        location => (
+                            location.pathname === this.props.routeUrl ? (
+                                true
+                            ) : (
+                                this.props.commonStrings('youHaveUnsavedChanges')
+                            )
                         )
-                    )
-                }
-            />,
-            <HashRouter key="router">
-                <div className={styles.editEntry}>
-                    <Route
-                        exact
-                        path="/"
-                        component={() => <Redirect to="/overview" />}
-                    />
-                    <Route
-                        path="/overview"
-                        render={props => (
-                            <Overview
-                                {...props}
+                    }
+                />
+                <HashRouter>
+                    <div className={styles.editEntry}>
+                        <Switch>
+                            <Route
+                                path="/overview"
+                                render={props => (
+                                    <Overview
+                                        {...props}
 
-                                analysisFramework={analysisFramework}
-                                entries={entries}
-                                filteredEntries={filteredEntries}
-                                leadId={leadId}
-                                onEntryAdd={this.handleAddEntry}
-                                onEntryDelete={this.handleEntryDelete}
-                                selectedEntryId={selectedEntryId}
+                                        analysisFramework={analysisFramework}
+                                        entries={entries}
+                                        filteredEntries={filteredEntries}
+                                        leadId={leadId}
+                                        onEntryAdd={this.handleAddEntry}
+                                        onEntryDelete={this.handleEntryDelete}
+                                        selectedEntryId={selectedEntryId}
 
-                                api={this.api}
-                                choices={this.choices}
-                                onSaveAll={this.handleSaveAll}
-                                saveAllDisabled={isSaveAllDisabled}
-                                saveAllPending={pendingSaveAll}
-                                widgetDisabled={isWidgetDisabled}
+                                        api={this.api}
+                                        choices={this.choices}
+                                        onSaveAll={this.handleSaveAll}
+                                        saveAllDisabled={isSaveAllDisabled}
+                                        saveAllPending={pendingSaveAll}
+                                        widgetDisabled={isWidgetDisabled}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                    <Route
-                        path="/list"
-                        render={props => (
-                            <List
-                                {...props}
+                            <Route
+                                path="/list"
+                                render={props => (
+                                    <List
+                                        {...props}
 
-                                analysisFramework={analysisFramework}
-                                entries={filteredEntries}
-                                leadId={leadId}
+                                        analysisFramework={analysisFramework}
+                                        entries={filteredEntries}
+                                        leadId={leadId}
 
-                                api={this.api}
-                                choices={this.choices}
-                                onSaveAll={this.handleSaveAll}
-                                saveAllDisabled={isSaveAllDisabled}
+                                        api={this.api}
+                                        choices={this.choices}
+                                        onSaveAll={this.handleSaveAll}
+                                        saveAllDisabled={isSaveAllDisabled}
+                                    />
+                                )}
                             />
-                        )}
-                    />
-                </div>
-            </HashRouter>,
-        ]);
+                            <Route
+                                path={undefined}
+                                render={() => <Redirect to="/overview" />}
+                                exact
+                            />
+                        </Switch>
+                    </div>
+                </HashRouter>
+            </Fragment>
+        );
     }
 }

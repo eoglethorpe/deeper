@@ -86,19 +86,21 @@ export default class List extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showApplyModal: false,
+            applyMode: undefined, // all or below
+            applyItemId: undefined,
+            applyEntryId: undefined,
+
+            pendingGeo: true,
+        };
+
         this.items = [];
         this.gridItems = {};
         this.entries = {};
 
         this.updateAnalysisFramework(props.analysisFramework);
         this.updateGridItems(props.entries);
-
-        this.state = {
-            showApplyModal: false,
-            applyMode: undefined, // all or below
-            applyItemId: undefined,
-            applyEntryId: undefined,
-        };
     }
 
     componentWillMount() {
@@ -130,6 +132,7 @@ export default class List extends React.PureComponent {
     );
 
     getItemView = (item) => {
+        // FIXME: this causes complexity to be O(n*m)
         const Component = this.widgets
             .find(w => w.id === item.widgetId).listComponent;
         return (
@@ -189,6 +192,7 @@ export default class List extends React.PureComponent {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))
             .params(() => createParamsForGeoOptionsGET())
+            .preLoad(() => this.setState({ pendingGeo: true }))
             .success((response) => {
                 try {
                     schema.validate(response, 'geoOptions');
@@ -196,6 +200,7 @@ export default class List extends React.PureComponent {
                         projectId,
                         locations: response,
                     });
+                    this.setState({ pendingGeo: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -353,14 +358,84 @@ export default class List extends React.PureComponent {
         );
     }
 
+    renderEntry = (entry) => {
+        const {
+            markForDeleteEntry,
+            setActiveEntry,
+            leadId,
+            choices,
+        } = this.props;
+
+        const entryKey = entryAccessor.getKey(entry);
+
+        const { isWidgetDisabled } = choices[entryKey] || {};
+
+        const handleDelete = () => {
+            markForDeleteEntry({
+                leadId,
+                entryId: entryKey,
+                mark: true,
+            });
+        };
+        const handleEdit = () => {
+            setActiveEntry({
+                leadId,
+                entryId: entryKey,
+            });
+        };
+
+        return (
+            <div
+                key={entryAccessor.getKey(entry)}
+                className={styles.entry}
+                style={this.entryStyle}
+            >
+                { isWidgetDisabled && <LoadingAnimation /> }
+                <GridLayout
+                    className={styles.gridLayout}
+                    modifier={this.getItemView}
+                    items={this.gridItems[entryAccessor.getKey(entry)]}
+                    viewOnly
+                />
+                <div className={styles.actionButtons}>
+                    {/* FIXME: use strings */}
+                    <DangerButton
+                        onClick={handleDelete}
+                        type="button"
+                        iconName={iconNames.delete}
+                        title="Delete Entry"
+                    />
+                    {/* FIXME: use strings */}
+                    <Link
+                        onClick={handleEdit}
+                        to="/overview"
+                        replace
+                        className={styles.editLink}
+                        title="Edit Entry"
+                    >
+                        <i className={iconNames.edit} />
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
     render() {
-        const { entries } = this.props;
+        const {
+            entries,
+            entryStrings,
+        } = this.props;
         const {
             showApplyModal,
             applyMode,
         } = this.state;
 
-        const entryStyle = { height: this.getMaxHeight() };
+        // FIXME: this is a quick fix
+        const newHeight = this.getMaxHeight();
+        if (!this.entryStyle || this.entryStyle.height !== newHeight) {
+            this.entryStyle = { height: newHeight };
+        }
+
         const Header = this.renderHeader;
 
         return (
@@ -370,62 +445,17 @@ export default class List extends React.PureComponent {
                     (!entries || entries.length <= 0) ? (
                         <div className={styles.noEntryWrapper}>
                             <h2>
-                                {this.props.entryStrings('noEntryFound')}
+                                {entryStrings('noEntryFound')}
                             </h2>
                         </div>
                     ) : (
                         <div className={styles.entryList}>
                             {
-                                entries.map((entry) => {
-                                    const entryKey = entryAccessor.getKey(entry);
-                                    const handleDelete = () => {
-                                        this.props.markForDeleteEntry({
-                                            leadId: this.props.leadId,
-                                            entryId: entryKey,
-                                            mark: true,
-                                        });
-                                    };
-                                    const handleEdit = () => {
-                                        this.props.setActiveEntry({
-                                            leadId: this.props.leadId,
-                                            entryId: entryKey,
-                                        });
-                                    };
-                                    const { isWidgetDisabled } = this.props.choices[entryKey] || {};
-
-                                    return (
-                                        <div
-                                            key={entryAccessor.getKey(entry)}
-                                            className={styles.entry}
-                                            style={entryStyle}
-                                        >
-                                            { isWidgetDisabled && <LoadingAnimation /> }
-                                            <GridLayout
-                                                className={styles.gridLayout}
-                                                modifier={this.getItemView}
-                                                items={this.gridItems[entryAccessor.getKey(entry)]}
-                                                viewOnly
-                                            />
-                                            <div className={styles.actionButtons}>
-                                                {/* FIXME: use strings */}
-                                                <DangerButton
-                                                    onClick={handleDelete}
-                                                    type="button"
-                                                    iconName={iconNames.delete}
-                                                />
-                                                {/* FIXME: use strings */}
-                                                <Link
-                                                    onClick={handleEdit}
-                                                    to="/overview"
-                                                    replace
-                                                    className={styles.editLink}
-                                                >
-                                                    <i className={iconNames.edit} />
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    );
-                                })
+                                this.state.pendingGeo ? (
+                                    <LoadingAnimation />
+                                ) : (
+                                    entries.map(this.renderEntry)
+                                )
                             }
                         </div>
                     )
@@ -437,11 +467,9 @@ export default class List extends React.PureComponent {
                 >
                     <p>
                         {
-                            applyMode === APPLY_MODE.all ? (
-                                this.props.entryStrings('applyToAll')
-                            ) : (
-                                this.props.entryStrings('applyToAllBelow')
-                            )
+                            applyMode === APPLY_MODE.all
+                                ? entryStrings('applyToAll')
+                                : entryStrings('applyToAllBelow')
                         }
                     </p>
                 </Confirm>

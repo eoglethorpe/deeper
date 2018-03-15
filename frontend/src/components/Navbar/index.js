@@ -229,8 +229,8 @@ export default class Navbar extends React.PureComponent {
         const navLinks = [
             'leads',
             'entries',
-            'export',
             'arys',
+            'export',
         ];
 
         const dropLinks = [

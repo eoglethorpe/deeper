@@ -36,11 +36,12 @@
     .entry-list {
         flex-grow: 1;
         overflow: auto;
+        position: relative;
 
         .entry {
+            background-color: $color-background-row;
             display: inline-block;
             position: relative;
-            background-color: $color-background-row;
 
             .apply-buttons {
                 display: flex;
