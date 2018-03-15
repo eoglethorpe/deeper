@@ -13,7 +13,7 @@ $info-height: 144px;
         "stats projects"
         "stats members";
     grid-template-columns: 3fr 7fr;
-    grid-template-rows: $header-height $info-height 3fr 2fr;
+    grid-template-rows: $header-height $info-height 2fr 3fr;
 
     .header {
         display: flex;
@@ -93,10 +93,12 @@ $info-height: 144px;
 .projects {
     border-bottom: $width-separator-thin solid $color-separator;
     grid-area: projects;
+    overflow-y: auto;
 }
 
 .members {
     grid-area: members;
+    overflow-y: auto;
 }
 
 .user-group-edit-modal {

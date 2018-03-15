@@ -1,17 +1,14 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
-    reverseRoute,
     caseInsensitiveSubmatch,
     compareString,
     compareDate,
 } from '../../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
@@ -34,14 +31,12 @@ import {
     createParamsForUserMembershipDelete,
     createParamsForUserMembershipRoleChange,
 } from '../../../rest';
-import {
-    iconNames,
-    pathNames,
-} from '../../../constants';
+import { iconNames } from '../../../constants';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
 import AddUserGroupMembers from './AddUserGroupMembers';
+import ActionButtons from './ActionButtons';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -124,46 +119,15 @@ export default class MembersTable extends React.PureComponent {
                 key: 'actions',
                 label: this.props.userStrings('tableHeaderActions'),
                 order: 5,
-                modifier: (row) => {
-                    const isAdmin = row.role === 'admin';
-                    const isCurrentUser = row.member === this.props.activeUser.userId;
-                    if (isCurrentUser || !this.props.isCurrentUserAdmin) {
-                        return (
-                            <div>
-                                <Link
-                                    title={this.props.userStrings('viewMemberLinkTitle')}
-                                    key={row.member}
-                                    to={reverseRoute(pathNames.userProfile, { userId: row.member })}
-                                    className={styles.link}
-                                >
-                                    <span className={iconNames.openLink} />
-                                </Link>
-                            </div>
-                        );
-                    }
-                    return (
-                        <div>
-                            <PrimaryButton
-                                title={
-                                    isAdmin
-                                        ? this.props.userStrings('revokeAdminLinkTitle')
-                                        : this.props.userStrings('grantAdminLinkTitle')
-                                }
-                                onClick={() => this.handleToggleMemberRoleClick(row)}
-                                iconName={isAdmin ? iconNames.locked : iconNames.person}
-                                smallVerticalPadding
-                                transparent
-                            />
-                            <DangerButton
-                                title={this.props.userStrings('deleteMemberLinkTitle')}
-                                onClick={() => this.handleDeleteMemberClick(row)}
-                                iconName={iconNames.delete}
-                                smallVerticalPadding
-                                transparent
-                            />
-                        </div>
-                    );
-                },
+                modifier: row => (
+                    <ActionButtons
+                        row={row}
+                        activeUser={this.props.activeUser}
+                        isCurrentUserAdmin={this.props.isCurrentUserAdmin}
+                        onRemoveMember={this.handleDeleteMemberClick}
+                        onChangeMemberRole={this.handleToggleMemberRoleClick}
+                    />
+                ),
             },
         ];
     }

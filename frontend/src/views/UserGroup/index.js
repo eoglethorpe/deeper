@@ -41,7 +41,7 @@ const propTypes = {
     setUsers: PropTypes.func.isRequired,
     unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    userGroupId: PropTypes.string.isRequired,
+    userGroupId: PropTypes.number.isRequired,
     userStrings: PropTypes.func.isRequired,
 };
 

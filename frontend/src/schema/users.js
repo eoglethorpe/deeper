@@ -36,6 +36,7 @@ const userSchema = [];
             organization: { type: 'string', required: true },
             username: { type: 'string', required: true },
             lastActiveProject: { type: 'uint' },
+            loginAttempts: { type: 'number' },
         },
     };
     userSchema.push({ name, schema });

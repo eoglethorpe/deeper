@@ -1338,6 +1338,7 @@ const initialLangState = {
                     tableHeaderName: 103,
                     tableHeaderEmail: 184,
                     tableHeaderStartDate: 185,
+                    tableHeaderCountries: 51,
                     viewUsergroupLinkTitle: 167,
                     editUsergroupLinkTitle: 168,
                     deleteUsergroupLinkTitle: 169,

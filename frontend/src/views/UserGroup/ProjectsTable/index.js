@@ -114,7 +114,7 @@ export default class ProjectsTable extends React.PureComponent {
             },
             {
                 key: 'countries',
-                label: this.props.userStrings('tableHeaderStartDate'),
+                label: this.props.userStrings('tableHeaderCountries'),
                 order: 4,
                 sortable: true,
                 modifier: d => ((d.regions || []).length),
@@ -146,6 +146,14 @@ export default class ProjectsTable extends React.PureComponent {
                 order: 8,
                 modifier: row => (
                     <div>
+                        <Link
+                            title={this.props.userStrings('viewProjectLinkTitle')}
+                            key={row.id}
+                            to={reverseRoute(pathNames.projects, { projectId: row.id })}
+                            className={styles.link}
+                        >
+                            <span className={iconNames.openLink} />
+                        </Link>
                         {
                             this.props.isCurrentUserAdmin &&
                             <DangerButton
@@ -156,14 +164,6 @@ export default class ProjectsTable extends React.PureComponent {
                                 transparent
                             />
                         }
-                        <Link
-                            title={this.props.userStrings('viewProjectLinkTitle')}
-                            key={row.id}
-                            to={reverseRoute(pathNames.projects, { projectId: row.id })}
-                            className={styles.link}
-                        >
-                            <span className={iconNames.openLink} />
-                        </Link>
                     </div>
                 ),
             },
