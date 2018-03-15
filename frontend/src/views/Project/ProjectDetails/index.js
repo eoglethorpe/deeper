@@ -255,9 +255,11 @@ export default class ProjectDetails extends React.PureComponent {
                                 key="header"
                                 className={styles.header}
                             >
+                                {/*
                                 <h2 className={styles.heading}>
                                     { project.title }
                                 </h2>
+                                */}
                                 <div className={styles.tabs}>
                                     <List
                                         data={this.routes}

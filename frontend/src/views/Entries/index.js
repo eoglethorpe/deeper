@@ -461,7 +461,7 @@ export default class Entries extends React.PureComponent {
                         title={this.props.entryStrings('editEntryLinkTitle')}
                         to={route}
                     >
-                        <AccentButton transparent>
+                        <AccentButton>
                             {this.props.entryStrings('editEntryButtonLabel')}
                         </AccentButton>
                     </Link>

@@ -13,11 +13,13 @@ $width-region-list: 240px;
         border-right: $width-separator-thin solid $color-separator-alt;
 
         >.header {
+            @include background-color($color-background-header);
             display: flex;
             flex-shrink: 0;
             flex-wrap: wrap;
             align-items: center;
             padding: $spacing-small;
+            border-bottom: $width-separator-thin solid $color-separator;
 
             .heading {
                 flex-grow: 1;

@@ -13,10 +13,12 @@ $width-af-list: 240px;
         border-right: $width-separator-thin solid $color-separator-alt;
 
         .header {
+            @include background-color($color-background-header);
             display: flex;
             flex-shrink: 0;
             flex-wrap: wrap;
             align-items: center;
+            border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-small;
 
             .heading {
@@ -48,6 +50,7 @@ $width-af-list: 240px;
     }
 
     .details-container {
+        position: relative;
         flex-grow: 1;
     }
 
