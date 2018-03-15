@@ -27,11 +27,11 @@ $color-text-label-on-light: rgba(0, 0, 0, .5);
 $color-text-label-on-dark: rgba(255, 255, 255, .4);
 $color-text-label: get-color($color-text-label-on-light, $color-text-label-on-dark);
 
-$color-primary-light: #008975;
+$color-primary-light: #1676d3;
 $color-primary-dark: #4ce49c;
 $color-primary: get-color($color-primary-light, $color-primary-dark);
 
-$color-accent-light: #c2185b;
+$color-accent-light: #008975;
 $color-accent-dark: #c34176;
 $color-accent: get-color($color-accent-light, $color-accent-dark);
 

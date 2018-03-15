@@ -1,4 +1,4 @@
-import { RestRequest } from '../../public/utils/rest';
+import { RestRequest } from '../../vendor/react-store/utils/rest';
 import store from '../store';
 import { tokenSelector } from '../selectors/auth';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../selectors/settings';
 
 // TODO: Remove this on release
-export const DEV = false;
+export const DEV = true;
 
 // Alias for prepareQueryParams
 export const p = RestRequest.prepareUrlParams;

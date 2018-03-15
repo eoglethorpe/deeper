@@ -34,10 +34,18 @@
 
 .submit-success {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: $height-app;
     color: $color-success;
+
+    .add-entry-link {
+        background-color: $color-accent;
+        cursor: pointer;
+        padding: $spacing-small;
+        color: $color-text-on-accent;
+    }
 }
 
 .submit-failure {

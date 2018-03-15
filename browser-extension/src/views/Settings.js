@@ -3,17 +3,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    TextInput,
-    Form,
+import TextInput from '../vendor/react-store/components/Input/TextInput';
+import Form, {
     requiredCondition,
     urlCondition,
-} from '../public-components/Input';
+} from '../vendor/react-store/components/Input/Form';
 
-import {
-    AccentButton,
-    PrimaryButton,
-} from '../public-components/Action';
+import AccentButton from '../vendor/react-store/components/Action/Button/AccentButton';
+import PrimaryButton from '../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import {
     setSettingsAction,
@@ -61,18 +58,16 @@ export default class Settings extends React.PureComponent {
             formFieldErrors: {},
         };
 
-        this.formElements = [
-            'serverAddress',
-            'apiAddress',
-        ];
-
-        this.validations = {
-            serverAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
-            apiAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
+        this.schema = {
+            fields: {
+                serverAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
+                apiAddress: DEV ? [requiredCondition] : [requiredCondition, urlCondition],
+            },
         };
     }
 
     componentWillReceiveProps(nextProps) {
+        // FIXME: add checks
         this.setState({
             inputValues: {
                 serverAddress: nextProps.serverAddress,
@@ -105,26 +100,15 @@ export default class Settings extends React.PureComponent {
 
     // FORM
 
-    handleFormChange = (value, { formFieldErrors }) => {
+    handleFormChange = (value, formFieldErrors) => {
         this.setState({
-            formFieldErrors: {
-                ...this.state.formFieldErrors,
-                ...formFieldErrors,
-            },
-            inputValues: {
-                ...this.state.inputValues,
-                ...value,
-            },
+            formFieldErrors,
+            inputValues: value,
         });
     }
 
-    handleFormFailure = ({ formFieldErrors }) => {
-        this.setState({
-            formFieldErrors: {
-                ...this.state.formFieldErrors,
-                ...formFieldErrors,
-            },
-        });
+    handleFormFailure = (formFieldErrors) => {
+        this.setState({ formFieldErrors });
     }
 
     handleFormSuccess = (values) => {
@@ -147,10 +131,14 @@ export default class Settings extends React.PureComponent {
                     successCallback={this.handleFormSuccess}
                     failureCallback={this.handleFormFailure}
                     changeCallback={this.handleFormChange}
-                    elements={this.formElements}
-                    validations={this.validations}
+                    schema={this.schema}
+                    fieldErrors={formFieldErrors}
+                    value={inputValues}
                 >
-                    <header styleName="header">
+                    <header
+                        formskip
+                        styleName="header"
+                    >
                         <h1>
                             Settings
                         </h1>
@@ -166,15 +154,11 @@ export default class Settings extends React.PureComponent {
                             formname="serverAddress"
                             label="Server address"
                             placeholder="eg: https://thedeep.io"
-                            value={inputValues.serverAddress}
-                            error={formFieldErrors.serverAddress}
                         />
                         <TextInput
                             formname="apiAddress"
                             label="Api address"
                             placeholder="eg: https://api.thedeep.io"
-                            value={inputValues.apiAddress}
-                            error={formFieldErrors.apiAddress}
                         />
                     </div>
                     <footer styleName="footer">
