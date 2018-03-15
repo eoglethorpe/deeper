@@ -126,7 +126,7 @@ export default class List extends React.PureComponent {
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
             const { height, top } = item.properties.listGridLayout;
-            return Math.max(acc, height + top);
+            return Math.max(acc, height + top + 4);
         },
         0,
     );

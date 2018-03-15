@@ -43,11 +43,11 @@ $color-success-light: #41cf76;
 $color-success-dark: #41cf76;
 $color-success: get-color($color-success-light, $color-success-dark);
 
-$color-warning-light: #e0b652;
+$color-warning-light: #ef8c00;
 $color-warning-dark: #e0b652;
 $color-warning: get-color($color-warning-light, $color-warning-dark);
 
-$color-danger-light: #d3575e;
+$color-danger-light: #f44336;
 $color-danger-dark: #d3575e;
 $color-danger: get-color($color-danger-light, $color-danger-dark);
 
@@ -55,7 +55,7 @@ $color-background-light: #e0e0e0;
 $color-background-dark: #000;
 $color-background: get-color($color-background-light, $color-background-dark);
 
-$color-background-light-alt: #f0f0f0;
+$color-background-light-alt: #eee;
 $color-background-dark-alt: #313131;
 $color-background-alt: get-color($color-background-light-alt, $color-background-dark-alt);
 
@@ -67,7 +67,7 @@ $color-foreground-light-alt: #f5f5f5;
 $color-foreground-dark-alt: #484848;
 $color-foreground-alt: get-color($color-foreground-light-alt, $color-foreground-dark-alt);
 
-$color-background-header-light: #fafafa;
+$color-background-header-light: #f0f5f5;
 $color-background-header-dark: #212121;
 $color-background-header: get-color($color-background-header-light, $color-background-header-dark);
 
@@ -91,11 +91,11 @@ $color-background-selected-light: rgba(0, 0, 0, .07);
 $color-background-selected-dark: rgba(255, 255, 255, .07);
 $color-background-selected: get-color($color-background-selected-light, $color-background-selected-dark);
 
-$color-background-row-light: #fafafa;
+$color-background-row-light: #f5f5f5;
 $color-background-row-dark: #414141;
 $color-background-row: get-color($color-background-row-light, $color-background-row-dark);
 
-$color-background-row-light-alt: #f0f0f0;
+$color-background-row-light-alt: #eee;
 $color-background-row-dark-alt: #484848;
 $color-background-row-alt: get-color($color-background-row-light-alt, $color-background-row-dark-alt);
 

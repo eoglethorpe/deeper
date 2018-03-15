@@ -79,8 +79,7 @@ export const maxHeightForProjectSelector = createSelector(
     items => items.reduce(
         (acc, item) => {
             const { height, top } = item.properties.listGridLayout;
-            // 12 to add extra padding at bottom
-            return Math.max(acc, height + top);
+            return Math.max(acc, height + top + 4);
         },
         0,
     ),
