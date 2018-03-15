@@ -1,6 +1,6 @@
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
@@ -407,7 +407,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             formname="parent"
                             label={this.props.countriesStrings('parentAdminLevelLabel')}
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
-                            styleName="text-input"
+                            className={styles.selectInput}
                         />
                         <FileInput
                             styleName="geo-file"
@@ -417,10 +417,16 @@ export default class EditAdminLevel extends React.PureComponent {
                         >
                             {
                                 formValues.geoShapeFile ? (
-                                    <span styleName="show">
-                                        <i className={iconNames.documentText} />
-                                        {this.props.countriesStrings('geoShapeFile')}
-                                    </span>
+                                    <Fragment>
+                                        <span styleName="show">
+                                            <i className={iconNames.documentText} />
+                                            {this.props.countriesStrings('geoShapeFile')}
+                                        </span>
+                                        <InternalGallery
+                                            onlyFileName
+                                            galleryId={formValues.geoShapeFile}
+                                        />
+                                    </Fragment>
                                 ) : (
                                     <span styleName="load">
                                         <i className={iconNames.uploadFa} />
@@ -428,10 +434,6 @@ export default class EditAdminLevel extends React.PureComponent {
                                     </span>
                                 )
                             }
-                            <InternalGallery
-                                onlyFileName
-                                galleryId={formValues.geoShapeFile}
-                            />
                         </FileInput>
                         <HiddenInput formname="geoShapeFile" />
                     </div>
