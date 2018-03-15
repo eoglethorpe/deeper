@@ -4,13 +4,18 @@
     @extend %main-content;
     display: flex;
     flex-direction: column;
+    margin: -$spacing-small-alt;
+    border: 0;
+    background-color: transparent;
+    height: calc(100vh - #{$height-navbar});
 
     .header {
+        @include background-color($color-background-header);
         display: flex;
         flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        background-color: $color-foreground;
+        border-bottom: $width-separator-thin solid $color-separator-alt;
         padding: $spacing-small;
 
         .add-lead-button {
@@ -52,25 +57,29 @@
 
     .viz-container {
         display: grid;
-        background-color: $color-foreground;
         grid-template-columns: 1fr 1fr;
-        grid-template-rows: repeat(5, 512px);
+        grid-template-rows: repeat(5, 640px);
+        padding: $spacing-small-alt;
+        grid-column-gap: $spacing-small-alt;
+        grid-row-gap: $spacing-small-alt;
         grid-template-areas: 'geo-referenced-map geo-referenced-map'
-            'tree-map tree-map'
             'sun-burst chord-diagram'
-            'correlation-matrix force-directed-graph'
-            'collapsible-tree radial-dendrogram';
+            'tree-map correlation-matrix'
+            'force-directed-graph radial-dendrogram'
+            'collapsible-tree collapsible-tree';
         overflow-y: auto;
 
         .viz {
+            @include background-color($color-foreground-alt);
             display: flex;
             flex-direction: column;
             flex-shrink: 0;
-            border: $width-separator-thin solid $color-separator;
+            border: $width-separator-thin solid $color-separator-alt;
             padding-bottom: $spacing-extra-small;
 
             :global {
                 .action {
+                    @include background-color($color-background-header);
                     display: flex;
                     flex-shrink: 0;
                     align-items: flex-end;
@@ -97,6 +106,10 @@
                     flex-grow: 1;
                 }
             }
+        }
+
+        .chart-container {
+            padding: $spacing-extra-large-alt;
         }
 
         .tree-map {
@@ -133,23 +146,15 @@
     }
 
     .footer {
+        @include background-color($color-foreground);
         display: flex;
         flex-shrink: 0;
         justify-content: space-between;
         border-top: $width-separator-thin solid $color-separator;
-        background-color: $color-foreground-alt;
         padding: $spacing-small $spacing-medium-alt;
 
-
-        .link-container {
-            display: flex;
-            height: 32px;
-
-            .link {
-                @extend %button-like-link;
-                background-color: $color-primary;
-                color: $color-foreground-alt;
-            }
+        .link {
+            @include button-like-link($color-accent);
         }
     }
 }

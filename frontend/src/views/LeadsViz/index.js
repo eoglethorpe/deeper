@@ -287,12 +287,14 @@ export default class LeadsViz extends React.PureComponent {
             <div styleName="viz-container">
                 <GeoReferencedMap
                     styleName="geo-referenced-map viz"
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || geoPointsDataPending}
                     geoPoints={geoPointsData.points}
                 />
                 <TreeMapView
                     styleName="tree-map viz"
                     data={hierarchicalData}
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
@@ -300,6 +302,7 @@ export default class LeadsViz extends React.PureComponent {
                 <SunBurstView
                     styleName="sun-burst viz"
                     data={hierarchicalData}
+                    vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
@@ -308,6 +311,7 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="chord-diagram viz"
                     data={chordData.values}
                     loading={loadingLeads || chordDataPending}
+                    vizContainerClass={styles.chartContainer}
                     labelsData={chordData.labels}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
@@ -316,12 +320,13 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="correlation-matrix viz"
                     data={correlationData}
                     loading={loadingLeads || correlationDataPending}
-                    margins={{ top: 100, right: 0, bottom: 50, left: 100 }}
+                    vizContainerClass={styles.chartContainer}
                 />
                 <ForceDirectedGraphView
                     styleName="force-directed-graph viz"
                     data={forceDirectedData}
                     loading={loadingLeads || forceDirectedDataPending}
+                    vizContainerClass={styles.chartContainer}
                     idAccessor={d => d.id}
                     groupAccessor={LeadsViz.groupValueAccessor}
                     valueAccessor={LeadsViz.valueAccessor}
@@ -331,12 +336,14 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="collapsible-tree viz"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
+                    vizContainerClass={styles.chartContainer}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <RadialDendrogramView
                     styleName="radial-dendrogram viz"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
+                    vizContainerClass={styles.chartContainer}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
             </div>
@@ -354,15 +361,13 @@ export default class LeadsViz extends React.PureComponent {
                 </header>
                 { noLeadSelected ? this.renderNoLeadFound() : this.renderCharts() }
                 <footer styleName="footer">
-                    <div styleName="link-container">
-                        <Link
-                            styleName="link"
-                            to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
-                            replace
-                        >
-                            Show Table
-                        </Link>
-                    </div>
+                    <Link
+                        styleName="link"
+                        to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
+                        replace
+                    >
+                        Show Table
+                    </Link>
                 </footer>
             </div>
         );
