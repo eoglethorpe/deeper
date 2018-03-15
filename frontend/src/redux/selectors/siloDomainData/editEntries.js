@@ -8,44 +8,44 @@ import {
 const emptyList = [];
 const emptyObject = {};
 
-const editEntryViewSelector = ({ siloDomainData }) => (
-    siloDomainData.editEntryView || emptyObject
+const editEntrySelector = ({ siloDomainData }) => (
+    siloDomainData.editEntry || emptyObject
 );
 
-export const editEntryViewForLeadIdSelector = createSelector(
+export const editEntryForLeadIdSelector = createSelector(
     leadIdFromRoute,
-    editEntryViewSelector,
-    (leadId, editEntryView) => editEntryView[leadId] || emptyObject,
+    editEntrySelector,
+    (leadId, editEntry) => editEntry[leadId] || emptyObject,
 );
 
-export const editEntryViewCurrentLeadSelector = createSelector(
-    editEntryViewForLeadIdSelector,
-    editEntryView => editEntryView.lead || emptyObject,
+export const editEntryCurrentLeadSelector = createSelector(
+    editEntryForLeadIdSelector,
+    editEntry => editEntry.lead || emptyObject,
 );
 
-export const editEntryViewSelectedEntryIdSelector = createSelector(
-    editEntryViewForLeadIdSelector,
-    editEntryView => editEntryView.selectedEntryId,
+export const editEntrySelectedEntryIdSelector = createSelector(
+    editEntryForLeadIdSelector,
+    editEntry => editEntry.selectedEntryId,
 );
 
-export const editEntryViewEntriesSelector = createSelector(
-    editEntryViewForLeadIdSelector,
-    editEntryView => editEntryView.entries || emptyList,
+export const editEntryEntriesSelector = createSelector(
+    editEntryForLeadIdSelector,
+    editEntry => editEntry.entries || emptyList,
 );
 
-export const editEntryViewFilteredEntriesSelector = createSelector(
-    editEntryViewEntriesSelector,
+export const editEntryFilteredEntriesSelector = createSelector(
+    editEntryEntriesSelector,
     entries => entries.filter(e => !e.markedForDelete),
 );
 
-export const editEntryViewCurrentProjectSelector = createSelector(
-    editEntryViewCurrentLeadSelector,
+export const editEntryCurrentProjectSelector = createSelector(
+    editEntryCurrentLeadSelector,
     projectsSelector,
     (lead, projects) => (lead.project && projects[lead.project]) || emptyObject,
 );
 
-export const editEntryViewCurrentAnalysisFrameworkSelector = createSelector(
-    editEntryViewCurrentProjectSelector,
+export const editEntryCurrentAnalysisFrameworkSelector = createSelector(
+    editEntryCurrentProjectSelector,
     analysisFrameworksSelector,
     (project, analysisFrameworks) => (
         (project.analysisFramework && analysisFrameworks[project.analysisFramework]) || emptyObject

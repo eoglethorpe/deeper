@@ -1,11 +1,9 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
 import Button from '../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
 import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
@@ -35,22 +33,22 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps, undefined)
-@CSSModules(styles, { allowMultiple: true })
-export default class LeftPanel extends React.PureComponent {
+export default class EntriesListing extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
     static iconMap = {
-        [ENTRY_STATUS.requesting]: `${iconNames.loading} pending`,
-        [ENTRY_STATUS.invalid]: `${iconNames.error} error`,
-        [ENTRY_STATUS.nonPristine]: `${iconNames.codeWorking} pristine`,
-        [ENTRY_STATUS.complete]: `${iconNames.checkCircle} complete`,
+        [ENTRY_STATUS.requesting]: `${iconNames.loading} ${styles.pending}`,
+        [ENTRY_STATUS.invalid]: `${iconNames.error} ${styles.error}`,
+        [ENTRY_STATUS.nonPristine]: `${iconNames.codeWorking} ${styles.pristine}`,
+        [ENTRY_STATUS.complete]: `${iconNames.checkCircle} ${styles.complete}`,
+        markedForRemoval: `${iconNames.removeCircle} ${styles.error}`,
     };
 
     static calcEntryKey = entry => entryAccessor.getKey(entry);
 
     renderIcon = (status) => {
-        const className = LeftPanel.iconMap[status] || '';
+        const className = EntriesListing.iconMap[status] || '';
         return <span className={className} />;
     }
 
@@ -60,14 +58,15 @@ export default class LeftPanel extends React.PureComponent {
         if (values.entryType === 'image') {
             return (
                 <img
-                    className="image"
+                    className={styles.image}
                     src={values.image}
                     alt={this.props.entryStrings('altLabel')}
                 />
             );
         }
+        // FIXME: use strings
         return (
-            <div className="entry-excerpt">
+            <div className={styles.entryExcerpt}>
                 {values.excerpt || `Excerpt ${values.order}`}
             </div>
         );
@@ -81,7 +80,7 @@ export default class LeftPanel extends React.PureComponent {
             choices,
         } = this.props;
 
-        const currentEntryId = LeftPanel.calcEntryKey(entry);
+        const currentEntryId = EntriesListing.calcEntryKey(entry);
         const isActive = currentEntryId === selectedEntryId;
         const status = choices[key].choice;
         const selectedEntry = entries.find(
@@ -90,22 +89,20 @@ export default class LeftPanel extends React.PureComponent {
 
         const isMarkedForDelete = entryAccessor.isMarkedForDelete(selectedEntry);
         return (
-            <ListItem
-                className="entries-list-item"
+            <div
+                className={`${styles.entriesListItem} ${isActive ? styles.active : ''}`}
                 key={key}
-                active={isActive}
-                scrollIntoView={isActive}
             >
                 <button
-                    className="add-entry-list-item"
+                    className={styles.addEntryListItem}
                     onClick={() => this.props.handleEntryItemClick(currentEntryId)}
                     disabled={isMarkedForDelete}
                 >
                     {this.renderEntryLabel(entry)}
-                    <div className="status-icons">
+                    <div className={styles.statusIcons}>
                         {
                             entryAccessor.isMarkedForDelete(entry) &&
-                            <span className={`${iconNames.removeCircle} error`} />
+                            <span className={EntriesListing.iconMap.markedForRemoval} />
                         }
                         {this.renderIcon(status)}
                     </div>
@@ -114,7 +111,7 @@ export default class LeftPanel extends React.PureComponent {
                     isMarkedForDelete ? (
                         <Button
                             key="undo-button"
-                            className="remove-button"
+                            className={styles.removeButton}
                             onClick={() => onEntryDelete(false, key)}
                             iconName={iconNames.undo}
                             title={this.props.entryStrings('removeEntryButtonTitle')}
@@ -122,24 +119,24 @@ export default class LeftPanel extends React.PureComponent {
                     ) : (
                         <DangerButton
                             key="remove-button"
-                            className="remove-button"
+                            className={styles.removeButton}
                             onClick={() => onEntryDelete(true, key)}
                             iconName={iconNames.delete}
                             title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
                         />
                     )
                 }
-            </ListItem>
+            </div>
         );
     }
 
     render() {
         return (
             <ListView
-                className={styles['entries-list']}
+                className={styles.entriesList}
                 modifier={this.renderEntryItem}
                 data={this.props.entries}
-                keyExtractor={LeftPanel.calcEntryKey}
+                keyExtractor={EntriesListing.calcEntryKey}
             />
         );
     }

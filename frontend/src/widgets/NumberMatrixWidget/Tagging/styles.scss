@@ -1,7 +1,9 @@
 @import '../../../stylesheets/base';
 
-.number-matrix-overview {
-    display: flex;
+.overview {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
 
     .table-header {
         @include background-color($color-foreground);
@@ -26,7 +28,7 @@
 
     .table-cell {
         @include background-color($color-foreground);
-        padding: $spacing-extra-small $spacing-small;
+        padding: $spacing-small;
 
         .number-input {
             background-color: transparent;

@@ -12,6 +12,8 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
+import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
+
 import { iconNames } from '../../../constants';
 import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../components/BoundError';
@@ -104,7 +106,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
             <Modal className={styles['org-chart-modal']}>
                 <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
                 <ModalBody className={styles.body}>
-                    <div>
+                    <div className={styles.excerpt} >
                         {this.props.api.getEntryExcerpt(this.props.entryId)}
                     </div>
                     <OrgChart
@@ -161,12 +163,15 @@ export default class OrganigramTaggingList extends React.PureComponent {
                         onClick={this.handleShowModal}
                         iconName={iconNames.chart}
                         transparent
-                    />
+                    >
+                        Open Organigram
+                    </AccentButton>
                 </header>
                 <ListView
                     className={styles['selected-organs']}
                     data={values}
                     modifier={this.renderSelectedOrgan}
+                    emptyComponent={WidgetEmptyComponent}
                 />
                 <OrgChartModal />
             </div>

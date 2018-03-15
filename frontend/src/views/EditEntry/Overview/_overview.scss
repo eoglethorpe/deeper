@@ -73,12 +73,12 @@ $height-tabs: 48px;
         min-width: $width-right-panel-min;
 
         >.header {
+            @include background-color($color-foreground);
             display: flex;
             align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-medium solid $color-separator;
-            background-color: $color-foreground;
-            padding: $spacing-small $spacing-medium;
+            padding: 0 $spacing-medium;
             height: $height-tabs;
 
             .entry-actions {
@@ -107,8 +107,8 @@ $height-tabs: 48px;
         }
 
         .container {
+            @include background-color($color-background-alt);
             position: relative;
-            background-color: $color-background-alt;
             width: 100%;
             height: calc(100% - #{$height-tabs});
             overflow: auto;
@@ -120,6 +120,14 @@ $height-tabs: 48px;
                 :global {
                     .grid-item {
                         @extend %grid-item;
+
+                        .header {
+                            @include background-color($color-background-header);
+                        }
+
+                        .content {
+                            @include background-color($color-foreground-alt);
+                        }
                     }
                 }
             }

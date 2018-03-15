@@ -8,7 +8,7 @@ import reducers, {
     EE__ENTRY_CHANGE,
     EE__ENTRY_DIFF,
     EE__ENTRY_MARK_FOR_DELETE,
-    setEditEntryViewLeadAction,
+    setEditEntryLeadAction,
     addEntryAction,
     removeEntryAction,
     saveEntryAction,
@@ -20,13 +20,13 @@ import reducers, {
 
 test('should set lead', () => {
     const state = {
-        editEntryView: {},
+        editEntry: {},
     };
-    const action = setEditEntryViewLeadAction({
+    const action = setEditEntryLeadAction({
         lead: { id: 1, title: 'Lead #1' },
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 lead: { id: 1, title: 'Lead #1' },
             },
@@ -37,7 +37,7 @@ test('should set lead', () => {
 
 test('should add entry', () => {
     const state = {
-        editEntryView: {},
+        editEntry: {},
     };
 
     const action = addEntryAction({
@@ -49,7 +49,7 @@ test('should add entry', () => {
         leadId: 1,
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -77,7 +77,7 @@ test('should add entry', () => {
 
 test('should add entry', () => {
     const state = {
-        editEntryView: {},
+        editEntry: {},
     };
     const action = addEntryAction({
         entry: {
@@ -88,7 +88,7 @@ test('should add entry', () => {
         leadId: 1,
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -116,7 +116,7 @@ test('should add entry', () => {
 
 test('should save entry', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -148,7 +148,7 @@ test('should save entry', () => {
         },
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -176,7 +176,7 @@ test('should save entry', () => {
 
 test('should change entry', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -218,7 +218,7 @@ test('should change entry', () => {
         uiState: { error: true },
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -252,7 +252,7 @@ test('should change entry', () => {
 
 test('should mark for delete', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -279,7 +279,7 @@ test('should mark for delete', () => {
         mark: true,
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: undefined,
                 entries: [
@@ -306,7 +306,7 @@ test('should mark for delete', () => {
 
 test('should delete entry at bottom', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -329,7 +329,7 @@ test('should delete entry at bottom', () => {
         entryId: 'flksjal',
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'gksgk',
                 entries: [
@@ -347,7 +347,7 @@ test('should delete entry at bottom', () => {
 
 test('should delete entry at top', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'gksgk',
                 entries: [
@@ -370,7 +370,7 @@ test('should delete entry at top', () => {
         entryId: 'gksgk',
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -388,7 +388,7 @@ test('should delete entry at top', () => {
 
 test('should set active entry', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'flksjal',
                 entries: [
@@ -411,7 +411,7 @@ test('should set active entry', () => {
         entryId: 'gksgk',
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'gksgk',
                 entries: [
@@ -434,7 +434,7 @@ test('should set active entry', () => {
 
 test('should apply diff', () => {
     const state = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'klklk',
                 entries: [
@@ -596,7 +596,7 @@ test('should apply diff', () => {
         ],
     });
     const after = {
-        editEntryView: {
+        editEntry: {
             1: {
                 selectedEntryId: 'zzzzz',
                 entries: [

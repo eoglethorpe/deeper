@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -7,6 +6,7 @@ import { Link } from 'react-router-dom';
 import GridLayout from '../../../vendor/react-store/components/View/GridLayout';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
@@ -20,9 +20,11 @@ import {
     transformResponseErrorToFormError,
 } from '../../../rest';
 import {
-    editEntryViewCurrentLeadSelector,
+    editEntryCurrentLeadSelector,
     projectIdFromRouteSelector,
+    markForDeleteEntryAction,
 
+    setActiveEntryAction,
     setGeoOptionsAction,
     entryStringsSelector,
     afStringsSelector,
@@ -37,28 +39,29 @@ import styles from '../styles.scss';
 
 
 const propTypes = {
-    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    onSaveAll: PropTypes.func.isRequired,
-    widgetDisabled: PropTypes.bool,
-    saveAllDisabled: PropTypes.bool.isRequired,
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
-    setGeoOptions: PropTypes.func.isRequired,
-
     entryStrings: PropTypes.func.isRequired,
     afStrings: PropTypes.func.isRequired,
+    setGeoOptions: PropTypes.func.isRequired,
+    setActiveEntry: PropTypes.func.isRequired,
+    markForDeleteEntry: PropTypes.func.isRequired,
+
+    analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadId: PropTypes.number.isRequired,
+    onSaveAll: PropTypes.func.isRequired,
+    saveAllDisabled: PropTypes.bool.isRequired,
+    choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    widgetDisabled: false,
     projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    leadDetails: editEntryViewCurrentLeadSelector(state, props),
+    leadDetails: editEntryCurrentLeadSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
     entryStrings: entryStringsSelector(state),
     afStrings: afStringsSelector(state),
@@ -66,6 +69,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
+    setActiveEntry: params => dispatch(setActiveEntryAction(params)),
+    markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
 });
 
 const APPLY_MODE = {
@@ -74,7 +79,6 @@ const APPLY_MODE = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -82,19 +86,21 @@ export default class List extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        this.state = {
+            showApplyModal: false,
+            applyMode: undefined, // all or below
+            applyItemId: undefined,
+            applyEntryId: undefined,
+
+            pendingGeo: true,
+        };
+
         this.items = [];
         this.gridItems = {};
         this.entries = {};
 
         this.updateAnalysisFramework(props.analysisFramework);
         this.updateGridItems(props.entries);
-
-        this.state = {
-            showApplyModal: false,
-            applyMode: undefined, // all or below
-            applyItemId: undefined,
-            applyEntryId: undefined,
-        };
     }
 
     componentWillMount() {
@@ -126,6 +132,7 @@ export default class List extends React.PureComponent {
     );
 
     getItemView = (item) => {
+        // FIXME: this causes complexity to be O(n*m)
         const Component = this.widgets
             .find(w => w.id === item.widgetId).listComponent;
         return (
@@ -185,6 +192,7 @@ export default class List extends React.PureComponent {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))
             .params(() => createParamsForGeoOptionsGET())
+            .preLoad(() => this.setState({ pendingGeo: true }))
             .success((response) => {
                 try {
                     schema.validate(response, 'geoOptions');
@@ -192,6 +200,7 @@ export default class List extends React.PureComponent {
                         projectId,
                         locations: response,
                     });
+                    this.setState({ pendingGeo: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -282,7 +291,7 @@ export default class List extends React.PureComponent {
     renderActionButtons = (item, entryId) => (
         <div className="action-buttons">
             <AccentButton
-                className={styles['apply-button']}
+                className={styles.applyButton}
                 type="button"
                 title={this.props.entryStrings('applyAllButtonTitle')}
                 onClick={() =>
@@ -299,7 +308,7 @@ export default class List extends React.PureComponent {
                 <span className={iconNames.applyAll} />
             </AccentButton>
             <WarningButton
-                className={styles['apply-button']}
+                className={styles.applyButton}
                 type="button"
                 title={this.props.entryStrings('applyAllBelowButtonTitle')}
                 onClick={() =>
@@ -329,9 +338,9 @@ export default class List extends React.PureComponent {
                 <h3>
                     {leadDetails.title}
                 </h3>
-                <div className={styles['action-buttons']}>
+                <div className={styles.actionButtons}>
                     <Link
-                        className={styles['primary-link-button']}
+                        className={styles.primaryLinkButton}
                         to="/overview"
                         replace
                     >
@@ -340,7 +349,7 @@ export default class List extends React.PureComponent {
                     <SuccessButton
                         onClick={onSaveAll}
                         disabled={saveAllDisabled}
-                        className={styles['save-button']}
+                        className={styles.saveButton}
                     >
                         {this.props.entryStrings('saveButtonLabel')}
                     </SuccessButton>
@@ -349,47 +358,104 @@ export default class List extends React.PureComponent {
         );
     }
 
+    renderEntry = (entry) => {
+        const {
+            markForDeleteEntry,
+            setActiveEntry,
+            leadId,
+            choices,
+        } = this.props;
+
+        const entryKey = entryAccessor.getKey(entry);
+
+        const { isWidgetDisabled } = choices[entryKey] || {};
+
+        const handleDelete = () => {
+            markForDeleteEntry({
+                leadId,
+                entryId: entryKey,
+                mark: true,
+            });
+        };
+        const handleEdit = () => {
+            setActiveEntry({
+                leadId,
+                entryId: entryKey,
+            });
+        };
+
+        return (
+            <div
+                key={entryAccessor.getKey(entry)}
+                className={styles.entry}
+                style={this.entryStyle}
+            >
+                { isWidgetDisabled && <LoadingAnimation /> }
+                <GridLayout
+                    className={styles.gridLayout}
+                    modifier={this.getItemView}
+                    items={this.gridItems[entryAccessor.getKey(entry)]}
+                    viewOnly
+                />
+                <div className={styles.actionButtons}>
+                    {/* FIXME: use strings */}
+                    <DangerButton
+                        onClick={handleDelete}
+                        type="button"
+                        iconName={iconNames.delete}
+                        title="Delete Entry"
+                    />
+                    {/* FIXME: use strings */}
+                    <Link
+                        onClick={handleEdit}
+                        to="/overview"
+                        replace
+                        className={styles.editLink}
+                        title="Edit Entry"
+                    >
+                        <i className={iconNames.edit} />
+                    </Link>
+                </div>
+            </div>
+        );
+    }
+
     render() {
         const {
             entries,
-            widgetDisabled,
+            entryStrings,
         } = this.props;
         const {
             showApplyModal,
             applyMode,
         } = this.state;
 
-        const entryStyle = { height: this.getMaxHeight() };
+        // FIXME: this is a quick fix
+        const newHeight = this.getMaxHeight();
+        if (!this.entryStyle || this.entryStyle.height !== newHeight) {
+            this.entryStyle = { height: newHeight };
+        }
+
         const Header = this.renderHeader;
 
         return (
-            <div styleName="list">
-                { widgetDisabled && <LoadingAnimation /> }
+            <div className={styles.list}>
                 <Header />
                 {
                     (!entries || entries.length <= 0) ? (
-                        <div styleName="no-entry-wrapper">
+                        <div className={styles.noEntryWrapper}>
                             <h2>
-                                {this.props.entryStrings('noEntryFound')}
+                                {entryStrings('noEntryFound')}
                             </h2>
                         </div>
                     ) : (
-                        <div styleName="entry-list">
+                        <div className={styles.entryList}>
                             {
-                                entries.map(entry => (
-                                    <div
-                                        key={entryAccessor.getKey(entry)}
-                                        styleName="entry"
-                                        style={entryStyle}
-                                    >
-                                        <GridLayout
-                                            styleName="grid-layout"
-                                            modifier={this.getItemView}
-                                            items={this.gridItems[entryAccessor.getKey(entry)]}
-                                            viewOnly
-                                        />
-                                    </div>
-                                ))
+                                this.state.pendingGeo ? (
+                                    <LoadingAnimation />
+                                ) : (
+                                    entries.map(this.renderEntry)
+                                )
                             }
                         </div>
                     )
@@ -401,11 +467,9 @@ export default class List extends React.PureComponent {
                 >
                     <p>
                         {
-                            applyMode === APPLY_MODE.all ? (
-                                this.props.entryStrings('applyToAll')
-                            ) : (
-                                this.props.entryStrings('applyToAllBelow')
-                            )
+                            applyMode === APPLY_MODE.all
+                                ? entryStrings('applyToAll')
+                                : entryStrings('applyToAllBelow')
                         }
                     </p>
                 </Confirm>

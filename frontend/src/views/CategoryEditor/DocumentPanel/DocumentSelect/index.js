@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
-import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import Button from '../../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -121,7 +120,7 @@ export default class DocumentSelect extends React.PureComponent {
     keyExtractorForGalleryFiles = file => file.id
 
     renderGalleryFilesListItem = (fileId, file) => (
-        <ListItem
+        <div
             className={styles['file-list-item']}
             key={fileId}
         >
@@ -132,10 +131,9 @@ export default class DocumentSelect extends React.PureComponent {
                 className={styles.icon}
                 onClick={() => this.handleRemoveFiles(fileId)}
                 transparent
-            >
-                <span className={iconNames.delete} />
-            </DangerButton>
-        </ListItem>
+                iconName={iconNames.delete}
+            />
+        </div>
     );
 
     render() {

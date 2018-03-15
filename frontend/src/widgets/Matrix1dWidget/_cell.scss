@@ -1,8 +1,8 @@
 %matrix-1d-cell {
+    @include background-color($color-foreground);
     flex-shrink: 0;
     margin: $spacing-extra-small;
-    background-color: $color-background-alt;
+    border: $width-separator-thin solid $color-separator;
     padding: $spacing-extra-small $spacing-small;
-    color: $color-text;
     user-select: none;
 }

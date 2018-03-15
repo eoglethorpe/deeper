@@ -1,3 +1,5 @@
+$height-header: 48px;
+
 .list {
     display: flex;
     flex-direction: column;
@@ -5,14 +7,13 @@
     height: 100%;
 
     .header {
+        @include background-color($color-background-header);
         display: flex;
-        flex-shrink: 0;
         align-items: center;
         justify-content: space-between;
-        border-bottom: $width-separator-thin solid $color-separator;
-        background-color: $color-background-header;
-        padding: $spacing-small $spacing-medium;
-        width: 100%;
+        border-bottom: $width-separator-medium solid $color-separator;
+        padding: 0 $spacing-medium;
+        height: $height-header;
 
         .action-buttons {
             .primary-link-button {
@@ -34,12 +35,14 @@
     }
 
     .entry-list {
-        flex-grow: 1;
+        position: relative;
+        height: calc(100% - #{$height-header});
         overflow: auto;
 
         .entry {
+            @include background-color($color-background-row);
             display: inline-block;
-            background-color: $color-background-row;
+            position: relative;
 
             .apply-buttons {
                 display: flex;
@@ -47,6 +50,30 @@
                 .apply-button {
                     margin: 0;
                     padding: 0 $spacing-extra-small;
+                }
+            }
+
+            .action-buttons {
+                @include transition-medium;
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                opacity: 0;
+                padding: $spacing-extra-small;
+
+                >* {
+                    margin: $spacing-extra-small;
+                }
+
+                .edit-link {
+                    @extend %button-like-link;
+                    @include background-color($color-warning);
+                }
+            }
+
+            &:hover {
+                .action-buttons {
+                    opacity: 1;
                 }
             }
 

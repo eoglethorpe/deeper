@@ -7,7 +7,6 @@
     .header {
         display: flex;
         flex-shrink: 0;
-        justify-content: flex-end;
     }
 
     .selected-organs {
@@ -41,8 +40,16 @@ $height-modal: 80vh;
 
     .body {
         display: flex;
-        flex-direction: column;
         flex-grow: 1;
+        padding: 0;
+
+        .excerpt {
+            border-right: $width-separator-thin solid $color-separator;
+            flex-basis: 30%;
+            flex-shrink: 0;
+            padding: $spacing-small;
+            text-align: justify;
+        }
 
         .header {
             padding: 0 $spacing-small;
