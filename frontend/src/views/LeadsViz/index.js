@@ -283,6 +283,8 @@ export default class LeadsViz extends React.PureComponent {
             geoPointsDataPending,
         } = this.state;
 
+        // FIXME: Use strings in headerText in all views
+
         return (
             <div styleName="viz-container">
                 <GeoReferencedMap
@@ -296,6 +298,7 @@ export default class LeadsViz extends React.PureComponent {
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
+                    headerText="Tree Map"
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
@@ -304,6 +307,7 @@ export default class LeadsViz extends React.PureComponent {
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
+                    headerText="Sunburst"
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
@@ -311,6 +315,7 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="chord-diagram viz"
                     data={chordData.values}
                     loading={loadingLeads || chordDataPending}
+                    headerText="Chord diagram"
                     vizContainerClass={styles.chartContainer}
                     labelsData={chordData.labels}
                     valueAccessor={LeadsViz.sizeValueAccessor}
@@ -319,6 +324,7 @@ export default class LeadsViz extends React.PureComponent {
                 <CorrelationMatrixView
                     styleName="correlation-matrix viz"
                     data={correlationData}
+                    headerText="Correlation matrix"
                     loading={loadingLeads || correlationDataPending}
                     vizContainerClass={styles.chartContainer}
                 />
@@ -326,6 +332,7 @@ export default class LeadsViz extends React.PureComponent {
                     styleName="force-directed-graph viz"
                     data={forceDirectedData}
                     loading={loadingLeads || forceDirectedDataPending}
+                    headerText="Force directed graph"
                     vizContainerClass={styles.chartContainer}
                     idAccessor={d => d.id}
                     groupAccessor={LeadsViz.groupValueAccessor}
@@ -334,6 +341,7 @@ export default class LeadsViz extends React.PureComponent {
                 />
                 <CollapsibleTreeView
                     styleName="collapsible-tree viz"
+                    headerText="Collapsible tree view"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
                     vizContainerClass={styles.chartContainer}
@@ -341,6 +349,7 @@ export default class LeadsViz extends React.PureComponent {
                 />
                 <RadialDendrogramView
                     styleName="radial-dendrogram viz"
+                    headerText="Radial dendrogram"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
                     vizContainerClass={styles.chartContainer}
