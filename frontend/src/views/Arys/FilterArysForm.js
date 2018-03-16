@@ -158,7 +158,7 @@ export default class FilterArysForm extends React.PureComponent {
         if (isObjectEmpty(this.props.filters)) {
             // NOTE: Only clear component state,
             // as the filters in global state is already empty
-            this.setState({ formValues: {} });
+            this.setState({ formValues: {}, pristine: true });
         } else {
             this.props.unsetAryPageFilter();
         }
