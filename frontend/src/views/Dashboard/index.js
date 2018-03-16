@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactSVG from 'react-svg';
 import { connect } from 'react-redux';
 
-import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
-
 import { currentUserActiveProjectSelector } from '../../redux';
+import logo from '../../resources/img/deep-logo.svg';
 import BoundError from '../../components/BoundError';
 
 import styles from './styles.scss';
@@ -26,12 +26,21 @@ export default class Dashboard extends React.PureComponent {
     render() {
         const { currentUserActiveProject } = this.props;
 
+        // FIXME: Use strings
         return (
             <div className={styles.dashboard}>
                 <p className={styles.header}>
                     { currentUserActiveProject.title }
                 </p>
-                <GeoReferencedMap className={styles.dashboardMap} />
+                <div className={styles.content}>
+                    <ReactSVG
+                        className={styles.deepLogo}
+                        path={logo}
+                    />
+                    <div className={styles.deepText} >
+                        DEEP Beta
+                    </div>
+                </div>
             </div>
         );
     }
