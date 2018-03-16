@@ -31,7 +31,7 @@ const noLinks = {};
 const allLinks = {
     leads: lp,
     entries: lp,
-    ary: lpd,
+    arys: lpd,
     projects: l,
     countries: l,
     export: lp,

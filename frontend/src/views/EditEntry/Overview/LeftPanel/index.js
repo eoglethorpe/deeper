@@ -84,22 +84,16 @@ export default class LeftPanel extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { currentTab, oldTab } = this.state;
         const { saveAllPending: oldSaveAllPending, entries: oldEntries } = this.props;
         const { saveAllPending: newSaveAllPending, entries: newEntries } = nextProps;
+        const { currentTab } = this.state;
 
-        if (oldSaveAllPending !== newSaveAllPending) {
-            if (newSaveAllPending && currentTab !== 'entries-listing') {
-                this.setState({
-                    currentTab: 'entries-listing',
-                    oldTab: currentTab,
-                });
-            } else if (!newSaveAllPending && currentTab === 'entries-listing') {
-                this.setState({
-                    currentTab: oldTab,
-                    oldTab: undefined,
-                });
-            }
+        if (
+            oldSaveAllPending !== newSaveAllPending &&
+            newSaveAllPending &&
+            currentTab !== 'entries-listing'
+        ) {
+            this.setState({ currentTab: 'entries-listing' });
         }
 
         if (oldEntries !== newEntries) {
@@ -221,15 +215,7 @@ export default class LeftPanel extends React.PureComponent {
         if (key === this.state.currentTab) {
             return;
         }
-
-        let oldTab;
-        if (key === 'entries-listing') {
-            oldTab = this.state.currentTab;
-        }
-        this.setState({
-            oldTab,
-            currentTab: key,
-        });
+        this.setState({ currentTab: key });
     }
 
     // Simplified Lead Preview
@@ -287,8 +273,6 @@ export default class LeftPanel extends React.PureComponent {
             leadId: this.props.leadId,
             entryId: value,
         });
-        // NOTE: change to last selected on click
-        // this.setState({ currentTab: this.state.oldTab });
     }
 
     render() {
