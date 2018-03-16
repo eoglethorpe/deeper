@@ -260,7 +260,6 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                             data={ngramKeys}
                             modifier={this.renderNGramSelect}
                             keyExtractor={d => d}
-                            emptyComponent={null}
                         />
                     </div>
                     {
