@@ -1,25 +1,51 @@
 @import '../../../stylesheets/base';
-@import '../../../stylesheets/tabs';
 
-.tabs-container {
-    border-right: $width-separator-thin solid $color-separator;
-    height: 100%;
+$height-tabs: 48px;
 
-    .tabs-header-container {
-        background-color: $color-foreground;
-    }
+.tabs {
+    height: $height-tabs;
+}
 
-    .tabs-content {
-        background-color: $color-foreground-alt;
-        height: calc(100% - 39px);
+%container {
+    background-color: $color-foreground-alt;
+    height: calc(100% - #{$height-tabs});
+    overflow-y: auto;
+}
 
-        .tab {
-            height: 100%;
+.simplified-preview {
+    @extend %container;
+}
+
+.assisted-tagging {
+    @extend %container;
+
+    :global {
+        .preview {
+            height: calc(100% - 59px);
+            overflow-y: auto;
+        }
+
+        .assistant-options {
+            border-top-color: $color-accent;
         }
     }
 }
 
-.highlights-container {
-    height: 100%;
-    overflow-y: auto;
+.original-preview {
+    @extend %container;
+
+    .preview {
+        height: 100%;
+    }
+
+    .empty-text {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+    }
+}
+
+.images-preview {
+    @extend %container;
 }

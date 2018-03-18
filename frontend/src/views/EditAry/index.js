@@ -7,15 +7,19 @@ import ResizableH from '../../vendor/react-store/components/View/Resizable/Resiz
 import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
-    setAryTemplateAction,
     setProjectAction,
+    setAryTemplateAction,
+    setAryAction,
 
     projectDetailsSelector,
     aryStringsSelector,
+    leadIdFromRouteSelector,
 } from '../../redux';
 
+import LeadRequest from './requests/LeadRequest';
 import ProjectRequest from './requests/ProjectRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
+import AryGetRequest from './requests/AryGetRequest';
 
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
@@ -23,9 +27,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    activeLeadId: PropTypes.number.isRequired,
 
     setProject: PropTypes.func.isRequired,
     setAryTemplate: PropTypes.func.isRequired,
+    setAry: PropTypes.func.isRequired,
 
     aryStrings: PropTypes.func.isRequired,
 };
@@ -37,10 +43,12 @@ const defaultProps = {
 const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
+    activeLeadId: leadIdFromRouteSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
+    setAry: params => dispatch(setAryAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
 });
 
@@ -54,21 +62,31 @@ export default class EditAry extends React.PureComponent {
         super(props);
 
         this.state = {
+            pendingAryTemplate: true,
+            pendingLead: true,
+            pendingAry: true,
+
             pending: true,
             noTemplate: false,
         };
     }
 
     componentWillMount() {
-        const { activeProject: { id } } = this.props;
-        this.startProjectRequest(id);
+        const { activeProject: { id: projectId }, activeLeadId: leadId } = this.props;
+        this.startProjectRequest(projectId);
+        this.startAryGetRequest(leadId);
+        this.startLeadRequest(leadId);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { activeProject: { id: oldProjectId } } = this.props;
-        const { activeProject: { id: projectId } } = nextProps;
+        const { activeProject: { id: oldProjectId }, activeLeadId: oldLeadId } = this.props;
+        const { activeProject: { id: projectId }, activeLeadId: leadId } = nextProps;
         if (oldProjectId !== projectId) {
             this.startProjectRequest(projectId);
+        }
+        if (oldLeadId !== leadId) {
+            this.startAryGetRequest(leadId);
+            this.startLeadRequest(leadId);
         }
     }
 
@@ -79,10 +97,39 @@ export default class EditAry extends React.PureComponent {
         if (this.projectRequest) {
             this.projectRequest.stop();
         }
+        if (this.aryGetRequest) {
+            this.aryGetRequest.stop();
+        }
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
     }
 
-    startProjectRequest = (id) => { // Project Id
-        if (isFalsy(id)) {
+    startLeadRequest = (leadId) => {
+        if (this.leadRequest) {
+            this.leadRequest.stop();
+        }
+        const leadRequest = new LeadRequest(this);
+        this.leadRequest = leadRequest.create(leadId);
+        this.leadRequest.start();
+    }
+
+    startAryGetRequest = (leadId) => {
+        const { setAry } = this.props;
+        if (this.aryGetRequest) {
+            this.aryGetRequest.stop();
+        }
+        const aryGetRequest = new AryGetRequest(
+            this,
+            { setAry },
+        );
+
+        this.aryGetRequest = aryGetRequest.create(leadId);
+        this.aryGetRequest.start();
+    }
+
+    startProjectRequest = (projectId) => {
+        if (isFalsy(projectId)) {
             return;
         }
         // stop all the request [both project update and aryTemplate]
@@ -100,12 +147,12 @@ export default class EditAry extends React.PureComponent {
                 setProject: this.props.setProject,
             },
         );
-        this.projectRequest = projectRequest.create(id);
+        this.projectRequest = projectRequest.create(projectId);
         this.projectRequest.start();
     }
 
-    startAryTemplateRequest = (id) => { // Ary Template Id
-        if (isFalsy(id)) {
+    startAryTemplateRequest = (aryTemplateId) => {
+        if (isFalsy(aryTemplateId)) {
             return;
         }
         // only stop previous ary template request
@@ -117,18 +164,21 @@ export default class EditAry extends React.PureComponent {
             this,
             { setAryTemplate: this.props.setAryTemplate },
         );
-        this.aryTemplateRequest = aryTemplateRequest.create(id);
+        this.aryTemplateRequest = aryTemplateRequest.create(aryTemplateId);
         this.aryTemplateRequest.start();
     }
 
     render() {
         const { aryStrings } = this.props;
         const {
-            pending,
+            pendingEntries,
+            pendingLead,
+            pendingAryTemplate,
             noTemplate,
+            lead,
         } = this.state;
 
-        if (pending) {
+        if (pendingEntries || pendingLead || pendingAryTemplate) {
             return <LoadingAnimation />;
         }
 
@@ -145,7 +195,11 @@ export default class EditAry extends React.PureComponent {
                 styleName="ary"
                 leftContainerClassName={styles.left}
                 rightContainerClassName={styles.right}
-                leftChild={<LeftPanel />}
+                leftChild={
+                    <LeftPanel
+                        lead={lead}
+                    />
+                }
                 rightChild={<RightPanel />}
             />
         );

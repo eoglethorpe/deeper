@@ -34,7 +34,7 @@ import SimplifiedLeadPreview from '../SimplifiedLeadPreview';
 import styles from './styles.scss';
 
 const propTypes = {
-    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadId: PropTypes.number.isRequired,
     project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     onEntryAdd: PropTypes.func.isRequired,
     className: PropTypes.string,
@@ -543,9 +543,9 @@ export default class AssistedTagging extends React.PureComponent {
 
     render() {
         const {
-            lead,
             className,
             onEntryAdd,
+            leadId,
         } = this.props;
 
         const {
@@ -577,7 +577,7 @@ export default class AssistedTagging extends React.PureComponent {
             >
                 <SimplifiedLeadPreview
                     className="preview"
-                    leadId={lead.id}
+                    leadId={leadId}
                     highlights={highlights}
                     highlightModifier={this.highlightSimplifiedExcerpt}
                     onLoad={this.handleLeadPreviewLoad}
