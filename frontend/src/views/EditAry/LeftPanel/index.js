@@ -25,6 +25,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,
@@ -103,6 +104,7 @@ export default class LeftPanel extends React.PureComponent {
         'assisted-tagging': {
             component: () => (
                 <AssistedTagging
+                    onEntryAdd={() => { /* FIXME: add real function */ }}
                     className={styles.assistedTagging}
                     leadId={this.props.leadId}
                     project={this.props.project}
@@ -198,7 +200,7 @@ export default class LeftPanel extends React.PureComponent {
 
     // Lead Preview
 
-    handleScreenshot = (image) => {
+    handleScreenshot = (/* image */) => {
         console.warn('Screenshot was taken');
         /*
         this.props.api.getEntryBuilder()
