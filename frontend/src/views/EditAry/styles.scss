@@ -22,12 +22,14 @@ $width-right-panel-min: 640px;
     @extend %basic-container;
 
     .left {
-        width: 24%;
+       border-right: $width-separator-thin solid $color-separator;
+        width: 30%;
         min-width: $width-left-panel-min;
+        height: 100%;
     }
 
     .right {
-        width: 76%;
+        width: 70%;
         min-width: $width-right-panel-min;
     }
 }

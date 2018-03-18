@@ -22,7 +22,6 @@ import TextInput from '../../../../vendor/react-store/components/Input/TextInput
 import Button from '../../../../vendor/react-store/components/Action/Button';
 
 import AryPutRequest from '../../requests/AryPutRequest';
-import AryGetRequest from '../../requests/AryGetRequest';
 
 import styles from './styles.scss';
 
@@ -122,15 +121,6 @@ export default class Metadata extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        const { activeLeadId, setAry } = this.props;
-        const aryGetRequest = new AryGetRequest(this, {
-            setAry, dataType: AryGetRequest.dataType.metaData,
-        });
-        this.aryGetRequest = aryGetRequest.create(activeLeadId);
-        this.aryGetRequest.start();
-    }
-
     componentWillReceiveProps(nextProps) {
         if (this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata) {
             const { aryTemplateMetadata: metadataGroups } = nextProps;
@@ -151,9 +141,6 @@ export default class Metadata extends React.PureComponent {
     componentWillUnmount() {
         if (this.aryPutRequest) {
             this.aryPutRequest.stop();
-        }
-        if (this.aryGetRequest) {
-            this.aryGetRequest.stop();
         }
     }
 

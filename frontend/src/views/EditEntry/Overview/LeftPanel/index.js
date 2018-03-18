@@ -119,7 +119,7 @@ export default class LeftPanel extends React.PureComponent {
             component: () => (
                 <AssistedTagging
                     className={styles.assistedTagging}
-                    lead={this.props.lead}
+                    leadId={this.props.leadId}
                     project={this.props.api.getProject()}
                     onEntryAdd={this.handleEntryAdd}
                 />

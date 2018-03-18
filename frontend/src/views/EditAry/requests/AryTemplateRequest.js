@@ -19,8 +19,8 @@ export default class AryTemplateRequest {
         const aryTemplateRequest = new FgRestBuilder()
             .url(createUrlForAryTemplate(id))
             .params(commonParamsForGET())
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
+            .preLoad(() => { this.setState({ pendingAryTemplate: true }); })
+            .postLoad(() => { this.setState({ pendingAryTemplate: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'aryTemplateGetResponse');

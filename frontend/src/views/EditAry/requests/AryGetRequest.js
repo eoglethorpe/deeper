@@ -6,27 +6,21 @@ import {
 import schema from '../../../schema';
 
 export default class AryGetRequest {
-    static dataType = {
-        metaData: 'meta_data',
-        methodologyData: 'methodology_data',
-    }
-
     constructor(parent, params) {
         this.setState = (state) => {
             parent.setState(state);
         };
 
-        const { setAry, dataType } = params;
+        const { setAry } = params;
         this.setAry = setAry;
-        this.dataType = dataType;
     }
 
     create = (id) => { // id is lead id
         const aryPutRequest = new FgRestBuilder()
-            .url(createUrlForLeadAry(id, [this.dataType]))
+            .url(createUrlForLeadAry(id))
             .params(commonParamsForGET())
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
+            .preLoad(() => { this.setState({ pendingAry: true }); })
+            .postLoad(() => { this.setState({ pendingAry: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'aryGetResponse');

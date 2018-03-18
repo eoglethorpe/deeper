@@ -26,7 +26,6 @@ import LeftPanel from './LeftPanel';
 import styles from '../styles.scss';
 
 const propTypes = {
-
     leadId: PropTypes.oneOfType([
         PropTypes.number,
         PropTypes.string,

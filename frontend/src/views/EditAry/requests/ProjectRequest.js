@@ -24,29 +24,30 @@ export default class ProjectRequest {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ pending: true, noTemplate: false }); })
+            .preLoad(() => { this.setState({ pendingAryTemplate: true, noTemplate: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'projectGetResponse');
                     this.setProject({ project: response });
+
                     if (isFalsy(response.assessmentTemplate)) {
-                        console.warn('There is no assessment template');
-                        this.setState({ noTemplate: true, pending: false });
+                        this.setState({ noTemplate: true, pendingAryTemplate: true });
                     } else {
-                        this.startAryTemplateRequest(response.assessmentTemplate);
+                        const assessmentTemplateId = response.assessmentTemplate;
+                        this.startAryTemplateRequest(assessmentTemplateId);
                     }
                 } catch (er) {
                     console.error(er);
-                    this.setState({ pending: false });
+                    this.setState({ pendingAryTemplate: false });
                 }
             })
             .failure((response) => {
                 console.warn('Failure', response);
-                this.setState({ pending: false });
+                this.setState({ pendingAryTemplate: false });
             })
             .fatal((response) => {
                 console.warn('Fatal', response);
-                this.setState({ pending: false });
+                this.setState({ pendingAryTemplate: false });
             })
             .build();
         return projectRequest;
