@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types'; import { connect } from 'react-redux';
 
@@ -53,7 +52,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class EditAry extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -195,7 +193,7 @@ export default class EditAry extends React.PureComponent {
 
         if (noTemplate) {
             return (
-                <div styleName="no-ary-template">
+                <div className={styles.noTemplate}>
                     <p>{aryStrings('noAryTemplateForProject')}</p>
                 </div>
             );
@@ -203,7 +201,7 @@ export default class EditAry extends React.PureComponent {
 
         return (
             <ResizableH
-                styleName="ary"
+                className={styles.assessments}
                 leftContainerClassName={styles.left}
                 rightContainerClassName={styles.right}
                 leftChild={<LeftPanel lead={lead} />}

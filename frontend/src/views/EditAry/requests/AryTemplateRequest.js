@@ -20,20 +20,22 @@ export default class AryTemplateRequest {
             .url(createUrlForAryTemplate(id))
             .params(commonParamsForGET())
             .preLoad(() => { this.setState({ pendingAryTemplate: true }); })
-            .postLoad(() => { this.setState({ pendingAryTemplate: false }); })
             .success((response) => {
                 try {
                     schema.validate(response, 'aryTemplateGetResponse');
                     this.setAryTemplate({ template: response });
+                    this.setState({ pendingAryTemplate: false });
                 } catch (err) {
                     console.error(err);
                 }
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
+                this.setState({ pendingAryTemplate: false });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                this.setState({ pendingAryTemplate: false });
             })
             .build();
         return aryTemplateRequest;

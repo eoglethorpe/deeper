@@ -151,3 +151,11 @@ $radius-button-border: 2px;
         transform: translateY(1px);
     }
 }
+
+%background-alternating-row {
+    @include background-color($color-background-row);
+
+    &:nth-child(odd) {
+        @include background-color($color-background-row-alt);
+    }
+}

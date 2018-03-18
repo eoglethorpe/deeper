@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -10,6 +9,7 @@ import {
     leadIdFromRouteSelector,
     setAryAction,
 } from '../../../../redux';
+import iconNames from '../../../../constants/iconNames.js';
 import Form, {
     requiredCondition,
 } from '../../../../vendor/react-store/components/Input/Form';
@@ -20,7 +20,10 @@ import DateInput from '../../../../vendor/react-store/components/Input/DateInput
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
+import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import Button from '../../../../vendor/react-store/components/Action/Button';
+import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
 import AryPutRequest from '../../requests/AryPutRequest';
 
@@ -35,7 +38,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-    className: '',
     metaData: {},
     aryTemplateMetadata: {},
 };
@@ -51,46 +53,19 @@ const mapDispatchToProps = dispatch => ({
     setAry: params => dispatch(setAryAction(params)),
 });
 
+const widgets = {
+    string: TextInput,
+    number: NumberInput,
+    date: DateInput,
+    multiselect: MultiSelectInput,
+    select: SelectInput,
+};
+
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static renderWidget = ({ id: key, fieldType, title, options, placeholder }) => {
-        const id = String(key);
-        const commonProps = {
-            key: id,
-            formname: id,
-            label: title,
-            placeholder,
-            options,
-        };
-        const typeSpecificProps = {
-            number: {
-                separator: ' ',
-            },
-        };
-        const components = {
-            string: TextInput,
-            number: NumberInput,
-            date: DateInput,
-            multiselect: MultiSelectInput,
-            select: SelectInput,
-        };
-
-        const Component = components[fieldType];
-        if (!Component) {
-            console.error('Unidentified fieldType', fieldType);
-            return null;
-        }
-        return (
-            <Component
-                {...commonProps}
-                {...typeSpecificProps[fieldType]}
-            />
-        );
-    }
 
     static getSchema = (metadataGroups) => {
         const schema = {
@@ -106,6 +81,44 @@ export default class Metadata extends React.PureComponent {
         });
 
         return schema;
+    }
+
+    static renderWidget = (data) => {
+        const {
+            id: key,
+            fieldType,
+            title,
+            options,
+            placeholder,
+        } = data;
+
+        const id = String(key);
+        const commonProps = {
+            key: id,
+            formname: id,
+            label: title,
+            placeholder,
+            options,
+        };
+        const typeSpecificProps = {
+            number: {
+                separator: ' ',
+            },
+        };
+
+        const Component = widgets[fieldType];
+
+        if (!Component) {
+            console.error('Unidentified fieldType', fieldType);
+            return null;
+        }
+
+        return (
+            <Component
+                {...commonProps}
+                {...typeSpecificProps[fieldType]}
+            />
+        );
     }
 
     constructor(props) {
@@ -178,8 +191,89 @@ export default class Metadata extends React.PureComponent {
         this.aryPutRequest.start();
     };
 
+    renderMetadata = (data) => {
+        const {
+            fields,
+            id,
+            title,
+        } = data;
+        const fieldWidgetList = Object.values(fields);
+
+        return (
+            <div
+                key={id}
+                className={styles.widgetGroup}
+            >
+                <h4 className={styles.heading}>
+                    {title}
+                </h4>
+                <div className={styles.content}>
+                    {fieldWidgetList.map(Metadata.renderWidget)}
+                </div>
+            </div>
+        );
+    }
+
+    renderAdditionalDocument = (key, data) => (
+        <div
+            className={styles.document}
+            key={data.id}
+        >
+            <span className={styles.title}>
+                { data.title }
+            </span>
+            <DangerButton
+                transparent
+                iconName={iconNames.close}
+            />
+        </div>
+    )
+
+    renderAdditionalDocumentsSection = () => {
+        // FIXME: use strings
+        const headingText = 'Additional documents';
+        const additionalDocuments = [
+            { id: '1', title: 'Additional document #1' },
+            { id: '2', title: 'Additional document #2' },
+            { id: '3', title: 'Additional document #1' },
+            { id: '4', title: 'Additional document #2' },
+            { id: '5', title: 'Additional document #1' },
+            { id: '6', title: 'Additional document #2' },
+            { id: '7', title: 'Additional document #1' },
+            { id: '8', title: 'Additional document #2' },
+            { id: '9', title: 'Additional document #1' },
+            { id: '10', title: 'Additional document #2' },
+            { id: '11', title: 'Additional document #2' },
+            { id: '12', title: 'Additional document #2' },
+        ];
+
+        return (
+            <div className={styles.bottom}>
+                <header className={styles.header}>
+                    <h3 className={styles.heading}>
+                        { headingText }
+                    </h3>
+                    <div className={styles.actionButtons}>
+                        <Button>
+                            Add link
+                        </Button>
+                        <Button>
+                            Add files
+                        </Button>
+                    </div>
+                </header>
+                <ListView
+                    className={styles.documents}
+                    data={additionalDocuments}
+                    modifier={this.renderAdditionalDocument}
+                />
+            </div>
+        );
+    }
+
     render() {
         const { aryTemplateMetadata: metadataGroups } = this.props;
+
         const {
             pending,
             schema,
@@ -188,9 +282,16 @@ export default class Metadata extends React.PureComponent {
             formFieldErrors,
         } = this.state;
 
+        const metadataList = Object.values(metadataGroups);
+
+        // FIXME: use strings
+        const saveButtonLabel = 'Save';
+
+        const AdditionalDocumentsSection = this.renderAdditionalDocumentsSection;
+
         return (
             <Form
-                className={styles.metaData}
+                className={styles.metadata}
                 schema={schema}
                 changeCallback={this.changeCallback}
                 successCallback={this.successCallback}
@@ -201,45 +302,21 @@ export default class Metadata extends React.PureComponent {
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <div className={styles.overview}>
-                    <NonFieldErrors formerror="" />
-                    {
-                        Object.keys(metadataGroups).map((key) => {
-                            const metadataGroup = metadataGroups[key];
-                            return (
-                                <div
-                                    key={metadataGroup.id}
-                                    className={styles.background}
-                                >
-                                    <h3 className={styles.heading}>
-                                        {metadataGroup.title}
-                                    </h3>
-                                    { metadataGroup.fields.map(Metadata.renderWidget) }
-                                </div>
-                            );
-                        })
-                    }
+                <header className={styles.header}>
+                    <NonFieldErrors
+                        className={styles.nonFieldErrors}
+                        formerror=""
+                    />
+                    <div className={styles.actionButtons}>
+                        <SuccessButton>
+                            { saveButtonLabel }
+                        </SuccessButton>
+                    </div>
+                </header>
+                <div className={styles.top}>
+                    {metadataList.map(this.renderMetadata)}
                 </div>
-                <Button> Submit </Button>
-                {/*
-                <div
-                    className={styles.structure}
-                    formskip
-                >
-                    <h3 className={styles.heading}>
-                        {this.props.aryStrings('structureSectionLabel')}
-                    </h3>
-                    <div className={styles.kobo}>
-                        {this.props.aryStrings('dragKoboLabel')}
-                    </div>
-                    <div className={styles.questionnaire}>
-                        {this.props.aryStrings('dragQuestionLabel')}
-                    </div>
-                    <div className={styles.documents}>
-                        {this.props.aryStrings('dragDocumentLabel')}
-                    </div>
-                </div>
-                */}
+                <AdditionalDocumentsSection />
             </Form>
         );
     }

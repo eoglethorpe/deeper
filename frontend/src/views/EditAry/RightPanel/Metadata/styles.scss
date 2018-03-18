@@ -1,69 +1,85 @@
 @import '../../../../stylesheets/base';
-@import '../../../../stylesheets/tabs';
 
-.meta-data {
+$height-bottom: 320px;
+$width-documents: 480px;
+
+.metadata {
     display: flex;
-    flex-basis: 100%;
     flex-direction: column;
+    flex-grow: 1;
     background-color: $color-foreground-alt;
-    padding: $spacing-medium;
-    height: 100%;
 
-    .overview {
+    > .header {
+        @include background-color($color-background-header);
         display: flex;
+        flex-shrink: 0;
+        align-items: center;
         border-bottom: $width-separator-thin solid $color-separator;
 
-        .background,
-        .stakeholders,
-        .dates,
-        .status {
-            display: flex;
-            flex-basis: 24%;
-            flex-direction: column;
-            margin-right: $spacing-large;
-            padding: $spacing-small;
+        .non-field-errors {
+            flex-grow: 1;
+        }
+
+        .action-buttons {
+            flex-shrink: 0;
+            padding: $spacing-small $spacing-medium;
+        }
+    }
+
+    .top {
+        display: flex;
+        flex-grow: 1;
+
+        .widget-group {
+            @extend %background-alternating-row;
+            flex-grow: 1;
 
             .heading {
-                margin-bottom: $spacing-large;
-                border-bottom: $width-separator-thin solid $color-separator;
-                color: $color-text-label;
+                padding: $spacing-medium;
+                color: $color-accent;
             }
 
-            .background-child,
-            .stakeholders-child,
-            .dates-child,
-            .status-child {
-                margin-bottom: $spacing-extra-large;
+            .content {
+                padding: $spacing-medium;
             }
         }
     }
 
-    .structure {
+    .bottom {
         display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        margin-right: $spacing-large;
-        padding: $spacing-small;
+        flex-direction: column;
+        flex-shrink: 1;
+        height: $height-bottom;
 
-        .heading {
-            flex-basis: 100%;
-            margin: $spacing-large 0;
-            color: $color-text-label;
+        .header {
+            @include background-color($color-background-header);
+            display: flex;
+            flex-shrink: 0;
+            align-items: center;
+            justify-content: space-between;
+            border-top: $width-separator-thin solid $color-separator;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small $spacing-medium;
+
+            .action-buttons {
+                button {
+                    margin-left: $spacing-small;
+                }
+            }
         }
 
-        .kobo,
-        .questionnaire,
         .documents {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: $spacing-medium;
-            border: $width-separator-thin solid $color-separator;
-            border-style: dashed;
-            width: 32%;
-            height: 200px;
-            color: $color-text-disabled;
+            flex-grow: 1;
+            width: $width-documents;
+            overflow-y: auto;
+
+            .document {
+                @extend %background-alternating-row;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 0 $spacing-medium;
+            }
         }
     }
 }
