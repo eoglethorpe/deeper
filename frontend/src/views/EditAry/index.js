@@ -8,10 +8,7 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     setProjectAction,
-<<<<<<< HEAD
     setAryTemplateAction,
-=======
->>>>>>> Add Methodology Put Api
     setAryAction,
 
     projectDetailsSelector,

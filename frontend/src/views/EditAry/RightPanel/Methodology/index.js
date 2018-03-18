@@ -15,6 +15,7 @@ import Form, {
 } from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
@@ -152,16 +153,17 @@ export default class Methodology extends React.PureComponent {
         }
         if (this.props.methodology !== nextProps.methodology) {
             const { methodology } = nextProps;
-            this.setState({
-                formValues: methodology,
-            });
+            this.setState({ formValues: methodology });
         }
     }
 
     // FORM RELATED
     changeCallback = (values, formFieldErrors, formErrors) => {
+        this.props.setAry({
+            lead: this.props.activeLeadId,
+            methodologyData: values,
+        });
         this.setState({
-            formValues: values,
             formFieldErrors,
             formErrors,
             pristine: true,
@@ -191,7 +193,13 @@ export default class Methodology extends React.PureComponent {
 
     render() {
         const { aryTemplateMethodology: methodologyGroups } = this.props;
-        const pending = false;
+        const {
+            pending,
+            schema,
+            formValues,
+            formErrors,
+            formFieldErrors,
+        } = this.state;
 
         const renderMethodologyGroupHeaders = (key) => {
             const methodologyGroup = methodologyGroups[key];
@@ -248,15 +256,16 @@ export default class Methodology extends React.PureComponent {
             <div className={styles.methodology}>
                 <Form
                     className={styles.overview}
-                    schema={this.state.schema}
-                    value={this.state.formValues}
-                    formErrors={this.state.formErrors}
-                    fieldErrors={this.state.formFieldErrors}
+                    schema={schema}
+                    value={formValues}
+                    formErrors={formErrors}
+                    fieldErrors={formFieldErrors}
                     changeCallback={this.changeCallback}
                     successCallback={this.successCallback}
                     failureCallback={this.failureCallback}
                     disabled={pending}
                 >
+                    { pending && <LoadingAnimation /> }
                     <div className={styles.fields}>
                         <div className={styles['field-title']}>
                             { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
@@ -270,7 +279,7 @@ export default class Methodology extends React.PureComponent {
                             </div>
                         </div>
                         <div className={styles['field-values']}>
-                            { (this.state.formValues.attributes || []).map(renderMethodologyRow) }
+                            { (formValues.attributes || []).map(renderMethodologyRow) }
                         </div>
                     </div>
                     <NonFieldErrors formerror="attributes" />

@@ -15,6 +15,7 @@ import Form, {
 } from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
@@ -114,6 +115,7 @@ export default class Metadata extends React.PureComponent {
         const schema = Metadata.getSchema(metadataGroups);
 
         this.state = {
+            pending: false,
             formValues: this.props.metaData || {},
             formErrors: {},
             formFieldErrors: {},
@@ -145,6 +147,10 @@ export default class Metadata extends React.PureComponent {
     }
 
     changeCallback = (values, formFieldErrors, formErrors) => {
+        this.props.setAry({
+            lead: this.props.activeLeadId,
+            metaData: values,
+        });
         this.setState({
             formValues: values,
             formFieldErrors,
@@ -175,13 +181,13 @@ export default class Metadata extends React.PureComponent {
     render() {
         const { aryTemplateMetadata: metadataGroups } = this.props;
         const {
+            pending,
             schema,
             formValues,
             formErrors,
             formFieldErrors,
         } = this.state;
 
-        const pending = false;
         return (
             <Form
                 className={styles.metaData}
@@ -194,6 +200,7 @@ export default class Metadata extends React.PureComponent {
                 fieldErrors={formFieldErrors}
                 disabled={pending}
             >
+                { pending && <LoadingAnimation /> }
                 <div className={styles.overview}>
                     <NonFieldErrors formerror="" />
                     {
