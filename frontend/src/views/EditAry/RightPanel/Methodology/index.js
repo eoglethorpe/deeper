@@ -4,8 +4,10 @@ import { connect } from 'react-redux';
 
 import {
     // aryStringsSelector,
-    // aryViewMethodologySelector,
+    aryViewMethodologySelector,
     aryTemplateMethodologySelector,
+    leadIdFromRouteSelector,
+    setAryAction,
 } from '../../../../redux';
 
 import Form, {
@@ -21,31 +23,38 @@ import DangerButton from '../../../../vendor/react-store/components/Action/Butto
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import Button from '../../../../vendor/react-store/components/Action/Button';
 
-
 // import RegionMap from '../../../../components/RegionMap';
 import { iconNames } from '../../../../constants';
+
+import AryPutRequest from '../../requests/AryPutRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
+    activeLeadId: PropTypes.number.isRequired,
     // aryStrings: PropTypes.func.isRequired,
-    // methodology: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    setAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    // methodology: {},
     aryTemplateMethodology: {},
 };
 
 const mapStateToProps = state => ({
     // aryStrings: aryStringsSelector(state),
-    // methodology: aryViewMethodologySelector(state),
+    activeLeadId: leadIdFromRouteSelector(state),
+    methodology: aryViewMethodologySelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
 });
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => ({
+    setAry: params => dispatch(setAryAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -119,14 +128,10 @@ export default class Methodology extends React.PureComponent {
 
         const {
             aryTemplateMethodology: methodologyGroups,
-        } = this.props;
+            methodology,
+        } = props;
         const schema = Methodology.getSchema(methodologyGroups);
 
-        const methodology = {
-            attributes: [
-                {},
-            ],
-        };
         this.state = {
             formValues: methodology,
             formErrors: {},
@@ -143,6 +148,12 @@ export default class Methodology extends React.PureComponent {
                 schema,
                 formFieldErrors: {},
                 formErrors: {},
+            });
+        }
+        if (this.props.methodology !== nextProps.methodology) {
+            const { methodology } = nextProps;
+            this.setState({
+                formValues: methodology,
             });
         }
     }
@@ -167,6 +178,15 @@ export default class Methodology extends React.PureComponent {
 
     successCallback = (value) => {
         console.warn('Submit', value);
+        const { activeLeadId, setAry } = this.props;
+
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
+
+        const aryPutRequest = new AryPutRequest(this, { setAry });
+        this.aryPutRequest = aryPutRequest.create(activeLeadId, { methodology_data: value });
+        this.aryPutRequest.start();
     };
 
     render() {
@@ -193,6 +213,7 @@ export default class Methodology extends React.PureComponent {
 
         const renderMethodologyGroup = (context, key) => {
             const methodologyGroup = methodologyGroups[key];
+            // FIXME: add key
             return (
                 <div className={styles['field-inputs']}>
                     {

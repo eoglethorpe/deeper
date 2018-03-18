@@ -8,10 +8,14 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     setProjectAction,
+<<<<<<< HEAD
     setAryTemplateAction,
+=======
+>>>>>>> Add Methodology Put Api
     setAryAction,
 
     projectDetailsSelector,
+    leadIdFromRouteSelector,
     aryStringsSelector,
     leadIdFromRouteSelector,
 } from '../../redux';
@@ -26,6 +30,7 @@ import RightPanel from './RightPanel';
 import styles from './styles.scss';
 
 const propTypes = {
+    activeLeadId: PropTypes.number.isRequired,
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     activeLeadId: PropTypes.number.isRequired,
 
@@ -41,6 +46,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
+    activeLeadId: leadIdFromRouteSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
     activeLeadId: leadIdFromRouteSelector(state),
@@ -50,6 +56,7 @@ const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
     setAry: params => dispatch(setAryAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
+    setAry: params => dispatch(setAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -155,6 +162,7 @@ export default class EditAry extends React.PureComponent {
         if (isFalsy(aryTemplateId)) {
             return;
         }
+
         // only stop previous ary template request
         if (this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
