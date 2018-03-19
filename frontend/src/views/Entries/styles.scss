@@ -88,6 +88,7 @@
 
                 .entry {
                     border-bottom: $width-separator-thin solid $color-separator-alt;
+                    background-color: $color-background-row;
                     min-width: 100%;
 
                     :global {

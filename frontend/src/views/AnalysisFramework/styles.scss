@@ -2,14 +2,14 @@
 @import '../../stylesheets/grid-item';
 
 %widget-list {
-    background-color: $color-background-row;
+    background-color: $color-background-row-alt;
     overflow-y: auto;
 
     .widget-list-item {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background-color: $color-background-row;
+        background-color: $color-background-row-alt;
         padding: $spacing-small $spacing-medium;
 
         .title {
@@ -17,7 +17,7 @@
         }
 
         &:nth-child(odd) {
-            background-color: $color-background-row-alt;
+            background-color: $color-background-row;
         }
     }
 }

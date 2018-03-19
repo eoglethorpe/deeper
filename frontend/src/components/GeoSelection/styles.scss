@@ -101,11 +101,11 @@
                         flex-shrink: 0;
                         align-items: center;
                         justify-content: space-between;
-                        background-color: $color-background-row;
+                        background-color: $color-background-row-alt;
                         padding: $spacing-extra-small $spacing-medium;
 
-                        &:nth-child(even) {
-                            background-color: $color-background-row-alt;
+                        &:nth-child(odd) {
+                            background-color: $color-background-row;
                         }
                     }
                 }

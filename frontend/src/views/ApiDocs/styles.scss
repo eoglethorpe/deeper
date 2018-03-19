@@ -23,10 +23,10 @@
             }
 
             .endpoint {
-                background-color: $color-background-row;
+                background-color: $color-background-row-alt;
 
                 &:nth-child(odd) {
-                    background-color: $color-background-row-alt;
+                    background-color: $color-background-row;
                 }
 
                 h3 {

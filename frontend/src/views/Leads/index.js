@@ -16,6 +16,9 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
+import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
+
 import BoundError from '../../components/BoundError';
 import ActionButtons from './ActionButtons';
 
@@ -24,6 +27,8 @@ import {
     createUrlForLeadsOfProject,
     createUrlForLeadDelete,
     createParamsForLeadDelete,
+    createUrlForLeadEdit,
+    createParamsForLeadEdit,
     transformResponseErrorToFormError,
 } from '../../rest';
 import {
@@ -96,6 +101,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const MAX_LEADS_PER_REQUEST = 24;
+
+const ACTION = {
+    delete: 'delete',
+    markAsPending: 'markAsPending',
+    markAsProcessed: 'markAsProcessed',
+};
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
@@ -206,7 +217,7 @@ export default class Leads extends React.PureComponent {
                 sortable: true,
                 order: 7,
                 modifier: row => (
-                    <div className="capitalize">
+                    <div className={styles.confidentiality}>
                         {row.confidentiality}
                     </div>
                 ),
@@ -217,8 +228,28 @@ export default class Leads extends React.PureComponent {
                 sortable: true,
                 order: 8,
                 modifier: row => (
-                    <div className="capitalize">
+                    <div className={styles.status}>
                         {row.status}
+                        {
+                            row.status === 'pending' &&
+                            <SuccessButton
+                                tabIndex="-1"
+                                className={`${styles.markButton} mark-button`}
+                                title="Mark as processed"
+                                iconName={iconNames.check}
+                                onClick={() => this.handleLeadAction(row, ACTION.markAsProcessed)}
+                            />
+                        }
+                        {
+                            row.status === 'processed' &&
+                            <WarningButton
+                                tabIndex="-1"
+                                className={`${styles.markButton} mark-button`}
+                                title="Mark as pending"
+                                iconName={iconNames.undo}
+                                onClick={() => this.handleLeadAction(row, ACTION.markAsPending)}
+                            />
+                        }
                     </div>
                 ),
             },
@@ -239,7 +270,7 @@ export default class Leads extends React.PureComponent {
                         row={row}
                         leadsStrings={this.props.leadsStrings}
                         onSearchSimilarLead={this.handleSearchSimilarLead}
-                        onRemoveLead={this.handleRemoveLead}
+                        onRemoveLead={r => this.handleLeadAction(r, ACTION.delete)}
                         activeProject={this.props.activeProject}
                     />
                 ),
@@ -250,8 +281,14 @@ export default class Leads extends React.PureComponent {
             loadingLeads: false,
             redirectTo: undefined,
 
+            leadAction: undefined,
+            showModal: false,
+            selectedLead: undefined,
+
+            /*
             showDeleteModal: false,
-            leadToDelete: undefined,
+            showStatusChangeModal: false,
+            */
         };
     }
 
@@ -401,6 +438,7 @@ export default class Leads extends React.PureComponent {
                     message: errors.join(''),
                     duration: notify.duration.MEDIUM,
                 });
+                this.setState({ loadingLeads: false });
             })
             .fatal(() => {
                 notify.send({
@@ -409,6 +447,66 @@ export default class Leads extends React.PureComponent {
                     message: this.props.leadsStrings('leadDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
+                this.setState({ loadingLeads: false });
+            })
+            .build();
+        return leadRequest;
+    }
+
+    createRequestForLeadEdit = (lead, values) => {
+        const { id } = lead;
+
+        const v = {
+            project: lead.project,
+            title: lead.title,
+            ...values,
+        };
+        const leadRequest = new FgRestBuilder()
+            .url(createUrlForLeadEdit(id))
+            .params(() => createParamsForLeadEdit(v))
+            .preLoad(() => {
+                this.setState({ loadingLeads: true });
+            })
+            .success(() => {
+                notify.send({
+                    title: 'Leads', // FIXME: strings
+                    type: notify.type.SUCCESS,
+                    message: 'Lead changed successfully.',
+                    duration: notify.duration.MEDIUM,
+                });
+
+                if (this.leadRequest) {
+                    this.leadRequest.stop();
+                }
+                const { activeProject, activePage, activeSort, filters } = this.props;
+                this.leadRequest = this.createRequestForProjectLeads({
+                    activeProject,
+                    activePage,
+                    activeSort,
+                    filters,
+                });
+                this.leadRequest.start();
+            })
+            .failure((response) => {
+                console.warn(response);
+                const { formErrors: { errors = [] } } =
+                    transformResponseErrorToFormError(response.errors);
+                notify.send({
+                    title: 'Leads',
+                    type: notify.type.ERROR,
+                    message: errors.join(''),
+                    duration: notify.duration.MEDIUM,
+                });
+                this.setState({ loadingLeads: false });
+            })
+            .fatal(() => {
+                notify.send({
+                    title: 'Leads',
+                    type: notify.type.ERROR,
+                    message: 'Lead couldn\'t be changed.',
+                    duration: notify.duration.MEDIUM,
+                });
+                this.setState({ loadingLeads: false });
             })
             .build();
         return leadRequest;
@@ -425,26 +523,51 @@ export default class Leads extends React.PureComponent {
         });
     };
 
-    handleRemoveLead = (row) => {
+    handleLeadAction= (row, action) => {
         this.setState({
-            showDeleteModal: true,
-            leadToDelete: row,
+            selectedLead: row,
+            leadAction: action,
+            showModal: true,
         });
-    };
+    }
 
-    handleDeleteModalClose = (confirm) => {
+    handleModalClose = (confirm) => {
         if (confirm) {
-            const { leadToDelete } = this.state;
-            if (this.leadDeleteRequest) {
-                this.leadDeleteRequest.stop();
+            const { leadAction, selectedLead } = this.state;
+            switch (leadAction) {
+                case ACTION.delete: {
+                    if (this.leadDeleteRequest) {
+                        this.leadDeleteRequest.stop();
+                    }
+                    this.leadDeleteRequest = this.createRequestForLeadDelete(selectedLead);
+                    this.leadDeleteRequest.start();
+                    break;
+                }
+                case ACTION.markAsPending: {
+                    if (this.leadEditRequest) {
+                        this.leadEditRequest.stop();
+                    }
+                    this.leadEditRequest = this.createRequestForLeadEdit(selectedLead, { status: 'pending' });
+                    this.leadEditRequest.start();
+                    break;
+                }
+                case ACTION.markAsProcessed: {
+                    if (this.leadEditRequest) {
+                        this.leadEditRequest.stop();
+                    }
+                    this.leadEditRequest = this.createRequestForLeadEdit(selectedLead, { status: 'processed' });
+                    this.leadEditRequest.start();
+                    break;
+                }
+                default:
+                    break;
             }
-            this.leadDeleteRequest = this.createRequestForLeadDelete(leadToDelete);
-            this.leadDeleteRequest.start();
         }
 
         this.setState({
-            showDeleteModal: false,
-            leadToDelete: undefined,
+            showModal: false,
+            selectedLead: undefined,
+            leadAction: undefined,
         });
     }
 
@@ -510,13 +633,13 @@ export default class Leads extends React.PureComponent {
         }
         if (!url) {
             return (
-                <div className="icon-wrapper">
+                <div className={styles.iconWrapper}>
                     <i className={icon} />
                 </div>
             );
         }
         return (
-            <div className="icon-wrapper">
+            <div className={styles.iconWrapper}>
                 <a href={url} target="_blank">
                     <i className={icon} />
                 </a>
@@ -543,6 +666,7 @@ export default class Leads extends React.PureComponent {
             </header>
         );
     }
+
     renderFooter = () => {
         const {
             activeProject,
@@ -581,8 +705,9 @@ export default class Leads extends React.PureComponent {
     render() {
         const {
             loadingLeads,
-            showDeleteModal,
+            showModal,
             redirectTo,
+            leadAction,
         } = this.state;
 
         if (redirectTo) {
@@ -596,6 +721,19 @@ export default class Leads extends React.PureComponent {
 
         const Header = this.renderHeader;
         const Footer = this.renderFooter;
+
+        const getModalText = (action) => {
+            switch (action) {
+                case ACTION.delete:
+                    return this.props.leadsStrings('leadDeleteConfirmText');
+                case ACTION.markAsPending:
+                    return 'Do you want to mark the lead as pending?';
+                case ACTION.markAsProcessed:
+                    return 'Do you want to mark the lead as processed?';
+                default:
+                    return 'Are you sure?';
+            }
+        };
 
         return (
             <div className={styles.leads}>
@@ -614,12 +752,12 @@ export default class Leads extends React.PureComponent {
                 </div>
                 <Footer />
                 <Confirm
-                    show={showDeleteModal}
+                    show={showModal}
                     closeOnEscape
-                    onClose={this.handleDeleteModalClose}
+                    onClose={this.handleModalClose}
                 >
                     <p>
-                        {this.props.leadsStrings('leadDeleteConfirmText')}
+                        {getModalText(leadAction)}
                     </p>
                 </Confirm>
             </div>

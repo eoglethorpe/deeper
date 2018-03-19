@@ -8,15 +8,14 @@ $height-add-member-modal: 600px;
     flex-direction: column;
     flex-grow: 1;
     grid-area: members;
-    background-color: $color-background-row-alt;
 
     >.header {
         display: flex;
         flex-shrink: 0;
         align-items: center;
+        background-color: $color-background-header;
         padding: $spacing-small $spacing-medium;
         height: $height-navbar;
-        background-color: $color-background-header;
 
         >* {
             flex-shrink: 0;
@@ -35,6 +34,7 @@ $height-add-member-modal: 600px;
         flex-basis: 100%;
         flex-grow: 1;
         overflow-y: auto;
+        background-color: $color-background-row;
 
         .link {
             margin: 1px;

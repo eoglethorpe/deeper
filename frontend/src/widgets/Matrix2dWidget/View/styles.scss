@@ -7,11 +7,11 @@
 
     .tag-unit {
         display: flex;
-        background-color: $color-background-row;
+        background-color: $color-background-row-alt;
         padding: $spacing-small;
 
-        &:nth-child(even) {
-            background-color: $color-background-row-alt;
+        &:nth-child(odd) {
+            background-color: $color-background-row;
         }
 
         .tag-dimension {
