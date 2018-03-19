@@ -105,8 +105,9 @@ export default class Methodology extends React.PureComponent {
                     },
                     validation: (value) => {
                         const errors = [];
-                        if (!value || value.length <= 4) {
-                            errors.push('There should be at least five value');
+                        if (!value || value.length < 1) {
+                            // FIXME: Use strings
+                            errors.push('There should be at least one value');
                         }
                         return errors;
                     },
@@ -171,7 +172,6 @@ export default class Methodology extends React.PureComponent {
     };
 
     failureCallback = (formFieldErrors, formErrors) => {
-        console.warn(formFieldErrors, formErrors);
         this.setState({
             formFieldErrors,
             formErrors,
@@ -179,7 +179,6 @@ export default class Methodology extends React.PureComponent {
     };
 
     successCallback = (value) => {
-        console.warn('Submit', value);
         const { activeLeadId, setAry } = this.props;
 
         if (this.aryPutRequest) {
@@ -221,9 +220,11 @@ export default class Methodology extends React.PureComponent {
 
         const renderMethodologyGroup = (context, key) => {
             const methodologyGroup = methodologyGroups[key];
-            // FIXME: add key
             return (
-                <div className={styles['field-inputs']}>
+                <div
+                    key={key}
+                    className={styles['field-inputs']}
+                >
                     {
                         methodologyGroup.fields
                             .map(field => renderMethodologyField(context, field))

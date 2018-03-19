@@ -11,12 +11,11 @@ export default class AryTemplateRequest {
             parent.setState(state);
         };
 
-        const { setAryTemplate, startAryRequest } = params;
+        const { setAryTemplate } = params;
         this.setAryTemplate = setAryTemplate;
-        this.startAryRequest = startAryRequest;
     }
 
-    create = (id, activeLeadId) => {
+    create = (id) => {
         const aryTemplateRequest = new FgRestBuilder()
             .url(createUrlForAryTemplate(id))
             .params(commonParamsForGET())
@@ -26,7 +25,6 @@ export default class AryTemplateRequest {
                 try {
                     schema.validate(response, 'aryTemplateGetResponse');
                     this.setAryTemplate({ template: response });
-                    this.startAryRequest(activeLeadId);
                 } catch (err) {
                     console.error(err);
                 }
