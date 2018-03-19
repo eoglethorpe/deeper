@@ -89,6 +89,7 @@
                 .entry {
                     border-bottom: $width-separator-thin solid $color-separator-alt;
                     min-width: 100%;
+                    background-color: $color-background-row;
 
                     :global {
                         .grid-item {

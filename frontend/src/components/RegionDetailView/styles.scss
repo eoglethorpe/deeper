@@ -27,7 +27,7 @@ $height-region-detail-max: 320px;
         overflow-y: auto;
 
         .row {
-            @include background-color($color-background-row);
+            @include background-color($color-background-row-alt);
             display: table-row;
 
             .title {
@@ -49,8 +49,8 @@ $height-region-detail-max: 320px;
                 font-size: $font-size-medium-alt;
             }
 
-            &:nth-child(even) {
-                @include background-color($color-background-row-alt);
+            &:nth-child(odd) {
+                @include background-color($color-background-row);
             }
         }
     }

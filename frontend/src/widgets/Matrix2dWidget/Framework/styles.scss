@@ -169,7 +169,7 @@ $height-overview-edit-modal: 80vh;
 }
 
 .sub-dimensions {
-    background-color: $color-background-row;
+    background-color: $color-background-row-alt;
 
     .drag-handle {
         display: flex;
@@ -180,17 +180,17 @@ $height-overview-edit-modal: 80vh;
     }
 
     &:nth-child(odd) {
-        background-color: $color-background-row-alt;
+        background-color: $color-background-row;
     }
 }
 
 .dimension-list-item {
     align-items: stretch;
     border-bottom: $width-separator-thin solid $color-separator;
-    background-color: $color-background-row;
+    background-color: $color-background-row-alt;
 
     &:nth-child(odd) {
-        background-color: $color-background-row-alt;
+        background-color: $color-background-row;
     }
 
     .dimension-tab {

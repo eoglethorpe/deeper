@@ -98,12 +98,12 @@ $info-height: 144px;
 
     .projects {
         border-bottom: $width-separator-thin solid $color-separator;
-        background-color: $color-background-row-alt;
+        background-color: $color-background-row;
         grid-area: projects;
     }
 
     .groups {
-        background-color: $color-background-row-alt;
+        background-color: $color-background-row;
         grid-area: groups;
     }
 

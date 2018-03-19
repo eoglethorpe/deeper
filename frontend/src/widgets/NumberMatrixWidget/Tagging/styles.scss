@@ -55,13 +55,13 @@
 
         .cols-container {
             .col {
-                @include background-color($color-background-row);
+                @include background-color($color-background-row-alt);
                 display: flex;
                 justify-content: space-between;
                 padding: $spacing-extra-small $spacing-small;
 
                 &:nth-child(odd) {
-                    @include background-color($color-background-row-alt);
+                    @include background-color($color-background-row);
                 }
             }
         }

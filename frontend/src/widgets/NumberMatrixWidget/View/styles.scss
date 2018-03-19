@@ -19,11 +19,11 @@
             .col {
                 display: flex;
                 justify-content: space-between;
-                background-color: $color-background-row;
+                background-color: $color-background-row-alt;
                 padding: $spacing-extra-small $spacing-small;
 
                 &:nth-child(odd) {
-                    background-color: $color-background-row-alt;
+                    background-color: $color-background-row;
                 }
 
                 .col-title {

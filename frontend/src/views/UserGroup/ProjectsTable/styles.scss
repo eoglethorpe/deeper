@@ -5,7 +5,6 @@
     flex-direction: column;
     flex-grow: 1;
     grid-area: projects;
-    background-color: $color-background-row-alt;
 
     >.header {
         display: flex;
@@ -32,6 +31,7 @@
         flex-basis: 100%;
         flex-grow: 1;
         overflow-y: auto;
+        background-color: $color-background-row;
 
         .link {
             padding: 0 $spacing-medium;
