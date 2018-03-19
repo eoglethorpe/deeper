@@ -1,45 +1,19 @@
 @import '../../stylesheets/base';
-@import '../../stylesheets/tabs';
 
-$width-entry-select-input: 400px;
-$width-left-panel-min: 460px;
-$width-right-panel-min: 640px;
-
-%basic-container {
+.assessments {
+    @extend %main-content;
     display: flex;
-    border: $width-separator-thin solid $color-separator;
-    height: 100%;
-}
-
-.no-ary-template {
-    @extend %basic-container;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-}
-
-.ary {
-    @extend %basic-container;
 
     .left {
-       border-right: $width-separator-thin solid $color-separator;
+        border-right: $width-separator-thin solid $color-separator;
         width: 30%;
-        min-width: $width-left-panel-min;
         height: 100%;
     }
 
     .right {
+        display: flex;
+        flex-direction: column;
         width: 70%;
-        min-width: $width-right-panel-min;
     }
 }
 
-@keyframes fade {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}

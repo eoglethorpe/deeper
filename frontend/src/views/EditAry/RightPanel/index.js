@@ -1,7 +1,5 @@
-// import CSSModules from 'react-css-modules';
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-// import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 import { connect } from 'react-redux';
 
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
@@ -11,21 +9,20 @@ import { aryStringsSelector } from '../../../redux';
 
 import Metadata from './Metadata';
 import Methodology from './Methodology';
-// import styles from './styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    className: '',
 };
 
 const mapStateToProps = state => ({
     aryStrings: aryStringsSelector(state),
 });
+
 @connect(mapStateToProps)
-// @CSSModules(styles, { allowMultiple: true })
 export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -33,7 +30,7 @@ export default class RightPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = { currentTabKey: 'methodology' };
+        this.state = { currentTabKey: 'metadata' };
 
         const Entries = () => <div>{this.props.aryStrings('entriesTabLabel')}</div>;
         const Summary = () => <div>{this.props.aryStrings('summaryTabLabel')}</div>;
@@ -68,6 +65,7 @@ export default class RightPanel extends React.PureComponent {
         return (
             <Fragment>
                 <FixedTabs
+                    className={styles.tabs}
                     active={currentTabKey}
                     tabs={this.tabs}
                     onClick={this.handleTabClick}
