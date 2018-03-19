@@ -13,9 +13,9 @@ $height-add-member-modal: 600px;
         display: flex;
         flex-shrink: 0;
         align-items: center;
+        background-color: $color-background-header;
         padding: $spacing-small $spacing-medium;
         height: $height-navbar;
-        background-color: $color-background-header;
 
         >* {
             flex-shrink: 0;
