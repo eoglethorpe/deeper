@@ -12,8 +12,8 @@ import {
     setAryAction,
 
     projectDetailsSelector,
-    aryStringsSelector,
     leadIdFromRouteSelector,
+    aryStringsSelector,
 } from '../../redux';
 
 import LeadRequest from './requests/LeadRequest';
@@ -26,8 +26,8 @@ import RightPanel from './RightPanel';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     activeLeadId: PropTypes.number.isRequired,
+    activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 
     setProject: PropTypes.func.isRequired,
     setAryTemplate: PropTypes.func.isRequired,
@@ -41,9 +41,9 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
+    activeLeadId: leadIdFromRouteSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
-    activeLeadId: leadIdFromRouteSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -106,24 +106,33 @@ export default class EditAry extends React.PureComponent {
     }
 
     startLeadRequest = (leadId) => {
+        if (isFalsy(leadId)) {
+            return;
+        }
+
         if (this.leadRequest) {
             this.leadRequest.stop();
         }
+
         const leadRequest = new LeadRequest(this);
         this.leadRequest = leadRequest.create(leadId);
         this.leadRequest.start();
     }
 
     startAryGetRequest = (leadId) => {
+        if (isFalsy(leadId)) {
+            return;
+        }
+
         const { setAry } = this.props;
         if (this.aryGetRequest) {
             this.aryGetRequest.stop();
         }
+
         const aryGetRequest = new AryGetRequest(
             this,
             { setAry },
         );
-
         this.aryGetRequest = aryGetRequest.create(leadId);
         this.aryGetRequest.start();
     }
@@ -132,6 +141,7 @@ export default class EditAry extends React.PureComponent {
         if (isFalsy(projectId)) {
             return;
         }
+
         // stop all the request [both project update and aryTemplate]
         if (this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
@@ -155,6 +165,7 @@ export default class EditAry extends React.PureComponent {
         if (isFalsy(aryTemplateId)) {
             return;
         }
+
         // only stop previous ary template request
         if (this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
@@ -195,11 +206,7 @@ export default class EditAry extends React.PureComponent {
                 styleName="ary"
                 leftContainerClassName={styles.left}
                 rightContainerClassName={styles.right}
-                leftChild={
-                    <LeftPanel
-                        lead={lead}
-                    />
-                }
+                leftChild={<LeftPanel lead={lead} />}
                 rightChild={<RightPanel />}
             />
         );

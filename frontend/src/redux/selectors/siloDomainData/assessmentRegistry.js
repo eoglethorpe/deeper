@@ -2,9 +2,8 @@ import { createSelector } from 'reselect';
 import { leadIdFromRoute, projectIdFromRoute } from '../domainData';
 
 const emptyObject = {};
+const emptyMethodology = { attributes: [] };
 const emptyList = [];
-const zeroNumber = 0;
-const oneNumber = 1;
 
 // ARYS SELECTORS
 const aryPageSelector = ({ siloDomainData }) => siloDomainData.aryPage;
@@ -24,12 +23,12 @@ export const arysForProjectSelector = createSelector(
 
 export const totalArysCountForProjectSelector = createSelector(
     aryPageForProjectSelector,
-    aryPage => aryPage.totalArysCount || zeroNumber,
+    aryPage => aryPage.totalArysCount || 0,
 );
 
 export const aryPageActivePageSelector = createSelector(
     aryPageForProjectSelector,
-    aryPage => aryPage.activePage || oneNumber,
+    aryPage => aryPage.activePage || 1,
 );
 
 export const aryPageActiveSortSelector = createSelector(
@@ -60,5 +59,5 @@ export const aryViewMetadataSelector = createSelector(
 
 export const aryViewMethodologySelector = createSelector(
     aryViewFromRouteSelector,
-    view => view.methodology || emptyObject,
+    view => view.methodologyData || emptyMethodology,
 );
