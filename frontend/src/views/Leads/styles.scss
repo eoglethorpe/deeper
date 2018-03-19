@@ -47,24 +47,54 @@
         overflow-y: auto;
 
         .leads-table {
-            :global {
-                .header {
-                    position: sticky;
-                    top: 0;
-                }
+            .header {
+                position: sticky;
+                top: 0;
+            }
 
-                .capitalize {
-                    text-transform: capitalize;
-                }
+            .status {
+                position: relative;
+                text-transform: capitalize;
 
-                .icon-wrapper {
+                .mark-button {
+                    @include transition-medium;
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    font-size: $font-size-large;
+                    position: absolute;
+                    top: 50%;
+                    right: 0;
+                    opacity: 0;
+                    transform: translate(20%, -50%);
 
-                    a {
-                        color: $color-accent;
+                    >* {
+                        flex-shrink: 0;
+                    }
+                }
+
+            }
+
+
+            .confidentiality {
+                text-transform: capitalize;
+            }
+
+            .icon-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: $font-size-large;
+
+                a {
+                    color: $color-accent;
+                }
+            }
+
+            :global {
+                .row {
+                    &:hover {
+                        .mark-button {
+                            opacity: 1;
+                            transform: translate(0%, -50%);
+                        }
                     }
                 }
 
