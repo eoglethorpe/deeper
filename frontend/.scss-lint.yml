@@ -1,6 +1,8 @@
 linters:
     PropertySortOrder:
-        order: "concentric"
+      order:
+        -
+      ignore_unspecified: true
     Indentation:
         width: 4
     SelectorDepth:

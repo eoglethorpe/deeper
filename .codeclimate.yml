@@ -3,15 +3,15 @@ checks:
   complex-logic:
     enabled: true
     config:
-        threshold: 4
+        threshold: 10
   file-lines:
     enabled: true
     config:
-        threshold: 500
+        threshold: 999
   method-complexity:
     enabled: true
     config:
-        threshold: 5
+        threshold: 10
   method-count:
     enabled: true
     config:
@@ -52,14 +52,31 @@ plugins:
   scss-lint:
     enabled: true
     config: frontend/.scss-lint.yml
+plugins:
+  fixme:
+    enabled: true
+    config:
+      strings:
+      - FIXME
+      - XXX
+      - TODO
 
 exclude_patterns:
 - "backend/*/migrations/*"
 - "backend/*/tests/*"
 - "backend/*/wsgi.py"
 - "backend/manage.py"
+
+- "frontend/build/"
+- "frontend/coverage/"
 - "frontend/config/"
 - "frontend/scripts/"
+
+- "browser-extension/build/"
+- "browser-extension/coverage/"
+- "browser-extension/config/"
+- "browser-extension/scripts/"
+
 - "**/node_modules/"
 - "script/"
 - "**/spec/"

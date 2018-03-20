@@ -58,10 +58,10 @@ body {
 
         .deep-main-content {
             position: relative;
+            perspective: 1000px;
             background-color: $color-background;
             padding: $spacing-small-alt;
             height: calc(100vh - #{$height-navbar});
-            perspective: 1000px;
             overflow-y: auto;
         }
 
@@ -85,10 +85,10 @@ body {
 %main-content {
     // @frozenhelium
     transform-origin: bottom;
-    animation: slide-in $duration-slow ease forwards;
     border: $width-separator-thin solid $color-separator-alt;
     background-color: $color-background-alt;
     height: 100%;
+    animation: slide-in $duration-slow ease forwards;
 }
 
 @keyframes slide-in {
