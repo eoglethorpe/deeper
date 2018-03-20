@@ -6,7 +6,6 @@ import ResizableH from '../../vendor/react-store/components/View/Resizable/Resiz
 import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
-    setProjectAction,
     setAryTemplateAction,
     setAryAction,
 
@@ -16,7 +15,6 @@ import {
 } from '../../redux';
 
 import LeadRequest from './requests/LeadRequest';
-import ProjectRequest from './requests/ProjectRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
 import AryGetRequest from './requests/AryGetRequest';
 
@@ -28,7 +26,6 @@ const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
     activeProject: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 
-    setProject: PropTypes.func.isRequired,
     setAryTemplate: PropTypes.func.isRequired,
     setAry: PropTypes.func.isRequired,
 
@@ -48,7 +45,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
     setAry: params => dispatch(setAryAction(params)),
-    setProject: params => dispatch(setProjectAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -71,7 +67,7 @@ export default class EditAry extends React.PureComponent {
 
     componentWillMount() {
         const { activeProject: { id: projectId }, activeLeadId: leadId } = this.props;
-        this.startProjectRequest(projectId);
+        this.startAryTemplateRequest(projectId);
         this.startAryGetRequest(leadId);
         this.startLeadRequest(leadId);
     }
@@ -80,7 +76,7 @@ export default class EditAry extends React.PureComponent {
         const { activeProject: { id: oldProjectId }, activeLeadId: oldLeadId } = this.props;
         const { activeProject: { id: projectId }, activeLeadId: leadId } = nextProps;
         if (oldProjectId !== projectId) {
-            this.startProjectRequest(projectId);
+            this.startAryTemplateRequest(projectId);
         }
         if (oldLeadId !== leadId) {
             this.startAryGetRequest(leadId);
@@ -91,9 +87,6 @@ export default class EditAry extends React.PureComponent {
     componentWillUnmount() {
         if (this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
-        }
-        if (this.projectRequest) {
-            this.projectRequest.stop();
         }
         if (this.aryGetRequest) {
             this.aryGetRequest.stop();
@@ -135,45 +128,19 @@ export default class EditAry extends React.PureComponent {
         this.aryGetRequest.start();
     }
 
-    startProjectRequest = (projectId) => {
+    startAryTemplateRequest = (projectId) => {
         if (isFalsy(projectId)) {
             return;
         }
-
-        // stop all the request [both project update and aryTemplate]
-        if (this.aryTemplateRequest) {
-            this.aryTemplateRequest.stop();
-        }
-        if (this.projectRequest) {
-            this.projectRequest.stop();
-        }
-
-        const projectRequest = new ProjectRequest(
-            this,
-            {
-                startAryTemplateRequest: this.startAryTemplateRequest,
-                setProject: this.props.setProject,
-            },
-        );
-        this.projectRequest = projectRequest.create(projectId);
-        this.projectRequest.start();
-    }
-
-    startAryTemplateRequest = (aryTemplateId) => {
-        if (isFalsy(aryTemplateId)) {
-            return;
-        }
-
-        // only stop previous ary template request
         if (this.aryTemplateRequest) {
             this.aryTemplateRequest.stop();
         }
 
-        const aryTemplateRequest = new AryTemplateRequest(
-            this,
-            { setAryTemplate: this.props.setAryTemplate },
-        );
-        this.aryTemplateRequest = aryTemplateRequest.create(aryTemplateId);
+        const aryTemplateRequest = new AryTemplateRequest({
+            setAryTemplate: this.props.setAryTemplate,
+            setState: params => this.setState(params),
+        });
+        this.aryTemplateRequest = aryTemplateRequest.create(projectId);
         this.aryTemplateRequest.start();
     }
 
@@ -187,16 +154,16 @@ export default class EditAry extends React.PureComponent {
             lead,
         } = this.state;
 
-        if (pendingEntries || pendingLead || pendingAryTemplate) {
-            return <LoadingAnimation />;
-        }
-
         if (noTemplate) {
             return (
                 <div className={styles.noTemplate}>
                     <p>{aryStrings('noAryTemplateForProject')}</p>
                 </div>
             );
+        }
+
+        if (pendingEntries || pendingLead || pendingAryTemplate) {
+            return <LoadingAnimation />;
         }
 
         return (
