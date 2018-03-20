@@ -29,6 +29,11 @@ export const leadPageActiveSortSelector = createSelector(
     leadPage => leadPage.activeSort || '-created_at',
 );
 
+export const leadPageLeadsPerPageSelector = createSelector(
+    leadPageForProjectSelector,
+    leadPage => leadPage.leadsPerPage || 25,
+);
+
 export const leadsForProjectSelector = createSelector(
     leadPageForProjectSelector,
     leadPage => leadPage.leads || emptyList,
