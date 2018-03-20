@@ -49,9 +49,10 @@ plugins:
     checks:
       complexity:
         enabled: false
-  scss-lint:
+  stylelint:
     enabled: true
-    config: frontend/.scss-lint.yml
+    config: frontend/.stylelintrc.json
+
 
 exclude_patterns:
 - "backend/*/migrations/*"
