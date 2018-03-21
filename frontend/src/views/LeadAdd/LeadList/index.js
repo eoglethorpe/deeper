@@ -81,7 +81,7 @@ export default class LeadList extends React.PureComponent {
         const { leads } = this.props;
         return (
             <ListView
-                styleName="lead-list"
+                className={styles.leadList}
                 data={leads}
                 keyExtractor={leadAccessor.getKey}
                 modifier={this.renderLeadItem}

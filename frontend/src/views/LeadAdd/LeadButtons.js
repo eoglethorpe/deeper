@@ -270,12 +270,12 @@ export default class LeadButtons extends React.PureComponent {
         const { dropboxDisabled } = this.state;
 
         return (
-            <div styleName="add-lead-buttons">
-                <h3 styleName="heading">
+            <div className={styles.addLeadButtons}>
+                <h3 className={styles.heading}>
                     {this.props.leadsStrings('addSourceFromLabel')}
                 </h3>
                 <GooglePicker
-                    styleName="add-lead-btn"
+                    className={styles.addLeadBtn}
                     clientId={googleDriveClientId}
                     developerKey={googleDriveDeveloperKey}
                     onAuthenticate={this.handleGoogleDriveOnAuthenticated}
@@ -290,7 +290,7 @@ export default class LeadButtons extends React.PureComponent {
                     </p>
                 </GooglePicker>
                 <DropboxChooser
-                    styleName="add-lead-btn"
+                    className={styles.addLeadBtn}
                     appKey={dropboxAppKey}
                     multiselect
                     extensions={supportedDropboxExtension}
@@ -305,7 +305,7 @@ export default class LeadButtons extends React.PureComponent {
                     </p>
                 </DropboxChooser>
                 <FileInput
-                    styleName="add-lead-btn"
+                    className={styles.addLeadBtn}
                     onChange={this.handleLeadAddFromDisk}
                     showStatus={false}
                     multiple
@@ -317,7 +317,7 @@ export default class LeadButtons extends React.PureComponent {
                     </p>
                 </FileInput>
                 <Button
-                    styleName="add-lead-btn"
+                    className={styles.addLeadBtn}
                     transparent
                     onClick={this.handleLeadAddFromWebsite}
                 >
@@ -327,7 +327,7 @@ export default class LeadButtons extends React.PureComponent {
                     </p>
                 </Button>
                 <Button
-                    styleName="add-lead-btn"
+                    className={styles.addLeadBtn}
                     transparent
                     onClick={this.handleLeadAddFromText}
                 >

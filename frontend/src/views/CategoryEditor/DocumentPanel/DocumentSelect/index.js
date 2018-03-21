@@ -149,25 +149,22 @@ export default class DocumentSelect extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                styleName="document-tab"
-                className={className}
-            >
+            <div className={`${styles.documentTab} ${className}`}>
                 <ListView
-                    styleName="file-list-view"
+                    className={styles.fileListView}
                     modifier={this.renderGalleryFilesListItem}
                     data={selectedFiles}
                     keyExtractor={this.keyExtractorForGalleryFiles}
                 />
-                <div styleName="bottom-bar">
+                <div className={styles.bottomBar}>
                     <Button
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handleSelectFromGallery}
                     >
                         {this.props.ceStrings('selectFromGalleryButtonLabel')}
                     </Button>
                     <PrimaryButton
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >

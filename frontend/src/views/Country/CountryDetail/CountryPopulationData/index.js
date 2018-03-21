@@ -83,7 +83,7 @@ export default class CountryPopulationData extends React.PureComponent {
 
         return (
             <Form
-                styleName="country-population"
+                className={styles.countryPopulation}
                 schema={this.schema}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
@@ -94,7 +94,7 @@ export default class CountryPopulationData extends React.PureComponent {
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors formerror="" />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         type="button"
                         onClick={this.handleFormCancel}
@@ -105,16 +105,16 @@ export default class CountryPopulationData extends React.PureComponent {
                         {this.props.countriesStrings('saveChangesButtonLabel')}
                     </PrimaryButton>
                 </div>
-                <div styleName="population-container">
+                <div className={styles.populationContainer}>
                     <TextInput
                         label={this.props.countriesStrings('totalPopulationLabel')}
-                        styleName="population"
+                        className={styles.population}
                         placeholder={this.props.countriesStrings('totalPopulationPlaceholder')}
                         formname="population"
                     />
                     <TextInput
                         label={this.props.countriesStrings('sourceLabel')}
-                        styleName="source"
+                        className={styles.source}
                         formname="source"
                         placeholder={this.props.countriesStrings('sourcePlaceholder')}
                     />

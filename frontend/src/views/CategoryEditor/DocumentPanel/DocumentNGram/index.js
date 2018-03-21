@@ -119,22 +119,19 @@ export default class DocumentNGram extends React.PureComponent {
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
-            <div
-                styleName="ngrams-tab"
-                className={className}
-            >
+            <div className={`${styles.ngramsTab} ${className}`}>
                 <ListView
-                    styleName="ngram-list"
+                    className={styles.ngramList}
                     data={selectedNGram}
                     modifier={this.renderNGram}
                     keyExtractor={this.keyExtractorKeywordTuple}
                 />
-                <div styleName="ngram-selects">
-                    <h4 styleName="heading">
+                <div className={styles.ngramSelects}>
+                    <h4 className={styles.heading}>
                         {this.props.ceStrings('numberOfWordsLabel')}
                     </h4>
                     <ListView
-                        styleName="ngram-select-list"
+                        className={styles.ngramSelectList}
                         data={ngramKeys}
                         modifier={this.renderNGramSelect}
                         keyExtractor={this.keyExtractorKeywordTuple}

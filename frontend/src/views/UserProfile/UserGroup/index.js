@@ -335,12 +335,9 @@ export default class UserGroup extends React.PureComponent {
         const isCurrentUser = userId === activeUser.userId;
 
         return (
-            <div
-                styleName="groups"
-                className={className}
-            >
+            <div className={`${styles.groups} ${className}`}>
                 {deletePending && <LoadingAnimation />}
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('headerGroups')}
                     </h2>
@@ -383,7 +380,7 @@ export default class UserGroup extends React.PureComponent {
                 >
                     <p>{confirmText}</p>
                 </Confirm>
-                <div styleName="usergroup-table">
+                <div className={styles.usergroupTable}>
                     <Table
                         data={userGroups}
                         headers={this.userGroupsTableHeaders}

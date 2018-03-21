@@ -205,7 +205,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (error) {
             return (
-                <div styleName="message">
+                <div className={styles.message}>
                     { error }
                 </div>
             );
@@ -220,7 +220,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         }
 
         return (
-            <div styleName="message">
+            <div className={styles.message}>
                 {this.props.commonStrings('previewNotAvailable')}
             </div>
         );
@@ -231,10 +231,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         const { pending } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="file-preview"
-            >
+            <div className={`${className} ${styles.filePreview}`}>
                 {
                     pending ? (
                         <LoadingAnimation />

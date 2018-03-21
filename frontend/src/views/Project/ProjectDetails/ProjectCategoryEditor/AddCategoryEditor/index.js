@@ -165,8 +165,7 @@ export default class AddCategoryEditor extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-category-editor-form"
+                className={`${className} ${styles.addCategoryEditorForm}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -184,7 +183,7 @@ export default class AddCategoryEditor extends React.PureComponent {
                     placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
                     autoFocus
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

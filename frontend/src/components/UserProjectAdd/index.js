@@ -195,7 +195,7 @@ export default class UserProjectAdd extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-project-add-form"
+                className={styles.userProjectAddForm}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -213,7 +213,7 @@ export default class UserProjectAdd extends React.PureComponent {
                     placeholder={this.props.userStrings('addProjectModalPlaceholder')}
                     autoFocus
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         type="button"
                         onClick={this.handleFormClose}

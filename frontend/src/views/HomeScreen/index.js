@@ -78,13 +78,13 @@ export default class HomeScreen extends React.PureComponent {
         );
 
         return (
-            <div styleName="home-screen">
+            <div className={styles.homeScreen}>
                 <ReactSVG
-                    styleName="deep-logo"
+                    className={styles.deepLogo}
                     path={logo}
                 />
                 <p>
-                    <span styleName="welcome-message">
+                    <span className={styles.welcomeMessage}>
                         {this.props.homescreenStrings('welcomeText')}
                         <strong>{this.props.homescreenStrings('deepLabel')}</strong>
                         <br />

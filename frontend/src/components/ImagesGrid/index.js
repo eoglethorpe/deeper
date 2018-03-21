@@ -100,25 +100,22 @@ export default class ImagesGrid extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="images-grid"
-            >
+            <div className={`${className} ${styles.imagesGrid}`}>
                 <ListView
-                    styleName="images"
+                    className={styles.images}
                     keyExtractor={ImagesGrid.imageKeySelector}
                     data={images}
                     modifier={this.renderImage}
                 />
                 { imageViewModalShow &&
                     <Modal
-                        styleName="image-preview"
+                        className={styles.imagePreview}
                         onClose={this.handleImagePreviewClose}
                         closeOnEscape
                     >
                         <ModalHeader
                             title=""
-                            styleName="modal-header"
+                            className={styles.modalHeader}
                             rightComponent={
                                 <PrimaryButton
                                     className={styles['transparent-btn']}
@@ -129,9 +126,9 @@ export default class ImagesGrid extends React.PureComponent {
                                 </PrimaryButton>
                             }
                         />
-                        <ModalBody styleName="modal-body">
+                        <ModalBody className={styles.modalBody}>
                             <img
-                                styleName="preview-image"
+                                className={styles.previewImage}
                                 src={activeImageSource}
                                 alt={activeImageSource}
                             />

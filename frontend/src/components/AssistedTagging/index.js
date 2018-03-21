@@ -582,12 +582,9 @@ export default class AssistedTagging extends React.PureComponent {
                     highlightModifier={this.highlightSimplifiedExcerpt}
                     onLoad={this.handleLeadPreviewLoad}
                 />
-                <div
-                    className="assistant-options"
-                    styleName="assistant-options"
-                >
+                <div className={`assistant-options ${styles.assistantOptions}`}>
                     <SegmentButton
-                        styleName="assisted-source-change-btn"
+                        className={styles.assistedSourceChangeBtn}
                         data={this.assitedTaggingSources}
                         selected={selectedAssitedTaggingSource}
                         onChange={this.handleAssitedTaggingSourceChange}
@@ -597,7 +594,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'nlp' && (
                             <MultiSelectInput
                                 label={this.props.entryStrings('showSuggestionText')}
-                                styleName="select-input"
+                                className={styles.selectInput}
                                 options={nlpSectorOptions}
                                 showHintAndError={false}
                                 value={nlpSelectedSectors}
@@ -609,7 +606,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'ce' && (
                             <MultiSelectInput
                                 label={this.props.entryStrings('showSuggestionText')}
-                                styleName="select-input"
+                                className={styles.selectInput}
                                 options={ceSectorOptions}
                                 showHintAndError={false}
                                 value={ceSelectedSectors}
@@ -621,7 +618,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'ner' && (
                             <MultiSelectInput
                                 label={this.props.entryStrings('showSuggestionText')}
-                                styleName="select-input"
+                                className={styles.selectInput}
                                 options={nerSectorOptions}
                                 showHintAndError={false}
                                 value={nerSelectedSectors}
@@ -635,11 +632,15 @@ export default class AssistedTagging extends React.PureComponent {
                         parent={this.state.activeHighlightRef}
                         onInvalidate={this.handleAssitedBoxInvalidate}
                     >
-                        <div styleName="assistant">
-                            <header styleName="header">
-                                <div styleName="title">
-                                    <span styleName="label">Source:</span>
-                                    <span styleName="source">{activeHighlightDetails.source}</span>
+                        <div className={styles.assistant}>
+                            <header className={styles.header}>
+                                <div className={styles.title}>
+                                    <span className={styles.label}>
+                                        Source:
+                                    </span>
+                                    <span className={styles.source}>
+                                        {activeHighlightDetails.source}
+                                    </span>
                                 </div>
                                 <PrimaryButton
                                     onClick={this.handleOnCloseAssistedActions}
@@ -648,11 +649,11 @@ export default class AssistedTagging extends React.PureComponent {
                                     <span className={iconNames.close} />
                                 </PrimaryButton>
                             </header>
-                            <div styleName="info-bar">
+                            <div className={styles.infoBar}>
                                 <span>{activeHighlightDetails.text}</span>
                                 <div>
                                     { activeHighlightDetails.details &&
-                                        <span styleName="details">
+                                        <span className={styles.details}>
                                             {activeHighlightDetails.details.toLowerCase()}
                                         </span>
                                     }
@@ -660,7 +661,7 @@ export default class AssistedTagging extends React.PureComponent {
                             </div>
                             {selectedAssitedTaggingSource === 'nlp' && (
                                 <ListView
-                                    styleName="sectors"
+                                    className={styles.sectors}
                                     modifier={this.renderSectorList}
                                     data={activeHighlightDetails.sectors}
                                     keyExtractor={this.calcSectorKey}

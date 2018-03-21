@@ -74,7 +74,7 @@ export default class ProjectAfForm extends React.PureComponent {
 
         return (
             <Form
-                styleName="af-detail-form"
+                className={styles.afDetailForm}
                 changeCallback={changeCallback}
                 failureCallback={failureCallback}
                 successCallback={successCallback}
@@ -85,7 +85,7 @@ export default class ProjectAfForm extends React.PureComponent {
                 disabled={pending}
             >
                 { !readOnly &&
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <DangerButton
                             onClick={handleFormCancel}
                             type="button"
@@ -105,14 +105,14 @@ export default class ProjectAfForm extends React.PureComponent {
                     label={this.props.projectStrings('addAfTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
-                    styleName="name"
+                    className={styles.name}
                     readOnly={readOnly}
                 />
                 <TextArea
                     label={this.props.projectStrings('projectDescriptionLabel')}
                     formname="description"
                     placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
-                    styleName="description"
+                    className={styles.description}
                     rows={3}
                     readOnly={readOnly}
                 />

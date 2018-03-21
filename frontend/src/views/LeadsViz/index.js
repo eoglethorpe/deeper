@@ -260,7 +260,7 @@ export default class LeadsViz extends React.PureComponent {
 
     renderNoLeadFound = () => (
         // FIXME: strings
-        <div styleName="no-lead-found">
+        <div className={styles.noLeadFound}>
             <h3>No leads found</h3>
             <p>Try with different filters</p>
         </div>
@@ -286,15 +286,15 @@ export default class LeadsViz extends React.PureComponent {
         // FIXME: Use strings in headerText in all views
 
         return (
-            <div styleName="viz-container">
+            <div className={styles.vizContainer}>
                 <GeoReferencedMap
-                    styleName="geo-referenced-map viz"
+                    className={`${styles.geoReferencedMap} ${styles.viz}`}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || geoPointsDataPending}
                     geoPoints={geoPointsData.points}
                 />
                 <TreeMapView
-                    styleName="tree-map viz"
+                    className={`${styles.treeMap} ${styles.viz}`}
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
@@ -303,7 +303,7 @@ export default class LeadsViz extends React.PureComponent {
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <SunBurstView
-                    styleName="sun-burst viz"
+                    className={`${styles.sunBurst} ${styles.viz}`}
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
@@ -312,7 +312,7 @@ export default class LeadsViz extends React.PureComponent {
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <ChordDiagramView
-                    styleName="chord-diagram viz"
+                    className={`${styles.chordDiagram} ${styles.viz}`}
                     data={chordData.values}
                     loading={loadingLeads || chordDataPending}
                     headerText="Chord diagram"
@@ -322,14 +322,14 @@ export default class LeadsViz extends React.PureComponent {
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <CorrelationMatrixView
-                    styleName="correlation-matrix viz"
+                    className={`${styles.correlationMatrix} ${styles.viz}`}
                     data={correlationData}
                     headerText="Correlation matrix"
                     loading={loadingLeads || correlationDataPending}
                     vizContainerClass={styles.chartContainer}
                 />
                 <ForceDirectedGraphView
-                    styleName="force-directed-graph viz"
+                    className={`${styles.forceDirectedGraph} ${styles.viz}`}
                     data={forceDirectedData}
                     loading={loadingLeads || forceDirectedDataPending}
                     headerText="Force directed graph"
@@ -340,7 +340,7 @@ export default class LeadsViz extends React.PureComponent {
                     useVoronoi={false}
                 />
                 <CollapsibleTreeView
-                    styleName="collapsible-tree viz"
+                    className={`${styles.collapsibleTree} ${styles.viz}`}
                     headerText="Collapsible tree view"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
@@ -348,7 +348,7 @@ export default class LeadsViz extends React.PureComponent {
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
                 <RadialDendrogramView
-                    styleName="radial-dendrogram viz"
+                    className={`${styles.radialDendrogram} ${styles.viz}`}
                     headerText="Radial dendrogram"
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
@@ -364,14 +364,14 @@ export default class LeadsViz extends React.PureComponent {
         const { noLeadSelected } = this.state;
 
         return (
-            <div styleName="leads">
-                <header styleName="header">
-                    <FilterLeadsForm styleName="filters" />
+            <div className={styles.leads}>
+                <header className={styles.header}>
+                    <FilterLeadsForm className={styles.filters} />
                 </header>
                 { noLeadSelected ? this.renderNoLeadFound() : this.renderCharts() }
-                <footer styleName="footer">
+                <footer className={styles.footer}>
                     <Link
-                        styleName="link"
+                        className={styles.link}
                         to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
                         replace
                     >

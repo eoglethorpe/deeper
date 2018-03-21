@@ -159,7 +159,7 @@ export default class AnalysisFramework extends React.PureComponent {
 
         if (!analysisFramework) {
             return (
-                <div styleName="analysis-framework">
+                <div className={styles.analysisFramework}>
                     <LoadingAnimation />
                 </div>
             );
@@ -167,7 +167,7 @@ export default class AnalysisFramework extends React.PureComponent {
 
         return (
             <HashRouter>
-                <div styleName="analysis-framework">
+                <div className={styles.analysisFramework}>
                     <Route
                         exact
                         path="/"

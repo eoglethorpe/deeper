@@ -317,23 +317,20 @@ export default class Navbar extends React.PureComponent {
             this.props.commonStrings('anonymousLabel')
         );
         return (
-            <nav
-                className={className}
-                styleName="navbar"
-            >
+            <nav className={`${className} ${styles.navbar}`}>
                 <Link
                     to={reverseRoute(pathNames.homeScreen, {})}
-                    styleName="brand"
+                    className={styles.brand}
                 >
                     <ReactSVG
                         wrapperClassName={styles['icon-wrapper']}
                         className={styles.icon}
                         path={logo}
                     />
-                    <div styleName="title">
+                    <div className={styles.title}>
                         {this.props.commonStrings('deepLabel')}
                     </div>
-                    <span styleName="beta-label">
+                    <span className={styles.betaLabel}>
                         {this.props.commonStrings('betaLabel')}
                     </span>
                 </Link>
@@ -365,13 +362,13 @@ export default class Navbar extends React.PureComponent {
 
                 <NavMenu
                     links={this.validNavLinks}
-                    styleName="main-menu"
+                    className={styles.mainMenu}
                     projectId={activeProject}
                     countryId={activeCountry}
                 />
 
                 <DropdownMenu
-                    styleName="user-menu"
+                    className={styles.userMenu}
                     iconName={iconNames.person}
                     title={userName}
                 >

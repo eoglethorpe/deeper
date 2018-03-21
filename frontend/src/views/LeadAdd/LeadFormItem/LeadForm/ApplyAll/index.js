@@ -46,14 +46,11 @@ export default class ApplyAll extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                styleName="apply-input"
-                className={className}
-            >
+            <div className={`${styles.applyInput} ${className}`}>
                 { children }
-                <div styleName="apply-buttons">
+                <div className={styles.applyButtons}>
                     <AccentButton
-                        styleName="apply-button"
+                        className={styles.applyButton}
                         transparent
                         type="button"
                         title={this.props.leadsStrings('applyAllButtonTitle')}
@@ -64,7 +61,7 @@ export default class ApplyAll extends React.PureComponent {
                         <span className={iconNames.applyAll} />
                     </AccentButton>
                     <WarningButton
-                        styleName="apply-button"
+                        className={styles.applyButton}
                         transparent
                         type="button"
                         title={this.props.leadsStrings('applyAllBelowButtonTitle')}

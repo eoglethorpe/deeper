@@ -168,9 +168,9 @@ export default class SubcategoryColumn extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="column" >
-                <header styleName="header">
-                    <h4 styleName="heading" >
+            <div className={styles.column} >
+                <header className={styles.header}>
+                    <h4 className={styles.heading} >
                         {title}
                     </h4>
                     <AccentButton
@@ -181,7 +181,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     />
                 </header>
                 <ListView
-                    styleName="sub-category-list"
+                    className={styles.subCategoryList}
                     data={subcategories}
                     modifier={this.renderSubcategory}
                     keyExtractor={SubcategoryColumn.keyExtractorForSubcategory}

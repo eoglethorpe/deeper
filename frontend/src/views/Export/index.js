@@ -463,7 +463,7 @@ export default class Export extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="export">
+            <div className={styles.export}>
                 <ExportHeader
                     projectId={projectId}
                     entriesFilters={entriesFilters}
@@ -474,10 +474,10 @@ export default class Export extends React.PureComponent {
                     onPreview={this.handlePreview}
                     pending={pendingLeads || pendingAf}
                 />
-                <div styleName="main-content">
-                    <section styleName="filters" >
+                <div className={styles.mainContent}>
+                    <section className={styles.filters} >
                         <div>
-                            <h4 styleName="heading">
+                            <h4 className={styles.heading}>
                                 {this.props.exportStrings('entryAttributesLabel')}
                             </h4>
                             <FilterEntriesForm
@@ -485,17 +485,17 @@ export default class Export extends React.PureComponent {
                                 pending={pendingAf}
                             />
                         </div>
-                        <div styleName="lead-filters">
-                            <div styleName="lead-attributes">
-                                <h4 styleName="heading">
+                        <div className={styles.leadFilters}>
+                            <div className={styles.leadAttributes}>
+                                <h4 className={styles.heading}>
                                     {this.props.exportStrings('leadAttributesLabel')}
                                 </h4>
                                 <FilterLeadsForm />
                             </div>
-                            <div styleName="leads">
+                            <div className={styles.leads}>
                                 { pendingLeads && <LoadingAnimation /> }
                                 <Table
-                                    styleName="leads-table"
+                                    className={styles.leadsTable}
                                     data={leads}
                                     headers={this.headers}
                                     defaultSort={this.defaultSort}
@@ -514,7 +514,7 @@ export default class Export extends React.PureComponent {
                         analysisFramework={analysisFramework}
                     />
                     <ExportPreview
-                        styleName="preview"
+                        className={styles.preview}
                         exportId={previewId}
                     />
                 </div>

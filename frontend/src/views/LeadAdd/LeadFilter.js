@@ -156,7 +156,7 @@ export default class LeadFilter extends React.PureComponent {
 
         return (
             <div
-                styleName="lead-filters"
+                className={styles.leadFilters}
             >
                 <TextInput
                     label={this.props.leadsStrings('placeholderSearch')}

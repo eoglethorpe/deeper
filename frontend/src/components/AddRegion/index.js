@@ -234,8 +234,7 @@ export default class AddRegion extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-region-form"
+                className={`${className} ${styles.addRegionForm}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -259,7 +258,7 @@ export default class AddRegion extends React.PureComponent {
                     formname="code"
                     placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

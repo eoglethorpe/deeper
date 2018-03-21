@@ -244,8 +244,7 @@ export default class AddExistingRegion extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-region-form"
+                className={`${className} ${styles.addRegionForm}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -257,12 +256,12 @@ export default class AddExistingRegion extends React.PureComponent {
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
-                    styleName="non-field-errors"
+                    className={styles.nonFieldErrors}
                     formerror=""
                 />
                 <TabularSelectInput
                     formname="regions"
-                    styleName="tabular-select"
+                    className={styles.tabularSelect}
                     blackList={regionsBlackList}
                     options={regionOptions}
                     optionsIdentifier="select-input-inside-modal"
@@ -270,7 +269,7 @@ export default class AddExistingRegion extends React.PureComponent {
                     keySelector={AddExistingRegion.optionKeySelector}
                     tableHeaders={this.regionsHeader}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

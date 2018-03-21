@@ -123,7 +123,7 @@ export default class ExportPreview extends React.PureComponent {
 
         if (error) {
             return (
-                <div styleName="message">
+                <div className={styles.message}>
                     { error }
                 </div>
             );
@@ -142,7 +142,7 @@ export default class ExportPreview extends React.PureComponent {
         }
 
         return (
-            <div styleName="message">
+            <div className={styles.message}>
                 {this.props.exportStrings('previewNotAvailableLabel')}
             </div>
         );
@@ -153,10 +153,7 @@ export default class ExportPreview extends React.PureComponent {
         const { pending } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="export-preview"
-            >
+            <div className={`${className} ${styles.exportPreview}`}>
                 { pending && <LoadingAnimation /> }
                 { !pending && this.renderContent() }
             </div>

@@ -149,15 +149,9 @@ export default class ExternalGallery extends React.PureComponent {
     }
 
     renderPendingScreen = className => (
-        <div
-            styleName="pending-container"
-            className={className}
-        >
-            <span
-                className={iconNames.loading}
-                styleName="loading-animation"
-            />
-            <span styleName="waiting-text">
+        <div className={`${styles.pendingContainer} ${className}`}>
+            <span className={`${iconNames.loading} ${styles.loadingAnimation}`} />
+            <span className={styles.waitingText}>
                 {this.props.leadsStrings('gatheringWebsiteInfoLabel')}
             </span>
         </div>

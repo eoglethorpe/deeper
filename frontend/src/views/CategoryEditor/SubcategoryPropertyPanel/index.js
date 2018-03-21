@@ -200,8 +200,8 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         if (!subcategory) {
             return (
-                <div styleName="property-panel">
-                    <p styleName="empty">
+                <div className={styles.propertyPanel}>
+                    <p className={styles.empty}>
                         {this.props.ceStrings('nothingHereText')}
                     </p>
                 </div>
@@ -218,13 +218,13 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
         return (
             <div
-                styleName="property-panel"
+                className={styles.propertyPanel}
             >
-                <header styleName="header" >
-                    <h3 styleName="heading" >
+                <header className={styles.header} >
+                    <h3 className={styles.heading} >
                         {this.props.ceStrings('subCategoryDetailsText')}
                     </h3>
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <DangerButton
                             onClick={this.handleSubcategoryRemove}
                         >
@@ -232,7 +232,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         </DangerButton>
                     </div>
                 </header>
-                <section styleName="properties" >
+                <section className={styles.properties} >
                     <TextInput
                         label={this.props.ceStrings('subCategoryTitleLabel')}
                         placeholder={this.props.ceStrings('subCategoryTitlePlaceholder')}
@@ -246,17 +246,17 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                         onChange={this.handleSubcategoryDescriptionInputChange}
                     />
                 </section>
-                <section styleName="ngrams" >
-                    <div styleName="ngram-selects">
+                <section className={styles.ngrams} >
+                    <div className={styles.ngramSelects}>
                         {
                             (ngramKeys.length > 0) && (
-                                <h4 styleName="heading">
+                                <h4 className={styles.heading}>
                                     {this.props.ceStrings('numberOfWordsLabel')}
                                 </h4>
                             )
                         }
                         <ListView
-                            styleName="ngram-select-list"
+                            className={styles.ngramSelectList}
                             data={ngramKeys}
                             modifier={this.renderNGramSelect}
                             keyExtractor={d => d}
@@ -270,12 +270,12 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                                 onDelete={this.handleDelete}
                             />
                         ) : (
-                            <div styleName="empty">
+                            <div className={styles.empty}>
                                 {this.props.ceStrings('noWordsText')}
                             </div>
                         )
                     }
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <PrimaryButton
                             onClick={onNewManualNGram}
                         >

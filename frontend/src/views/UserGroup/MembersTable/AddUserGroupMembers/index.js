@@ -327,8 +327,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-member-form"
+                className={`${className} ${styles.addMemberForm}`}
                 schema={this.schema}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
@@ -340,12 +339,12 @@ export default class AddUserGroupMembers extends React.PureComponent {
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
-                    styleName="non-field-errors"
+                    className={styles.nonFieldErrors}
                     formerror=""
                 />
                 <TabularSelectInput
                     formname="memberships"
-                    styleName="tabular-select"
+                    className={styles.tabularSelect}
                     blackList={membersBlackList}
                     options={usersWithRole}
                     optionsIdentifier="select-input-inside-modal"
@@ -354,7 +353,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     tableHeaders={this.memberHeaders}
                     error={formFieldErrors.memberships}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

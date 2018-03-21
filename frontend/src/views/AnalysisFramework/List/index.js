@@ -293,8 +293,8 @@ export default class List extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="list">
-                <header styleName="header">
+            <div className={styles.list}>
+                <header className={styles.header}>
                     <h2>
                         {this.props.afStrings('analysisFramework')}
                         /
@@ -302,9 +302,9 @@ export default class List extends React.PureComponent {
                             {this.props.afStrings('headerList')}
                         </small>
                     </h2>
-                    <div styleName="actions">
+                    <div className={styles.actions}>
                         <Link
-                            styleName="link-to-overview"
+                            className={styles.linkToOverview}
                             to="/overview"
                             replace
                         >
@@ -318,10 +318,10 @@ export default class List extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <div styleName="content">
-                    <div styleName="grid-layout-wrapper">
+                <div className={styles.content}>
+                    <div className={styles.gridLayoutWrapper}>
                         <GridLayout
-                            styleName="grid-layout"
+                            className={styles.gridLayout}
                             modifier={this.getItemView}
                             items={this.gridItems}
                             onLayoutChange={this.handleLayoutChange}
@@ -337,17 +337,17 @@ export default class List extends React.PureComponent {
                         </Confirm>
                         {/* FIXME: strings */}
                     </div>
-                    <div styleName="widget-list">
+                    <div className={styles.widgetList}>
                         {
                             this.widgets.map(widget => (
                                 <div
-                                    styleName="widget-list-item"
+                                    className={styles.widgetListItem}
                                     key={widget.id}
                                 >
-                                    <div styleName="title">
+                                    <div className={styles.title}>
                                         {this.props.afStrings(widget.title)}
                                     </div>
-                                    <div styleName="actions">
+                                    <div className={styles.actions}>
                                         <Button
                                             transparent
                                             onClick={

@@ -143,10 +143,7 @@ export default class Screenshot extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="screenshot"
-            >
+            <div className={`${className} ${styles.screenshot}`}>
                 <svg
                     ref={(ref) => { this.svg = ref; }}
                     viewBox={`${offsetX} ${offsetY} ${width} ${height}`}

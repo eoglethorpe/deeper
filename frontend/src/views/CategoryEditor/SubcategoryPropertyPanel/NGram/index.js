@@ -49,7 +49,7 @@ export default class NGram extends React.PureComponent {
 
         return (
             <ListView
-                styleName="ngram"
+                className={styles.ngram}
                 data={keywords}
                 modifier={this.renderKeyword}
                 keyExtractor={this.keyExtractorForKeyword}

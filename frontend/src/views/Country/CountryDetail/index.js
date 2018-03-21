@@ -155,12 +155,9 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                className={className}
-                styleName="country-detail"
-            >
+            <div className={`${className} ${styles.countryDetail}`}>
                 { deletePending && <LoadingAnimation /> }
-                <header styleName="header">
+                <header className={styles.header}>
                     <h2>
                         {countryDetail.title}
                     </h2>
@@ -180,70 +177,70 @@ export default class CountryDetail extends React.PureComponent {
                     </Confirm>
                 </header>
                 { !activeUser.isSuperuser ? (
-                    <div styleName="details-no-edit">
+                    <div className={styles.detailsNoEdit}>
                         <RegionDetailView
-                            styleName="region-detail-box"
+                            className={styles.regionDetailBox}
                             countryId={countryDetail.id}
                         />
-                        <div styleName="map-container">
+                        <div className={styles.mapContainer}>
                             <RegionMap regionId={countryDetail.id} />
                         </div>
                     </div>
                 ) : (
                     <Tabs
                         activeLinkStyle={{ none: 'none' }}
-                        styleName="tabs-container"
+                        className={styles.tabsContainer}
                         renderActiveTabContentOnly
                     >
-                        <div styleName="tabs-header-container">
+                        <div className={styles.tabsHeaderContainer}>
                             <TabLink
-                                styleName="tab-header"
+                                className={styles.tabHeader}
                                 to="general"
                             >
                                 {this.props.countriesStrings('generalTabLabel')}
                             </TabLink>
                             <TabLink
-                                styleName="tab-header"
+                                className={styles.tabHeader}
                                 to="key-figures"
                             >
                                 {this.props.countriesStrings('keyFiguesTabLabel')}
                             </TabLink>
                             <TabLink
-                                styleName="tab-header"
+                                className={styles.tabHeader}
                                 to="population-data"
                             >
                                 {this.props.countriesStrings('populationTabLabel')}
                             </TabLink>
                             <TabLink
-                                styleName="tab-header"
+                                className={styles.tabHeader}
                                 to="seasonal-calendar"
                             >
                                 {this.props.countriesStrings('seasonalTabLabel')}
                             </TabLink>
                             <TabLink
-                                styleName="tab-header"
+                                className={styles.tabHeader}
                                 to="media-sources"
                             >
                                 {this.props.countriesStrings('mediaTabLabel')}
                             </TabLink>
                             {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                            <div styleName="empty-tab" />
+                            <div className={styles.emptyTab} />
                         </div>
                         <TabContent
                             for="general"
-                            styleName="tab-content"
+                            className={styles.tabContent}
                         >
                             <CountryGeneral countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="key-figures"
-                            styleName="tab-content"
+                            className={styles.tabContent}
                         >
                             <CountryKeyFigures countryId={countryDetail.id} />
                         </TabContent>
                         <TabContent
                             for="population-data"
-                            styleName="tab-content"
+                            className={styles.tabContent}
                         >
                             <CountryPopulationData
                                 countryId={countryDetail.id}
@@ -251,7 +248,7 @@ export default class CountryDetail extends React.PureComponent {
                         </TabContent>
                         <TabContent
                             for="seasonal-calendar"
-                            styleName="tab-content"
+                            className={styles.tabContent}
                         >
                             <CountrySeasonalCalendar
                                 countryId={countryDetail.id}
@@ -259,7 +256,7 @@ export default class CountryDetail extends React.PureComponent {
                         </TabContent>
                         <TabContent
                             for="media-sources"
-                            styleName="tab-content"
+                            className={styles.tabContent}
                         >
                             <CountryMediaSources
                                 countryId={countryDetail.id}

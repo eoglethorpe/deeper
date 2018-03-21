@@ -42,14 +42,14 @@ export default class ImagesSlider extends React.PureComponent {
         }
     }
 
-    getStyleName = (galleryIndex) => {
-        const styleNames = ['image'];
+    getClassName = (galleryIndex) => {
+        const classNames = [styles.image];
         const { selectedIndex } = this.state;
 
         if (galleryIndex === selectedIndex) {
-            styleNames.push('visible');
+            classNames.push(styles.visible);
         }
-        return styleNames.join(' ');
+        return classNames.join(' ');
     }
 
     handlePreviousClick = () => {
@@ -77,7 +77,7 @@ export default class ImagesSlider extends React.PureComponent {
         return (
             <div
                 className={className}
-                styleName="images-slider"
+                className={styles.imagesSlider}
             >
                 {
                     galleryIds.map((galleryId, key) => (
@@ -85,13 +85,13 @@ export default class ImagesSlider extends React.PureComponent {
                             <InternalGallery
                                 key={galleryId}
                                 galleryId={galleryId}
-                                styleName={this.getStyleName(key)}
+                                className={this.getClassName(key)}
                             />
                         )
                     ))
                 }
                 {galleryIds.length > 0 &&
-                    <div styleName="action-bar">
+                    <div className={styles.actionBar}>
                         {!isFirstItem &&
                             <Button
                                 onClick={this.handlePreviousClick}

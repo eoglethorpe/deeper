@@ -231,8 +231,7 @@ export default class LeadForm extends React.PureComponent {
         return (
             <Form
                 ref={(ref) => { this.formRef = ref; }}
-                styleName="add-lead-form"
-                className={className}
+                className={`${styles.addLeadForm} ${className}`}
                 schema={this.schema}
                 changeCallback={onChange}
                 failureCallback={onFailure}
@@ -245,7 +244,7 @@ export default class LeadForm extends React.PureComponent {
                 {
                     (isFormLoading || isExtractionLoading) && <LoadingAnimation />
                 }
-                <header styleName="header">
+                <header className={styles.header}>
                     <NonFieldErrors formerror="" />
                 </header>
                 <HiddenInput formname="sourceType" />
@@ -253,7 +252,7 @@ export default class LeadForm extends React.PureComponent {
                     type === LEAD_TYPE.website && [
                         <ExtractThis
                             key="url"
-                            styleName="url"
+                            className={styles.url}
                             disabled={isFormDisabled || isExtractionDisabled}
                             onClick={onExtractClick}
                         >
@@ -269,7 +268,7 @@ export default class LeadForm extends React.PureComponent {
                             key="website"
                             label={this.props.leadsStrings('websiteLabel')}
                             placeholder={this.props.leadsStrings('urlPlaceholderLabel')}
-                            styleName="website"
+                            className={styles.website}
                         />,
                     ]
                 }
@@ -280,7 +279,7 @@ export default class LeadForm extends React.PureComponent {
                             label={this.props.leadsStrings('textLabel')}
                             placeholder={this.props.leadsStrings('textareaPlaceholderLabel')}
                             rows="3"
-                            styleName="text"
+                            className={styles.text}
                             autoFocus
                         />
                 }
@@ -296,20 +295,20 @@ export default class LeadForm extends React.PureComponent {
                     placeholder={this.props.leadsStrings('projectPlaceholderLabel')}
                     showHintAndError
                     showLabel
-                    styleName="project"
+                    className={styles.project}
                 />
                 <div
-                    styleName="line-break"
+                    className={styles.lineBreak}
                 />
                 <TextInput
-                    styleName="title"
+                    className={styles.title}
                     formname="title"
                     label={this.props.leadsStrings('titleLabel')}
                     placeholder={this.props.leadsStrings('titlePlaceHolderLabel')}
                 />
 
                 <ApplyAll
-                    styleName="source"
+                    className={styles.source}
                     disabled={isApplyAllDisabled}
                     identiferName="source"
                     onApplyAllClick={this.handleApplyAllClick}
@@ -322,7 +321,7 @@ export default class LeadForm extends React.PureComponent {
                     />
                 </ApplyAll>
                 <ApplyAll
-                    styleName="confidentiality"
+                    className={styles.confidentiality}
                     disabled={isApplyAllDisabled}
                     identiferName="confidentiality"
                     onApplyAllClick={this.handleApplyAllClick}
@@ -341,7 +340,7 @@ export default class LeadForm extends React.PureComponent {
                 </ApplyAll>
 
                 <ApplyAll
-                    styleName="user"
+                    className={styles.user}
                     disabled={isApplyAllDisabled}
                     identiferName="assignee"
                     onApplyAllClick={this.handleApplyAllClick}
@@ -360,7 +359,7 @@ export default class LeadForm extends React.PureComponent {
                 </ApplyAll>
 
                 <ApplyAll
-                    styleName="date"
+                    className={styles.date}
                     disabled={isApplyAllDisabled}
                     identiferName="publishedOn"
                     onApplyAllClick={this.handleApplyAllClick}
@@ -377,7 +376,7 @@ export default class LeadForm extends React.PureComponent {
                     ATTACHMENT_TYPES.indexOf(type) !== -1 && ([
                         <div
                             key="title"
-                            styleName="file-title"
+                            className={styles.fileTitle}
                         >
                             {
                                 values.attachment && (

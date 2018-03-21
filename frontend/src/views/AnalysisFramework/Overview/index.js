@@ -260,8 +260,8 @@ export default class Overview extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="overview">
-                <header styleName="header">
+            <div className={styles.overview}>
+                <header className={styles.header}>
                     <h2>
                         {this.props.afStrings('analysisFramework')}
                         /
@@ -269,9 +269,9 @@ export default class Overview extends React.PureComponent {
                             {this.props.afStrings('headerOverview')}
                         </small>
                     </h2>
-                    <div styleName="actions">
+                    <div className={styles.actions}>
                         <Link
-                            styleName="link-to-list"
+                            className={styles.linkToList}
                             to="/list"
                             replace
                         >
@@ -285,18 +285,18 @@ export default class Overview extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <div styleName="content">
-                    <div styleName="widget-list">
+                <div className={styles.content}>
+                    <div className={styles.widgetList}>
                         {
                             this.widgets.map(widget => (
                                 <div
-                                    styleName="widget-list-item"
+                                    className={styles.widgetListItem}
                                     key={widget.id}
                                 >
-                                    <div styleName="title">
+                                    <div className={styles.title}>
                                         {widget.title}
                                     </div>
-                                    <div styleName="actions">
+                                    <div className={styles.actions}>
                                         <Button
                                             transparent
                                             onClick={
@@ -309,10 +309,10 @@ export default class Overview extends React.PureComponent {
                             ))
                         }
                     </div>
-                    <div styleName="grid-layout-container">
-                        <div styleName="scroll-wrapper">
+                    <div className={styles.gridLayoutContainer}>
+                        <div className={styles.scrollWrapper}>
                             <GridLayout
-                                styleName="grid-layout"
+                                className={styles.gridLayout}
                                 modifier={this.getItemView}
                                 items={this.gridItems}
                                 onLayoutChange={this.handleLayoutChange}

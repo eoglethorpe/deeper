@@ -32,21 +32,21 @@ export default class FourHundredFour extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="four-hundred-four">
+            <div className={styles.fourHundredFour}>
                 <ReactSVG
-                    styleName="deep-logo"
+                    className={styles.deepLogo}
                     path={logo}
                 />
-                <h1 styleName="heading">
+                <h1 className={styles.heading}>
                     {this.props.fourHundredFourStrings('errorFourHundredFour')}
                 </h1>
-                <p styleName="message">
+                <p className={styles.message}>
                     {this.props.fourHundredFourStrings('message1')}<br />
                     {this.props.fourHundredFourStrings('message2')}
                 </p>
                 <Link
                     to={pathNames.homeScreen}
-                    styleName="home-screen-link"
+                    className={styles.homeScreenLink}
                 >
                     {this.props.fourHundredFourStrings('goToDeep')}
                 </Link>

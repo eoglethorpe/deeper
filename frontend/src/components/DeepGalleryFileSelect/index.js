@@ -39,7 +39,7 @@ export default class DeepGallery extends React.PureComponent {
         return (
             <Modal
                 closeOnEscape
-                styleName="add-gallery-file-modal"
+                className={styles.addGalleryFileModal}
                 onClose={onClose}
             >
                 <DeepGallerySelect

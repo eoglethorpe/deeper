@@ -2,7 +2,6 @@
  * @author frozenhelium <fren.ankit@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSVG from 'react-svg';
@@ -77,7 +76,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -285,38 +283,38 @@ export default class Login extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="login">
-                <div styleName="deep-container">
+            <div className={styles.login}>
+                <div className={styles.deepContainer}>
                     <ReactSVG
-                        styleName="logo"
+                        className={styles.logo}
                         path={logo}
                     />
-                    <h2 styleName="heading">
+                    <h2 className={styles.heading}>
                         <small>{this.props.loginStrings('welcomeToText')}</small><br />
                     </h2>
                 </div>
-                <div styleName="login-form-container">
-                    <div styleName="hid-link-container">
+                <div className={styles.loginFormContainer}>
+                    <div className={styles.hidLinkContainer}>
                         <a
-                            styleName="hid-link"
+                            className={styles.hidLink}
                             href={hidUrl}
                             onClick={this.onHidLoginClick}
                         >
                             <img
-                                styleName="logo"
+                                className={styles.logo}
                                 src={hidLogo}
                                 alt={this.props.loginStrings('logInWIthHid')}
                                 draggable="false"
                             />
                             <span>{this.props.loginStrings('logInWIthHid')}</span>
                         </a>
-                        <div styleName="or-container">
-                            <hr /><span styleName="or">{this.props.loginStrings('orText')}</span>
+                        <div className={styles.orContainer}>
+                            <hr /><span className={styles.or}>{this.props.loginStrings('orText')}</span>
                         </div>
                     </div>
                     { pending && <LoadingAnimation /> }
                     <Form
-                        styleName="login-form"
+                        className={styles.loginForm}
                         changeCallback={this.changeCallback}
                         failureCallback={this.failureCallback}
                         successCallback={this.successCallback}
@@ -349,9 +347,9 @@ export default class Login extends React.PureComponent {
                                 siteKey={reCaptchaSiteKey}
                             />
                         }
-                        <div styleName="action-buttons">
+                        <div className={styles.actionButtons}>
                             <Link
-                                styleName="forgot-password-link"
+                                className={styles.forgotPasswordLink}
                                 to={reverseRoute(pathNames.passwordReset, {})}
                             >
                                 {this.props.loginStrings('forgotPasswordText')}
@@ -361,10 +359,10 @@ export default class Login extends React.PureComponent {
                             </PrimaryButton>
                         </div>
                     </Form>
-                    <div styleName="register-link-container">
+                    <div className={styles.registerLinkContainer}>
                         <p>{this.props.loginStrings('noAccountYetText')}</p>
                         <Link
-                            styleName="register-link"
+                            className={styles.registerLink}
                             to={reverseRoute(pathNames.register, {})}
                         >
                             {this.props.loginStrings('registerLabel')}

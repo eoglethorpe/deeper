@@ -156,11 +156,11 @@ export default class ProjectPanel extends React.PureComponent {
         const { history } = this.props;
 
         return (
-            <div styleName="project-panel">
-                <div styleName="sidebar">
+            <div className={styles.projectPanel}>
+                <div className={styles.sidebar}>
                     {pending && <LoadingAnimation />}
-                    <header styleName="header">
-                        <h3 styleName="heading">
+                    <header className={styles.header}>
+                        <h3 className={styles.heading}>
                             {this.props.projectStrings('headerProjects')}
                         </h3>
                         <PrimaryButton
@@ -172,7 +172,7 @@ export default class ProjectPanel extends React.PureComponent {
                         <TextInput
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.projectStrings('searchProjectPlaceholder')}
-                            styleName="search-input"
+                            className={styles.searchInput}
                             type="search"
                             value={this.state.searchInputValue}
                             showLabel={false}
@@ -204,7 +204,7 @@ export default class ProjectPanel extends React.PureComponent {
                         }
                     </header>
                     <ListView
-                        styleName="project-list"
+                        className={styles.projectList}
                         data={displayUserProjects}
                         keyExtractor={project => project.id}
                         modifier={this.renderSidebarItem}
@@ -214,12 +214,12 @@ export default class ProjectPanel extends React.PureComponent {
                     projectId ? (
                         <ProjectDetails
                             key={projectId}
-                            styleName="project-details"
+                            className={styles.projectDetails}
                             projectId={projectId}
                             mainHistory={history}
                         />
                     ) : (
-                        <p styleName="no-project-text">
+                        <p className={styles.noProjectText}>
                             {this.props.projectStrings('noProjectText')}
                         </p>
                     )

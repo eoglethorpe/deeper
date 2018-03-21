@@ -2,7 +2,6 @@
  * @author frozenhelium <fren.ankit@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -44,7 +43,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Register extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -183,7 +181,7 @@ export default class Register extends React.PureComponent {
 
         return (
             <Form
-                styleName="register-form"
+                className={styles.registerForm}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -222,7 +220,7 @@ export default class Register extends React.PureComponent {
                     siteKey={reCaptchaSiteKey}
                     reset={pending}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <PrimaryButton>
                         { this.props.loginStrings('registerLabel')}
                     </PrimaryButton>
@@ -232,7 +230,7 @@ export default class Register extends React.PureComponent {
     }
 
     renderSuccess = () => (
-        <div className={styles['register-success']}>
+        <div className={styles.registerSuccess}>
             {this.props.loginStrings('checkYourEmailText')}
             {this.state.formValues.email}
         </div>
@@ -244,10 +242,10 @@ export default class Register extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="register">
-                <div styleName="register-box">
+            <div className={styles.register}>
+                <div className={styles.registerBox}>
                     { success ? this.renderSuccess() : this.renderForm() }
-                    <div styleName="login-link-container">
+                    <div className={styles.loginLinkContainer}>
                         <p>
                             { success ?
                                 this.props.loginStrings('goBackToLoginText') :
@@ -256,7 +254,7 @@ export default class Register extends React.PureComponent {
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}
-                            styleName="login-link"
+                            className={styles.loginLink}
                         >
                             {this.props.loginStrings('loginLabel')}
                         </Link>

@@ -41,23 +41,16 @@ export default class GalleryImage extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                styleName="gallery-image"
-                className={`gallery-image ${className}`}
-            >
+            <div className={`gallery-image ${styles.galleryImage} ${className}`}>
                 {
                     imageUrl ? (
                         <img
                             alt={this.props.commonStrings('altUser')}
-                            className="image"
-                            styleName="image"
+                            className={`image ${styles.image}`}
                             src={imageUrl}
                         />
                     ) : (
-                        <span
-                            styleName="image-alt"
-                            className={`image-alt ${iconNames.user}`}
-                        />
+                        <span className={`image-alt ${styles.imageAlt} ${iconNames.user}`} />
                     )
                 }
             </div>

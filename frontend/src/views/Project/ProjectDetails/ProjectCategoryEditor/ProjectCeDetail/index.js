@@ -266,13 +266,13 @@ export default class ProjectCeDetail extends React.PureComponent {
         const isProjectCe = categoryEditorId === projectDetails.categoryEditor;
 
         return (
-            <div styleName="category-editor-detail">
+            <div className={styles.categoryEditorDetail}>
                 { pending && <LoadingAnimation /> }
-                <header styleName="header">
+                <header className={styles.header}>
                     <h2>
                         {ceDetails.title}
                     </h2>
-                    <div styleName="action-btns">
+                    <div className={styles.actionBtns}>
                         {!isProjectCe &&
                             <PrimaryButton
                                 iconName={iconNames.check}
@@ -317,7 +317,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                         <p>{this.props.projectStrings('confirmCloneCeText')}.</p>
                     </Confirm>
                 </header>
-                <div styleName="ce-details">
+                <div className={styles.ceDetails}>
                     <ProjectCeForm
                         formValues={formValues}
                         formErrors={formErrors}
@@ -326,7 +326,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                         failureCallback={this.failureCallback}
                         handleFormCancel={this.handleFormCancel}
                         successCallback={this.successCallback}
-                        styleName="project-ce-form"
+                        className={styles.projectCeForm}
                         pristine={pristine}
                         pending={pending}
                         readOnly={!ceDetails.isAdmin}

@@ -118,7 +118,7 @@ export default class ApiDocs extends React.PureComponent {
     calcMethodKey = method => method.title
 
     renderDocs = docs => (
-        <div styleName="docs">
+        <div className={styles.docs}>
             <h1>{docs.title}</h1>
             <List
                 data={docs.apis}
@@ -208,7 +208,7 @@ export default class ApiDocs extends React.PureComponent {
         let content;
         if (pending) {
             content = (
-                <p styleName="message">
+                <p className={styles.message}>
                     {this.props.apiStrings('loadingLabel')}
                 </p>
             );

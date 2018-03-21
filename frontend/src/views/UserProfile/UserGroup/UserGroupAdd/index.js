@@ -184,7 +184,7 @@ export default class UserGroupAdd extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-group-add-form"
+                className={styles.userGroupAddForm}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -202,7 +202,7 @@ export default class UserGroupAdd extends React.PureComponent {
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     autoFocus
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         type="button"
                         onClick={this.handleFormClose}

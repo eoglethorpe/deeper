@@ -185,8 +185,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-analysis-framework-form"
+                className={`${className} ${styles.addAnalysisFrameworkForm}`}
                 schema={this.schema}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
@@ -205,7 +204,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
                     autoFocus
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

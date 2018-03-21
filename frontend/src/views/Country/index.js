@@ -182,7 +182,7 @@ export default class CountryPanel extends React.PureComponent {
 
         if (countries.length <= 0) {
             return (
-                <div styleName="country-detail-alt">
+                <div className={styles.countryDetailAlt}>
                     {this.props.countriesStrings('noCountriesText')}
                 </div>
             );
@@ -190,7 +190,7 @@ export default class CountryPanel extends React.PureComponent {
 
         if (!activeCountryId) {
             return (
-                <div styleName="country-detail-alt">
+                <div className={styles.countryDetailAlt}>
                     {this.props.countriesStrings('selectCountryText')}
                 </div>
             );
@@ -205,13 +205,13 @@ export default class CountryPanel extends React.PureComponent {
                 <CountryDetail
                     countryId={activeCountryId}
                     key={activeCountryId}
-                    styleName="country-detail"
+                    className={styles.countryDetail}
                 />
             );
         }
 
         return (
-            <div styleName="country-detail-alt">
+            <div className={styles.countryDetailAlt}>
                 {this.props.countriesStrings('countryNotFoundText')}
             </div>
         );
@@ -222,10 +222,10 @@ export default class CountryPanel extends React.PureComponent {
         const { activeUser } = this.props;
 
         return (
-            <div styleName="country-panel">
-                <div styleName="sidebar">
-                    <header styleName="header">
-                        <h3 styleName="heading">
+            <div className={styles.countryPanel}>
+                <div className={styles.sidebar}>
+                    <header className={styles.header}>
+                        <h3 className={styles.heading}>
                             {this.props.countriesStrings('countriesLabel')}
                         </h3>
                         {
@@ -238,7 +238,7 @@ export default class CountryPanel extends React.PureComponent {
                             </PrimaryButton>
                         }
                         <TextInput
-                            styleName="search-input"
+                            className={styles.searchInput}
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.countriesStrings('searchCountryPlaceholer')}
                             type="search"
@@ -248,7 +248,7 @@ export default class CountryPanel extends React.PureComponent {
                         />
                     </header>
                     <ListView
-                        styleName="country-list"
+                        className={styles.countryList}
                         modifier={this.renderCountryListItem}
                         data={displayCountryList}
                         keyExtractor={this.calcCountryListItemKey}

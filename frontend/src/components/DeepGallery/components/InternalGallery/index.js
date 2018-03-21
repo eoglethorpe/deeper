@@ -116,8 +116,7 @@ export default class InternalGallery extends React.PureComponent {
 
     renderFileName = ({ className, fileName, fileUrl }) => (
         <a
-            styleName="gallery-file-name"
-            className={className}
+            className={`${styles.galleryFileName} ${className}`}
             href={fileUrl}
             target="_blank"
         >
@@ -129,20 +128,14 @@ export default class InternalGallery extends React.PureComponent {
         const { className, pendingLabel, onlyFileName } = this.props;
 
         return (
-            <div
-                styleName={`pending-container ${onlyFileName ? 'file-name' : ''}`}
-                className={className}
-            >
+            <div className={`${styles.pendingContainer} ${onlyFileName ? styles.fileName : ''} ${className}`}>
                 {
                     onlyFileName &&
-                    <span styleName="label" >
+                    <span className={styles.label} >
                         { pendingLabel || this.props.commonStrings('loadingFileLabel') }
                     </span>
                 }
-                <span
-                    className={iconNames.loading}
-                    styleName="loading-animation"
-                />
+                <span className={`${iconNames.loading} ${styles.loadingAnimation}`} />
             </div>
         );
     }
@@ -151,11 +144,8 @@ export default class InternalGallery extends React.PureComponent {
         const { className, onlyFileName, notFoundMessage } = this.props;
 
         return (
-            <div
-                styleName={`show-404 ${onlyFileName ? 'file-name' : ''}`}
-                className={className}
-            >
-                <span styleName="label">
+            <div className={`${styles.show404} ${onlyFileName ? styles.fileName : ''} ${className}`}>
+                <span className={styles.label}>
                     {notFoundMessage || this.props.commonStrings('deepFileNotFound')}
                 </span>
             </div>

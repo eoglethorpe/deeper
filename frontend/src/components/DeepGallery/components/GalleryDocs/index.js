@@ -57,14 +57,12 @@ export default class GalleryDocs extends React.PureComponent {
                 {
                     mimeType === 'application/pdf' && canShowIframe && !notHttps ?
                         <iframe
-                            className="doc"
-                            styleName="doc"
+                            className={`doc ${styles.doc}`}
                             title={docUrl}
                             src={docUrl}
                         />
                         : <iframe
-                            className="doc"
-                            styleName="doc"
+                            className={`doc ${styles.doc}`}
                             title={docUrl}
                             src={googleDriveViewerUrl}
                             sandbox="allow-scripts allow-same-origin allow-popups"

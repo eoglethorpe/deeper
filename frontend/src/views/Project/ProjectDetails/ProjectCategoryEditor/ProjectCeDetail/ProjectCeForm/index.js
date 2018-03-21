@@ -73,7 +73,7 @@ export default class ProjectCeForm extends React.PureComponent {
 
         return (
             <Form
-                styleName="ce-detail-form"
+                className={styles.ceDetailForm}
                 changeCallback={changeCallback}
                 failureCallback={failureCallback}
                 successCallback={successCallback}
@@ -84,7 +84,7 @@ export default class ProjectCeForm extends React.PureComponent {
                 disabled={pending}
             >
                 { !readOnly &&
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <DangerButton
                             onClick={handleFormCancel}
                             type="button"
@@ -104,7 +104,7 @@ export default class ProjectCeForm extends React.PureComponent {
                     label={this.props.projectStrings('addCeTitleLabel')}
                     formname="title"
                     placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
-                    styleName="name"
+                    className={styles.name}
                     readOnly={readOnly}
                 />
             </Form>

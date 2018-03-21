@@ -1,5 +1,8 @@
 {
-    "extends": "airbnb",
+    "extends": [
+        "airbnb",
+        "plugin:css-modules/recommended"
+    ],
     "env": {
         "browser": true,
         "jest": true,
@@ -9,6 +12,7 @@
     },
     "plugins": [
         "react",
+        "css-modules",
     ],
     "rules": {
         "strict": 0,
@@ -25,7 +29,9 @@
         "react/forbid-prop-types": [1],
         "react/prop-types": [1, { ignore: [], customValidators: [], skipUndeclared: false }],
         "no-unused-vars": [1, { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }],
-        "no-console": 0
+        "no-console": 0,
+        "css-modules/no-unused-class": [2, { "camelCase": true }],
+        "css-modules/no-undef-class": [2, { "camelCase": true }]
     },
     "parser": "babel-eslint",
     "parserOptions": {

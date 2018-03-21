@@ -124,8 +124,7 @@ export default class DropboxChooser extends React.Component {
 
         return (
             <Button
-                className={className}
-                styleName="dropbox-btn"
+                className={`${className} ${styles.dropboxBtn}`}
                 onClick={this.onChoose}
                 disabled={disabled || !ready}
                 transparent

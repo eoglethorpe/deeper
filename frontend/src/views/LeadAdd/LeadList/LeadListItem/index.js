@@ -141,18 +141,13 @@ export default class LeadListItem extends React.PureComponent {
         const UploadProgress = this.renderUploadProgress;
 
         return (
-            <div styleName="lead-list-item">
+            <div className={styles.leadListItem}>
                 <button
-                    key="lead-item"
-                    styleName={`add-lead-list-item ${active ? 'active' : ''}`}
-                    className={className}
+                    className={`${styles.addLeadListItem} ${active ? 'active' : ''} ${className}`}
                     onClick={this.handleClick}
                 >
-                    <span
-                        styleName="icon"
-                        className={LeadListItem.getIconClassName(type)}
-                    />
-                    <span styleName="title" >
+                    <span className={`${styles.icon} ${LeadListItem.getIconClassName(type)}`} />
+                    <span className={styles.title} >
                         { title }
                     </span>
                     <LeadListIcon leadState={leadState} />
@@ -162,8 +157,7 @@ export default class LeadListItem extends React.PureComponent {
                     />
                 </button>
                 <WarningButton
-                    key="remove-button"
-                    styleName="remove-button"
+                    className={styles.removeButton}
                     disabled={isRemoveDisabled}
                     onClick={this.handleRemoveClick}
                 >

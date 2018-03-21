@@ -338,14 +338,10 @@ export default class GeoSelection extends React.PureComponent {
             .filter(v => v);
 
         return (
-            <div
-                className={className}
-                styleName="geo-selection"
-            >
+            <div className={`${className} ${styles.geoSelection}`}>
                 <div className={styles.header}>
                     <MultiSelectInput
-                        className="flat-select-input"
-                        styleName="flat-select-input"
+                        className={`flat-select-input ${styles.flatSelectInput}`}
                         label={label}
                         showHintAndError={false}
                         hideSelectAllButton
@@ -355,7 +351,7 @@ export default class GeoSelection extends React.PureComponent {
                         disabled={disabled}
                     />
                     <AccentButton
-                        styleName="map-modal-button"
+                        className={styles.mapModalButton}
                         onClick={this.handleGeoSelectButtonClick}
                         smallVerticalPadding
                         smallHorizontalPadding
@@ -367,14 +363,14 @@ export default class GeoSelection extends React.PureComponent {
                 </div>
                 { showMapModal &&
                     <Modal
-                        styleName="modal"
+                        className={styles.modal}
                         onClose={this.handleMapModalClose}
                         closeOnEscape
                     >
                         <ModalHeader
                             title="Geo selection"
                             rightComponent={
-                                <div styleName="location-selects">
+                                <div className={styles.locationSelects}>
                                     <SelectInput
                                         hideClearButton
                                         keySelector={this.regionKeySelector}
@@ -395,22 +391,22 @@ export default class GeoSelection extends React.PureComponent {
                                         optionsIdentifier="location-select-options"
                                         placeholder={this.props.entryStrings('locationSelectPlaceholder')}
                                         showHintAndError={false}
-                                        styleName="map-selection-select"
+                                        className={styles.mapSelectionSelect}
                                         value={values[selectedRegion]}
                                     />
                                 </div>
                             }
                         />
-                        <ModalBody styleName="body">
+                        <ModalBody className={styles.body}>
                             <RegionMap
-                                styleName="map"
+                                className={styles.map}
                                 regionId={selectedRegion}
                                 onChange={this.handleMapSelect}
                                 selections={values[selectedRegion]}
                             />
-                            <div styleName="map-selections">
+                            <div className={styles.mapSelections}>
                                 <ListView
-                                    styleName="map-selections-list"
+                                    className={styles.mapSelectionsList}
                                     data={selectedRegionList}
                                     keyExtractor={GeoSelection.adminLevelKeySelector}
                                     modifier={this.renderAdminLevelList}

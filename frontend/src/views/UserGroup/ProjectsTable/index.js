@@ -319,22 +319,19 @@ export default class ProjectsTable extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={this.props.className}
-                styleName="projects"
-            >
+            <div className={`${this.props.className} ${styles.projects}`}>
                 {deletePending && <LoadingAnimation /> }
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('headerProjects')}
                     </h2>
-                    <div styleName="pusher" />
+                    <div className={styles.pusher} />
                     <TextInput
                         placeholder={this.props.userStrings('placeholderSearch')}
                         onChange={this.handleSearchProjectChange}
                         value={searchProjectInputValue}
                         type="search"
-                        styleName="search-input"
+                        className={styles.searchInput}
                         showLabel={false}
                         showHintAndError={false}
                     />
@@ -348,7 +345,7 @@ export default class ProjectsTable extends React.PureComponent {
                         </PrimaryButton>
                     }
                 </div>
-                <div styleName="content">
+                <div className={styles.content}>
                     <Table
                         data={projects}
                         headers={this.projectHeaders}

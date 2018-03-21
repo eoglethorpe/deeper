@@ -361,12 +361,9 @@ export default class UserProject extends React.PureComponent {
         const isCurrentUser = userId === activeUser.userId;
 
         return (
-            <div
-                styleName="projects"
-                className={className}
-            >
+            <div className={`${styles.projects} ${className}`}>
                 { deletePending && <LoadingAnimation /> }
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('headerProjects')}
                     </h2>
@@ -406,7 +403,7 @@ export default class UserProject extends React.PureComponent {
                 >
                     <p>{confirmText}</p>
                 </Confirm>
-                <div styleName="projects-table">
+                <div className={styles.projectsTable}>
                     <Table
                         data={userProjects}
                         headers={this.projectTableHeaders}

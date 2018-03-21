@@ -283,10 +283,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const Content = this.renderContent;
 
         return (
-            <div
-                className={className}
-                styleName="lead-preview"
-            >
+            <div className={`${className} ${styles.leadPreview}`}>
                 {
                     pending ? (
                         <LoadingAnimation />
