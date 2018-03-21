@@ -2,7 +2,7 @@ version: '3'
 
 services:
     db:
-        build: ./postgres
+        image: devtc/deep-postgres:0.1
         volumes:
             - ./postgres-data:/var/lib/postgresql/data
     redis:
