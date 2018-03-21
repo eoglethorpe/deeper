@@ -23,8 +23,8 @@
             display: flex;
 
             .marker {
-                flex-shrink: 0;
                 align-self: flex-start;
+                flex-shrink: 0;
                 padding-right: $spacing-extra-small-alt;
                 color: $color-text-label;
             }

@@ -9,13 +9,13 @@
 
     .header {
         @include background-color($color-background-header);
-        flex-shrink: 0;
         display: flex;
+        flex-shrink: 0;
         padding: 0;
 
         .heading {
-            padding: $spacing-small $spacing-large;
             flex-shrink: 0;
+            padding: $spacing-small $spacing-large;
         }
 
         .tabs {

@@ -3,9 +3,9 @@
 .register {
     @extend %main-content;
     display: flex;
-    flex-wrap: wrap;
     align-content: center;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
     width: 100%;
     height: 100vh;
@@ -36,8 +36,8 @@
 
         .login-link-container {
             display: flex;
-            flex-basis: 100%;
             align-items: center;
+            flex-basis: 100%;
             justify-content: center;
             margin-top: $spacing-extra-small;
             background-color: $color-foreground;

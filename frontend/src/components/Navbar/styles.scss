@@ -78,8 +78,8 @@ $color-text-on-primary: get-text-color($color-primary);
     }
 
     .main-menu {
-        flex-grow: 1;
         align-self: stretch;
+        flex-grow: 1;
 
         >button {
             padding: $spacing-small;
@@ -87,8 +87,8 @@ $color-text-on-primary: get-text-color($color-primary);
     }
 
     .user-menu {
-        flex-shrink: 0;
         align-self: stretch;
+        flex-shrink: 0;
         min-width: 156px;
     }
 
@@ -102,8 +102,8 @@ $color-text-on-primary: get-text-color($color-primary);
     .menu-item {
         @include transition-medium;
         display: inline-flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: center;
         border-top: $width-separator-thick solid transparent;
         border-bottom: $width-separator-thick solid transparent;

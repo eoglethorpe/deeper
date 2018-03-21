@@ -8,8 +8,8 @@
 
     .header {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
         padding: $spacing-small $spacing-large;

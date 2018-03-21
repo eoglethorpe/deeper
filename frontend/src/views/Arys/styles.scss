@@ -7,8 +7,8 @@
 
     .header {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         background-color: $color-foreground;
         padding: $spacing-small;
@@ -23,8 +23,8 @@
                 }
 
                 .button {
-                    flex-shrink: 0;
                     align-self: flex-end;
+                    flex-shrink: 0;
                     margin: $spacing-small;
                 }
             }

@@ -29,9 +29,9 @@ $info-height: 144px;
         @include shadow-medium;
         @include background-color($color-foreground);
         display: flex;
+        align-items: center;
         flex-direction: column;
         flex-grow: 1;
-        align-items: center;
         justify-content: center;
         padding: $spacing-medium-alt;
         font-size: $font-size-extra-large;
@@ -52,8 +52,8 @@ $info-height: 144px;
 
     .title-container {
         display: flex;
-        flex-shrink: 0;
         align-items: flex-start;
+        flex-shrink: 0;
         padding: $spacing-small $spacing-medium-alt;
 
         .name {
@@ -75,8 +75,8 @@ $info-height: 144px;
         flex-grow: 1;
         margin: 0;
         padding: 0 $spacing-medium-alt;
-        text-align: justify;
         overflow-y: auto;
+        text-align: justify;
     }
 
     button {
@@ -92,13 +92,13 @@ $info-height: 144px;
 
 .projects {
     border-bottom: $width-separator-thin solid $color-separator;
-    grid-area: projects;
     overflow-y: auto;
+    grid-area: projects;
 }
 
 .members {
-    grid-area: members;
     overflow-y: auto;
+    grid-area: members;
 }
 
 .user-group-edit-modal {

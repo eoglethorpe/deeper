@@ -8,14 +8,14 @@ $height-deep-logo: 256px;
 .login {
     @extend %main-content;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
+    flex-wrap: wrap;
     justify-content: center;
 
     .deep-container {
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         padding: $spacing-extra-large;
 
         .logo {
@@ -47,15 +47,15 @@ $height-deep-logo: 256px;
         .hid-link-container {
             @include background-color($color-foreground);
             display: flex;
+            align-items: center;
             flex-basis: 100%;
             flex-direction: column;
-            align-items: center;
             padding: $spacing-large;
 
             .hid-link {
                 display: flex;
-                flex-basis: 100%;
                 align-items: center;
+                flex-basis: 100%;
                 margin-bottom: $spacing-large;
                 border: $width-separator-thin solid $color-separator-alt;
                 border-radius: 3px;
@@ -114,8 +114,8 @@ $height-deep-logo: 256px;
         .register-link-container {
             @include background-color($color-foreground);
             display: flex;
-            flex-basis: 100%;
             align-items: center;
+            flex-basis: 100%;
             justify-content: center;
             margin-top: $spacing-extra-small;
             padding: $spacing-large;

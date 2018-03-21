@@ -10,8 +10,8 @@
         display: flex;
 
         .marker {
-            flex-shrink: 0;
             align-self: flex-start;
+            flex-shrink: 0;
             padding-right: $spacing-small;
             color: $color-text-label;
         }

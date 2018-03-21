@@ -27,8 +27,8 @@
 
     %ngram-selects {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         border-top: $width-separator-medium solid $color-separator;
         background-color: $color-foreground;
 
@@ -107,8 +107,8 @@
 
                         .file-list-item {
                             display: flex;
-                            flex-shrink: 0;
                             align-items: center;
+                            flex-shrink: 0;
                             justify-content: space-between;
                             border-bottom: $width-separator-thin solid $color-separator;
                             padding: $spacing-small;
@@ -141,8 +141,8 @@
                     flex-grow: 1;
                     padding: $spacing-medium;
                     width: 100%;
-                    text-align: justify;
                     overflow-y: auto;
+                    text-align: justify;
                 }
 
                 .ngrams-tab {
@@ -215,8 +215,8 @@
 
             .action-btn {
                 display: flex;
-                flex-basis: 100%;
                 align-items: flex-end;
+                flex-basis: 100%;
                 justify-content: flex-start;
 
                 .category-select {
@@ -268,8 +268,8 @@
 
                     .header {
                         display: flex;
-                        flex-shrink: 0;
                         align-items: center;
+                        flex-shrink: 0;
                         justify-content: space-between;
                         border-bottom: $width-separator-medium solid $color-separator;
 
@@ -349,8 +349,8 @@
 
                 .header {
                     display: flex;
-                    flex-shrink: 0;
                     align-items: center;
+                    flex-shrink: 0;
                     justify-content: space-between;
                     border-bottom: $width-separator-medium solid $color-separator;
                     padding: $spacing-small 0;
@@ -415,8 +415,8 @@
 
         .empty {
             display: flex;
-            flex-grow: 1;
             align-items: center;
+            flex-grow: 1;
             justify-content: center;
             color: $color-text-disabled;
         }

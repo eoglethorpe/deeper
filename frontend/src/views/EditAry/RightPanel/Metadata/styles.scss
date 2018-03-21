@@ -12,8 +12,8 @@ $width-documents: 480px;
     > .header {
         @include background-color($color-background-header);
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         border-bottom: $width-separator-thin solid $color-separator;
 
         .non-field-errors {
@@ -54,8 +54,8 @@ $width-documents: 480px;
         .header {
             @include background-color($color-background-header);
             display: flex;
-            flex-shrink: 0;
             align-items: center;
+            flex-shrink: 0;
             justify-content: space-between;
             border-top: $width-separator-thin solid $color-separator;
             border-bottom: $width-separator-thin solid $color-separator;

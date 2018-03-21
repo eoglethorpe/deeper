@@ -11,9 +11,9 @@
     .assistant-options {
         display: flex;
         align-items: flex-end;
-        animation: pop-in $duration-medium ease forwards;
         border-top: $width-separator-thin solid $color-separator;
         padding: $spacing-medium-alt;
+        animation: pop-in $duration-medium ease forwards;
 
         .assisted-source-change-btn {
             flex-basis: 60%;
@@ -71,8 +71,8 @@
         flex-direction: column;
         padding: $spacing-small $spacing-large;
         max-height: 40vh;
-        text-align: justify;
         overflow-y: auto;
+        text-align: justify;
 
         .details {
             display: inline-block;
@@ -120,8 +120,8 @@
     }
 
     .add-button {
-        flex-shrink: 0;
         align-self: flex-end;
+        flex-shrink: 0;
         margin: $spacing-extra-small $spacing-medium $spacing-medium 0;
     }
 }

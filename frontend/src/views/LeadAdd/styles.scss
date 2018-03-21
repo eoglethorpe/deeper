@@ -9,8 +9,8 @@ $radius-button-border: 2px;
 
     > .header {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
         background-color: $color-foreground;
@@ -49,9 +49,9 @@ $radius-button-border: 2px;
         .lead-filters {
             display: flex;
             position: relative;
+            align-items: center;
             flex-shrink: 0;
             flex-wrap: wrap;
-            align-items: center;
             justify-content: space-between;
 
             >* {
@@ -85,8 +85,8 @@ $radius-button-border: 2px;
                     border-left: $width-separator-thick solid transparent;
                     cursor: pointer;
                     padding-top: $spacing-small $spacing-medium;
-                    user-select: none;
                     overflow-y: auto;
+                    user-select: none;
 
                     &.active {
                         border-left: $width-separator-thick solid $color-accent;
@@ -114,9 +114,9 @@ $radius-button-border: 2px;
             .add-lead-buttons {
                 @include background-color($color-foreground);
                 display: flex;
+                align-items: center;
                 flex-shrink: 0;
                 flex-wrap: wrap;
-                align-items: center;
                 justify-content: space-around;
 
                 .heading {
@@ -227,9 +227,9 @@ $radius-button-border: 2px;
 
             .empty-form {
                 display: flex;
+                align-items: center;
                 flex-basis: 30%;
                 flex-shrink: 0;
-                align-items: center;
                 justify-content: center;
             }
 

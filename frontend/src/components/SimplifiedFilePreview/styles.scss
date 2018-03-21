@@ -4,8 +4,8 @@
     display: flex;
     position: relative;
     flex-grow: 1;
-    overflow-y: auto;
     overflow-x: hidden;
+    overflow-y: auto;
 
     .simplified-text {
         margin: 0;
@@ -20,8 +20,8 @@
 
     .message {
         display: flex;
-        flex-grow: 1;
         align-items: center;
+        flex-grow: 1;
         justify-content: center;
         color: $color-text-disabled;
         font-size: $font-size-large;
