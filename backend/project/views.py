@@ -1,4 +1,3 @@
-from django.db import models
 from rest_framework import (
     viewsets,
     permissions,
@@ -24,14 +23,8 @@ class ProjectViewSet(viewsets.ModelViewSet):
                           ModifyPermission]
 
     def get_queryset(self):
-        projects = Project.get_for(self.request.user)
-
         user = self.request.GET.get('user', self.request.user)
-        if user:
-            projects = projects.filter(
-                models.Q(members=user) |
-                models.Q(user_groups__members=user)
-            ).distinct()
+        projects = Project.get_for(user)
 
         user_group = self.request.GET.get('user_group')
         if user_group:
