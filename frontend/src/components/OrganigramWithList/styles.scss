@@ -1,0 +1,13 @@
+@import '../../stylesheets/base.scss';
+
+.container {
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .title {
+            text-transform: uppercase;
+        }
+    }
+}

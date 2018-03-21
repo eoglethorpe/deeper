@@ -249,6 +249,13 @@ export const aryTemplateMethodologySelector = createSelector(
     ),
 );
 
+export const assessmentTopicsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.assessmentTopics || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,

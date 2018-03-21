@@ -1,71 +1,114 @@
 @import '../../../../stylesheets/base';
-@import '../../../../stylesheets/tabs';
 
+$width-action-buttons: 48px;
+$height-bottom: 320px;
 
 .methodology {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     background-color: $color-foreground-alt;
-    padding: $spacing-medium;
-    height: 100%;
 
     .overview {
         display: flex;
         flex-direction: column;
+        flex-grow: 1;
 
-        .fields {
+        > .header {
+            @include background-color($color-background-header);
             display: flex;
-            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            justify-content: space-between;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small $spacing-medium;
+        }
+
+        .scroll-wrapper {
+            @include background-color($color-background-row);
             flex-grow: 1;
+            overflow: auto;
 
-            .field-title {
-                display: flex;
-                margin-bottom: $spacing-large;
+            .content {
+                display: table;
+                width: 100%;
 
-                h3 {
-                    flex-basis: 16%;
-                    margin-right: $spacing-large;
-                    border-bottom: $width-separator-thin solid $color-separator;
+                %cell {
+                    display: table-cell;
+                    padding: $spacing-small $spacing-medium;
+
+                    &:not(:last-child) {
+                        border-right: $width-separator-thin solid $color-separator;
+                    }
                 }
 
-                .add {
-                    flex-basis: 3%;
+                %action-buttons {
+                    @extend %cell;
+                    width: $width-action-buttons;
                 }
-            }
 
-            .field-values {
-                display: flex;
-                flex-basis: 100%;
-                flex-direction: column;
+                .header {
+                    display: table-row;
 
-                >div {
-                    display: flex;
-                    flex-grow: 1;
+                    .title {
+                        @extend %cell;
+                        @include background-color($color-background-header);
+                        position: sticky;
+                        top: 0;
+                        z-index: 1;
+                        border-bottom: $width-separator-thin solid $color-separator-alt;
+                        text-transform: uppercase;
+                    }
 
+                    .action-buttons {
+                        @extend %action-buttons;
+                        @include background-color($color-background-header);
+                        position: sticky;
+                        top: 0;
+                        border-bottom: $width-separator-thin solid $color-separator-alt;
+                    }
+                }
+
+                .row {
+                    @extend %background-alternating-row;
+                    display: table-row;
+
+                    .cell {
+                        @extend %cell;
+                    }
+
+                    .action-buttons {
+                        @extend %action-buttons;
+                    }
                 }
             }
         }
 
-        .action-buttons {
+        .bottom {
             display: flex;
+            flex-shrink: 0;
+            justify-content: space-evenly;
+            height: $height-bottom;
 
+            .affected-groups {
+                padding: 0 $spacing-medium;
+
+                .header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-betweeen;
+                    text-transform: uppercase;
+                }
+            }
+
+            .location-selection {
+                padding: 0;
+            }
+
+            .additional-document {
+                padding: $spacing-small $spacing-medium;
+            }
         }
     }
 }
 
-
-.values {
-    display: flex;
-    padding: $spacing-medium;
-
-    .field-inputs {
-        flex-basis: 16%;
-        margin-right: $spacing-large;
-    }
-
-    .remove-button {
-        flex-basis: 3%;
-    }
-
-    &:nth-child(odd) {
-        background-color: $color-background-row;
-    }
-}
