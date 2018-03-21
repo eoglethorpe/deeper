@@ -51,7 +51,7 @@ plugins:
         enabled: false
   stylelint:
     enabled: true
-    config: frontend/.stylelintrc.json
+    config: frontend/.stylelintrc-2.json
 
 
 exclude_patterns:

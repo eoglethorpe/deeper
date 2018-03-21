@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "stylelint-config-concentric": "^2.0.0",
+    "stylelint-config-recommended-scss": "^3.1.0"
+  }
+}
