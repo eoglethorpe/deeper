@@ -24,6 +24,16 @@ $font-family-icons: 'Ionicons';
     }
 }
 
+:global {
+    .modal-shown {
+        #root {
+            filter: brightness(50%);
+            pointer-events: none;
+            user-select: none;
+        }
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -68,16 +78,6 @@ body {
         .no-nav + .deep-main-content {
             padding: 0;
             height: 100vh;
-        }
-    }
-}
-
-:global {
-    .modal-shown {
-        #root {
-            filter: brightness(50%);
-            pointer-events: none;
-            user-select: none;
         }
     }
 }

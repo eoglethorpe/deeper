@@ -1,11 +1,11 @@
 .preview {
     display: flex;
-    flex-basis: 30%;
-    text-align: center;
     align-items: center;
+    flex-basis: 30%;
     justify-content: center;
     border-left: $width-separator-thin solid $color-separator;
     background-color: $color-foreground-alt;
+    text-align: center;
     color: $color-text-disabled;
     font-size: $font-size-large;
 }
