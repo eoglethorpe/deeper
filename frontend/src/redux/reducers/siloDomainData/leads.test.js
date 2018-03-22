@@ -155,6 +155,7 @@ test('should set active sort for first time', () => {
 
 test('should set leads', () => {
     const state = {
+        activeProject: 2,
         leadPage: {
             2: {
                 filter: { search: 'hari' },
@@ -168,9 +169,9 @@ test('should set leads', () => {
     const action = setLeadsAction({
         leads: ['lead1', 'lead2'],
         totalLeadsCount: 10,
-        projectId: 2,
     });
     const after = {
+        activeProject: 2,
         leadPage: {
             2: {
                 filter: { search: 'hari' },
@@ -187,15 +188,16 @@ test('should set leads', () => {
 
 test('should set leads for first time', () => {
     const state = {
+        activeProject: 2,
         leadPage: {
         },
     };
     const action = setLeadsAction({
         leads: ['lead1', 'lead2'],
         totalLeadsCount: 10,
-        projectId: 2,
     });
     const after = {
+        activeProject: 2,
         leadPage: {
             2: {
                 leads: ['lead1', 'lead2'],
