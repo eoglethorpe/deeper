@@ -18,8 +18,8 @@
             padding: 0 $spacing-small;
 
             .marker {
-                flex-shrink: 0;
                 align-self: flex-start;
+                flex-shrink: 0;
                 padding-right: $spacing-small;
                 color: $color-text-label;
             }
@@ -44,9 +44,9 @@ $height-modal: 80vh;
         padding: 0;
 
         .excerpt {
-            border-right: $width-separator-thin solid $color-separator;
             flex-basis: 30%;
             flex-shrink: 0;
+            border-right: $width-separator-thin solid $color-separator;
             padding: $spacing-small;
             text-align: justify;
         }

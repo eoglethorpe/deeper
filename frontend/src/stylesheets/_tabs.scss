@@ -32,8 +32,8 @@
         }
 
         .empty-tab {
-            flex-grow: 1;
             align-self: stretch;
+            flex-grow: 1;
             border-bottom: $width-separator-medium solid $color-separator;
         }
 

@@ -67,18 +67,18 @@ $height-edit-modal: 72vh;
 
     .drag-handle {
         display: flex;
-        flex-grow: 0;
-        flex-shrink: 0;
         align-items: center;
         align-self: stretch;
+        flex-grow: 0;
+        flex-shrink: 0;
         cursor: move;
         padding: 0 $spacing-medium;
     }
 
     .edit-scale-unit {
         display: flex;
-        flex-grow: 1;
         align-items: flex-end;
+        flex-grow: 1;
         background-color: $color-foreground;
         padding: $spacing-medium 0;
 
@@ -92,9 +92,9 @@ $height-edit-modal: 72vh;
 
         .check-button {
             display: flex;
+            align-items: flex-end;
             flex-direction: column;
             flex-shrink: 0;
-            align-items: flex-end;
             cursor: pointer;
 
             .label {

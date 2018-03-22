@@ -15,11 +15,11 @@ $width-region-list: 240px;
         >.header {
             @include background-color($color-background-header);
             display: flex;
+            align-items: center;
             flex-shrink: 0;
             flex-wrap: wrap;
-            align-items: center;
-            padding: $spacing-small;
             border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small;
 
             .heading {
                 flex-grow: 1;
@@ -46,8 +46,8 @@ $width-region-list: 240px;
 
     .no-regions {
         display: flex;
-        flex-basis: calc(100% - #{$width-region-list});
         align-items: center;
+        flex-basis: calc(100% - #{$width-region-list});
         justify-content: center;
         color: $color-text-disabled;
         font-size: $font-size-large;

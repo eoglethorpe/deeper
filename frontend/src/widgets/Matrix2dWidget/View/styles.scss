@@ -15,8 +15,8 @@
         }
 
         .tag-dimension {
-            flex-basis: 50%;
             align-self: center;
+            flex-basis: 50%;
 
             .dimension-title {
                 color: $color-accent;
@@ -41,8 +41,8 @@
                     display: flex;
 
                     .marker {
-                        flex-shrink: 0;
                         align-self: flex-start;
+                        flex-shrink: 0;
                         padding-right: $spacing-extra-small-alt;
                         color: $color-text-label;
                     }

@@ -1,21 +1,66 @@
 .filters {
     display: flex;
-    flex-direction: column;
     flex-basis: 50%;
+    flex-direction: column;
     background-color: $color-background-row;
 
     .heading {
-        padding: $spacing-small;
-        background-color: $color-background-header;
         border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-small;
+    }
+
+    .lead-filters {
+        display: flex;
+        flex-direction: column;
+
+        .lead-attributes {
+            :global {
+                .leads-filters {
+                    display: flex;
+                    align-items: flex-end;
+                    flex-shrink: 0;
+                    flex-wrap: wrap;
+                    // border-bottom: $width-separator-thin solid $color-separator;
+                    background-color: $color-foreground;
+                    padding: $spacing-small;
+
+
+                    .leads-filter {
+                        margin: $spacing-small;
+                    }
+
+                    .button {
+                        align-self: flex-end;
+                        flex-shrink: 0;
+                        margin: $spacing-small;
+                    }
+                }
+            }
+        }
+
+        .leads {
+            position: relative;
+            flex-grow: 1;
+            overflow-y: auto;
+
+            .leads-table {
+                :global {
+                    .select {
+                        width: 64px;
+                    }
+                }
+            }
+
+        }
     }
 
     :global {
         .entries-filters {
             display: flex;
+            align-items: flex-end;
             flex-shrink: 0;
             flex-wrap: wrap;
-            align-items: flex-end;
             border-bottom: $width-separator-thin solid $color-separator;
             background-color: $color-foreground;
             padding: $spacing-small;
@@ -43,51 +88,6 @@
                 flex-shrink: 0;
                 margin: $spacing-small;
             }
-        }
-    }
-
-    .lead-filters {
-        display: flex;
-        flex-direction: column;
-
-        .lead-attributes {
-            :global {
-                .leads-filters {
-                    display: flex;
-                    flex-shrink: 0;
-                    flex-wrap: wrap;
-                    align-items: flex-end;
-                    // border-bottom: $width-separator-thin solid $color-separator;
-                    background-color: $color-foreground;
-                    padding: $spacing-small;
-
-
-                    .leads-filter {
-                        margin: $spacing-small;
-                    }
-
-                    .button {
-                        flex-shrink: 0;
-                        align-self: flex-end;
-                        margin: $spacing-small;
-                    }
-                }
-            }
-        }
-
-        .leads {
-            position: relative;
-            flex-grow: 1;
-            overflow-y: auto;
-
-            .leads-table {
-                :global {
-                    .select {
-                        width: 64px;
-                    }
-                }
-            }
-
         }
     }
 }

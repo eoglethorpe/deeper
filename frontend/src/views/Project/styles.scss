@@ -20,9 +20,9 @@ $width-project-bar: 240px;
         .header {
             @include background-color($color-background-header);
             display: flex;
+            align-items: center;
             flex-shrink: 0;
             flex-wrap: wrap;
-            align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-small;
@@ -48,10 +48,10 @@ $width-project-bar: 240px;
 
                 .link {
                     display: block;
+                    padding: $spacing-small;
                     width: 100%;
                     height: 100%;
                     text-transform: none;
-                    padding: $spacing-small;
                 }
             }
 
@@ -75,8 +75,8 @@ $width-project-bar: 240px;
     .no-project-text {
         @include background-color-with-disabled-text($color-foreground-alt);
         display: flex;
-        flex-basis: 84%;
         align-items: center;
+        flex-basis: 84%;
         justify-content: center;
         margin: 0;
         font-size: $font-size-extra-large;

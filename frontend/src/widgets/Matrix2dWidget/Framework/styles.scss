@@ -46,8 +46,8 @@ $height-overview-edit-modal: 80vh;
 
         >.header {
             display: flex;
-            flex-shrink: 0;
             align-items: center;
+            flex-shrink: 0;
             justify-content: space-between;
 
             .left {
@@ -58,8 +58,8 @@ $height-overview-edit-modal: 80vh;
             }
 
             .dimension-type-list {
-                flex-shrink: 0;
                 align-self: flex-end;
+                flex-shrink: 0;
 
                 .tab {
                     @extend %button-basic;
@@ -76,8 +76,8 @@ $height-overview-edit-modal: 80vh;
 
             .right {
                 display: flex;
-                flex-grow: 1;
                 align-self: flex-end;
+                flex-grow: 1;
                 justify-content: flex-end;
                 border-bottom: $width-separator-medium solid $color-separator;
                 padding: $spacing-medium;
@@ -141,8 +141,8 @@ $height-overview-edit-modal: 80vh;
 
                     .header {
                         display: flex;
-                        flex-shrink: 0;
                         align-items: center;
+                        flex-shrink: 0;
                         justify-content: space-between;
                         border-bottom: $width-separator-thin solid $color-separator;
                         background-color: $color-background-header;
@@ -159,8 +159,8 @@ $height-overview-edit-modal: 80vh;
 
             .empty {
                 display: flex;
-                flex-basis: 80%;
                 align-items: center;
+                flex-basis: 80%;
                 justify-content: center;
                 color: $color-text-label;
             }
@@ -237,8 +237,8 @@ $height-overview-edit-modal: 80vh;
     }
 
     .actions {
-        flex-shrink: 0;
         align-self: flex-end;
+        flex-shrink: 0;
         padding: 0 $spacing-medium;
     }
 }

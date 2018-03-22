@@ -5,8 +5,8 @@
 
     .add-lead-list-item {
         display: flex;
-        flex-wrap: wrap;
         align-items: center;
+        flex-wrap: wrap;
         outline: none;
         border: 0;
         border-bottom: $width-separator-thin solid $color-separator;
@@ -111,8 +111,8 @@
 
         .remove-button {
             display: initial;
-            animation: fade .5s linear;
             opacity: 1;
+            animation: fade .5s linear;
         }
     }
 }

@@ -9,8 +9,8 @@
 
         .url {
             display: flex;
-            flex-grow: 1;
             align-items: center;
+            flex-grow: 1;
 
             :global .input {
                 border: $width-separator-thin solid $color-separator;
@@ -22,8 +22,8 @@
 
         .action-buttons {
             display: flex;
-            flex-shrink: 0;
             align-items: center;
+            flex-shrink: 0;
             margin-left: $spacing-small;
 
             .open-link {
@@ -52,8 +52,8 @@
 
 .error-website-msg {
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     margin: auto;
     padding: $spacing-medium;
@@ -69,14 +69,14 @@
 
 .pending-container {
     display: flex;
-    flex-grow: 1;
     align-items: center;
+    flex-grow: 1;
     justify-content: center;
 
     .loading-animation {
         display: inline-block;
-        animation: spin 1s linear infinite;
         margin-right: $spacing-small;
+        animation: spin 1s linear infinite;
     }
 
     .waiting-text {

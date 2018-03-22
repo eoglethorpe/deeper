@@ -110,9 +110,9 @@ $info-height: 144px;
     .user-detail-alt {
         @include shadow-medium;
         display: flex;
+        align-items: center;
         flex-direction: column;
         flex-grow: 1;
-        align-items: center;
         justify-content: center;
         background-color: $color-foreground;
         padding: $spacing-medium-alt;

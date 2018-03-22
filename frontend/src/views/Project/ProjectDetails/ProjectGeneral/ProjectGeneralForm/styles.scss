@@ -3,9 +3,9 @@
 .project-general-form {
     display: flex;
     position: relative;
+    align-content: stretch;
     flex-direction: column;
     flex-grow: 1;
-    align-content: stretch;
 
     >* {
         padding: $spacing-small $spacing-medium-alt;

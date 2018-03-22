@@ -12,15 +12,15 @@
     .header {
         @include background-color($color-background-header);
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator-alt;
         padding: $spacing-small;
 
         .add-lead-button {
-            flex-shrink: 0;
             align-self: flex-end;
+            flex-shrink: 0;
             margin: $spacing-small;
             padding: $spacing-small $spacing-medium-alt;
             font-size: $font-size-large;
@@ -36,8 +36,8 @@
                 }
 
                 .button {
-                    flex-shrink: 0;
                     align-self: flex-end;
+                    flex-shrink: 0;
                     margin: $spacing-small;
                 }
             }
@@ -46,8 +46,8 @@
 
     .no-lead-found {
         display: flex;
-        flex-direction: column;
         align-items: center;
+        flex-direction: column;
         margin: auto;
 
         p {
@@ -57,9 +57,10 @@
 
     .viz-container {
         display: grid;
+        padding: $spacing-small-alt;
+        overflow-y: auto;
         grid-template-columns: 1fr 1fr;
         grid-template-rows: repeat(5, 640px);
-        padding: $spacing-small-alt;
         grid-column-gap: $spacing-small-alt;
         grid-row-gap: $spacing-small-alt;
         grid-template-areas: 'geo-referenced-map geo-referenced-map'
@@ -67,7 +68,6 @@
             'tree-map correlation-matrix'
             'force-directed-graph radial-dendrogram'
             'collapsible-tree collapsible-tree';
-        overflow-y: auto;
 
         .viz {
             @include background-color($color-foreground-alt);

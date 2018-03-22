@@ -9,8 +9,8 @@
 
     .header {
         display: flex;
-        flex-basis: 100%;
         align-items: center;
+        flex-basis: 100%;
         justify-content: space-between;
         padding: $spacing-small 0;
 
@@ -44,11 +44,6 @@
     .user,
     .date {
         flex-basis: calc(100% / 3 - #{$spacing-medium});
-    }
-
-    .confidentiality,
-    .date,
-    .user {
         padding: $spacing-medium 0;
     }
 
@@ -72,8 +67,8 @@
 
     .file-title {
         flex-basis: 100%;
-        color: $color-text;
         margin: $spacing-small 0;
+        color: $color-text;
     }
 
     .pending-overlay {
@@ -92,9 +87,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            animation: spin 1s linear infinite;
             width: $width-icon-super-large;
             height: $width-icon-super-large;
+            animation: spin 1s linear infinite;
             color: $color-accent;
             font-size: $width-icon-super-large;
         }

@@ -1,0 +1,14 @@
+{
+  "plugins": [
+    "stylelint-scss"
+  ],
+  "extends": [
+      "stylelint-config-recommended-scss",
+      "stylelint-config-concentric"
+  ],
+  "rules": {
+      "indentation": 4,
+
+      "selector-pseudo-class-no-unknown": ["global"]
+  }
+}

@@ -28,21 +28,6 @@ $height-tabs: 48px;
             @extend %container;
         }
 
-        .assisted-tagging {
-            @extend %container;
-
-            :global {
-                .preview {
-                    height: calc(100% - 59px);
-                    overflow-y: auto;
-                }
-
-                .assistant-options {
-                    border-top-color: $color-accent;
-                }
-            }
-        }
-
         .original-preview {
             @extend %container;
 
@@ -55,6 +40,21 @@ $height-tabs: 48px;
                 align-items: center;
                 justify-content: center;
                 height: 100%;
+            }
+        }
+
+        .assisted-tagging {
+            @extend %container;
+
+            :global {
+                .preview {
+                    height: calc(100% - 59px);
+                    overflow-y: auto;
+                }
+
+                .assistant-options {
+                    border-top-color: $color-accent;
+                }
             }
         }
 

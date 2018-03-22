@@ -17,9 +17,9 @@ $width-sidebar: 320px;
 
         .header {
             display: flex;
+            align-items: center;
             flex-shrink: 0;
             flex-wrap: wrap;
-            align-items: center;
             justify-content: space-between;
             border-bottom: $width-separator-medium solid $color-separator;
             padding: $spacing-medium;
@@ -51,9 +51,9 @@ $width-sidebar: 320px;
         @include background-color($color-foreground);
         @include shadow-medium;
         display: flex;
+        align-items: center;
         flex-direction: column;
         flex-grow: 1;
-        align-items: center;
         justify-content: center;
         padding: $spacing-medium-alt;
         font-size: $font-size-extra-large;

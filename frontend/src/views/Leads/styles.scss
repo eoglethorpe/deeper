@@ -7,8 +7,8 @@
 
     .header {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         background-color: $color-foreground;
         padding: $spacing-small;
@@ -16,8 +16,8 @@
         .add-lead-link {
             @extend %button-like-link;
             @include background-color($color-primary);
-            flex-shrink: 0;
             align-self: flex-end;
+            flex-shrink: 0;
             margin: $spacing-small;
             padding: $spacing-small $spacing-medium-alt;
         }
@@ -32,8 +32,8 @@
                 }
 
                 .button {
-                    flex-shrink: 0;
                     align-self: flex-end;
+                    flex-shrink: 0;
                     margin: $spacing-small;
                 }
             }
@@ -120,8 +120,8 @@
 
     .footer {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
         border-top: $width-separator-thin solid $color-separator;
         background-color: $color-foreground-alt;

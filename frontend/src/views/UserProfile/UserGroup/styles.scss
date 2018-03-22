@@ -8,12 +8,12 @@
 
     >.header {
         display: flex;
-        flex-shrink: 0;
         align-items: center;
+        flex-shrink: 0;
         justify-content: space-between;
+        background-color: $color-background-header;
         padding: $spacing-small $spacing-medium;
         height: $height-navbar;
-        background-color: $color-background-header;
     }
 
     .usergroup-table {

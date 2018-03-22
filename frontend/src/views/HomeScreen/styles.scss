@@ -3,8 +3,8 @@
 .home-screen {
     @extend %main-content;
     display: flex;
-    flex-direction: column;
     align-items: center;
+    flex-direction: column;
     justify-content: center;
     background-color: $color-foreground-alt;
 

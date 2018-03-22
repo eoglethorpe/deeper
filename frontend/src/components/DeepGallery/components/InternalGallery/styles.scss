@@ -10,8 +10,8 @@
 
         .url {
             display: flex;
-            flex-grow: 1;
             align-items: center;
+            flex-grow: 1;
 
             :global .input {
                 border: $width-separator-thin solid $color-separator;
@@ -23,8 +23,8 @@
 
         .action-buttons {
             display: flex;
-            flex-shrink: 0;
             align-items: center;
+            flex-shrink: 0;
             margin-left: $spacing-small;
 
             .open-link {
