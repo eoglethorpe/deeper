@@ -81,6 +81,8 @@ from export.views import (
 from deep.views import (
     Api_404View,
     FrontendView,
+    PasswordReset,
+    AccountActivate,
 )
 from docs.views import (
     DocsView,
@@ -292,6 +294,10 @@ urlpatterns = [
     # DRF auth, TODO: logout
     url(r'^api-auth/', include('rest_framework.urls',
                                namespace='rest_framework')),
+
+    # NOTE: For debuging email templates
+    url(r'^pr-email/$', PasswordReset.as_view()),
+    url(r'^aa-email/$', AccountActivate.as_view()),
 
     url(r'^favicon.ico$',
         RedirectView.as_view(
