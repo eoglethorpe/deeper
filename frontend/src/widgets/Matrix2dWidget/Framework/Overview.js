@@ -441,7 +441,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                                     {
                                         i === 0 && (
                                             <td
-                                                className={styles['dimension-td']}
+                                                className={styles.dimensionTd}
                                                 rowSpan={dimension.subdimensions.length}
                                                 title={dimension.tooltip}
                                             >
@@ -498,7 +498,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         return (
             <ListView
-                className={styles['dimension-type-list']}
+                className={styles.dimensionTypeList}
                 data={dimensionTypes}
                 modifier={this.renderDimensionTypeListItem}
             />
@@ -507,7 +507,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderDimensionListItem = (key, data, i) => {
         const { activeDimensionIndex } = this.state;
-        const classNames = [styles['dimension-tab']];
+        const classNames = [styles.dimensionTab];
 
         if (activeDimensionIndex === i) {
             classNames.push(styles.active);
@@ -537,11 +537,11 @@ export default class Matrix2dOverview extends React.PureComponent {
 
         return (
             <SortableList
-                className={styles['dimension-list']}
+                className={styles.dimensionList}
                 data={dimensionData[activeDimensionTypeIndex]}
                 modifier={this.renderDimensionListItem}
                 onChange={this.handleDimensionListSortChange}
-                sortableItemClass={styles['dimension-list-item']}
+                sortableItemClass={styles.dimensionListItem}
                 keyExtractor={Matrix2dOverview.rowKeyExtractor}
                 dragHandleModifier={this.renderDimensionDragHandle}
             />
@@ -550,7 +550,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderDimensionDragHandle = (key, data, index) => {
         const { activeDimensionIndex } = this.state;
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         if (activeDimensionIndex === index) {
             dragStyle.push(styles.active);
         }
@@ -560,7 +560,7 @@ export default class Matrix2dOverview extends React.PureComponent {
     };
 
     renderSubDimensionDragHandle = () => {
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         return (
             <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
         );
@@ -568,7 +568,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderDimensionDragHandle = (key, data, index) => {
         const { activeDimensionIndex } = this.state;
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         if (activeDimensionIndex === index) {
             dragStyle.push(styles.active);
         }
@@ -579,7 +579,7 @@ export default class Matrix2dOverview extends React.PureComponent {
 
     renderSubdimension = (key, data, i) => (
         <div
-            className={styles['sub-dimension-inputs']}
+            className={styles.subDimensionInputs}
             key={data.id}
         >
             <div className={styles.inputs}>
@@ -641,11 +641,11 @@ export default class Matrix2dOverview extends React.PureComponent {
         const addSubdimensionButtonTitle = afStrings('addSubdimensionButtonTitle');
 
         return (
-            <div className={styles['dimension-detail']}>
-                <div className={styles['dimension-inputs']}>
+            <div className={styles.dimensionDetail}>
+                <div className={styles.dimensionInputs}>
                     <div className={styles.inputs}>
                         <TextInput
-                            className={styles['text-input']}
+                            className={styles.textInput}
                             label={titleInputLabel}
                             value={dimension.title}
                             showHintAndError={false}
@@ -653,7 +653,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                             autoFocus
                         />
                         <TextInput
-                            className={styles['text-input']}
+                            className={styles.textInput}
                             label={tooltipInputLabel}
                             value={dimension.tooltip}
                             showHintAndError={false}
@@ -662,7 +662,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         {
                             showColorInput && (
                                 <ColorInput
-                                    className={styles['color-input']}
+                                    className={styles.colorInput}
                                     label={colorInputLabel}
                                     value={dimension.color}
                                     showHintAndError={false}
@@ -678,7 +678,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         />
                     </div>
                 </div>
-                <div className={styles['subdimension-detail']}>
+                <div className={styles.subdimensionDetail}>
                     <header className={styles.header}>
                         <h4>{ subdimensionsTitle }</h4>
                         <AccentButton
@@ -693,7 +693,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         data={subdimension}
                         modifier={this.renderSubdimension}
                         onChange={this.handleSubdimensionsSortChange}
-                        sortableItemClass={styles['sub-dimensions']}
+                        sortableItemClass={styles.subDimensions}
                         keyExtractor={Matrix2dOverview.rowKeyExtractor}
                         dragHandleModifier={this.renderSubDimensionDragHandle}
                     />
@@ -724,7 +724,7 @@ export default class Matrix2dOverview extends React.PureComponent {
         const saveButtonTitle = afStrings('saveButtonTitle');
 
         return (
-            <Modal className={styles['overview-edit-modal']}>
+            <Modal className={styles.overviewEditModal}>
                 <ModalHeader title={editModalTitle} />
                 <ModalBody className={styles.body}>
                     <header className={styles.header}>

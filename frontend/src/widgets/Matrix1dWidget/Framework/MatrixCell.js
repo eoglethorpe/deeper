@@ -16,7 +16,7 @@ export default class MatrixCell extends React.PureComponent {
 
     getClassName = () => {
         const classNames = [
-            styles['matrix-cell'],
+            styles.matrixCell,
         ];
 
         return classNames.join(' ');

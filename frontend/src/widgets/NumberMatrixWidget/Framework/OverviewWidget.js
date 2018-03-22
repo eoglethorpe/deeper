@@ -182,11 +182,11 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     renderColumnUnit = (key, data) => (
         <div
-            className={`${styles['row-col-element']} ${styles['draggable-item']}`}
+            className={`${styles.rowColElement} ${styles.draggableItem}`}
             key={key}
         >
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('titleLabel')}
                 placeholder={this.props.afStrings('titlePlaceholderColumn')}
                 onChange={(value) => { this.handleUnitInputChange(key, value, 'column', 'title'); }}
@@ -195,7 +195,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 autoFocus
             />
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('tooltipTitle')}
                 placeholder={this.props.afStrings('tooltipPlaceholder')}
                 onChange={(value) => { this.handleUnitInputChange(key, value, 'column', 'tooltip'); }}
@@ -203,7 +203,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 showHintAndError={false}
             />
             <DangerButton
-                className={styles['delete-button']}
+                className={styles.deleteButton}
                 onClick={() => { this.handleColUnitRemoveButtonClick(key); }}
                 transparent
             >
@@ -213,7 +213,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
     )
 
     renderDragHandle = () => {
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         return (
             <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
         );
@@ -221,11 +221,11 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     renderRowUnit = (key, data) => (
         <div
-            className={`${styles['row-col-element']} ${styles['draggable-item']}`}
+            className={`${styles.rowColElement} ${styles.draggableItem}`}
             key={key}
         >
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('titleLabel')}
                 placeholder={this.props.afStrings('titlePlaceholderRow')}
                 onChange={(value) => { this.handleUnitInputChange(key, value, 'row', 'title'); }}
@@ -234,7 +234,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 autoFocus
             />
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('tooltipTitle')}
                 placeholder={this.props.afStrings('tooltipPlaceholder')}
                 onChange={(value) => { this.handleUnitInputChange(key, value, 'row', 'tooltip'); }}
@@ -242,7 +242,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 showHintAndError={false}
             />
             <DangerButton
-                className={styles['delete-button']}
+                className={styles.deleteButton}
                 onClick={() => { this.handleRowUnitRemoveButtonClick(key); }}
                 transparent
             >
@@ -253,7 +253,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     renderColHeader = (key, data) => (
         <th
-            className={styles['table-header']}
+            className={styles.tableHeader}
             scope="col"
             key={key}
         >
@@ -263,11 +263,11 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     renderColElement = (key, data, rowKey) => (
         <td
-            className={styles['table-cell']}
+            className={styles.tableCell}
             key={`${rowKey}-${key}`}
         >
             <NumberInput
-                className={styles['number-input']}
+                className={styles.numberInput}
                 placeholder={this.props.afStrings('numberPlaceholder')}
                 showLabel={false}
                 showHintAndError={false}
@@ -283,7 +283,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
         return (
             <tr key={key}>
                 <th
-                    className={styles['table-header']}
+                    className={styles.tableHeader}
                     scope="row"
                 >
                     {data.title}
@@ -335,12 +335,12 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
         return (
             <Modal
-                className={styles['edit-modal']}
+                className={styles.editModal}
                 onClose={this.handleEditModalClose}
             >
                 <ModalHeader title={this.props.afStrings('editNumberMatrixModalTitle')} />
                 <ModalBody className={styles.body}>
-                    <div className={styles['title-input-container']}>
+                    <div className={styles.titleInputContainer}>
                         <TextInput
                             label={this.props.afStrings('titleLabel')}
                             placeholder={this.props.afStrings('titlePlaceholderScale')}
@@ -351,7 +351,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             selectOnFocus
                         />
                     </div>
-                    <div className={styles['modal-unit-container']}>
+                    <div className={styles.modalUnitContainer}>
                         <header className={styles.header}>
                             <h3 className={styles.heading}>
                                 {this.props.afStrings('rowsLabel')}
@@ -364,16 +364,16 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             />
                         </header>
                         <SortableList
-                            className={styles['edit-list']}
+                            className={styles.editList}
                             data={rowHeaders}
                             modifier={this.renderRowUnit}
                             onChange={this.handleRowListSortChange}
-                            sortableItemClass={styles['sortable-unit']}
+                            sortableItemClass={styles.sortableUnit}
                             keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                             dragHandleModifier={this.renderDragHandle}
                         />
                     </div>
-                    <div className={styles['modal-unit-container']}>
+                    <div className={styles.modalUnitContainer}>
                         <header className={styles.header}>
                             <h3 className={styles.heading}>
                                 {this.props.afStrings('columnsLabel')}
@@ -386,11 +386,11 @@ export default class NumberMatrixOverview extends React.PureComponent {
                             />
                         </header>
                         <SortableList
-                            className={styles['edit-list']}
+                            className={styles.editList}
                             data={columnHeaders}
                             modifier={this.renderColumnUnit}
                             onChange={this.handleColumnListSortChange}
-                            sortableItemClass={styles['sortable-unit']}
+                            sortableItemClass={styles.sortableUnit}
                             keyExtractor={NumberMatrixOverview.rowKeyExtractor}
                             dragHandleModifier={this.renderDragHandle}
                         />

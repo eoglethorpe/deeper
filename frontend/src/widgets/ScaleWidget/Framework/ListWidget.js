@@ -212,7 +212,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
     )
 
     renderDragHandle = () => {
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         return (
             <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
         );
@@ -233,7 +233,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
         return (
             <div
-                className={`${styles['edit-scale-unit']} ${styles['draggable-item']}`}
+                className={`${styles.editScaleUnit} ${styles.draggableItem}`}
                 key={key}
             >
                 <ColorInput
@@ -243,7 +243,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     showHintAndError={false}
                 />
                 <TextInput
-                    className={styles['title-input']}
+                    className={styles.titleInput}
                     label={titleInputLabel}
                     placeholder={titleInputPlaceholder}
                     onChange={(value) => { this.handleScaleUnitValueInputChange(key, value); }}
@@ -252,7 +252,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     autoFocus
                 />
                 <AccentButton
-                    className={styles['check-button']}
+                    className={styles.checkButton}
                     onClick={() => { this.handleScaleSetDefaultButtonClick(key); }}
                     id={`${key}-check-button`}
                     transparent
@@ -266,7 +266,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     <span className={defaultIconName} />
                 </AccentButton>
                 <DangerButton
-                    className={styles['delete-button']}
+                    className={styles.deleteButton}
                     onClick={() => { this.handleScaleUnitRemoveButtonClick(key); }}
                     transparent
                 >
@@ -297,7 +297,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
         const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <Modal className={styles['edit-modal']}>
+            <Modal className={styles.editModal}>
                 <ModalHeader
                     title={headerTitle}
                     rightComponent={
@@ -311,7 +311,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
                     }
                 />
                 <ModalBody className={styles.body}>
-                    <div className={styles['title-input-container']} >
+                    <div className={styles.titleInputContainer} >
                         <TextInput
                             label={titleInputLabel}
                             placeholder={titleInputPlaceholder}
@@ -322,13 +322,13 @@ export default class ScaleFrameworkList extends React.PureComponent {
                             selectOnFocus
                         />
                     </div>
-                    <div className={styles['scale-units']}>
+                    <div className={styles.scaleUnits}>
                         <SortableList
-                            className={styles['scale-unit']}
+                            className={styles.scaleUnit}
                             data={scaleUnits}
                             modifier={this.renderScaleUnit}
                             onChange={this.handleScaleUnitSortChange}
-                            sortableItemClass={styles['sortable-unit']}
+                            sortableItemClass={styles.sortableUnit}
                             keyExtractor={ScaleFrameworkList.rowKeyExtractor}
                             dragHandleModifier={this.renderDragHandle}
                         />

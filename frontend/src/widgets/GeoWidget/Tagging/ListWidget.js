@@ -75,7 +75,7 @@ export default class GeoTaggingList extends React.PureComponent {
 
         return (
             <GeoSelection
-                className={styles['geo-select']}
+                className={styles.geoSelect}
                 disabled={false}
                 onChange={this.handleGeoSelectionChange}
                 regions={regions}

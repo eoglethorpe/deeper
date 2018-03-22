@@ -155,7 +155,7 @@ export default class StringManagement extends React.PureComponent {
                         String Management
                     </h2>
                     <button
-                        className={`${styles['sidebar-button']} ${this.state.mode === 'string' ? styles.active : ''}`}
+                        className={`${styles.sidebarButton} ${this.state.mode === 'string' ? styles.active : ''}`}
                         onClick={() => { this.setState({ mode: 'string' }); }}
                     >
                         All Strings
@@ -163,7 +163,7 @@ export default class StringManagement extends React.PureComponent {
                     { Object.keys(this.props.viewStrings).map(viewName => (
                         <button
                             key={viewName}
-                            className={`${styles['sidebar-button']} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
+                            className={`${styles.sidebarButton} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
                             onClick={() => { this.setState({ mode: 'view', viewName }); }}
                         >
                             { viewName }

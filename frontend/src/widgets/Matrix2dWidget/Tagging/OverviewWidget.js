@@ -197,7 +197,7 @@ export default class Matrix2dOverview extends React.PureComponent {
                         i === 0 && (
                             <td
                                 rowSpan={dimension.subdimensions.length}
-                                className={styles['dimension-td']}
+                                className={styles.dimensionTd}
                                 title={dimension.tooltip}
                             >
                                 {dimension.title}

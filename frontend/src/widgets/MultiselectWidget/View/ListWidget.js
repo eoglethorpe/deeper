@@ -32,7 +32,7 @@ export default class MultiselectList extends React.PureComponent {
 
         return (
             <div
-                className={styles['selected-option']}
+                className={styles.selectedOption}
                 key={key}
             >
                 <div className={styles.marker}>

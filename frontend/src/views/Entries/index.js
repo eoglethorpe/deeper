@@ -420,7 +420,7 @@ export default class Entries extends React.PureComponent {
                 style={{ height: maxHeight }}
             >
                 <GridLayout
-                    className={styles['grid-layout']}
+                    className={styles.gridLayout}
                     modifier={this.renderItemView}
                     items={gridItems[data.id] || emptyList}
                     viewOnly
@@ -442,7 +442,7 @@ export default class Entries extends React.PureComponent {
 
         return (
             <header className={styles.header}>
-                <div className={styles['info-container']}>
+                <div className={styles.infoContainer}>
                     <h2 className={styles.heading}>
                         {title}
                     </h2>
@@ -454,7 +454,7 @@ export default class Entries extends React.PureComponent {
                         />
                     </div>
                 </div>
-                <div className={styles['action-buttons']}>
+                <div className={styles.actionButtons}>
                     <Link
                         title={this.props.entryStrings('editEntryLinkTitle')}
                         to={route}
@@ -481,7 +481,7 @@ export default class Entries extends React.PureComponent {
         return (
             <div
                 key={data.id}
-                className={styles['lead-grouped-entries']}
+                className={styles.leadGroupedEntries}
             >
                 <LeadGroupedEntriesHeader
                     leadId={id}
@@ -529,14 +529,14 @@ export default class Entries extends React.PureComponent {
         if (pending) {
             return (
                 <LoadingAnimation
-                    className={styles['loading-animation']}
+                    className={styles.loadingAnimation}
                 />
             );
         }
 
         return (
             <ListView
-                className={styles['lead-entries']}
+                className={styles.leadEntries}
                 data={entries}
                 modifier={this.renderLeadGroupedEntriesItem}
             />
@@ -549,7 +549,7 @@ export default class Entries extends React.PureComponent {
         const LeadEntries = this.renderLeadEntries;
 
         return (
-            <div className={styles['entries-view']}>
+            <div className={styles.entriesView}>
                 <FilterEntriesForm pending={pendingAf} />
                 <LeadEntries />
                 <Footer />

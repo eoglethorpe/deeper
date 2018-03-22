@@ -115,7 +115,7 @@ export default class DateFrameworkList extends React.PureComponent {
         const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <Modal className={styles['edit-modal']}>
+            <Modal className={styles.editModal}>
                 <ModalHeader title={headerTitle} />
                 <ModalBody>
                     <TextInput
@@ -152,7 +152,7 @@ export default class DateFrameworkList extends React.PureComponent {
         return (
             <div className={styles.list}>
                 <DateInput
-                    className={styles['date-input']}
+                    className={styles.dateInput}
                     showHintAndError={false}
                     disabled
                 />

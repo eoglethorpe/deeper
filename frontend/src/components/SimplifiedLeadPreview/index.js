@@ -259,7 +259,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         } else if (extractedText) {
             return (
                 <HighlightedText
-                    className={styles['highlighted-text']}
+                    className={styles.highlightedText}
                     text={extractedText}
                     highlights={highlights}
                     modifier={highlightModifier}

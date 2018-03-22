@@ -103,7 +103,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
         }
 
         return (
-            <Modal className={styles['org-chart-modal']}>
+            <Modal className={styles.orgChartModal}>
                 <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
                 <ModalBody className={styles.body}>
                     <div className={styles.excerpt} >
@@ -168,7 +168,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
                     </AccentButton>
                 </header>
                 <ListView
-                    className={styles['selected-organs']}
+                    className={styles.selectedOrgans}
                     data={values}
                     modifier={this.renderSelectedOrgan}
                     emptyComponent={WidgetEmptyComponent}

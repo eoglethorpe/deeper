@@ -103,14 +103,14 @@ export default class List extends React.PureComponent {
         const minSize = this.widgets.find(w => w.id === widgetId).listMinSize;
 
         const headerRightComponent = widget.overviewComponent ? (
-            <div className={`${styles['action-buttons']} action-buttons`} >
+            <div className={`${styles.actionButtons} actionButtons`} >
                 <span
                     className={`${iconNames.info} icon`}
                     title="Widget added from overview page" // FIXME: use strings
                 />
             </div>
         ) : (
-            <div className={`${styles['action-buttons']} action-buttons`} >
+            <div className={`${styles.actionButtons} actionButtons`} >
                 <Button
                     transparent
                     onClick={() => this.handleWidgetEditButtonClick(key)}

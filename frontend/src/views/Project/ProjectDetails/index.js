@@ -241,7 +241,7 @@ export default class ProjectDetails extends React.PureComponent {
         return (
             <HashRouter>
                 <div
-                    className={`${className} ${styles['project-details']}`}
+                    className={`${className} ${styles.projectDetails}`}
                 >
                     <Route
                         exact
@@ -266,7 +266,7 @@ export default class ProjectDetails extends React.PureComponent {
                                         modifier={this.renderLink}
                                         keyExtractor={ProjectDetails.keyExtractor}
                                     />
-                                    <div className={styles['empty-space']} />
+                                    <div className={styles.emptySpace} />
                                 </div>
                             </header>,
                             <List
@@ -276,7 +276,7 @@ export default class ProjectDetails extends React.PureComponent {
                                 keyExtractor={ProjectDetails.keyExtractor}
                             />,
                         ]) : (
-                            <p className={styles['forbidden-text']}>
+                            <p className={styles.forbiddenText}>
                                 {this.props.projectStrings('forbiddenText')}
                             </p>
                         )

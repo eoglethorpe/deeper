@@ -59,11 +59,11 @@ export default class NumberMatrixList extends React.PureComponent {
             className={styles.row}
             key={key}
         >
-            <span className={styles['row-title']}>
+            <span className={styles.rowTitle}>
                 {data.title}
             </span>
             <ListView
-                className={styles['cols-container']}
+                className={styles.colsContainer}
                 data={data.columns}
                 modifier={this.renderDataColumns}
                 keyExtractor={NumberMatrixList.rowKeyExtractor}
@@ -77,10 +77,10 @@ export default class NumberMatrixList extends React.PureComponent {
             className={styles.col}
             key={key}
         >
-            <span className={styles['col-title']}>
+            <span className={styles.colTitle}>
                 {data.title}
             </span>
-            <span className={styles['col-value']}>
+            <span className={styles.colValue}>
                 {data.value}
             </span>
         </div>

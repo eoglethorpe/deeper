@@ -108,8 +108,8 @@ export default class DocumentPanel extends React.PureComponent {
         return classNames.join(' ');
     }
 
-    getTabHeaderClassName = i => this.getTabClassName(styles['tab-header'], i)
-    getTabContentClassName = i => this.getTabClassName(styles['tab-content'], i)
+    getTabHeaderClassName = i => this.getTabClassName(styles.tabHeader, i)
+    getTabContentClassName = i => this.getTabClassName(styles.tabContent, i)
 
     // Simplification callback
     handleFilesPreviewLoad = (response) => {

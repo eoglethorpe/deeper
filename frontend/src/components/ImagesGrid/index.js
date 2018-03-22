@@ -116,7 +116,7 @@ export default class ImagesGrid extends React.PureComponent {
                             className={styles.modalHeader}
                             rightComponent={
                                 <PrimaryButton
-                                    className={styles['transparent-btn']}
+                                    className={styles.transparentBtn}
                                     onClick={this.handleImagePreviewClose}
                                     transparent
                                 >

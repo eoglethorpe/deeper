@@ -211,7 +211,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (extractedText) {
             return (
-                <p className={styles['simplified-text']}>
+                <p className={styles.simplifiedText}>
                     {extractedText}
                 </p>
             );

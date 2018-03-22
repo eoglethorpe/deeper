@@ -517,10 +517,10 @@ export default class AssistedTagging extends React.PureComponent {
             key={sector.label}
             className={styles.sector}
         >
-            <div className={styles['sector-text']}>
+            <div className={styles.sectorText}>
                 {sector.label} {sector.confidence}
             </div>
-            <div className={styles['feedback-buttons']}>
+            <div className={styles.feedbackButtons}>
                 <SuccessButton
                     title={this.props.entryStrings('accurateTextTitle')}
                     onClick={() => this.handleFeedbackClick(sector.label, 'true')}
@@ -561,11 +561,11 @@ export default class AssistedTagging extends React.PureComponent {
 
         const classNames = [
             className,
-            styles['assisted-tagging'],
+            styles.assistedTagging,
         ];
 
         if (showAssistant) {
-            classNames.push(styles['assistant-shown']);
+            classNames.push(styles.assistantShown);
         }
 
         return (
@@ -668,7 +668,7 @@ export default class AssistedTagging extends React.PureComponent {
                             {onEntryAdd && (
                                 <PrimaryButton
                                     iconName={iconNames.add}
-                                    className={styles['add-button']}
+                                    className={styles.addButton}
                                     onClick={() => this.handleEntryAdd(
                                         activeHighlightDetails.text,
                                     )}

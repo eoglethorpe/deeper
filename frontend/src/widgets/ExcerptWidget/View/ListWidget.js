@@ -58,7 +58,7 @@ export default class ExcerptTextList extends React.PureComponent {
         const altText = afStrings('altEntryLabel');
 
         return (
-            <div className={styles['excerpt-list-view']}>
+            <div className={styles.excerptListView}>
                 {
                     attribute.type === IMAGE ? (
                         <img

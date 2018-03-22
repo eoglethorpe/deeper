@@ -22,7 +22,7 @@ export default class MatrixCell extends React.PureComponent {
 
     getClassName = () => {
         const classNames = [];
-        classNames.push(styles['matrix-cell']);
+        classNames.push(styles.matrixCell);
 
         const { active } = this.props;
         if (active) {

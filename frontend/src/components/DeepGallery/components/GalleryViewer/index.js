@@ -238,7 +238,7 @@ export default class GalleryViewer extends React.PureComponent {
         }
 
         const docContainerClassNames = [
-            styles['doc-container'],
+            styles.docContainer,
             'doc-container',
         ];
 

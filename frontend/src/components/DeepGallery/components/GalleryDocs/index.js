@@ -47,7 +47,7 @@ export default class GalleryDocs extends React.PureComponent {
         const classNames = [
             className,
             'gallery-docs',
-            styles['gallery-docs'],
+            styles.galleryDocs,
         ];
 
         return (

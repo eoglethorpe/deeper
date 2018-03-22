@@ -51,7 +51,7 @@ export default class DocumentNGram extends React.PureComponent {
         const { selectedNGramIndex } = this.state;
 
         const styleNames = [];
-        styleNames.push(styles['ngram-select']);
+        styleNames.push(styles.ngramSelect);
         if (selectedNGramIndex === i) {
             styleNames.push(styles.active);
         }

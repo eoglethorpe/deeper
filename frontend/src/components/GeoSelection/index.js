@@ -238,7 +238,7 @@ export default class GeoSelection extends React.PureComponent {
 
     renderSelectedList = (key, data) => (
         <div
-            className={styles['region-item']}
+            className={styles.regionItem}
             key={key}
         >
             {data.shortLabel}
@@ -253,7 +253,7 @@ export default class GeoSelection extends React.PureComponent {
 
     renderAdminLevelList = (key, data) => (
         <div
-            className={styles['admin-level-section']}
+            className={styles.adminLevelSection}
             key={key}
         >
             <span
@@ -275,7 +275,7 @@ export default class GeoSelection extends React.PureComponent {
         return (
             <div
                 key={key}
-                className={styles['region-name']}
+                className={styles.regionName}
             >
                 <div className={styles.marker}>
                     { marker }
@@ -427,7 +427,7 @@ export default class GeoSelection extends React.PureComponent {
                 }
                 {!hideList &&
                     <ListView
-                        className={styles['region-list']}
+                        className={styles.regionList}
                         data={flatValuesWithTitle}
                         emptyComponent={WidgetEmptyComponent}
                         keyExtractor={GeoSelection.valueKeyExtractor}

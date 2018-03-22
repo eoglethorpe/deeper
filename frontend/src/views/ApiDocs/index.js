@@ -154,7 +154,7 @@ export default class ApiDocs extends React.PureComponent {
                 </button>
             </h3>
             <ListView
-                className={styles['methods-container']}
+                className={styles.methodsContainer}
                 data={endpoint.methods}
                 modifier={this.renderMethod}
                 keyExtractor={this.calcMethodKey}
@@ -215,7 +215,7 @@ export default class ApiDocs extends React.PureComponent {
         }
 
         return (
-            <div className={styles['api-docs']}>
+            <div className={styles.apiDocs}>
                 { content }
             </div>
         );

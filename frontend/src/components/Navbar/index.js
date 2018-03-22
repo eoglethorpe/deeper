@@ -280,7 +280,7 @@ export default class Navbar extends React.PureComponent {
                 render={() => (
                     <Link
                         to={reverseRoute(pathNames[key], params)}
-                        className={styles['dropdown-item']}
+                        className={styles.dropdownItem}
                     >
                         { iconName && <span className={`${iconName} ${styles.icon}`} />}
                         { this.props.pageTitleStrings(key) }
@@ -321,7 +321,7 @@ export default class Navbar extends React.PureComponent {
                     className={styles.brand}
                 >
                     <ReactSVG
-                        wrapperClassName={styles['icon-wrapper']}
+                        wrapperClassName={styles.iconWrapper}
                         className={styles.icon}
                         path={logo}
                     />
@@ -348,7 +348,7 @@ export default class Navbar extends React.PureComponent {
                                 placeholder={this.props.commonStrings('selectEventPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
-                                className={styles['project-select-input']}
+                                className={styles.projectSelectInput}
                                 disabled={
                                     userProjects.length <= 0 || projectSelectInputLink.disable
                                 }
@@ -384,7 +384,7 @@ export default class Navbar extends React.PureComponent {
                             render={
                                 () => (
                                     <a
-                                        className={styles['dropdown-item']}
+                                        className={styles.dropdownItem}
                                         href={adminEndpoint}
                                         target="_blank"
                                     >
@@ -397,7 +397,7 @@ export default class Navbar extends React.PureComponent {
                     </DropdownGroup>
                     <Link
                         target="_blank"
-                        className={styles['dropdown-item']}
+                        className={styles.dropdownItem}
                         to="https://chrome.google.com/webstore/detail/deep-2-add-lead/kafonkgglonkbldmcigbdojiadfcmcdc"
                     >
                         <span className={`${styles.icon} ${iconNames.chrome}`} />
@@ -409,7 +409,7 @@ export default class Navbar extends React.PureComponent {
                             () => (
                                 <DropdownGroup>
                                     <button
-                                        className={styles['dropdown-item']}
+                                        className={styles.dropdownItem}
                                         onClick={this.handleLogoutButtonClick}
                                     >
                                         <span className={`${styles.icon} ${iconNames.logout}`} />

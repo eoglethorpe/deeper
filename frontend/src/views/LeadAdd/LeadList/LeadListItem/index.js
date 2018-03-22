@@ -87,7 +87,7 @@ export default class LeadListItem extends React.PureComponent {
 
     renderIcon = ({ leadState }) => {
         const classNames = [
-            styles['status-icon'],
+            styles.statusIcon,
             styles[LeadListItem.styleMap[leadState]],
             iconNames[LeadListItem.iconMap[leadState]],
         ];
@@ -101,7 +101,7 @@ export default class LeadListItem extends React.PureComponent {
 
         const progress = isTruthy(upload.progress) ? upload.progress : 0;
 
-        const classNames = [styles['progress-bar']];
+        const classNames = [styles.progressBar];
         if (progress >= 100) {
             classNames.push(styles.completed);
         }

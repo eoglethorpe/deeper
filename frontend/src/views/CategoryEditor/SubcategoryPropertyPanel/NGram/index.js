@@ -31,7 +31,7 @@ export default class NGram extends React.PureComponent {
             <div className={styles.title}>
                 { data }
             </div>
-            <div className={styles['action-buttons']}>
+            <div className={styles.actionButtons}>
                 <DangerButton
                     onClick={() => this.props.onDelete(data)}
                     transparent

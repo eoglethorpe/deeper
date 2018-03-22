@@ -115,11 +115,11 @@ export default class NavMenu extends React.PureComponent {
     }
 
     getNavbarItem = (key, item) => (
-        this.getNavItem(key, item, styles['menu-item'])
+        this.getNavItem(key, item, styles.menuItem)
     )
 
     getOverflowMenuItem = (key, item) => (
-        this.getNavItem(key, item, styles['overflow-menu-item'])
+        this.getNavItem(key, item, styles.overflowMenuItem)
     )
 
     computeSize = () => {
@@ -208,7 +208,7 @@ export default class NavMenu extends React.PureComponent {
                     iconName={iconNames.overflowHorizontal}
                     className={styles.overflowMenu}
                     hideDropdownIcon
-                    dropdownClassName={styles['navbar-overflow-dropdown']}
+                    dropdownClassName={styles.navbarOverflowDropdown}
                 >
                     <List
                         data={overflowMenuLinks}

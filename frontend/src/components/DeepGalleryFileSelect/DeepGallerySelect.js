@@ -269,13 +269,13 @@ export default class DgSelect extends React.PureComponent {
         return ([
             <ModalHeader
                 key="header"
-                className={styles['modal-header']}
+                className={styles.modalHeader}
                 title="Select Gallery Files"
                 rightComponent={
                     <TextInput
                         onChange={this.handleSearchInputChange}
                         placeholder={this.props.commonStrings('searchGalleryPlaceholder')}
-                        className={styles['search-input']}
+                        className={styles.searchInput}
                         type="search"
                         label={this.props.commonStrings('searchGalleryLabel')}
                         value={searchInputValue}
@@ -286,7 +286,7 @@ export default class DgSelect extends React.PureComponent {
                 }
             />,
             <ModalBody
-                className={styles['modal-body']}
+                className={styles.modalBody}
                 key="body"
             >
                 { pending && <LoadingAnimation /> }

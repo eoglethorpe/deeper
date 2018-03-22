@@ -131,7 +131,7 @@ export default class ExportTypePane extends React.PureComponent {
         const { activeExportTypeKey } = this.props;
 
         const classNames = [
-            styles['export-type-select'],
+            styles.exportTypeSelect,
         ];
         if (activeExportTypeKey === key) {
             classNames.push(styles.active);

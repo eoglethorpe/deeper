@@ -98,7 +98,7 @@ export default class ProjectPanel extends React.PureComponent {
         const { projectId: projectIdFromUrl } = this.props;
 
         const styleNames = [];
-        styleNames.push(styles['list-item']);
+        styleNames.push(styles.listItem);
         if (projectId === projectIdFromUrl) {
             styleNames.push(styles.active);
         }

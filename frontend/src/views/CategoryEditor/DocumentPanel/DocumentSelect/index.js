@@ -119,7 +119,7 @@ export default class DocumentSelect extends React.PureComponent {
 
     renderGalleryFilesListItem = (fileId, file) => (
         <div
-            className={styles['file-list-item']}
+            className={styles.fileListItem}
             key={fileId}
         >
             <span className={styles.title} >

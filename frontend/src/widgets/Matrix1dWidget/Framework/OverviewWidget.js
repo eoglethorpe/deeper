@@ -307,7 +307,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     renderEditRow = (key, data) => {
         const { activeRow } = this.state;
-        const rowStyle = [styles['row-title-button']];
+        const rowStyle = [styles.rowTitleButton];
         if (activeRow === key) {
             rowStyle.push(styles.active);
         }
@@ -325,7 +325,7 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     renderRowDragHandle = (key) => {
         const { activeRow } = this.state;
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         if (activeRow === key) {
             dragStyle.push(styles.active);
         }
@@ -335,7 +335,7 @@ export default class Matrix1dOverview extends React.PureComponent {
     };
 
     renderCellDragHandle = () => {
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         return (
             <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
         );
@@ -351,7 +351,7 @@ export default class Matrix1dOverview extends React.PureComponent {
         const data = parentData.rows[rowIndex];
 
         return (
-            <div className={styles['edit-row']}>
+            <div className={styles.editRow}>
                 <ColorInput
                     label={this.props.afStrings('colorLabel')}
                     onChange={newColor => this.handleColorChange(newColor, key)}
@@ -359,7 +359,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                     value={data.color}
                 />
                 <TextInput
-                    className={styles['title-input']}
+                    className={styles.titleInput}
                     label={this.props.afStrings('titleLabel')}
                     placeholder={this.props.afStrings('optionPlaceholder')}
                     onChange={value => this.handleRowValueInputChange(key, value, 'title')}
@@ -368,7 +368,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                     autoFocus
                 />
                 <TextInput
-                    className={styles['title-input']}
+                    className={styles.titleInput}
                     label={this.props.afStrings('tooltipTitle')}
                     placeholder={this.props.afStrings('tooltipPlaceholder')}
                     onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
@@ -376,7 +376,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                     value={data.tooltip}
                 />
                 <DangerButton
-                    className={styles['delete-button']}
+                    className={styles.deleteButton}
                     onClick={() => this.handleRowRemoveButtonClick(key)}
                 >
                     <span className={iconNames.delete} />
@@ -387,11 +387,11 @@ export default class Matrix1dOverview extends React.PureComponent {
 
     renderEditCell = (key, data) => (
         <div
-            className={`${styles['edit-cell']} ${styles['draggable-item']}`}
+            className={`${styles.editCell} ${styles.draggableItem}`}
             key={key}
         >
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('titleLabel')}
                 placeholder={this.props.afStrings('titlePlaceholderOverview')}
                 onChange={value => this.handleCellValueInputChange(key, value)}
@@ -400,7 +400,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 autoFocus
             />
             <DangerButton
-                className={styles['delete-button']}
+                className={styles.deleteButton}
                 onClick={() => this.handleCellRemoveButtonClick(key)}
             >
                 <span className={iconNames.delete} />
@@ -424,11 +424,11 @@ export default class Matrix1dOverview extends React.PureComponent {
         const cells = parentData.rows[rowIndex].cells || emptyList;
 
         if (cells.length === 0) {
-            additionalStyle = styles['no-items'];
+            additionalStyle = styles.noItems;
         }
 
         return (
-            <div className={styles['matrix-cells']}>
+            <div className={styles.matrixCells}>
                 <header
                     className={styles.header}
                 >
@@ -442,11 +442,11 @@ export default class Matrix1dOverview extends React.PureComponent {
                     </AccentButton>
                 </header>
                 <SortableList
-                    className={`${styles['cell-list']} ${additionalStyle}`}
+                    className={`${styles.cellList} ${additionalStyle}`}
                     data={cells}
                     modifier={this.renderEditCell}
                     dragHandleModifier={this.renderCellDragHandle}
-                    sortableItemClass={styles['cell-list-item']}
+                    sortableItemClass={styles.cellListItem}
                     onChange={this.handleCellSortEnd}
                     keyExtractor={Matrix1dOverview.cellKeyExtractor}
                 />
@@ -490,11 +490,11 @@ export default class Matrix1dOverview extends React.PureComponent {
         let additionalStyle = '';
 
         if (data.rows.length === 0) {
-            additionalStyle = styles['no-items'];
+            additionalStyle = styles.noItems;
         }
 
         return (
-            <Modal className={styles['edit-row-modal']}>
+            <Modal className={styles.editRowModal}>
                 <ModalHeader
                     title={headerTitle}
                     rightComponent={
@@ -507,10 +507,10 @@ export default class Matrix1dOverview extends React.PureComponent {
                     }
                 />
                 <ModalBody className={styles.body}>
-                    <div className={styles['general-info-container']}>
+                    <div className={styles.generalInfoContainer}>
                         <TextInput
                             autoFocus
-                            className={styles['title-input']}
+                            className={styles.titleInput}
                             label={titleInputLabel}
                             onChange={this.handleWidgetTitleChange}
                             placeholder={titleInputPlaceholder}
@@ -519,24 +519,24 @@ export default class Matrix1dOverview extends React.PureComponent {
                             value={titleValue}
                         />
                     </div>
-                    <div className={styles['modal-rows-content']}>
-                        <div className={styles['left-container']}>
+                    <div className={styles.modalRowsContent}>
+                        <div className={styles.leftContainer}>
                             <SortableList
-                                className={`${styles['row-list']} ${additionalStyle}`}
+                                className={`${styles.rowList} ${additionalStyle}`}
                                 data={data.rows}
                                 modifier={this.renderEditRow}
                                 onChange={this.handleRowSortEnd}
-                                sortableItemClass={styles['row-list-item']}
+                                sortableItemClass={styles.rowListItem}
                                 keyExtractor={Matrix1dOverview.rowKeyExtractor}
                                 dragHandleModifier={this.renderRowDragHandle}
                             />
                         </div>
-                        <div className={styles['right-container']}>
+                        <div className={styles.rightContainer}>
                             {rowIndex !== -1 ? ([
                                 <RowDetail key="row-detail" />,
                                 <RowCells key="row-cells" />,
                             ]) : (
-                                <span className={styles['empty-container']}>
+                                <span className={styles.emptyContainer}>
                                     {this.props.afStrings('noRowSelected')}
                                 </span>
                             )}

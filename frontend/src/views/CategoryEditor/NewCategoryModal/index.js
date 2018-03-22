@@ -84,7 +84,7 @@ export default class NewCategoryModal extends React.PureComponent {
                 </Button>
                 <PrimaryButton
                     onClick={this.handleModalOk}
-                    className={styles['ok-button']}
+                    className={styles.okButton}
                 >
                     {this.props.ceStrings('modalOk')}
                 </PrimaryButton>

@@ -295,16 +295,16 @@ export default class LeadFormItem extends React.PureComponent {
                 return null;
             case LEAD_TYPE.website:
                 return (
-                    <div className={styles['lead-preview']} >
+                    <div className={styles.leadPreview} >
                         {
                             values.url ? (
                                 <ExternalGallery
-                                    className={styles['gallery-file']}
+                                    className={styles.galleryFile}
                                     url={values.url}
                                     showUrl
                                 />
                             ) : (
-                                <div className={styles['preview-text']}>
+                                <div className={styles.previewText}>
                                     <h1>
                                         {this.props.leadsStrings('sourcePreview')}
                                     </h1>
@@ -315,17 +315,17 @@ export default class LeadFormItem extends React.PureComponent {
                 );
             default:
                 return (
-                    <div className={styles['lead-preview']} >
+                    <div className={styles.leadPreview} >
                         {
                             values.attachment ? (
                                 <InternalGallery
-                                    className={styles['gallery-file']}
+                                    className={styles.galleryFile}
                                     galleryId={values.attachment && values.attachment.id}
                                     notFoundMessage={this.props.leadsStrings('leadFileNotFound')}
                                     showUrl
                                 />
                             ) :
-                                <div className={styles['preview-text']}>
+                                <div className={styles.previewText}>
                                     <h1>
                                         {this.props.leadsStrings('previewNotAvailable')}
                                     </h1>
@@ -366,7 +366,7 @@ export default class LeadFormItem extends React.PureComponent {
                     <Fragment>
                         <LeadForm
                             ref={this.referenceForLeadDetail}
-                            className={styles['add-lead-form']}
+                            className={styles.addLeadForm}
                             lead={lead}
                             onChange={this.handleFormChange}
                             onFailure={this.handleFormFailure}

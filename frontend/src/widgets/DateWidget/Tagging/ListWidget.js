@@ -66,7 +66,7 @@ export default class DateTaggingList extends React.PureComponent {
         return (
             <div className={styles.list}>
                 <DateInput
-                    className={styles['date-input']}
+                    className={styles.dateInput}
                     onChange={this.handleChange}
                     showHintAndError={false}
                     value={attribute && attribute.value}
