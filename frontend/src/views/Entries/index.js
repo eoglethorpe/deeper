@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -108,7 +107,6 @@ const emptyList = [];
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Entries extends React.PureComponent {
     static leadKeyExtractor = d => d.id;
     static propTypes = propTypes;

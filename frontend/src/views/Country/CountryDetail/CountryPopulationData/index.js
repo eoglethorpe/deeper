@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -25,7 +24,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class CountryPopulationData extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

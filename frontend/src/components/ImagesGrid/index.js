@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const defaultProps = {
     images: [],
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class ImagesGrid extends React.PureComponent {
     static imageKeySelector = d => d;
     static propTypes = propTypes;

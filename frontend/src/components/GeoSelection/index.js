@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +54,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static adminLevelKeySelector = d => d.title;

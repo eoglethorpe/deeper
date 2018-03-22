@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -40,7 +39,6 @@ const defaultProps = {
     upload: undefined,
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class LeadListItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
@@ -27,7 +26,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ApiDocs extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

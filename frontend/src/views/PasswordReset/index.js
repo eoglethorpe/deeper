@@ -2,7 +2,6 @@
  * @author thenav56 <ayernavin@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -43,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class PasswordReset extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

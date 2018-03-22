@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -20,7 +19,6 @@ const defaultProps = {
     galleryIds: [],
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class ImagesSlider extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

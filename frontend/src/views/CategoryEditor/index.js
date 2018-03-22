@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -146,7 +145,6 @@ const DEPTH_LIMIT = 5;
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

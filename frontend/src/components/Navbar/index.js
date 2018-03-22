@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSVG from 'react-svg';
@@ -110,7 +109,6 @@ const getKeyByValue = (object, value) => (
 
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

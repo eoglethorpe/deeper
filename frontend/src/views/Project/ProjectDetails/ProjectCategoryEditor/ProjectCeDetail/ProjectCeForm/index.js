@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -42,7 +41,6 @@ const mapStateToProps = state => ({
 
 // FIMXE: Unnecessary component, not reused
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectCeForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

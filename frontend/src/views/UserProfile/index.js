@@ -3,7 +3,6 @@
  * @co-author tnagorra <weathermist@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -67,7 +66,6 @@ const mapDispatchToProps = dispatch => ({
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserProfile extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

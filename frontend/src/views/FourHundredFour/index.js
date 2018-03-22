@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import ReactSVG from 'react-svg';
 import { Link } from 'react-router-dom';
@@ -25,7 +24,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class FourHundredFour extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

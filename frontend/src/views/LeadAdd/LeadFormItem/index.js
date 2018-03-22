@@ -2,7 +2,6 @@
  * @author tnagorra <weathermist@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -71,7 +70,6 @@ const APPLY_MODE = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
-@CSSModules(styles, { allowMultiple: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

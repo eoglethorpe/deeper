@@ -4,7 +4,6 @@
  * @co-author jacky <prabes.pathak@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -82,7 +81,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

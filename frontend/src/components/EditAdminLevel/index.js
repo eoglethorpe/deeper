@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -75,7 +74,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles)
 export default class EditAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
