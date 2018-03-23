@@ -157,8 +157,6 @@ const patchLead = (state, action) => {
     const { lead } = action;
 
     const leadIndex = leadPage[activeProject].leads.findIndex(ld => ld.id === lead.id);
-    console.warn(leadIndex);
-
     const settings = {
         leadPage: {
             [activeProject]: {
@@ -166,10 +164,7 @@ const patchLead = (state, action) => {
             },
         },
     };
-    console.warn(settings);
-    const val = update(state, settings);
-    console.warn(val);
-    return val;
+    return update(state, settings);
 };
 
 // REDUCER MAP

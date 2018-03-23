@@ -38,7 +38,6 @@ export default class PatchLeadRequest {
                 this.setState({ loadingLeads: false });
             })
             .failure((response) => {
-                console.warn(response);
                 const { formErrors: { errors = [] } } =
                     transformResponseErrorToFormError(response.errors);
                 notify.send({

@@ -214,13 +214,10 @@ $radius-button-border: 2px;
 
                     .preview-text {
                         display: flex;
+                        align-items: center;
                         flex-grow: 1;
-                        margin: auto;
-
-                        h1 {
-                            color: $color-text-disabled;
-                            font-weight: $font-weight-medium;
-                        }
+                        justify-content: center;
+                        color: $color-text-disabled;
                     }
                 }
             }
