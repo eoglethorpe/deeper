@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSVG from 'react-svg';
@@ -46,7 +45,6 @@ const defaultProps = {
 
 @BoundError
 @connect(mapStateToProps, undefined)
-@CSSModules(styles, { allowMultiple: true })
 export default class HomeScreen extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -78,13 +76,13 @@ export default class HomeScreen extends React.PureComponent {
         );
 
         return (
-            <div styleName="home-screen">
+            <div className={styles.homeScreen}>
                 <ReactSVG
-                    styleName="deep-logo"
+                    className={styles.deepLogo}
                     path={logo}
                 />
                 <p>
-                    <span styleName="welcome-message">
+                    <span className={styles.welcomeMessage}>
                         {this.props.homescreenStrings('welcomeText')}
                         <strong>{this.props.homescreenStrings('deepLabel')}</strong>
                         <br />

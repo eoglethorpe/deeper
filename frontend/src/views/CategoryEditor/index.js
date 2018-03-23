@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -146,7 +145,6 @@ const DEPTH_LIMIT = 5;
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -525,18 +523,18 @@ export default class CategoryEditor extends React.PureComponent {
         const activeCategory = categories.find(cat => cat.id === activeCategoryId);
 
         return (
-            <div styleName="category-editor">
+            <div className={styles.categoryEditor}>
                 { pending && <LoadingAnimation /> }
                 <Prompt
                     when={!categoryEditorViewPristine}
                     message={this.props.commonStrings('youHaveUnsavedChanges')}
                 />
-                <div styleName="left">
+                <div className={styles.left}>
                     <DocumentPanel />
                 </div>
-                <div styleName="right">
-                    <header styleName="header">
-                        <div styleName="header-content">
+                <div className={styles.right}>
+                    <header className={styles.header}>
+                        <div className={styles.headerContent}>
                             <h2>
                                 {categoryEditorViewTitle}
                             </h2>
@@ -548,17 +546,17 @@ export default class CategoryEditor extends React.PureComponent {
                             </SuccessButton>
                             <Link
                                 disabled={categoryEditorViewPristine || pending}
-                                styleName="link-to-pp"
+                                className={styles.linkToPp}
                                 to={`${reverseRoute(pathNames.projects, { projectId })}#/category-editor`}
                                 replace
                             >
                                 {this.props.ceStrings('exitButtonLabel')}
                             </Link>
                         </div>
-                        <div styleName="action-btn">
+                        <div className={styles.actionBtn}>
                             <SelectInput
                                 label={this.props.ceStrings('headerCategoryLabel')}
-                                styleName="category-select"
+                                className={styles.categorySelect}
                                 options={categories}
                                 onChange={this.handleCategorySelectChange}
                                 placeholder={this.props.ceStrings('selectCategoryPlaceholder')}
@@ -570,7 +568,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 disabled={pending}
                             />
                             <PrimaryButton
-                                styleName="add-category-btn"
+                                className={styles.addCategoryBtn}
                                 onClick={this.handleNewCategory}
                                 disabled={pending}
                                 iconName={iconNames.add}
@@ -580,7 +578,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 [
                                     <PrimaryButton
                                         key="edit"
-                                        styleName="add-category-btn"
+                                        className={styles.addCategoryBtn}
                                         onClick={this.handleEditCategory}
                                         disabled={pending}
                                         iconName={iconNames.edit}
@@ -588,7 +586,7 @@ export default class CategoryEditor extends React.PureComponent {
                                     />,
                                     <DangerButton
                                         key="remove"
-                                        styleName="add-category-btn"
+                                        className={styles.addCategoryBtn}
                                         onClick={this.handleRemoveCategory}
                                         disabled={pending}
                                         iconName={iconNames.delete}
@@ -598,13 +596,13 @@ export default class CategoryEditor extends React.PureComponent {
                             }
                         </div>
                     </header>
-                    <div styleName="content">
-                        <div styleName="sub-categories">
+                    <div className={styles.content}>
+                        <div className={styles.subCategories}>
                             {
                                 activeCategoryId ? (
                                     this.renderSubcategoryColumns()
                                 ) : (
-                                    <p styleName="empty">
+                                    <p className={styles.empty}>
                                         {this.props.ceStrings('nothingHereText')}
                                     </p>
                                 )
@@ -617,7 +615,7 @@ export default class CategoryEditor extends React.PureComponent {
                 </div>
                 { showNewCategoryModal &&
                     <Modal
-                        styleName="new-category-modal"
+                        className={styles.newCategoryModal}
                         onClose={this.noop}
                     >
                         <NewCategoryModal
@@ -628,7 +626,7 @@ export default class CategoryEditor extends React.PureComponent {
                 }
                 { showEditCategoryModal &&
                     <Modal
-                        styleName="edit-category-modal"
+                        className={styles.editCategoryModal}
                         onClose={this.noop}
                     >
                         <NewCategoryModal
@@ -641,7 +639,7 @@ export default class CategoryEditor extends React.PureComponent {
                 }
                 { showNewSubcategoryModal &&
                     <Modal
-                        styleName="new-subcategory-modal"
+                        className={styles.newSubcategoryModal}
                         onClose={this.noop}
                     >
                         <NewSubcategoryModal
@@ -652,7 +650,7 @@ export default class CategoryEditor extends React.PureComponent {
                 }
                 { showNewManualNGramModal &&
                     <Modal
-                        styleName="new-manual-ngram-modal"
+                        className={styles.newManualNgramModal}
                         onClose={this.noop}
                     >
                         <NewManualNgramModal

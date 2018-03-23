@@ -81,7 +81,7 @@ export default class MatrixRow extends React.PureComponent {
         } = this.props;
 
         return (
-            <div className={styles['matrix-row']}>
+            <div className={styles.matrixRow}>
                 <div
                     className={styles.title}
                     title={tooltip}

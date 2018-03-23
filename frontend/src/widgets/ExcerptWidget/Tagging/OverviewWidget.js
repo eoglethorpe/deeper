@@ -147,7 +147,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         const contentText = 'Drop text or image here';
         return (
             <div
-                className={styles['drop-container']}
+                className={styles.dropContainer}
                 onDragOver={this.handleChildDragOver}
                 onDrop={this.handleExcerptDrop}
             >
@@ -199,7 +199,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         const buttonTitle = afStrings('formatExcerpt');
         return (
             <AccentButton
-                className={styles['format-button']}
+                className={styles.formatButton}
                 iconName={iconNames.textFormat}
                 onClick={this.handleFormatText}
                 title={buttonTitle}
@@ -220,7 +220,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
 
         return (
             <div
-                className={styles['excerpt-overview']}
+                className={styles.excerptOverview}
                 onDragEnter={this.handleDragEnter}
                 onDragLeave={this.handleDragExit}
             >

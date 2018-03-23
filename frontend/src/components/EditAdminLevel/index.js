@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
@@ -75,7 +74,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles)
 export default class EditAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -342,9 +340,9 @@ export default class EditAdminLevel extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="form-container">
+            <div className={styles.formContainer}>
                 <Form
-                    styleName="edit-admin-level-form"
+                    className={styles.editAdminLevelForm}
                     changeCallback={this.changeCallback}
                     failureCallback={this.failureCallback}
                     successCallback={this.successCallback}
@@ -358,12 +356,12 @@ export default class EditAdminLevel extends React.PureComponent {
                         pending && <LoadingAnimation />
                     }
                     <NonFieldErrors formerror="" />
-                    <div styleName="admin-level-details" >
+                    <div className={styles.adminLevelDetails} >
                         <TextInput
                             formname="level"
                             label={this.props.countriesStrings('adminLevelLabel')}
                             placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                             type="number"
                             min={0}
                             autoFocus
@@ -372,31 +370,31 @@ export default class EditAdminLevel extends React.PureComponent {
                             formname="title"
                             label={this.props.countriesStrings('adminLevelNameLabel')}
                             placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                         />
                         <TextInput
                             formname="nameProp"
                             label={this.props.countriesStrings('namePropertyLabel')}
                             placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                         />
                         <TextInput
                             formname="codeProp"
                             label={this.props.countriesStrings('pcodePropertyLabel')}
                             placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                         />
                         <TextInput
                             formname="parentNameProp"
                             label={this.props.countriesStrings('parentNamePropLabel')}
                             placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                         />
                         <TextInput
                             formname="parentCodeProp"
                             label={this.props.countriesStrings('parentCodePropLabel')}
                             placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
-                            styleName="text-input"
+                            className={styles.textInput}
                         />
                         <SelectInput
                             keySelector={this.keySelector}
@@ -410,7 +408,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             className={styles.selectInput}
                         />
                         <FileInput
-                            styleName="geo-file"
+                            className={styles.geoFile}
                             onChange={this.handleGeoFileInputChange}
                             error={formFieldErrors.geoShapeFile}
                             accept=".zip, .json, .geojson"
@@ -418,7 +416,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             {
                                 formValues.geoShapeFile ? (
                                     <Fragment>
-                                        <span styleName="show">
+                                        <span className={styles.show}>
                                             <i className={iconNames.documentText} />
                                             {this.props.countriesStrings('geoShapeFile')}
                                         </span>
@@ -428,7 +426,7 @@ export default class EditAdminLevel extends React.PureComponent {
                                         />
                                     </Fragment>
                                 ) : (
-                                    <span styleName="load">
+                                    <span className={styles.load}>
                                         <i className={iconNames.uploadFa} />
                                         {this.props.countriesStrings('loadGeoShapeFile')}
                                     </span>
@@ -437,7 +435,7 @@ export default class EditAdminLevel extends React.PureComponent {
                         </FileInput>
                         <HiddenInput formname="geoShapeFile" />
                     </div>
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <DangerButton
                             onClick={onClose}
                             type="button"
@@ -445,7 +443,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <PrimaryButton
-                            styleName="save-btn"
+                            className={styles.saveBtn}
                             disabled={pending || !pristine}
                         >
                             {this.props.countriesStrings('saveChangesButtonLabel')}

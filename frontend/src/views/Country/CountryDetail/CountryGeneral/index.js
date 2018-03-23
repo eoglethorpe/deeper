@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -38,7 +37,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class CountryGeneral extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -87,21 +85,21 @@ export default class CountryGeneral extends React.PureComponent {
         const { dataLoading } = this.state;
 
         return (
-            <div styleName="country-general">
-                <div styleName="details-edit">
-                    <div styleName="map-container">
+            <div className={styles.countryGeneral}>
+                <div className={styles.detailsEdit}>
+                    <div className={styles.mapContainer}>
                         <RegionMap
                             regionId={countryDetail.id}
                         />
                     </div>
-                    <div styleName="detail-container">
+                    <div className={styles.detailContainer}>
                         <RegionDetail
-                            styleName="region-detail-form"
+                            className={styles.regionDetailForm}
                             countryId={countryDetail.id}
                             dataLoading={dataLoading}
                         />
                         <RegionAdminLevel
-                            styleName="admin-levels"
+                            className={styles.adminLevels}
                             countryId={countryDetail.id}
                         />
                     </div>

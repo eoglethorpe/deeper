@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const defaultProps = {
  * Deep Gallery Files Selector Component Modal Wrapper
  *
  */
-@CSSModules(styles, { allowMultiple: true })
 export default class DeepGallery extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -39,7 +37,7 @@ export default class DeepGallery extends React.PureComponent {
         return (
             <Modal
                 closeOnEscape
-                styleName="add-gallery-file-modal"
+                className={styles.addGalleryFileModal}
                 onClose={onClose}
             >
                 <DeepGallerySelect

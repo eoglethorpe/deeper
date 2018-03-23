@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -46,7 +45,6 @@ const mapStateToProps = state => ({
 // read more
 // https://www.dropbox.com/developers/chooser
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class DropboxChooser extends React.Component {
     static propTypes = propTypes ;
     static defaultProps = defaultProps ;
@@ -124,8 +122,7 @@ export default class DropboxChooser extends React.Component {
 
         return (
             <Button
-                className={className}
-                styleName="dropbox-btn"
+                className={`${className} ${styles.dropboxBtn}`}
                 onClick={this.onChoose}
                 disabled={disabled || !ready}
                 transparent

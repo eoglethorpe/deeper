@@ -93,10 +93,9 @@ export default class ProjectGeneralForm extends React.PureComponent {
 
         return (
             <Form
-                styleName="project-general-form"
+                className={styles.projectGeneralForm}
                 changeCallback={changeCallback}
                 failureCallback={failureCallback}
-                className={styles.projectGeneralForm}
                 successCallback={successCallback}
                 schema={this.schema}
                 value={formValues}

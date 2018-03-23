@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -38,7 +37,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ExportTypePane extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -133,7 +131,7 @@ export default class ExportTypePane extends React.PureComponent {
         const { activeExportTypeKey } = this.props;
 
         const classNames = [
-            styles['export-type-select'],
+            styles.exportTypeSelect,
         ];
         if (activeExportTypeKey === key) {
             classNames.push(styles.active);
@@ -185,13 +183,10 @@ export default class ExportTypePane extends React.PureComponent {
             onChange={this.props.onDecoupledEntriesChange}
         />,
         <div
-            styleName="info"
             key="info"
+            className={styles.info}
         >
-            <span
-                styleName="icon"
-                className={iconNames.info}
-            />
+            <span className={`${styles.icon} ${iconNames.info}`} />
             <div>
                 <p>{this.props.exportStrings('decoupledEntriesTitle2')}</p>
                 <p>{this.props.exportStrings('decoupledEntriesTitle')}</p>
@@ -218,16 +213,16 @@ export default class ExportTypePane extends React.PureComponent {
     render() {
         const { activeExportTypeKey } = this.props;
         return (
-            <section styleName="export-types">
-                <div styleName="export-type-select-list">
+            <section className={styles.exportTypes}>
+                <div className={styles.exportTypeSelectList}>
                     <List
-                        styleName="export-type-select-list"
+                        className={styles.exportTypeSelectList}
                         data={this.exportTypes}
                         modifier={this.renderExportType}
                         keyExtractor={ExportTypePane.exportTypeKeyExtractor}
                     />
                 </div>
-                <div styleName="export-type-options">
+                <div className={styles.exportTypeOptions}>
                     { this.renderOptions(activeExportTypeKey) }
                 </div>
             </section>

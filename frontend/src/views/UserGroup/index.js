@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -65,7 +64,6 @@ const emptyList = [];
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -173,7 +171,7 @@ export default class UserGroup extends React.PureComponent {
 
         if (pending) {
             return (
-                <div styleName="usergroup">
+                <div className={styles.usergroup}>
                     <LoadingAnimation />
                 </div>
             );
@@ -181,8 +179,8 @@ export default class UserGroup extends React.PureComponent {
 
         if (!userGroup.id) {
             return (
-                <div styleName="usergroup">
-                    <div styleName="usergroup-alt">
+                <div className={styles.usergroup}>
+                    <div className={styles.usergroupAlt}>
                         {this.props.userStrings('userGroupNotFound')}
                     </div>
                 </div>
@@ -190,15 +188,15 @@ export default class UserGroup extends React.PureComponent {
         }
 
         return (
-            <div styleName="usergroup">
-                <header styleName="header">
+            <div className={styles.usergroup}>
+                <header className={styles.header}>
                     <h2>
                         {this.props.userStrings('userGroupTitle')}
                     </h2>
                 </header>
-                <div styleName="info">
-                    <div styleName="title-container">
-                        <span styleName="name">{ userGroup.title }</span>
+                <div className={styles.info}>
+                    <div className={styles.titleContainer}>
+                        <span className={styles.name}>{ userGroup.title }</span>
                         {
                             isCurrentUserAdmin &&
                                 <PrimaryButton
@@ -209,22 +207,22 @@ export default class UserGroup extends React.PureComponent {
                                 </PrimaryButton>
                         }
                     </div>
-                    <p styleName="description">
+                    <p className={styles.description}>
                         { userGroup.description }
                     </p>
                 </div>
-                <div styleName="stats">
+                <div className={styles.stats}>
                     <h2>
                         {this.props.userStrings('userGroupActivtyLogTitle')}
                     </h2>
                 </div>
                 <ProjectsTable
-                    styleName="projects"
+                    className={styles.projects}
                     isCurrentUserAdmin={isCurrentUserAdmin}
                     userGroup={userGroup}
                 />
                 <MembersTable
-                    styleName="members"
+                    className={styles.members}
                     memberData={userGroup.memberships || emptyList}
                     userGroupId={userGroupId}
                     isCurrentUserAdmin={isCurrentUserAdmin}
@@ -234,7 +232,7 @@ export default class UserGroup extends React.PureComponent {
                     <Modal
                         closeOnEscape
                         onClose={this.handleUserGroupEditModalClose}
-                        styleName="user-group-edit-modal"
+                        className={styles.userGroupEditModal}
                     >
                         <ModalHeader
                             title={`${this.props.userStrings('userGroupEditModalLabel')}: ${userGroup.title}`}

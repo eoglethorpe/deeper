@@ -23,7 +23,7 @@ export default class CountryListItem extends React.PureComponent {
         return (
             <NavLink
                 activeClassName={styles.active}
-                className={styles['country-link']}
+                className={styles.countryLink}
                 to={route}
                 exact
             >

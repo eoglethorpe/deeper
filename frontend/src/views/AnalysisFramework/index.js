@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +54,6 @@ const mapDispatchToProps = dispatch => ({
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class AnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -159,7 +157,7 @@ export default class AnalysisFramework extends React.PureComponent {
 
         if (!analysisFramework) {
             return (
-                <div styleName="analysis-framework">
+                <div className={styles.analysisFramework}>
                     <LoadingAnimation />
                 </div>
             );
@@ -167,7 +165,7 @@ export default class AnalysisFramework extends React.PureComponent {
 
         return (
             <HashRouter>
-                <div styleName="analysis-framework">
+                <div className={styles.analysisFramework}>
                     <Route
                         exact
                         path="/"

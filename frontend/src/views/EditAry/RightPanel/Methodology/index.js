@@ -223,7 +223,7 @@ export default class Methodology extends React.PureComponent {
             return (
                 <div
                     key={key}
-                    className={styles['field-inputs']}
+                    className={styles.fieldInputs}
                 >
                     {
                         methodologyGroup.fields
@@ -242,7 +242,7 @@ export default class Methodology extends React.PureComponent {
                     Object.keys(methodologyGroups)
                         .map(key => renderMethodologyGroup(index, key))
                 }
-                <div className={styles['remove-button']}>
+                <div className={styles.removeButton}>
                     <DangerButton
                         type="button"
                         formname={`attributes:${index}`}
@@ -268,7 +268,7 @@ export default class Methodology extends React.PureComponent {
                 >
                     { pending && <LoadingAnimation /> }
                     <div className={styles.fields}>
-                        <div className={styles['field-title']}>
+                        <div className={styles.fieldTitle}>
                             { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
                             <div className={styles.add}>
                                 <PrimaryButton
@@ -279,12 +279,12 @@ export default class Methodology extends React.PureComponent {
                                 />
                             </div>
                         </div>
-                        <div className={styles['field-values']}>
+                        <div className={styles.fieldValues}>
                             { (formValues.attributes || []).map(renderMethodologyRow) }
                         </div>
                     </div>
                     <NonFieldErrors formerror="attributes" />
-                    <div className={styles['action-buttons']}>
+                    <div className={styles.actionButtons}>
                         <Button>
                             Submit
                         </Button>
@@ -298,7 +298,7 @@ export default class Methodology extends React.PureComponent {
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            className={styles['technique-child']}
+                            className={styles.techniqueChild}
                         />
                     </div>
                     <div className={styles.sampling}>
@@ -308,12 +308,12 @@ export default class Methodology extends React.PureComponent {
                         <TextInput
                             showHintAndError={false}
                             label={this.props.aryStrings('approachLabel')}
-                            className={styles['sampling-child']}
+                            className={styles.samplingChild}
                         />
                         <TextInput
                             showHintAndError={false}
                             label={this.props.aryStrings('sizeLabel')}
-                            className={styles['sampling-child']}
+                            className={styles.samplingChild}
                         />
                     </div>
                     <div className={styles.proximity}>
@@ -322,7 +322,7 @@ export default class Methodology extends React.PureComponent {
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            className={styles['proximity-child']}
+                            className={styles.proximityChild}
                         />
                     </div>
                     <div className={styles.unit}>
@@ -331,7 +331,7 @@ export default class Methodology extends React.PureComponent {
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            className={styles['unit-child']}
+                            className={styles.unitChild}
                         />
                     </div>
                     <div className={styles.disaggregation}>
@@ -340,7 +340,7 @@ export default class Methodology extends React.PureComponent {
                         </h3>
                         <SelectInput
                             showHintAndError={false}
-                            className={styles['disaggregation-child']}
+                            className={styles.disaggregationChild}
                         />
                     </div>
                     <div className={styles.questions}>
@@ -354,37 +354,37 @@ export default class Methodology extends React.PureComponent {
                                 transparent
                             />
                         </div>
-                        <div className={styles['questions-list']}>
+                        <div className={styles.questionsList}>
                             <TextInput
                                 showHintAndError={false}
                                 label="Question #1"
-                                className={styles['questions-child']}
+                                className={styles.questionsChild}
                             />
                             <TextInput
                                 showHintAndError={false}
                                 label="Question #1"
-                                className={styles['questions-child']}
+                                className={styles.questionsChild}
                             />
                             <TextInput
                                 showHintAndError={false}
                                 label="Question #1"
-                                className={styles['questions-child']}
+                                className={styles.questionsChild}
                             />
                             <TextInput
                                 showHintAndError={false}
                                 label="Question #1"
-                                className={styles['questions-child']}
+                                className={styles.questionsChild}
                             />
                         </div>
                     </div>
                 </div>
                 <div className={styles.middle}>
-                    <div className={styles['topics-assessed']}>
+                    <div className={styles.topicsAssessed}>
                         <h3 className={styles.heading}>
                             {this.props.aryStrings('topicAssessedLabel')}
                         </h3>
                     </div>
-                    <div className={styles['affected-groups']}>
+                    <div className={styles.affectedGroups}>
                         <h3 className={styles.heading}>
                             {this.props.aryStrings('affectedGroupsLabel')}
                         </h3>
@@ -394,7 +394,7 @@ export default class Methodology extends React.PureComponent {
                             {this.props.aryStrings('locationLabel')}
                         </h3>
                         <div
-                            className={styles['map-container']}
+                            className={styles.mapContainer}
                         >
                             <RegionMap regionId={155} />
                         </div>
@@ -405,12 +405,12 @@ export default class Methodology extends React.PureComponent {
                         {this.props.aryStrings('structureSectionLabel')}
                     </h3>
                     <div
-                        className={styles['collection-technique']}
+                        className={styles.collectionTechnique}
                     >
                         {this.props.aryStrings('dragDataCollectionlabel')}
                     </div>
                     <div
-                        className={styles['sampling-data']}
+                        className={styles.samplingData}
                     >
                         {this.props.aryStrings('dragSamplingLabel')}
                     </div>

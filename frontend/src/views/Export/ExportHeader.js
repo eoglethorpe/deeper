@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -44,7 +43,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ExportHeader extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -136,26 +134,26 @@ export default class ExportHeader extends React.PureComponent {
 
 
         return (
-            <header styleName="header">
+            <header className={styles.header}>
                 <h2>
                     {this.props.exportStrings('headerExport')}
                 </h2>
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <Link
                         to={reverseRoute(pathNames.userExports, { projectId })}
-                        styleName="link"
+                        className={styles.link}
                     >
                         {this.props.exportStrings('viewAllExportsButtonLabel')}
                     </Link>
                     <Button
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handlePreview}
                         disabled={this.props.pending}
                     >
                         {this.props.exportStrings('showPreviewButtonLabel')}
                     </Button>
                     <PrimaryButton
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handleExport}
                         disabled={this.props.pending}
                     >

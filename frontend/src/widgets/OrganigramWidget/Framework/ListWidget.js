@@ -167,19 +167,19 @@ export default class Organigram extends React.PureComponent {
                 className={styles.organ}
                 key={organ.key}
             >
-                <div className={styles['organ-header']}>
+                <div className={styles.organHeader}>
                     <TextInput
                         value={organ.title}
-                        className={styles['title-input']}
+                        className={styles.titleInput}
                         showHintAndError={false}
                         placeholder={organPlaceholder}
                         showLabel={false}
                         onChange={this.handleChange(nextIndices)}
                         autoFocus
                     />
-                    <div className={styles['action-buttons']}>
+                    <div className={styles.actionButtons}>
                         <PrimaryButton
-                            className={styles['action-button']}
+                            className={styles.actionButton}
                             onClick={this.handleAdd(nextIndices)}
                             title={addChildButtonTitle}
                             tabIndex="-1"
@@ -189,7 +189,7 @@ export default class Organigram extends React.PureComponent {
                         {
                             !isFatherOrgan && (
                                 <DangerButton
-                                    className={styles['action-button']}
+                                    className={styles.actionButton}
                                     onClick={this.handleRemove(indices, j)}
                                     title={removeElementButtonTitle}
                                     tabIndex="-1"
@@ -200,7 +200,7 @@ export default class Organigram extends React.PureComponent {
                         }
                     </div>
                 </div>
-                <div className={styles['organ-body']}>
+                <div className={styles.organBody}>
                     {
                         organ.organs.map(
                             (childOrgan, i) => this.renderOrgan(childOrgan, nextIndices, i),
@@ -230,12 +230,12 @@ export default class Organigram extends React.PureComponent {
         const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <Modal className={styles['edit-modal']}>
+            <Modal className={styles.editModal}>
                 <ModalHeader title={headerTitle} />
                 <ModalBody className={styles.body}>
-                    <div className={styles['title-input-container']}>
+                    <div className={styles.titleInputContainer}>
                         <TextInput
-                            className={styles['title-input']}
+                            className={styles.titleInput}
                             label={textInputLabel}
                             placeholder={textInputPlaceholder}
                             onChange={this.handleWidgetTitleChange}

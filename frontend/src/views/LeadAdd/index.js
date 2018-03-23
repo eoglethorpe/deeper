@@ -740,12 +740,12 @@ export default class LeadAdd extends React.PureComponent {
         } = this.globalUiState[activeLeadId] || {};
 
         return (
-            <div styleName="add-lead">
+            <div className={styles.addLead}>
                 <Prompt
                     when={this.isSaveEnabledForAll}
                     message={this.props.commonStrings('youHaveUnsavedChanges')}
                 />
-                <header styleName="header">
+                <header className={styles.header}>
                     <LeadFilter />
                     { activeLead &&
                         <LeadActions
@@ -767,8 +767,8 @@ export default class LeadAdd extends React.PureComponent {
                         />
                     }
                 </header>
-                <div styleName="content">
-                    <div styleName="left">
+                <div className={styles.content}>
+                    <div className={styles.left}>
                         <LeadList
                             leads={this.leadsFiltered}
                             leadUploads={leadUploads}

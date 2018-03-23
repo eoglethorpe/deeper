@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +54,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static adminLevelKeySelector = d => d.title;
@@ -240,7 +238,7 @@ export default class GeoSelection extends React.PureComponent {
 
     renderSelectedList = (key, data) => (
         <div
-            className={styles['region-item']}
+            className={styles.regionItem}
             key={key}
         >
             {data.shortLabel}
@@ -255,7 +253,7 @@ export default class GeoSelection extends React.PureComponent {
 
     renderAdminLevelList = (key, data) => (
         <div
-            className={styles['admin-level-section']}
+            className={styles.adminLevelSection}
             key={key}
         >
             <span
@@ -277,7 +275,7 @@ export default class GeoSelection extends React.PureComponent {
         return (
             <div
                 key={key}
-                className={styles['region-name']}
+                className={styles.regionName}
             >
                 <div className={styles.marker}>
                     { marker }
@@ -338,14 +336,10 @@ export default class GeoSelection extends React.PureComponent {
             .filter(v => v);
 
         return (
-            <div
-                className={className}
-                styleName="geo-selection"
-            >
+            <div className={`${className} ${styles.geoSelection}`}>
                 <div className={styles.header}>
                     <MultiSelectInput
-                        className="flat-select-input"
-                        styleName="flat-select-input"
+                        className={`flat-select-input ${styles.flatSelectInput}`}
                         label={label}
                         showHintAndError={false}
                         hideSelectAllButton
@@ -355,7 +349,7 @@ export default class GeoSelection extends React.PureComponent {
                         disabled={disabled}
                     />
                     <AccentButton
-                        styleName="map-modal-button"
+                        className={styles.mapModalButton}
                         onClick={this.handleGeoSelectButtonClick}
                         smallVerticalPadding
                         smallHorizontalPadding
@@ -367,14 +361,14 @@ export default class GeoSelection extends React.PureComponent {
                 </div>
                 { showMapModal &&
                     <Modal
-                        styleName="modal"
+                        className={styles.modal}
                         onClose={this.handleMapModalClose}
                         closeOnEscape
                     >
                         <ModalHeader
                             title="Geo selection"
                             rightComponent={
-                                <div styleName="location-selects">
+                                <div className={styles.locationSelects}>
                                     <SelectInput
                                         hideClearButton
                                         keySelector={this.regionKeySelector}
@@ -395,22 +389,22 @@ export default class GeoSelection extends React.PureComponent {
                                         optionsIdentifier="location-select-options"
                                         placeholder={this.props.entryStrings('locationSelectPlaceholder')}
                                         showHintAndError={false}
-                                        styleName="map-selection-select"
+                                        className={styles.mapSelectionSelect}
                                         value={values[selectedRegion]}
                                     />
                                 </div>
                             }
                         />
-                        <ModalBody styleName="body">
+                        <ModalBody className={styles.body}>
                             <RegionMap
-                                styleName="map"
+                                className={styles.map}
                                 regionId={selectedRegion}
                                 onChange={this.handleMapSelect}
                                 selections={values[selectedRegion]}
                             />
-                            <div styleName="map-selections">
+                            <div className={styles.mapSelections}>
                                 <ListView
-                                    styleName="map-selections-list"
+                                    className={styles.mapSelectionsList}
                                     data={selectedRegionList}
                                     keyExtractor={GeoSelection.adminLevelKeySelector}
                                     modifier={this.renderAdminLevelList}
@@ -433,7 +427,7 @@ export default class GeoSelection extends React.PureComponent {
                 }
                 {!hideList &&
                     <ListView
-                        className={styles['region-list']}
+                        className={styles.regionList}
                         data={flatValuesWithTitle}
                         emptyComponent={WidgetEmptyComponent}
                         keyExtractor={GeoSelection.valueKeyExtractor}

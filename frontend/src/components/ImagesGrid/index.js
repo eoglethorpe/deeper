@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const defaultProps = {
     images: [],
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class ImagesGrid extends React.PureComponent {
     static imageKeySelector = d => d;
     static propTypes = propTypes;
@@ -100,28 +98,25 @@ export default class ImagesGrid extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="images-grid"
-            >
+            <div className={`${className} ${styles.imagesGrid}`}>
                 <ListView
-                    styleName="images"
+                    className={styles.images}
                     keyExtractor={ImagesGrid.imageKeySelector}
                     data={images}
                     modifier={this.renderImage}
                 />
                 { imageViewModalShow &&
                     <Modal
-                        styleName="image-preview"
+                        className={styles.imagePreview}
                         onClose={this.handleImagePreviewClose}
                         closeOnEscape
                     >
                         <ModalHeader
                             title=""
-                            styleName="modal-header"
+                            className={styles.modalHeader}
                             rightComponent={
                                 <PrimaryButton
-                                    className={styles['transparent-btn']}
+                                    className={styles.transparentBtn}
                                     onClick={this.handleImagePreviewClose}
                                     transparent
                                 >
@@ -129,9 +124,9 @@ export default class ImagesGrid extends React.PureComponent {
                                 </PrimaryButton>
                             }
                         />
-                        <ModalBody styleName="modal-body">
+                        <ModalBody className={styles.modalBody}>
                             <img
-                                styleName="preview-image"
+                                className={styles.previewImage}
                                 src={activeImageSource}
                                 alt={activeImageSource}
                             />

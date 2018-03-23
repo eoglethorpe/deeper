@@ -3,7 +3,6 @@
  * @co-author tnagorra <weathermist@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -67,7 +66,6 @@ const mapDispatchToProps = dispatch => ({
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserProfile extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -154,7 +152,7 @@ export default class UserProfile extends React.PureComponent {
 
         if (pending) {
             return (
-                <div styleName="user-profile">
+                <div className={styles.userProfile}>
                     <LoadingAnimation />
                 </div>
             );
@@ -162,8 +160,8 @@ export default class UserProfile extends React.PureComponent {
 
         if (!userInformation.id) {
             return (
-                <div styleName="user-profile">
-                    <div styleName="user-detail-alt">
+                <div className={styles.userProfile}>
+                    <div className={styles.userDetailAlt}>
                         {this.props.userStrings('userNotFound')}
                     </div>
                 </div>
@@ -171,24 +169,24 @@ export default class UserProfile extends React.PureComponent {
         }
 
         return (
-            <div styleName="user-profile">
-                <header styleName="header">
+            <div className={styles.userProfile}>
+                <header className={styles.header}>
                     <h2>User Profile</h2>
                 </header>
-                <div styleName="info">
+                <div className={styles.info}>
                     {/* FIXME: add a default image in img */}
                     <InternalGallery
                         galleryId={userInformation.displayPicture}
                         notFoundMessage={this.props.userStrings('userImageNotFound')}
-                        styleName="display-picture"
+                        className={styles.displayPicture}
                     />
-                    <div styleName="detail">
-                        <div styleName="name">
+                    <div className={styles.detail}>
+                        <div className={styles.name}>
                             <div>
-                                <span styleName="first">
+                                <span className={styles.first}>
                                     { userInformation.firstName }
                                 </span>
-                                <span styleName="last">
+                                <span className={styles.last}>
                                     { userInformation.lastName }
                                 </span>
                             </div>
@@ -205,7 +203,7 @@ export default class UserProfile extends React.PureComponent {
                                 <Modal
                                     closeOnEscape
                                     onClose={this.handleEditProfileClose}
-                                    styleName="user-profile-edit-modal"
+                                    className={styles.userProfileEditModal}
                                 >
                                     <ModalHeader
                                         title={this.props.userStrings('editProfileModalHeader')}
@@ -228,19 +226,19 @@ export default class UserProfile extends React.PureComponent {
                                 </Modal>
                             }
                         </div>
-                        <p styleName="email">
+                        <p className={styles.email}>
                             { userInformation.email }
                         </p>
-                        <p styleName="organization">
+                        <p className={styles.organization}>
                             { userInformation.organization }
                         </p>
                     </div>
                 </div>
-                <div styleName="stats">
+                <div className={styles.stats}>
                     <h2>Stats</h2>
                 </div>
-                <UserProject styleName="projects" />
-                <UserGroup styleName="groups" />
+                <UserProject className={styles.projects} />
+                <UserGroup className={styles.groups} />
             </div>
         );
     }

@@ -55,7 +55,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     getSimilarityIndicatorStyle = (key) => {
         const { data, attribute } = this.props;
-        const indicatorStyle = [styles['table-header-row']];
+        const indicatorStyle = [styles.tableHeaderRow];
 
         const values = Object.values(attribute[key] || emptyObject).filter(v => v);
 
@@ -65,9 +65,9 @@ export default class NumberMatrixOverview extends React.PureComponent {
         if (values.length === 0 || (isSame && values.length === colHeaderLength)) {
             indicatorStyle.push(styles.similar);
         } else if (!isSame) {
-            indicatorStyle.push(styles['not-similar']);
+            indicatorStyle.push(styles.notSimilar);
         } else {
-            indicatorStyle.push(styles['partial-similar']);
+            indicatorStyle.push(styles.partialSimilar);
         }
 
         return indicatorStyle.join(' ');
@@ -95,7 +95,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
     renderColHeader = (key, data) => (
         <th
-            className={styles['table-header']}
+            className={styles.tableHeader}
             scope="col"
             key={key}
             title={data.tooltip}
@@ -110,7 +110,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
 
         return (
             <td
-                className={styles['table-cell']}
+                className={styles.tableCell}
                 key={`${rowKey}-${key}`}
             >
                 <NumberInput

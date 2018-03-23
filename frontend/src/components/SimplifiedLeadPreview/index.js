@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -38,7 +37,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class SimplifiedLeadPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -261,7 +259,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         } else if (extractedText) {
             return (
                 <HighlightedText
-                    className={styles['highlighted-text']}
+                    className={styles.highlightedText}
                     text={extractedText}
                     highlights={highlights}
                     modifier={highlightModifier}
@@ -283,10 +281,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
         const Content = this.renderContent;
 
         return (
-            <div
-                className={className}
-                styleName="lead-preview"
-            >
+            <div className={`${className} ${styles.leadPreview}`}>
                 {
                     pending ? (
                         <LoadingAnimation />

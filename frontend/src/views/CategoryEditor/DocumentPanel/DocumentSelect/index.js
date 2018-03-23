@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -47,7 +46,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class DocumentSelect extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -121,7 +119,7 @@ export default class DocumentSelect extends React.PureComponent {
 
     renderGalleryFilesListItem = (fileId, file) => (
         <div
-            className={styles['file-list-item']}
+            className={styles.fileListItem}
             key={fileId}
         >
             <span className={styles.title} >
@@ -149,25 +147,22 @@ export default class DocumentSelect extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                styleName="document-tab"
-                className={className}
-            >
+            <div className={`${styles.documentTab} ${className}`}>
                 <ListView
-                    styleName="file-list-view"
+                    className={styles.fileListView}
                     modifier={this.renderGalleryFilesListItem}
                     data={selectedFiles}
                     keyExtractor={this.keyExtractorForGalleryFiles}
                 />
-                <div styleName="bottom-bar">
+                <div className={styles.bottomBar}>
                     <Button
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handleSelectFromGallery}
                     >
                         {this.props.ceStrings('selectFromGalleryButtonLabel')}
                     </Button>
                     <PrimaryButton
-                        styleName="button"
+                        className={styles.button}
                         onClick={this.handleApply}
                         disabled={pending || !pristine}
                     >

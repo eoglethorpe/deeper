@@ -91,7 +91,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
         const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <Modal className={styles['edit-overview-modal']}>
+            <Modal className={styles.editOverviewModal}>
                 <ModalHeader title={headerTitle} />
                 <ModalBody>
                     <TextInput

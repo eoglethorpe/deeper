@@ -67,7 +67,7 @@ export default class ScaleTaggingList extends React.PureComponent {
 
     getActiveSelectionClassName = (scaleUnit) => {
         const classNames = [
-            styles['scale-unit'],
+            styles.scaleUnit,
         ];
 
         if (scaleUnit.selected) {

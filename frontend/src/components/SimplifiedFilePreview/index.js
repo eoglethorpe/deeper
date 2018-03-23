@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -42,7 +41,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class SimplifiedFilePreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -205,7 +203,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (error) {
             return (
-                <div styleName="message">
+                <div className={styles.message}>
                     { error }
                 </div>
             );
@@ -213,14 +211,14 @@ export default class SimplifiedFilePreview extends React.PureComponent {
 
         if (extractedText) {
             return (
-                <p className={styles['simplified-text']}>
+                <p className={styles.simplifiedText}>
                     {extractedText}
                 </p>
             );
         }
 
         return (
-            <div styleName="message">
+            <div className={styles.message}>
                 {this.props.commonStrings('previewNotAvailable')}
             </div>
         );
@@ -231,10 +229,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
         const { pending } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="file-preview"
-            >
+            <div className={`${className} ${styles.filePreview}`}>
                 {
                     pending ? (
                         <LoadingAnimation />

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -44,7 +43,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class StringManagement extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -151,13 +149,13 @@ export default class StringManagement extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="string-panel">
-                <div styleName="sidebar">
-                    <h2 styleName="heading">
+            <div className={styles.stringPanel}>
+                <div className={styles.sidebar}>
+                    <h2 className={styles.heading}>
                         String Management
                     </h2>
                     <button
-                        className={`${styles['sidebar-button']} ${this.state.mode === 'string' ? styles.active : ''}`}
+                        className={`${styles.sidebarButton} ${this.state.mode === 'string' ? styles.active : ''}`}
                         onClick={() => { this.setState({ mode: 'string' }); }}
                     >
                         All Strings
@@ -165,18 +163,18 @@ export default class StringManagement extends React.PureComponent {
                     { Object.keys(this.props.viewStrings).map(viewName => (
                         <button
                             key={viewName}
-                            className={`${styles['sidebar-button']} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
+                            className={`${styles.sidebarButton} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
                             onClick={() => { this.setState({ mode: 'view', viewName }); }}
                         >
                             { viewName }
                         </button>
                     )) }
                 </div>
-                <div styleName="string-detail">
+                <div className={styles.stringDetail}>
                     {
                         this.state.mode === 'string' && ([
                             <div
-                                styleName="content"
+                                className={styles.content}
                                 key="content"
                             >
                                 <Table
@@ -188,7 +186,7 @@ export default class StringManagement extends React.PureComponent {
                             </div>,
                             <ListView
                                 key="sidebar-right"
-                                styleName="sidebar-right"
+                                className={styles.sidebarRight}
                                 data={this.props.problemsWithAllStrings}
                                 modifier={this.renderError}
                                 keyExtractor={StringManagement.keyExtractor}
@@ -197,7 +195,7 @@ export default class StringManagement extends React.PureComponent {
                     }
                     {
                         this.state.mode === 'view' && (
-                            <div styleName="content" >
+                            <div className={styles.content} >
                                 <Table
                                     data={this.props.viewStrings[this.state.viewName]}
                                     headers={this.headers2}

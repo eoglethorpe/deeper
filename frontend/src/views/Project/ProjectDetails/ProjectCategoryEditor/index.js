@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -55,7 +54,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ProjectCategoryEditor extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -199,7 +197,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
 
         if (categoryEditorList.length <= 0) {
             return (
-                <h1 styleName="no-category-editor">
+                <h1 className={styles.noCategoryEditor}>
                     {this.props.projectStrings('noCeText')}
                 </h1>
             );
@@ -230,18 +228,18 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         sortedCes.sort((a, b) => compareString(a.title, b.title));
 
         return (
-            <div styleName="project-category-editor">
-                <div styleName="list-container">
-                    <div styleName="list-header">
+            <div className={styles.projectCategoryEditor}>
+                <div className={styles.listContainer}>
+                    <div className={styles.listHeader}>
                         <TextInput
-                            styleName="search-input"
+                            className={styles.searchInput}
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.projectStrings('searchCePlaceholder')}
                             type="search"
                         />
                         <PrimaryButton
-                            styleName="add-btn"
+                            className={styles.addBtn}
                             iconName={iconNames.add}
                             onClick={this.handleAddCeButtonClick}
                         >
@@ -264,13 +262,13 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                         }
                     </div>
                     <ListView
-                        styleName="list"
+                        className={styles.list}
                         modifier={this.renderCeList}
                         data={sortedCes}
                         keyExtractor={this.calcCeKey}
                     />
                 </div>
-                <div styleName="details-container">
+                <div className={styles.detailsContainer}>
                     {pending && <LoadingAnimation />}
                     {this.renderSelectedCeDetails()}
                 </div>

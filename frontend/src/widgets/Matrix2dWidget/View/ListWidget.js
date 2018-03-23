@@ -79,22 +79,22 @@ export default class Matrix2dList extends React.PureComponent {
     renderTagUnit = (key, data) => (
         <div
             key={key}
-            className={styles['tag-unit']}
+            className={styles.tagUnit}
         >
-            <div className={styles['tag-dimension']} >
-                <div className={styles['dimension-title']}>
+            <div className={styles.tagDimension} >
+                <div className={styles.dimensionTitle}>
                     {data.dimension.title}
                 </div>
-                <div className={styles['subdimension-title']}>
+                <div className={styles.subdimensionTitle}>
                     {data.subdimension.title}
                 </div>
             </div>
-            <div className={styles['tag-sector']}>
+            <div className={styles.tagSector}>
                 <div className={styles.title}>
                     {data.sector.title}
                 </div>
                 <ListView
-                    className={styles['tag-sub-sector']}
+                    className={styles.tagSubSector}
                     data={data.subsectorsWithTitle || emptyList}
                     keyExtractor={Matrix2dList.rowKeyExtractor}
                     emptyComponent={WidgetEmptyComponent}
@@ -110,7 +110,7 @@ export default class Matrix2dList extends React.PureComponent {
         return (
             <div
                 key={key}
-                className={styles['sub-sector']}
+                className={styles.subSector}
             >
                 <div className={styles.marker}>
                     { marker }

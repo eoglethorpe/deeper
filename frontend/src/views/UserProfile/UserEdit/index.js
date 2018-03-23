@@ -4,7 +4,6 @@
  * @co-author thenav56 <navinayer56@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -64,7 +63,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserEdit extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -275,7 +273,7 @@ export default class UserEdit extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-profile-edit-form"
+                className={styles.userProfileEditForm}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -291,16 +289,15 @@ export default class UserEdit extends React.PureComponent {
                 {
                     showGalleryImage && formValues.displayPicture && (
                         <InternalGallery
-                            styleName="gallery-image"
+                            className={styles.galleryImage}
                             galleryId={formValues.displayPicture}
                         />
                     )
                 }
                 <ImageInput
-                    className={styles.galleryImageSelect}
+                    className={`${styles.galleryImageSelect} ${styles.displayPicture}`}
                     showPreview={!showGalleryImage}
                     showStatus={false}
-                    styleName="display-picture"
                     onChange={this.handleImageInputChange}
                     accept="image/png, image/jpeg, image/fig, image/gif"
                 />
@@ -320,7 +317,7 @@ export default class UserEdit extends React.PureComponent {
                     formname="organization"
                     placeholder={this.props.userStrings('organizationPlaceholder')}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.handleFormClose}
                         type="button"

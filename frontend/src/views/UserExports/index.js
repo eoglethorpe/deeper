@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -72,7 +71,6 @@ const emptyList = [];
 
 @BoundError
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserExports extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -338,21 +336,21 @@ export default class UserExports extends React.PureComponent {
         const { selectedExport } = this.state;
 
         return (
-            <div styleName="user-exports">
-                <header styleName="header">
+            <div className={styles.userExports}>
+                <header className={styles.header}>
                     <h2>
                         {this.props.exportStrings('userExportsHeader')}
                     </h2>
                     <Link
-                        styleName="export-link"
+                        className={styles.exportLink}
                         to={reverseRoute(pathNames.export, { projectId })}
                     >
                         {this.props.exportStrings('goBackToExportLabel')}
                     </Link>
                 </header>
-                <div styleName="main-container">
+                <div className={styles.mainContainer}>
                     { this.state.pendingExports && <LoadingAnimation /> }
-                    <div styleName="table-container">
+                    <div className={styles.tableContainer}>
                         <Table
                             data={userExports || emptyList}
                             headers={this.exportsTableHeader}
@@ -363,7 +361,7 @@ export default class UserExports extends React.PureComponent {
                         />
                     </div>
                     <ExportPreview
-                        styleName="preview"
+                        className={styles.preview}
                         exportId={selectedExport}
                     />
                 </div>

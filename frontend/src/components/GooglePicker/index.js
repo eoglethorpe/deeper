@@ -1,11 +1,9 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import { commonStringsSelector } from '../../redux';
-import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
@@ -49,7 +47,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class GooglePicker extends React.Component {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

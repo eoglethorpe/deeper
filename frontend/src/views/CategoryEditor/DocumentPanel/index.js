@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -56,7 +55,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class DocumentPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -110,8 +108,8 @@ export default class DocumentPanel extends React.PureComponent {
         return classNames.join(' ');
     }
 
-    getTabHeaderClassName = i => this.getTabClassName(styles['tab-header'], i)
-    getTabContentClassName = i => this.getTabClassName(styles['tab-content'], i)
+    getTabHeaderClassName = i => this.getTabClassName(styles.tabHeader, i)
+    getTabContentClassName = i => this.getTabClassName(styles.tabContent, i)
 
     // Simplification callback
     handleFilesPreviewLoad = (response) => {
@@ -191,28 +189,20 @@ export default class DocumentPanel extends React.PureComponent {
         const { previewId } = this.props;
 
         return (
-            <div styleName="document-panel">
-                <header
-                    styleName="header"
-                >
+            <div className={styles.documentPanel}>
+                <header className={styles.header}>
                     <List
                         data={this.tabs}
                         keyExtractor={this.keyExtractorForTabs}
                         modifier={this.renderTabHeader}
                     />
                 </header>
-                <div styleName="content">
+                <div className={styles.content}>
                     { pending && <LoadingAnimation /> }
-                    <div
-                        styleName="tab-content"
-                        className={this.getTabContentClassName(0)}
-                    >
+                    <div className={`${styles.tabContent} ${this.getTabContentClassName(0)}`}>
                         <DocumentSelect />
                     </div>
-                    <div
-                        styleName="tab-content"
-                        className={this.getTabContentClassName(1)}
-                    >
+                    <div className={`${styles.tabContent} ${this.getTabContentClassName(1)}`}>
                         <SimplifiedFilePreview
                             fileIds={fileIds}
                             previewId={previewId}
@@ -221,10 +211,7 @@ export default class DocumentPanel extends React.PureComponent {
                             postLoad={this.handlePostLoad}
                         />
                     </div>
-                    <div
-                        styleName="tab-content"
-                        className={this.getTabContentClassName(2)}
-                    >
+                    <div className={`${styles.tabContent} ${this.getTabContentClassName(2)}`}>
                         <DocumentNGram />
                     </div>
                 </div>

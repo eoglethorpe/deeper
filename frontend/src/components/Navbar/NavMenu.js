@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -45,7 +44,6 @@ const mapStateToProps = state => ({
 
 @withRouter
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class NavMenu extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -117,11 +115,11 @@ export default class NavMenu extends React.PureComponent {
     }
 
     getNavbarItem = (key, item) => (
-        this.getNavItem(key, item, styles['menu-item'])
+        this.getNavItem(key, item, styles.menuItem)
     )
 
     getOverflowMenuItem = (key, item) => (
-        this.getNavItem(key, item, styles['overflow-menu-item'])
+        this.getNavItem(key, item, styles.overflowMenuItem)
     )
 
     computeSize = () => {
@@ -198,8 +196,7 @@ export default class NavMenu extends React.PureComponent {
         return (
             <div
                 ref={(el) => { this.menu = el; }}
-                styleName="nav-menu"
-                className={className}
+                className={`${styles.navMenu} ${className}`}
             >
                 <List
                     data={navLinks}
@@ -209,9 +206,9 @@ export default class NavMenu extends React.PureComponent {
 
                 <DropdownMenu
                     iconName={iconNames.overflowHorizontal}
-                    styleName="overflow-menu"
+                    className={styles.overflowMenu}
                     hideDropdownIcon
-                    dropdownClassName={styles['navbar-overflow-dropdown']}
+                    dropdownClassName={styles.navbarOverflowDropdown}
                 >
                     <List
                         data={overflowMenuLinks}

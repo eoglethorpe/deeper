@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -18,7 +17,6 @@ const defaultProps = {
     keywords: [],
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class NGram extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -33,7 +31,7 @@ export default class NGram extends React.PureComponent {
             <div className={styles.title}>
                 { data }
             </div>
-            <div className={styles['action-buttons']}>
+            <div className={styles.actionButtons}>
                 <DangerButton
                     onClick={() => this.props.onDelete(data)}
                     transparent
@@ -49,7 +47,7 @@ export default class NGram extends React.PureComponent {
 
         return (
             <ListView
-                styleName="ngram"
+                className={styles.ngram}
                 data={keywords}
                 modifier={this.renderKeyword}
                 keyExtractor={this.keyExtractorForKeyword}

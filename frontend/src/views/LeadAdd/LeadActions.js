@@ -3,7 +3,6 @@
  * @co-author tnagorra <weathermist@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -61,7 +60,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class LeadFilter extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -97,8 +95,8 @@ export default class LeadFilter extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="action-buttons">
-                <div styleName="movement-buttons">
+            <div className={styles.actionButtons}>
+                <div className={styles.movementButtons}>
                     <Button
                         disabled={!addLeadViewCanPrev}
                         onClick={this.handlePrevButtonClick}
@@ -114,32 +112,32 @@ export default class LeadFilter extends React.PureComponent {
                 </div>
                 <DropdownMenu
                     iconName={iconNames.delete}
-                    styleName="remove-buttons"
+                    className={styles.removeButtons}
                     title={leadsStrings('removeButtonTitle')}
                 >
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleRemoveButtonClick}
                         disabled={isRemoveDisabledForActive}
                     >
                         {leadsStrings('removeCurrentButtonTitle')}
                     </button>
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleFilteredRemoveButtonClick}
                         disabled={!isRemoveEnabledForFiltered}
                     >
                         {leadsStrings('removeAllFilteredButtonTitle')}
                     </button>
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         disabled={!isRemoveEnabledForCompleted}
                         onClick={handleSavedRemoveButtonClick}
                     >
                         {leadsStrings('removeAllCompletedButtonTitle')}
                     </button>
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleBulkRemoveButtonClick}
                         disabled={!isRemoveEnabledForAll}
                     >
@@ -148,25 +146,25 @@ export default class LeadFilter extends React.PureComponent {
                 </DropdownMenu>
                 <DropdownMenu
                     iconName={iconNames.save}
-                    styleName="save-buttons"
+                    className={styles.saveButtons}
                     title="Save" // FIXME: use strings
                 >
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleSaveButtonClick}
                         disabled={isSaveDisabledForActive}
                     >
                         {leadsStrings('saveCurrentButtonTitle')}
                     </button>
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleFilteredSaveButtonClick}
                         disabled={pendingSubmitAll || !isSaveEnabledForFiltered}
                     >
                         {leadsStrings('saveAllFilteredButtonTitle')}
                     </button>
                     <button
-                        styleName="dropdown-button"
+                        className={styles.dropdownButton}
                         onClick={handleBulkSaveButtonClick}
                         disabled={pendingSubmitAll || !isSaveEnabledForAll}
                     >

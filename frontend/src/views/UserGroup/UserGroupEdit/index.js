@@ -2,7 +2,6 @@
  * @author thenav56 <navinayer56@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -56,7 +55,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserGroupEdit extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -195,7 +193,7 @@ export default class UserGroupEdit extends React.PureComponent {
 
         return (
             <Form
-                styleName="user-group-edit-form"
+                className={styles.userGroupEditForm}
                 schema={this.schema}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
@@ -216,11 +214,11 @@ export default class UserGroupEdit extends React.PureComponent {
                 <TextArea
                     label={this.props.userStrings('userGroupModalDescriptionLabel')}
                     formname="description"
-                    styleName="description"
+                    className={styles.description}
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     rows={3}
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         type="button"
                         onClick={this.handleFormClose}

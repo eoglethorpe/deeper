@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -71,7 +70,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class RegionAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -276,12 +274,9 @@ export default class RegionAdminLevel extends React.PureComponent {
         const { activeAdminLevelDelete, showDeleteModal, deletePending } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="admin-levels"
-            >
+            <div className={`${className} ${styles.adminLevels}`}>
                 { deletePending && <LoadingAnimation /> }
-                <div styleName="header">
+                <div className={styles.header}>
                     <h5>
                         {this.props.countriesStrings('adminLevelsHeader')}
                     </h5>
@@ -318,7 +313,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                         </Modal>
                     }
                 </div>
-                <div styleName="admin-levels-list">
+                <div className={styles.adminLevelsList}>
                     <Table
                         data={adminLevelList}
                         headers={this.adminLevelHeaders}

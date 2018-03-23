@@ -43,7 +43,7 @@ export default class Multiselect extends React.PureComponent {
 
         return (
             <div
-                className={styles['selected-option']}
+                className={styles.selectedOption}
                 key={key}
             >
                 <div className={styles.marker}>
@@ -78,7 +78,7 @@ export default class Multiselect extends React.PureComponent {
                 />
                 <ListView
                     data={selectedData}
-                    className={styles['selected-options']}
+                    className={styles.selectedOptions}
                     keyExtractor={Multiselect.valueKeyExtractor}
                     modifier={this.renderSelectedOption}
                 />

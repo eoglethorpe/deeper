@@ -2,7 +2,6 @@
  * @author thenav56 <ayernavin@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
@@ -43,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class PasswordReset extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -162,11 +160,11 @@ export default class PasswordReset extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="reset-password">
-                <div styleName="form-container">
+            <div className={styles.resetPassword}>
+                <div className={styles.formContainer}>
                     {
                         resetSuccess ? (
-                            <div styleName="info">
+                            <div className={styles.info}>
                                 <p>
                                     {this.props.loginStrings('checkInboxText')}
                                     {formValues.email || this.props.loginStrings('emailPlaceholder')}
@@ -174,7 +172,7 @@ export default class PasswordReset extends React.PureComponent {
                             </div>
                         ) : (
                             <Form
-                                styleName="reset-password-form"
+                                className={styles.resetPasswordForm}
                                 changeCallback={this.changeCallback}
                                 failureCallback={this.failureCallback}
                                 successCallback={this.successCallback}
@@ -196,7 +194,7 @@ export default class PasswordReset extends React.PureComponent {
                                     formname="recaptchaResponse"
                                     siteKey={reCaptchaSiteKey}
                                 />
-                                <div styleName="action-buttons">
+                                <div className={styles.actionButtons}>
                                     <PrimaryButton>
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
@@ -204,9 +202,9 @@ export default class PasswordReset extends React.PureComponent {
                             </Form>
                         )
                     }
-                    <div styleName="go-back-container">
+                    <div className={styles.goBackContainer}>
                         <Link
-                            styleName="go-back-link"
+                            className={styles.goBackLink}
                             to={reverseRoute(pathNames.login, {})}
                         >
                             {this.props.loginStrings('goBackToLoginText')}

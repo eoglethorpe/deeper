@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -43,7 +42,6 @@ const mapStateToProps = state => ({
 });
 
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class SubcategoryColumn extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -58,7 +56,7 @@ export default class SubcategoryColumn extends React.PureComponent {
 
         const styleNames = [];
 
-        styleNames.push(styles['sub-category']);
+        styleNames.push(styles.subCategory);
 
         if (id === selectedSubcategoryId) {
             styleNames.push(isLastColumn ? styles.active : styles.selected);
@@ -71,10 +69,10 @@ export default class SubcategoryColumn extends React.PureComponent {
         const { target } = e;
 
         const classNames = target.className.split(' ');
-        const dragStyleName = styles['drag-enter'];
+        const dragStyleName = styles.dragEnter;
 
         if (classNames.findIndex(d => d === dragStyleName) === -1) {
-            classNames.push(styles['drag-enter']);
+            classNames.push(styles.dragEnter);
         }
 
         target.className = classNames.join(' ');
@@ -84,7 +82,7 @@ export default class SubcategoryColumn extends React.PureComponent {
         const { target } = e;
 
         const classNames = target.className.split(' ');
-        const dragStyleName = styles['drag-enter'];
+        const dragStyleName = styles.dragEnter;
 
         const styleIndex = classNames.findIndex(d => d === dragStyleName);
         if (styleIndex !== -1) {
@@ -168,9 +166,9 @@ export default class SubcategoryColumn extends React.PureComponent {
         } = this.props;
 
         return (
-            <div styleName="column" >
-                <header styleName="header">
-                    <h4 styleName="heading" >
+            <div className={styles.column} >
+                <header className={styles.header}>
+                    <h4 className={styles.heading} >
                         {title}
                     </h4>
                     <AccentButton
@@ -181,7 +179,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     />
                 </header>
                 <ListView
-                    styleName="sub-category-list"
+                    className={styles.subCategoryList}
                     data={subcategories}
                     modifier={this.renderSubcategory}
                     keyExtractor={SubcategoryColumn.keyExtractorForSubcategory}

@@ -4,7 +4,6 @@
  * @co-author jacky <prabes.pathak@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -82,7 +81,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserGroup extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -335,12 +333,9 @@ export default class UserGroup extends React.PureComponent {
         const isCurrentUser = userId === activeUser.userId;
 
         return (
-            <div
-                styleName="groups"
-                className={className}
-            >
+            <div className={`${styles.groups} ${className}`}>
                 {deletePending && <LoadingAnimation />}
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('headerGroups')}
                     </h2>
@@ -383,7 +378,7 @@ export default class UserGroup extends React.PureComponent {
                 >
                     <p>{confirmText}</p>
                 </Confirm>
-                <div styleName="usergroup-table">
+                <div className={styles.usergroupTable}>
                     <Table
                         data={userGroups}
                         headers={this.userGroupsTableHeaders}

@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -53,7 +52,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class CountryKeyFigures extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -238,7 +236,7 @@ export default class CountryKeyFigures extends React.PureComponent {
 
         return (
             <Form
-                styleName="key-figures"
+                className={styles.keyFigures}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
                 successCallback={this.successCallback}
@@ -249,9 +247,9 @@ export default class CountryKeyFigures extends React.PureComponent {
                 disabled={pending}
             >
                 { (pending || dataLoading) && <LoadingAnimation /> }
-                <header styleName="header">
+                <header className={styles.header}>
                     <NonFieldErrors formerror="" />
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <DangerButton
                             type="button"
                             onClick={this.handleFormCancel}
@@ -264,7 +262,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <div styleName="section">
+                <div className={styles.section}>
                     <h3>
                         {this.props.countriesStrings('humanDevelopmentIndexLabel')}
                         <a
@@ -273,8 +271,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className={iconNames.link}
-                                styleName="icon"
+                                className={`${iconNames.link} ${styles.icon}`}
                                 // FIXME: use strings
                                 title="Click to open"
                             />
@@ -282,7 +279,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label={this.props.countriesStrings('indexLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         type="number"
                         step="any"
                         min="0"
@@ -291,23 +288,23 @@ export default class CountryKeyFigures extends React.PureComponent {
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoRankLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         readOnly
                         formname="geoRank"
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoScoreLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         readOnly
                         formname="geoScore"
                     />
                     <TextInput
                         label={this.props.countriesStrings('rankLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="rank"
                     />
                 </div>
-                <div styleName="section">
+                <div className={styles.section}>
                     <h3>
                         {this.props.countriesStrings('underFiveMortalityLabel')}
                         <a
@@ -316,8 +313,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className={iconNames.link}
-                                styleName="icon"
+                                className={`${iconNames.link} ${styles.icon}`}
                                 // FIXME: use strings
                                 title="Click to open"
                             />
@@ -325,18 +321,18 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </h3>
                     <TextInput
                         label={this.props.countriesStrings('u5mLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="u5m"
                         type="number"
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoScoreLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         readOnly
                         formname="geoScoreU5m"
                     />
                 </div>
-                <div styleName="section">
+                <div className={styles.section}>
                     <h3>
                         {this.props.countriesStrings('uprootedPeopleLabel')}
                         <a
@@ -345,41 +341,41 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className={iconNames.link}
-                                styleName="icon"
+                                className={`${iconNames.link} ${styles.icon}`}
+                                // FIXME: use strings
                                 title="Click to open"
                             />
                         </a>
                     </h3>
                     <TextInput
                         label={this.props.countriesStrings('numberOfRefugeesLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="numberOfRefugees"
                     />
                     <TextInput
                         label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         readOnly
                         formname="percentageUprootedPeople"
                     />
                     <TextInput
                         label={this.props.countriesStrings('geoScoreLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         readOnly
                         formname="geoScoreUprooted"
                     />
                     <TextInput
                         label={this.props.countriesStrings('numberIdpLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="numberIdp"
                     />
                     <TextInput
                         label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="numberReturnedRefugees"
                     />
                 </div>
-                <div styleName="section">
+                <div className={styles.section}>
                     <h3>
                         {this.props.countriesStrings('informScoreLabel')}
                         <a
@@ -388,35 +384,35 @@ export default class CountryKeyFigures extends React.PureComponent {
                             rel="noopener noreferrer"
                         >
                             <span
-                                className={iconNames.link}
-                                styleName="icon"
+                                className={`${iconNames.link} ${styles.icon}`}
+                                // FIXME: use strings
                                 title="Click to open"
                             />
                         </a>
                     </h3>
                     <TextInput
                         label={this.props.countriesStrings('riskClassLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="riskClass"
                     />
                     <TextInput
                         label={this.props.countriesStrings('informRiskIndexLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="informRiskIndex"
                     />
                     <TextInput
                         label={this.props.countriesStrings('hazardAndExposureLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="hazardAndExposure"
                     />
                     <TextInput
                         label={this.props.countriesStrings('vulnerabilityLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="vulnerability"
                     />
                     <TextInput
                         label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
-                        styleName="text-input"
+                        className={styles.textInput}
                         formname="lackOfCopingCapacity"
                     />
                 </div>

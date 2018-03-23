@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -40,7 +39,6 @@ const defaultProps = {
     upload: undefined,
 };
 
-@CSSModules(styles, { allowMultiple: true })
 export default class LeadListItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -89,7 +87,7 @@ export default class LeadListItem extends React.PureComponent {
 
     renderIcon = ({ leadState }) => {
         const classNames = [
-            styles['status-icon'],
+            styles.statusIcon,
             styles[LeadListItem.styleMap[leadState]],
             iconNames[LeadListItem.iconMap[leadState]],
         ];
@@ -103,7 +101,7 @@ export default class LeadListItem extends React.PureComponent {
 
         const progress = isTruthy(upload.progress) ? upload.progress : 0;
 
-        const classNames = [styles['progress-bar']];
+        const classNames = [styles.progressBar];
         if (progress >= 100) {
             classNames.push(styles.completed);
         }
@@ -141,18 +139,13 @@ export default class LeadListItem extends React.PureComponent {
         const UploadProgress = this.renderUploadProgress;
 
         return (
-            <div styleName="lead-list-item">
+            <div className={styles.leadListItem}>
                 <button
-                    key="lead-item"
-                    styleName={`add-lead-list-item ${active ? 'active' : ''}`}
-                    className={className}
+                    className={`${styles.addLeadListItem} ${active ? 'active' : ''} ${className}`}
                     onClick={this.handleClick}
                 >
-                    <span
-                        styleName="icon"
-                        className={LeadListItem.getIconClassName(type)}
-                    />
-                    <span styleName="title" >
+                    <span className={`${styles.icon} ${LeadListItem.getIconClassName(type)}`} />
+                    <span className={styles.title} >
                         { title }
                     </span>
                     <LeadListIcon leadState={leadState} />
@@ -162,8 +155,7 @@ export default class LeadListItem extends React.PureComponent {
                     />
                 </button>
                 <WarningButton
-                    key="remove-button"
-                    styleName="remove-button"
+                    className={styles.removeButton}
                     disabled={isRemoveDisabled}
                     onClick={this.handleRemoveClick}
                 >

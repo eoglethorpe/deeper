@@ -4,7 +4,6 @@
  * @co-author thenav56 <ayernavin@gmail.com>
  */
 
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -85,7 +84,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class UserProject extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -361,12 +359,9 @@ export default class UserProject extends React.PureComponent {
         const isCurrentUser = userId === activeUser.userId;
 
         return (
-            <div
-                styleName="projects"
-                className={className}
-            >
+            <div className={`${styles.projects} ${className}`}>
                 { deletePending && <LoadingAnimation /> }
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('headerProjects')}
                     </h2>
@@ -406,7 +401,7 @@ export default class UserProject extends React.PureComponent {
                 >
                     <p>{confirmText}</p>
                 </Confirm>
-                <div styleName="projects-table">
+                <div className={styles.projectsTable}>
                     <Table
                         data={userProjects}
                         headers={this.projectTableHeaders}

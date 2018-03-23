@@ -30,7 +30,7 @@ export default class ScaleViewWidget extends React.PureComponent {
         const { selectedScale } = attribute;
 
         const classNames = [
-            styles['scale-unit'],
+            styles.scaleUnit,
         ];
 
         if (selectedScale === key) {

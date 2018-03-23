@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import ReactSVG from 'react-svg';
@@ -110,7 +109,6 @@ const getKeyByValue = (object, value) => (
 
 @withRouter
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Navbar extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -282,7 +280,7 @@ export default class Navbar extends React.PureComponent {
                 render={() => (
                     <Link
                         to={reverseRoute(pathNames[key], params)}
-                        className={styles['dropdown-item']}
+                        className={styles.dropdownItem}
                     >
                         { iconName && <span className={`${iconName} ${styles.icon}`} />}
                         { this.props.pageTitleStrings(key) }
@@ -317,23 +315,20 @@ export default class Navbar extends React.PureComponent {
             this.props.commonStrings('anonymousLabel')
         );
         return (
-            <nav
-                className={className}
-                styleName="navbar"
-            >
+            <nav className={`${className} ${styles.navbar}`}>
                 <Link
                     to={reverseRoute(pathNames.homeScreen, {})}
-                    styleName="brand"
+                    className={styles.brand}
                 >
                     <ReactSVG
-                        wrapperClassName={styles['icon-wrapper']}
+                        wrapperClassName={styles.iconWrapper}
                         className={styles.icon}
                         path={logo}
                     />
-                    <div styleName="title">
+                    <div className={styles.title}>
                         {this.props.commonStrings('deepLabel')}
                     </div>
-                    <span styleName="beta-label">
+                    <span className={styles.betaLabel}>
                         {this.props.commonStrings('betaLabel')}
                     </span>
                 </Link>
@@ -353,7 +348,7 @@ export default class Navbar extends React.PureComponent {
                                 placeholder={this.props.commonStrings('selectEventPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
-                                className={styles['project-select-input']}
+                                className={styles.projectSelectInput}
                                 disabled={
                                     userProjects.length <= 0 || projectSelectInputLink.disable
                                 }
@@ -365,13 +360,13 @@ export default class Navbar extends React.PureComponent {
 
                 <NavMenu
                     links={this.validNavLinks}
-                    styleName="main-menu"
+                    className={styles.mainMenu}
                     projectId={activeProject}
                     countryId={activeCountry}
                 />
 
                 <DropdownMenu
-                    styleName="user-menu"
+                    className={styles.userMenu}
                     iconName={iconNames.person}
                     title={userName}
                 >
@@ -389,7 +384,7 @@ export default class Navbar extends React.PureComponent {
                             render={
                                 () => (
                                     <a
-                                        className={styles['dropdown-item']}
+                                        className={styles.dropdownItem}
                                         href={adminEndpoint}
                                         target="_blank"
                                     >
@@ -402,7 +397,7 @@ export default class Navbar extends React.PureComponent {
                     </DropdownGroup>
                     <Link
                         target="_blank"
-                        className={styles['dropdown-item']}
+                        className={styles.dropdownItem}
                         to="https://chrome.google.com/webstore/detail/deep-2-add-lead/kafonkgglonkbldmcigbdojiadfcmcdc"
                     >
                         <span className={`${styles.icon} ${iconNames.chrome}`} />
@@ -414,7 +409,7 @@ export default class Navbar extends React.PureComponent {
                             () => (
                                 <DropdownGroup>
                                     <button
-                                        className={styles['dropdown-item']}
+                                        className={styles.dropdownItem}
                                         onClick={this.handleLogoutButtonClick}
                                     >
                                         <span className={`${styles.icon} ${iconNames.logout}`} />

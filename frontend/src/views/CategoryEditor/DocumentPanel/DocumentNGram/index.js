@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -38,7 +37,6 @@ const mapDispatchToProps = dispatch => ({
 
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class DocumentNGram extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -53,7 +51,7 @@ export default class DocumentNGram extends React.PureComponent {
         const { selectedNGramIndex } = this.state;
 
         const styleNames = [];
-        styleNames.push(styles['ngram-select']);
+        styleNames.push(styles.ngramSelect);
         if (selectedNGramIndex === i) {
             styleNames.push(styles.active);
         }
@@ -119,22 +117,19 @@ export default class DocumentNGram extends React.PureComponent {
         const selectedNGram = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
-            <div
-                styleName="ngrams-tab"
-                className={className}
-            >
+            <div className={`${styles.ngramsTab} ${className}`}>
                 <ListView
-                    styleName="ngram-list"
+                    className={styles.ngramList}
                     data={selectedNGram}
                     modifier={this.renderNGram}
                     keyExtractor={this.keyExtractorKeywordTuple}
                 />
-                <div styleName="ngram-selects">
-                    <h4 styleName="heading">
+                <div className={styles.ngramSelects}>
+                    <h4 className={styles.heading}>
                         {this.props.ceStrings('numberOfWordsLabel')}
                     </h4>
                     <ListView
-                        styleName="ngram-select-list"
+                        className={styles.ngramSelectList}
                         data={ngramKeys}
                         modifier={this.renderNGramSelect}
                         keyExtractor={this.keyExtractorKeywordTuple}

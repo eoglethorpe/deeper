@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -52,7 +51,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class AddAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -185,8 +183,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
 
         return (
             <Form
-                className={className}
-                styleName="add-analysis-framework-form"
+                className={`${className} ${styles.addAnalysisFrameworkForm}`}
                 schema={this.schema}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
@@ -205,7 +202,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
                     autoFocus
                 />
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.props.onModalClose}
                         type="button"

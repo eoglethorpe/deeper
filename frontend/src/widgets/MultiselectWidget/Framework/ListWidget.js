@@ -144,11 +144,11 @@ export default class Multiselect extends React.PureComponent {
 
     renderEditOption = (key, data) => (
         <div
-            className={styles['edit-option']}
+            className={styles.editOption}
             key={key}
         >
             <TextInput
-                className={styles['title-input']}
+                className={styles.titleInput}
                 label={this.props.afStrings('optionLabel')}
                 placeholder={this.props.afStrings('optionPlaceholder')}
                 onChange={(value) => { this.handleValueInputChange(key, value); }}
@@ -157,7 +157,7 @@ export default class Multiselect extends React.PureComponent {
                 autoFocus
             />
             <DangerButton
-                className={styles['delete-button']}
+                className={styles.deleteButton}
                 onClick={() => { this.handleRemoveButtonClick(key); }}
                 transparent
             >
@@ -167,7 +167,7 @@ export default class Multiselect extends React.PureComponent {
     )
 
     renderDragHandle = () => {
-        const dragStyle = [styles['drag-handle']];
+        const dragStyle = [styles.dragHandle];
         return (
             <span className={`${iconNames.hamburger} ${dragStyle.join(' ')}`} />
         );
@@ -194,12 +194,12 @@ export default class Multiselect extends React.PureComponent {
         const saveButtonLabel = afStrings('saveButtonLabel');
 
         return (
-            <Modal className={styles['edit-modal']}>
+            <Modal className={styles.editModal}>
                 <ModalHeader title={headerTitle} />
                 <ModalBody className={styles.body}>
-                    <div className={styles['title-input-container']}>
+                    <div className={styles.titleInputContainer}>
                         <TextInput
-                            className={styles['title-input']}
+                            className={styles.titleInput}
                             label={titleInputLabel}
                             placeholder={titleInputPlaceholder}
                             onChange={this.handleWidgetTitleChange}
@@ -209,7 +209,7 @@ export default class Multiselect extends React.PureComponent {
                             selectOnFocus
                         />
                     </div>
-                    <div className={styles['option-inputs']}>
+                    <div className={styles.optionInputs}>
                         <header className={styles.header}>
                             <h4>
                                 { optionsTitle }
@@ -222,11 +222,11 @@ export default class Multiselect extends React.PureComponent {
                             </AccentButton>
                         </header>
                         <SortableList
-                            className={styles['edit-option-list']}
+                            className={styles.editOptionList}
                             data={options}
                             modifier={this.renderEditOption}
                             onChange={this.handleOptionOrderChange}
-                            sortableItemClass={styles['sortable-unit']}
+                            sortableItemClass={styles.sortableUnit}
                             keyExtractor={Multiselect.valueKeyExtractor}
                             dragHandleModifier={this.renderDragHandle}
                         />

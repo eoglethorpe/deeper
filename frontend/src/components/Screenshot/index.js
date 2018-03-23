@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -21,7 +20,6 @@ const defaultProps = {
 };
 
 
-@CSSModules(styles, { allowMultiple: true })
 export default class Screenshot extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -143,10 +141,7 @@ export default class Screenshot extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={className}
-                styleName="screenshot"
-            >
+            <div className={`${className} ${styles.screenshot}`}>
                 <svg
                     ref={(ref) => { this.svg = ref; }}
                     viewBox={`${offsetX} ${offsetY} ${width} ${height}`}

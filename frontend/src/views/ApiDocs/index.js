@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
@@ -27,7 +26,6 @@ const mapStateToProps = state => ({
 
 @BoundError
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class ApiDocs extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -118,7 +116,7 @@ export default class ApiDocs extends React.PureComponent {
     calcMethodKey = method => method.title
 
     renderDocs = docs => (
-        <div styleName="docs">
+        <div className={styles.docs}>
             <h1>{docs.title}</h1>
             <List
                 data={docs.apis}
@@ -156,7 +154,7 @@ export default class ApiDocs extends React.PureComponent {
                 </button>
             </h3>
             <ListView
-                className={styles['methods-container']}
+                className={styles.methodsContainer}
                 data={endpoint.methods}
                 modifier={this.renderMethod}
                 keyExtractor={this.calcMethodKey}
@@ -208,7 +206,7 @@ export default class ApiDocs extends React.PureComponent {
         let content;
         if (pending) {
             content = (
-                <p styleName="message">
+                <p className={styles.message}>
                     {this.props.apiStrings('loadingLabel')}
                 </p>
             );
@@ -217,7 +215,7 @@ export default class ApiDocs extends React.PureComponent {
         }
 
         return (
-            <div className={styles['api-docs']}>
+            <div className={styles.apiDocs}>
                 { content }
             </div>
         );

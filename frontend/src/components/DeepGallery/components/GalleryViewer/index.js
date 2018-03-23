@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -62,7 +61,6 @@ const mapStateToProps = state => ({
  * Use required document viewer according to the mime-type
 */
 @connect(mapStateToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class GalleryViewer extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -114,14 +112,14 @@ export default class GalleryViewer extends React.PureComponent {
     renderErrorScreen = (url) => {
         const { invalidUrlMessage, cannotPreviewUrlMessage, leadsStrings } = this.props;
         return (
-            <div styleName="error-url">
+            <div className={styles.errorUrl}>
                 {
                     GalleryViewer.isUrlValid(url) ?
-                        <span styleName="msg">
+                        <span className={styles.msg}>
                             {cannotPreviewUrlMessage || leadsStrings('cannotPreviewUrl')}
                         </span>
                         :
-                        <span styleName="msg">
+                        <span className={styles.msg}>
                             {invalidUrlMessage || leadsStrings('invalidUrl')}
                         </span>
                 }
@@ -168,7 +166,7 @@ export default class GalleryViewer extends React.PureComponent {
         return (
             <div className={urlbarClassNames.join(' ')}>
                 <TextInput
-                    styleName="url"
+                    className={styles.url}
                     value={url || ''}
                     readOnly
                     showLabel={false}
@@ -176,9 +174,9 @@ export default class GalleryViewer extends React.PureComponent {
                     selectOnFocus
                 />
                 {
-                    <div styleName="action-buttons">
+                    <div className={styles.actionButtons}>
                         <a
-                            styleName="open-link"
+                            className={styles.openLink}
                             href={url}
                             target="_blank"
                         >
@@ -230,25 +228,22 @@ export default class GalleryViewer extends React.PureComponent {
         } = this.props;
         const { screenshotMode } = this.state;
 
-        const containerStyles = ['gallery-viewer'];
+        const containerStyles = [styles.galleryViewer];
         const isHttps = !!(url || '').match(/^https:\/\//) || window.location.protocol === 'http:';
         const previewError = !canShowIframe || !isHttps;
         const showBar = showUrl || showScreenshot;
 
         if (showBar) {
-            containerStyles.push('urlbar-shown');
+            containerStyles.push(styles.urlbarShown);
         }
 
         const docContainerClassNames = [
-            styles['doc-container'],
+            styles.docContainer,
             'doc-container',
         ];
 
         return (
-            <div
-                styleName={containerStyles.join(' ')}
-                className={className}
-            >
+            <div className={`${containerStyles.join(' ')} ${className}`}>
                 {
                     showBar &&
                     this.renderBar({

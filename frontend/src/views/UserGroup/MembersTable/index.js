@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -67,7 +66,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class MembersTable extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -322,22 +320,19 @@ export default class MembersTable extends React.PureComponent {
         } = this.state;
 
         return (
-            <div
-                className={this.props.className}
-                styleName="members"
-            >
+            <div className={`${this.props.className} ${styles.members}`}>
                 { actionPending && <LoadingAnimation /> }
-                <div styleName="header">
+                <div className={styles.header}>
                     <h2>
                         {this.props.userStrings('tableHeaderMembers')}
                     </h2>
-                    <div styleName="pusher" />
+                    <div className={styles.pusher} />
                     <TextInput
                         placeholder={this.props.userStrings('placeholderSearch')}
                         onChange={this.handleSearchMemberChange}
                         value={searchMemberInputValue}
                         type="search"
-                        styleName="search-input"
+                        className={styles.searchInput}
                         showLabel={false}
                         showHintAndError={false}
                     />
@@ -350,7 +345,7 @@ export default class MembersTable extends React.PureComponent {
                         </PrimaryButton>
                     }
                 </div>
-                <div styleName="content">
+                <div className={styles.content}>
                     <Table
                         data={memberData}
                         headers={this.memberHeaders}
@@ -371,7 +366,7 @@ export default class MembersTable extends React.PureComponent {
                 </div>
                 { showAddMemberModal &&
                     <Modal
-                        styleName="add-member-modal"
+                        className={styles.addMemberModal}
                         closeOnEscape
                         onClose={this.handleAddMemberModalClose}
                     >
@@ -387,7 +382,7 @@ export default class MembersTable extends React.PureComponent {
                             }
                         />
                         <ModalBody
-                            styleName="add-member"
+                            className={styles.addMember}
                         >
                             <AddUserGroupMembers
                                 userGroupId={this.props.userGroupId}

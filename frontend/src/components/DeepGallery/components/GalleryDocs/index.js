@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -26,7 +25,6 @@ const defaultProps = {
 /*
  * Gallery viewer component for Docs [galleryDocsMimeType]
  */
-@CSSModules(styles, { allowMultiple: true })
 export default class GalleryDocs extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -49,7 +47,7 @@ export default class GalleryDocs extends React.PureComponent {
         const classNames = [
             className,
             'gallery-docs',
-            styles['gallery-docs'],
+            styles.galleryDocs,
         ];
 
         return (
@@ -57,14 +55,12 @@ export default class GalleryDocs extends React.PureComponent {
                 {
                     mimeType === 'application/pdf' && canShowIframe && !notHttps ?
                         <iframe
-                            className="doc"
-                            styleName="doc"
+                            className={`doc ${styles.doc}`}
                             title={docUrl}
                             src={docUrl}
                         />
                         : <iframe
-                            className="doc"
-                            styleName="doc"
+                            className={`doc ${styles.doc}`}
                             title={docUrl}
                             src={googleDriveViewerUrl}
                             sandbox="allow-scripts allow-same-origin allow-popups"

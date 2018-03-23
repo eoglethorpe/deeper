@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import update from 'immutability-helper';
@@ -56,7 +55,6 @@ const mapStateToProps = (state, props) => ({
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -105,14 +103,14 @@ export default class List extends React.PureComponent {
         const minSize = this.widgets.find(w => w.id === widgetId).listMinSize;
 
         const headerRightComponent = widget.overviewComponent ? (
-            <div className={`${styles['action-buttons']} action-buttons`} >
+            <div className={`${styles.actionButtons} actionButtons`} >
                 <span
                     className={`${iconNames.info} icon`}
                     title="Widget added from overview page" // FIXME: use strings
                 />
             </div>
         ) : (
-            <div className={`${styles['action-buttons']} action-buttons`} >
+            <div className={`${styles.actionButtons} actionButtons`} >
                 <Button
                     transparent
                     onClick={() => this.handleWidgetEditButtonClick(key)}
@@ -293,8 +291,8 @@ export default class List extends React.PureComponent {
 
     render() {
         return (
-            <div styleName="list">
-                <header styleName="header">
+            <div className={styles.list}>
+                <header className={styles.header}>
                     <h2>
                         {this.props.afStrings('analysisFramework')}
                         /
@@ -302,9 +300,9 @@ export default class List extends React.PureComponent {
                             {this.props.afStrings('headerList')}
                         </small>
                     </h2>
-                    <div styleName="actions">
+                    <div className={styles.actions}>
                         <Link
-                            styleName="link-to-overview"
+                            className={styles.linkToOverview}
                             to="/overview"
                             replace
                         >
@@ -318,10 +316,10 @@ export default class List extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <div styleName="content">
-                    <div styleName="grid-layout-wrapper">
+                <div className={styles.content}>
+                    <div className={styles.gridLayoutWrapper}>
                         <GridLayout
-                            styleName="grid-layout"
+                            className={styles.gridLayout}
                             modifier={this.getItemView}
                             items={this.gridItems}
                             onLayoutChange={this.handleLayoutChange}
@@ -337,17 +335,17 @@ export default class List extends React.PureComponent {
                         </Confirm>
                         {/* FIXME: strings */}
                     </div>
-                    <div styleName="widget-list">
+                    <div className={styles.widgetList}>
                         {
                             this.widgets.map(widget => (
                                 <div
-                                    styleName="widget-list-item"
+                                    className={styles.widgetListItem}
                                     key={widget.id}
                                 >
-                                    <div styleName="title">
+                                    <div className={styles.title}>
                                         {this.props.afStrings(widget.title)}
                                     </div>
-                                    <div styleName="actions">
+                                    <div className={styles.actions}>
                                         <Button
                                             transparent
                                             onClick={

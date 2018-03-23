@@ -328,23 +328,23 @@ export default class RegionMap extends React.PureComponent {
             }));
 
             return (
-                <div className={styles['map-container']}>
+                <div className={styles.mapContainer}>
                     <Button
-                        className={styles['refresh-button']}
+                        className={styles.refreshButton}
                         onClick={this.handleRefresh}
                     >
                         <span className={iconNames.refresh} />
                     </Button>
                     <GeoJsonMap
                         selections={this.props.selections}
-                        className={styles['geo-json-map']}
+                        className={styles.geoJsonMap}
                         geoJson={geoJsons[selectedAdminLevelId]}
                         geoJsonBounds={geoJsonBounds[selectedAdminLevelId]}
                         onAreaClick={this.handleAreaClick}
                         thickness={adminLevels.length - adminLevel.level}
                         pending={adminLevelPending[selectedAdminLevelId]}
                     />
-                    <div className={styles['bottom-bar']}>
+                    <div className={styles.bottomBar}>
                         <SegmentButton
                             data={segmentButtonData}
                             selected={selectedAdminLevelId}
@@ -369,7 +369,7 @@ export default class RegionMap extends React.PureComponent {
 
         return (
             <div
-                className={`${className} ${styles['region-map']}`}
+                className={`${className} ${styles.regionMap}`}
             >
                 { pending ? <LoadingAnimation /> : this.renderContent() }
             </div>
