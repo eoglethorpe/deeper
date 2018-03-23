@@ -508,9 +508,7 @@ export default class ProjectGeneral extends React.PureComponent {
         } = this.props;
 
         return (
-            <div
-                className={`${className} ${styles.projectGeneral}`}
-            >
+            <div className={`${className} ${styles.projectGeneral}`}>
                 {actionPending && <LoadingAnimation />}
                 <ProjectGeneralForm
                     formValues={formValues}

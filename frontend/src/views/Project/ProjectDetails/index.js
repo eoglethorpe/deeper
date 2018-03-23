@@ -240,9 +240,7 @@ export default class ProjectDetails extends React.PureComponent {
 
         return (
             <HashRouter>
-                <div
-                    className={`${className} ${styles.projectDetails}`}
-                >
+                <div className={`${className} ${styles.projectDetails}`}>
                     <Route
                         exact
                         path="/"

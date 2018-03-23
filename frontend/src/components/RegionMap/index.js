@@ -368,9 +368,7 @@ export default class RegionMap extends React.PureComponent {
         const { pending } = this.state;
 
         return (
-            <div
-                className={`${className} ${styles.regionMap}`}
-            >
+            <div className={`${className} ${styles.regionMap}`}>
                 { pending ? <LoadingAnimation /> : this.renderContent() }
             </div>
         );
