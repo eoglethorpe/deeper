@@ -305,9 +305,7 @@ export default class LeadFormItem extends React.PureComponent {
                                 />
                             ) : (
                                 <div className={styles.previewText}>
-                                    <h1>
-                                        {this.props.leadsStrings('sourcePreview')}
-                                    </h1>
+                                    {this.props.leadsStrings('sourcePreview')}
                                 </div>
                             )
                         }
@@ -355,6 +353,9 @@ export default class LeadFormItem extends React.PureComponent {
             applyMode,
         } = this.state;
 
+        const type = leadAccessor.getType(lead);
+        const disableResize = type === LEAD_TYPE.text;
+
         const LeadPreview = this.renderLeadPreview;
 
         return (
@@ -362,6 +363,7 @@ export default class LeadFormItem extends React.PureComponent {
                 className={`${styles.right} ${!active ? styles.hidden : ''}`}
                 topContainerClassName={styles.top}
                 bottomContainerClassName={styles.bottom}
+                disabled={disableResize}
                 topChild={
                     <Fragment>
                         <LeadForm

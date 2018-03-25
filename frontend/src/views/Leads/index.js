@@ -9,10 +9,10 @@ import {
 import {
     reverseRoute,
 } from '../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import FormattedDate from '../../vendor/react-store/components/View/FormattedDate';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
@@ -22,15 +22,6 @@ import WarningButton from '../../vendor/react-store/components/Action/Button/War
 import BoundError from '../../components/BoundError';
 import ActionButtons from './ActionButtons';
 
-import {
-    createParamsForUser,
-    createUrlForLeadsOfProject,
-    createUrlForLeadDelete,
-    createParamsForLeadDelete,
-    createUrlForLeadEdit,
-    createParamsForLeadEdit,
-    transformResponseErrorToFormError,
-} from '../../rest';
 import {
     activeProjectSelector,
     leadsForProjectSelector,
@@ -47,16 +38,23 @@ import {
     leadPageActivePageSelector,
     setLeadPageActivePageAction,
 
+    leadPageLeadsPerPageSelector,
+    setLeadPageLeadsPerPageAction,
+
     leadsStringsSelector,
+
+    removeLeadAction,
+    patchLeadAction,
 } from '../../redux';
 import {
     iconNames,
     pathNames,
 } from '../../constants/';
 import { leadTypeIconMap } from '../../entities/lead';
-import schema from '../../schema';
-import notify from '../../notify';
 
+import LeadsRequest from './requests/LeadsRequest';
+import PatchLeadRequest from './requests/PatchLeadRequest';
+import DeleteLeadRequest from './requests/DeleteLeadRequest';
 import FilterLeadsForm from './FilterLeadsForm';
 import styles from './styles.scss';
 
@@ -67,11 +65,16 @@ const propTypes = {
     activePage: PropTypes.number.isRequired,
     activeSort: PropTypes.string.isRequired,
     activeProject: PropTypes.number.isRequired,
+    leadsPerPage: PropTypes.number.isRequired,
     setLeads: PropTypes.func.isRequired,
+    removeLead: PropTypes.func.isRequired,
+    patchLead: PropTypes.func.isRequired,
+
     totalLeadsCount: PropTypes.number,
     setLeadPageFilter: PropTypes.func.isRequired,
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
+    setLeadsPerPage: PropTypes.func.isRequired,
 
     leadsStrings: PropTypes.func.isRequired,
 };
@@ -88,19 +91,21 @@ const mapStateToProps = (state, props) => ({
     totalLeadsCount: totalLeadsCountForProjectSelector(state, props),
     activePage: leadPageActivePageSelector(state, props),
     activeSort: leadPageActiveSortSelector(state, props),
+    leadsPerPage: leadPageLeadsPerPageSelector(state, props),
     filters: leadPageFilterSelector(state, props),
     leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setLeads: params => dispatch(setLeadsAction(params)),
+    removeLead: params => dispatch(removeLeadAction(params)),
+    patchLead: params => dispatch(patchLeadAction(params)),
 
     setLeadPageActivePage: params => dispatch(setLeadPageActivePageAction(params)),
     setLeadPageActiveSort: params => dispatch(setLeadPageActiveSortAction(params)),
     setLeadPageFilter: params => dispatch(setLeadPageFilterAction(params)),
+    setLeadsPerPage: params => dispatch(setLeadPageLeadsPerPageAction(params)),
 });
-
-const MAX_LEADS_PER_REQUEST = 24;
 
 const ACTION = {
     delete: 'delete',
@@ -113,6 +118,16 @@ const ACTION = {
 export default class Leads extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static leadsPerPageOptions = [
+        { label: '25', key: 25 },
+        { label: '50', key: 50 },
+        { label: '75', key: 75 },
+        { label: '100', key: 100 },
+    ];
+
+
+    static leadKeyExtractor = lead => String(lead.id)
 
     // TODO: IMP move this somewhere
     static getFiltersForRequest = (filters) => {
@@ -151,15 +166,18 @@ export default class Leads extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const MimeType = this.renderMimeType;
-
         this.headers = [
             {
                 key: 'attachmentMimeType',
                 label: this.props.leadsStrings('filterSourceType'),
                 order: 1,
                 sortable: false,
-                modifier: row => <MimeType row={row} />,
+                modifier: (row) => {
+                    const MimeType = this.renderMimeType;
+                    return (
+                        <MimeType row={row} />
+                    );
+                },
             },
             {
                 key: 'title',
@@ -298,13 +316,20 @@ export default class Leads extends React.PureComponent {
             activeSort,
             filters,
             activePage,
+            leadsPerPage,
         } = this.props;
 
-        this.leadRequest = this.createRequestForProjectLeads({
+        const request = new LeadsRequest({
+            setState: params => this.setState(params),
+            setLeads: this.props.setLeads,
+        });
+
+        this.leadRequest = request.create({
             activeProject,
             activePage,
             activeSort,
             filters,
+            leadsPerPage,
         });
         this.leadRequest.start();
     }
@@ -315,20 +340,30 @@ export default class Leads extends React.PureComponent {
             activeSort,
             filters,
             activePage,
+            leadsPerPage,
         } = nextProps;
 
         if (
             this.props.activeProject !== activeProject ||
             this.props.activeSort !== activeSort ||
             this.props.filters !== filters ||
-            this.props.activePage !== activePage
+            this.props.activePage !== activePage ||
+            this.props.leadsPerPage !== leadsPerPage
         ) {
             this.leadRequest.stop();
-            this.leadRequest = this.createRequestForProjectLeads({
+
+
+            const request = new LeadsRequest({
+                setState: params => this.setState(params),
+                setLeads: this.props.setLeads,
+            });
+
+            this.leadRequest = request.create({
                 activeProject,
                 activePage,
                 activeSort,
                 filters,
+                leadsPerPage,
             });
             this.leadRequest.start();
         }
@@ -340,176 +375,6 @@ export default class Leads extends React.PureComponent {
         if (this.leadDeleteRequest) {
             this.leadDeleteRequest.stop();
         }
-    }
-
-    // REST
-
-    createRequestForProjectLeads = ({ activeProject, activePage, activeSort, filters }) => {
-        const sanitizedFilters = Leads.getFiltersForRequest(filters);
-        const leadRequestOffset = (activePage - 1) * MAX_LEADS_PER_REQUEST;
-        const leadRequestLimit = MAX_LEADS_PER_REQUEST;
-
-        // TODO: VAGUE add required fields only
-        const urlForProjectLeads = createUrlForLeadsOfProject({
-            project: activeProject,
-            ordering: activeSort,
-            ...sanitizedFilters,
-            offset: leadRequestOffset,
-            limit: leadRequestLimit,
-        });
-
-        const leadRequest = new FgRestBuilder()
-            .url(urlForProjectLeads)
-            .params(() => createParamsForUser())
-            .preLoad(() => {
-                this.setState({ loadingLeads: true });
-            })
-            .postLoad(() => {
-                this.setState({ loadingLeads: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'leadsGetResponse');
-                    this.props.setLeads({
-                        projectId: activeProject,
-                        leads: response.results,
-                        totalLeadsCount: response.count,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const { formErrors: { errors = [] } } =
-                    transformResponseErrorToFormError(response.errors);
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: errors.join(''),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return leadRequest;
-    }
-
-    createRequestForLeadDelete = (lead) => {
-        const { id } = lead;
-        const leadRequest = new FgRestBuilder()
-            .url(createUrlForLeadDelete(id))
-            .params(() => createParamsForLeadDelete())
-            .preLoad(() => {
-                this.setState({ loadingLeads: true });
-            })
-            .success(() => {
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.SUCCESS,
-                    message: this.props.leadsStrings('leadDeleteSuccess'),
-                    duration: notify.duration.MEDIUM,
-                });
-
-                if (this.leadRequest) {
-                    this.leadRequest.stop();
-                }
-                const { activeProject, activePage, activeSort, filters } = this.props;
-                this.leadRequest = this.createRequestForProjectLeads({
-                    activeProject,
-                    activePage,
-                    activeSort,
-                    filters,
-                });
-                this.leadRequest.start();
-            })
-            .failure((response) => {
-                const { formErrors: { errors = [] } } =
-                    transformResponseErrorToFormError(response.errors);
-                notify.send({
-                    title: this.props.leadsStrings('leadDelete'),
-                    type: notify.type.ERROR,
-                    message: errors.join(''),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({ loadingLeads: false });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.leadsStrings('leadDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.leadsStrings('leadDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({ loadingLeads: false });
-            })
-            .build();
-        return leadRequest;
-    }
-
-    createRequestForLeadEdit = (lead, values) => {
-        const { id } = lead;
-
-        const v = {
-            project: lead.project,
-            title: lead.title,
-            ...values,
-        };
-        const leadRequest = new FgRestBuilder()
-            .url(createUrlForLeadEdit(id))
-            .params(() => createParamsForLeadEdit(v))
-            .preLoad(() => {
-                this.setState({ loadingLeads: true });
-            })
-            .success(() => {
-                notify.send({
-                    title: 'Leads', // FIXME: strings
-                    type: notify.type.SUCCESS,
-                    message: 'Lead changed successfully.',
-                    duration: notify.duration.MEDIUM,
-                });
-
-                if (this.leadRequest) {
-                    this.leadRequest.stop();
-                }
-                const { activeProject, activePage, activeSort, filters } = this.props;
-                this.leadRequest = this.createRequestForProjectLeads({
-                    activeProject,
-                    activePage,
-                    activeSort,
-                    filters,
-                });
-                this.leadRequest.start();
-            })
-            .failure((response) => {
-                console.warn(response);
-                const { formErrors: { errors = [] } } =
-                    transformResponseErrorToFormError(response.errors);
-                notify.send({
-                    title: 'Leads',
-                    type: notify.type.ERROR,
-                    message: errors.join(''),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({ loadingLeads: false });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: 'Leads',
-                    type: notify.type.ERROR,
-                    message: 'Lead couldn\'t be changed.',
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({ loadingLeads: false });
-            })
-            .build();
-        return leadRequest;
     }
 
     // UI
@@ -539,7 +404,12 @@ export default class Leads extends React.PureComponent {
                     if (this.leadDeleteRequest) {
                         this.leadDeleteRequest.stop();
                     }
-                    this.leadDeleteRequest = this.createRequestForLeadDelete(selectedLead);
+                    const request = new DeleteLeadRequest({
+                        setState: params => this.setState(params),
+                        removeLead: this.props.removeLead,
+                        leadsStrings: this.props.leadsStrings,
+                    });
+                    this.leadDeleteRequest = request.create(selectedLead);
                     this.leadDeleteRequest.start();
                     break;
                 }
@@ -547,7 +417,11 @@ export default class Leads extends React.PureComponent {
                     if (this.leadEditRequest) {
                         this.leadEditRequest.stop();
                     }
-                    this.leadEditRequest = this.createRequestForLeadEdit(selectedLead, { status: 'pending' });
+                    const request = new PatchLeadRequest({
+                        setState: params => this.setState(params),
+                        patchLead: this.props.patchLead,
+                    });
+                    this.leadEditRequest = request.create(selectedLead, { status: 'pending' });
                     this.leadEditRequest.start();
                     break;
                 }
@@ -555,7 +429,11 @@ export default class Leads extends React.PureComponent {
                     if (this.leadEditRequest) {
                         this.leadEditRequest.stop();
                     }
-                    this.leadEditRequest = this.createRequestForLeadEdit(selectedLead, { status: 'processed' });
+                    const request = new PatchLeadRequest({
+                        setState: params => this.setState(params),
+                        patchLead: this.props.patchLead,
+                    });
+                    this.leadEditRequest = request.create(selectedLead, { status: 'processed' });
                     this.leadEditRequest.start();
                     break;
                 }
@@ -575,9 +453,11 @@ export default class Leads extends React.PureComponent {
         this.props.setLeadPageActivePage({ activePage: page });
     }
 
-    // TABLE
+    handleLeadsPerPageChange = (pageCount) => {
+        this.props.setLeadsPerPage({ leadsPerPage: pageCount });
+    }
 
-    leadKeyExtractor = lead => (lead.id.toString())
+    // TABLE
 
     leadModifier = (lead, columnKey) => {
         const header = this.headers.find(d => d.key === columnKey);
@@ -691,13 +571,27 @@ export default class Leads extends React.PureComponent {
                         Show Visualization
                     </Link>
                 </div>
-                <Pager
-                    activePage={activePage}
-                    className={styles.pager}
-                    itemsCount={totalLeadsCount}
-                    maxItemsPerPage={MAX_LEADS_PER_REQUEST}
-                    onPageClick={this.handlePageClick}
-                />
+                <div className={styles.pagerContainer}>
+                    <span className={styles.label}>
+                        Leads per page
+                    </span>
+                    <SelectInput
+                        className={styles.leadsPerPageInput}
+                        hideClearButton
+                        showLabel={false}
+                        showHintAndError={false}
+                        options={Leads.leadsPerPageOptions}
+                        value={this.props.leadsPerPage}
+                        onChange={this.handleLeadsPerPageChange}
+                    />
+                    <Pager
+                        activePage={activePage}
+                        className={styles.pager}
+                        itemsCount={totalLeadsCount}
+                        maxItemsPerPage={this.props.leadsPerPage}
+                        onPageClick={this.handlePageClick}
+                    />
+                </div>
             </footer>
         );
     }
@@ -727,10 +621,13 @@ export default class Leads extends React.PureComponent {
                 case ACTION.delete:
                     return this.props.leadsStrings('leadDeleteConfirmText');
                 case ACTION.markAsPending:
+                    // FIXME: Use strings
                     return 'Do you want to mark the lead as pending?';
                 case ACTION.markAsProcessed:
+                    // FIXME: Use strings
                     return 'Do you want to mark the lead as processed?';
                 default:
+                    // FIXME: Use strings
                     return 'Are you sure?';
             }
         };
@@ -745,7 +642,7 @@ export default class Leads extends React.PureComponent {
                         headerModifier={this.headerModifier}
                         headers={this.headers}
                         onHeaderClick={this.handleTableHeaderClick}
-                        keyExtractor={this.leadKeyExtractor}
+                        keyExtractor={Leads.leadKeyExtractor}
                         className={styles.leadsTable}
                     />
                     { loadingLeads && <LoadingAnimation /> }

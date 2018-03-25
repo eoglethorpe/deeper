@@ -73,10 +73,7 @@ export default class ImagesSlider extends React.PureComponent {
         const isLastItem = selectedIndex === galleryIds.length - 1;
 
         return (
-            <div
-                className={className}
-                className={styles.imagesSlider}
-            >
+            <div className={`${className} ${styles.imagesSlider}`}>
                 {
                     galleryIds.map((galleryId, key) => (
                         galleryId && (

@@ -1,4 +1,5 @@
 @import '../../stylesheets/base';
+@import '../../vendor/react-store/stylesheets/input-label';
 
 .leads {
     @extend %main-content;
@@ -138,6 +139,21 @@
             .link {
                 @extend %button-like-link;
                 @include background-color($color-accent);
+            }
+        }
+
+        .pager-container {
+            display: flex;
+            align-items: baseline;
+
+            .label {
+                @extend %input-label;
+                margin-right: $spacing-small;
+                width: auto;
+            }
+
+            .leads-per-page-input {
+                width: 56px;
             }
         }
     }

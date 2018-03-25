@@ -3,6 +3,7 @@ import {
     GET,
     POST,
     PUT,
+    PATCH,
     DELETE,
     commonHeaderForPost,
     p,
@@ -25,6 +26,12 @@ export const createParamsForLeadCreate = data => ({
 
 export const createParamsForLeadEdit = data => ({
     method: PUT,
+    headers: commonHeaderForPost,
+    body: JSON.stringify(data),
+});
+
+export const createParamsForLeadPatch = data => ({
+    method: PATCH,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),
 });
