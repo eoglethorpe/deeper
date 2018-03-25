@@ -85,13 +85,13 @@ export default class ProjectCeForm extends React.PureComponent {
                     <div className={styles.actionButtons}>
                         <DangerButton
                             onClick={handleFormCancel}
-                            type="button"
                             disabled={pending || !pristine}
                         >
                             {this.props.projectStrings('modalRevert')}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
+                            type="submit"
                         >
                             {this.props.projectStrings('modalSave')}
                         </SuccessButton>

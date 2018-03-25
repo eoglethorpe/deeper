@@ -318,13 +318,13 @@ export default class UserEdit extends React.PureComponent {
                     placeholder={this.props.userStrings('organizationPlaceholder')}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        onClick={this.handleFormClose}
-                        type="button"
-                    >
+                    <DangerButton onClick={this.handleFormClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>

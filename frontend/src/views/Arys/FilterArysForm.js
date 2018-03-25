@@ -226,13 +226,13 @@ export default class FilterArysForm extends React.PureComponent {
                     <Button
                         className="button apply-filter-button"
                         disabled={isApplyDisabled}
+                        type="submit"
                     >
                         {arysStrings('filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
                     className="button clear-filter-button"
-                    type="button"
                     disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >

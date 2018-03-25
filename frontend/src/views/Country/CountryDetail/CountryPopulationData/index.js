@@ -93,13 +93,13 @@ export default class CountryPopulationData extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors formerror="" />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        type="button"
-                        onClick={this.handleFormCancel}
-                    >
+                    <DangerButton onClick={this.handleFormCancel}>
                         {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.countriesStrings('saveChangesButtonLabel')}
                     </PrimaryButton>
                 </div>

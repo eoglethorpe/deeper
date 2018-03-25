@@ -192,7 +192,6 @@ export default class LeadFilter extends React.PureComponent {
                     showHintAndError={false}
                 />
                 <DangerButton
-                    type="button"
                     disabled={isFilterEmpty}
                     onClick={this.handleClearFilters}
                 >

@@ -201,13 +201,13 @@ export default class UserGroupAdd extends React.PureComponent {
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        type="button"
-                        onClick={this.handleFormClose}
-                    >
+                    <DangerButton onClick={this.handleFormClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>

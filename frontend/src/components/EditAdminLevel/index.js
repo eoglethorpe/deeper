@@ -436,14 +436,12 @@ export default class EditAdminLevel extends React.PureComponent {
                         <HiddenInput formname="geoShapeFile" />
                     </div>
                     <div className={styles.actionButtons}>
-                        <DangerButton
-                            onClick={onClose}
-                            type="button"
-                        >
+                        <DangerButton onClick={onClose}>
                             {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <PrimaryButton
                             className={styles.saveBtn}
+                            type="submit"
                             disabled={pending || !pristine}
                         >
                             {this.props.countriesStrings('saveChangesButtonLabel')}

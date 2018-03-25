@@ -266,13 +266,13 @@ export default class RegionDetail extends React.PureComponent {
                     </h4>
                     <div className={styles.actionButtons}>
                         <DangerButton
-                            type="button"
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
                             {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
                         <SuccessButton
+                            type="submit"
                             disabled={pending || !pristine}
                         >
                             {this.props.countriesStrings('saveButtonLabel')}

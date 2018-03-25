@@ -354,7 +354,9 @@ export default class Login extends React.PureComponent {
                             >
                                 {this.props.loginStrings('forgotPasswordText')}
                             </Link>
-                            <PrimaryButton>
+                            <PrimaryButton
+                                type="submit"
+                            >
                                 {this.props.loginStrings('loginLabel')}
                             </PrimaryButton>
                         </div>

@@ -212,13 +212,13 @@ export default class UserProjectAdd extends React.PureComponent {
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        type="button"
-                        onClick={this.handleFormClose}
-                    >
+                    <DangerButton onClick={this.handleFormClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        type="submit"
+                        disabled={pending || !pristine}
+                    >
                         {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>

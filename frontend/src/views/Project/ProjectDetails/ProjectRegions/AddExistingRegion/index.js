@@ -268,13 +268,13 @@ export default class AddExistingRegion extends React.PureComponent {
                     tableHeaders={this.regionsHeader}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        onClick={this.props.onModalClose}
-                        type="button"
-                    >
+                    <DangerButton onClick={this.props.onModalClose}>
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine}>
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.projectStrings('modalUpdate')}
                     </PrimaryButton>
                 </div>

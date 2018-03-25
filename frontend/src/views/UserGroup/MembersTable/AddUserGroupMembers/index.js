@@ -128,7 +128,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         <div className="actions">
                             <PrimaryButton
                                 title={title}
-                                type="button"
                                 onClick={() => this.handleRoleChangeForNewMember(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 smallVerticalPadding
@@ -352,13 +351,13 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     error={formFieldErrors.memberships}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        onClick={this.props.onModalClose}
-                        type="button"
-                    >
+                    <DangerButton onClick={this.props.onModalClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine}>
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>

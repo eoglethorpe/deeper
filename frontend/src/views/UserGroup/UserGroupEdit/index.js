@@ -219,13 +219,13 @@ export default class UserGroupEdit extends React.PureComponent {
                     rows={3}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        type="button"
-                        onClick={this.handleFormClose}
-                    >
+                    <DangerButton onClick={this.handleFormClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
