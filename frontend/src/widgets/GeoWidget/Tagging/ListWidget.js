@@ -1,8 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import GeoSelection from '../../../components/GeoSelection';
 import BoundError from '../../../components/BoundError';
+
+import {
+    geoOptionsForProjectSelector,
+} from '../../../redux';
 
 import styles from './styles.scss';
 
@@ -11,15 +16,22 @@ const propTypes = {
     entryId: PropTypes.string.isRequired,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     attribute: undefined,
+    geoOptions: {},
 };
+
+const mapStateToProps = (state, props) => ({
+    geoOptions: geoOptionsForProjectSelector(state, props),
+});
 
 const emptyList = [];
 
 @BoundError
+@connect(mapStateToProps)
 export default class GeoTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -69,6 +81,9 @@ export default class GeoTaggingList extends React.PureComponent {
         const {
             flatValues,
         } = this.state;
+        const {
+            geoOptions,
+        } = this.props;
 
         const { api } = this.props;
         const regions = api.getProject().regions;
@@ -78,6 +93,7 @@ export default class GeoTaggingList extends React.PureComponent {
                 className={styles.geoSelect}
                 disabled={false}
                 onChange={this.handleGeoSelectionChange}
+                geoOptions={geoOptions}
                 regions={regions}
                 value={flatValues}
             />

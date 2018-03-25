@@ -16,11 +16,7 @@ import AccentButton from '../../vendor/react-store/components/Action/Button/Acce
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 
 import WidgetEmptyComponent from '../WidgetEmptyComponent';
-
-import {
-    geoOptionsForProjectSelector,
-    entryStringsSelector,
-} from '../../redux';
+import { entryStringsSelector } from '../../redux';
 
 import { iconNames } from '../../constants';
 import RegionMap from '../RegionMap';
@@ -48,8 +44,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
-const mapStateToProps = (state, props) => ({
-    geoOptions: geoOptionsForProjectSelector(state, props),
+const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
 });
 
@@ -152,7 +147,7 @@ export default class GeoSelection extends React.PureComponent {
     }
 
     updateFlatValues = () => {
-        const { values } = this.state;
+        const { values = {} } = this.state;
         const flatValues = GeoSelection.createFlatValues(values);
         this.setState({ flatValues });
     }
@@ -191,9 +186,13 @@ export default class GeoSelection extends React.PureComponent {
     }
 
     handleModalCancelButtonClick = () => {
+        const locations = this.props.geoOptions;
+        const flatValues = this.props.value || emptyList;
+        const values = GeoSelection.createNonFlatValues(locations, flatValues);
+
         this.setState(
             {
-                values: this.props.value,
+                values,
                 showMapModal: false,
             },
             this.updateFlatValues,
@@ -299,7 +298,7 @@ export default class GeoSelection extends React.PureComponent {
         const {
             showMapModal,
             selectedRegion,
-            values,
+            values = {},
             flatValues,
             locations,
             flatLocations = emptyList,
@@ -368,7 +367,7 @@ export default class GeoSelection extends React.PureComponent {
                         <ModalHeader
                             title="Geo selection"
                             rightComponent={
-                                <div className={styles.locationSelects}>
+                                <div className={styles.locationSelects} >
                                     <SelectInput
                                         hideClearButton
                                         keySelector={this.regionKeySelector}
@@ -402,7 +401,7 @@ export default class GeoSelection extends React.PureComponent {
                                 onChange={this.handleMapSelect}
                                 selections={values[selectedRegion]}
                             />
-                            <div className={styles.mapSelections}>
+                            <div className={styles.mapSelections} >
                                 <ListView
                                     className={styles.mapSelectionsList}
                                     data={selectedRegionList}
@@ -412,14 +411,10 @@ export default class GeoSelection extends React.PureComponent {
                             </div>
                         </ModalBody>
                         <ModalFooter>
-                            <Button
-                                onClick={this.handleModalCancelButtonClick}
-                            >
+                            <Button onClick={this.handleModalCancelButtonClick} >
                                 {this.props.entryStrings('cancelGeoSelectionButtonLabel')}
                             </Button>
-                            <PrimaryButton
-                                onClick={this.handleModalSetButtonClick}
-                            >
+                            <PrimaryButton onClick={this.handleModalSetButtonClick} >
                                 {this.props.entryStrings('setGeoSelectionButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
