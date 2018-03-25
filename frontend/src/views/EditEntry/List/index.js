@@ -292,7 +292,6 @@ export default class List extends React.PureComponent {
         <div className="action-buttons">
             <AccentButton
                 className={styles.applyButton}
-                type="button"
                 title={this.props.entryStrings('applyAllButtonTitle')}
                 onClick={() =>
                     this.setState({
@@ -309,7 +308,6 @@ export default class List extends React.PureComponent {
             </AccentButton>
             <WarningButton
                 className={styles.applyButton}
-                type="button"
                 title={this.props.entryStrings('applyAllBelowButtonTitle')}
                 onClick={() =>
                     this.setState({
@@ -401,7 +399,6 @@ export default class List extends React.PureComponent {
                     {/* FIXME: use strings */}
                     <DangerButton
                         onClick={handleDelete}
-                        type="button"
                         iconName={iconNames.delete}
                         title="Delete Entry"
                     />

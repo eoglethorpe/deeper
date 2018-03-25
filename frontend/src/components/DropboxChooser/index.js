@@ -49,6 +49,7 @@ export default class DropboxChooser extends React.Component {
     static propTypes = propTypes ;
     static defaultProps = defaultProps ;
 
+    static POLL_TIME = 3000
     static isDropboxReady = () => (!!window.Dropbox)
 
     constructor(props) {
@@ -64,16 +65,28 @@ export default class DropboxChooser extends React.Component {
         clearTimeout(this.readyCheck);
     }
 
-    onApiLoad = () => {
+    pollForReadyState = () => {
+        if (DropboxChooser.isDropboxReady()) {
+            this.handleApiLoad();
+        } else {
+            this.readyCheck = setTimeout(this.pollForReadyState, DropboxChooser.POLL_TIME);
+        }
+    };
+
+    handleApiLoad = () => {
+        const {
+            appKey,
+            onApiLoad,
+        } = this.props;
         // only call when api is loaded,
         this.setState({ ready: true });
-        window.Dropbox.init({ appKey: this.props.appKey, id: SCRIPT_ID });
-        if (this.props.onApiLoad) {
-            this.props.onApiLoad();
+        window.Dropbox.init({ appKey, id: SCRIPT_ID });
+        if (onApiLoad) {
+            onApiLoad();
         }
     }
 
-    onChoose = () => {
+    handleClick = () => {
         const {
             success,
             disabled,
@@ -103,14 +116,6 @@ export default class DropboxChooser extends React.Component {
         }
     }
 
-    pollForReadyState = () => {
-        if (DropboxChooser.isDropboxReady()) {
-            this.onApiLoad();
-        } else {
-            this.readyCheck = setTimeout(this.pollForReadyState, 3000);
-        }
-    };
-
     render() {
         const {
             className,
@@ -123,7 +128,7 @@ export default class DropboxChooser extends React.Component {
         return (
             <Button
                 className={`${className} ${styles.dropboxBtn}`}
-                onClick={this.onChoose}
+                onClick={this.handleClick}
                 disabled={disabled || !ready}
                 transparent
             >

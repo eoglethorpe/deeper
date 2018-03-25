@@ -107,12 +107,14 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={handleFormCancel}
-                        type="button"
                         disabled={pending || !pristine}
                     >
                         {projectStrings('modalRevert')}
                     </DangerButton>
-                    <SuccessButton disabled={pending || !pristine} >
+                    <SuccessButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {projectStrings('modalSave')}
                     </SuccessButton>
                 </div>

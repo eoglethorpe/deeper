@@ -22,7 +22,7 @@ export default class HighlightedText extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    createNestedSplits = (splits = []) => {
+    static createNestedSplits = (splits = []) => {
         const parents = [];
         for (let i = 0; i < splits.length; i += 1) {
             const parent = splits[i];
@@ -44,7 +44,7 @@ export default class HighlightedText extends React.PureComponent {
                 }
             }
 
-            parent.children = this.createNestedSplits(parent.children);
+            parent.children = HighlightedText.createNestedSplits(parent.children);
             parents.push(parent);
         }
 
@@ -111,7 +111,7 @@ export default class HighlightedText extends React.PureComponent {
             <p className={className}>
                 {this.renderSplits(
                     text,
-                    this.createNestedSplits(highlightsCopy),
+                    HighlightedText.createNestedSplits(highlightsCopy),
                 )}
             </p>
         );

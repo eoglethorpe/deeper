@@ -44,7 +44,6 @@ export default class ExtractThis extends React.PureComponent {
                     <AccentButton
                         className={styles.applyButton}
                         transparent
-                        type="button"
                         title={this.props.leadsStrings('extractLead')}
                         disabled={disabled}
                         onClick={onClick}

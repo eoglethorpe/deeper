@@ -221,7 +221,9 @@ export default class Register extends React.PureComponent {
                     reset={pending}
                 />
                 <div className={styles.actionButtons}>
-                    <PrimaryButton>
+                    <PrimaryButton
+                        type="submit"
+                    >
                         { this.props.loginStrings('registerLabel')}
                     </PrimaryButton>
                 </div>

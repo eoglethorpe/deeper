@@ -370,7 +370,6 @@ export default class FilterEntriesForm extends React.PureComponent {
                 <DangerButton
                     className="button reset-filter-button"
                     onClick={this.handleClearFilter}
-                    type="button"
                     disabled={pending || isFilterEmpty}
                 >
                     {this.props.entryStrings('clearFilterButtonLabel')}

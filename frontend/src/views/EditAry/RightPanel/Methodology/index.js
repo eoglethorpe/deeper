@@ -244,7 +244,6 @@ export default class Methodology extends React.PureComponent {
                 }
                 <div className={styles.removeButton}>
                     <DangerButton
-                        type="button"
                         formname={`attributes:${index}`}
                         formpop
                         iconName={iconNames.delete}
@@ -272,7 +271,6 @@ export default class Methodology extends React.PureComponent {
                             { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
                             <div className={styles.add}>
                                 <PrimaryButton
-                                    type="button"
                                     formname="attributes"
                                     formpush="start"
                                     iconName={iconNames.add}
@@ -285,7 +283,9 @@ export default class Methodology extends React.PureComponent {
                     </div>
                     <NonFieldErrors formerror="attributes" />
                     <div className={styles.actionButtons}>
-                        <Button>
+                        <Button
+                            type="submit"
+                        >
                             Submit
                         </Button>
                     </div>

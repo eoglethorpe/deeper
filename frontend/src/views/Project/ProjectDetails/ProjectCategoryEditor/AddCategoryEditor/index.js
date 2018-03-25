@@ -182,13 +182,13 @@ export default class AddCategoryEditor extends React.PureComponent {
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        onClick={this.props.onModalClose}
-                        type="button"
-                    >
+                    <DangerButton onClick={this.props.onModalClose}>
                         {this.props.projectStrings('modalCancel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
                         {this.props.projectStrings('modalAdd')}
                     </PrimaryButton>
                 </div>

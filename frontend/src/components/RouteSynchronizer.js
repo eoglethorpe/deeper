@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import Helmet from 'react-helmet';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import Bundle from '../vendor/react-store/components/General/Bundle';
@@ -78,7 +78,10 @@ class RouteSynchronizer extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (this.props.match !== nextProps.match || this.props.location !== nextProps.location) {
+        if (
+            this.props.match !== nextProps.match ||
+            this.props.location !== nextProps.location
+        ) {
             this.props.setRouteParams({
                 match: nextProps.match,
                 location: nextProps.location,
@@ -187,18 +190,20 @@ class RouteSynchronizer extends React.PureComponent {
 
         const titleKey = getKeyByValue(pathNames, match.path);
         const title = pageTitleStrings(titleKey);
-        return [
-            <Helmet key={title}>
-                <meta charSet="utf-8" />
-                <title>
-                    { title }
-                </title>
-            </Helmet>,
-            <Bundle
-                key="component"
-                {...otherProps}
-            />,
-        ];
+        return (
+            <Fragment>
+                <Helmet>
+                    <meta charSet="utf-8" />
+                    <title>
+                        { title }
+                    </title>
+                </Helmet>
+                <Bundle
+                    key="component"
+                    {...otherProps}
+                />
+            </Fragment>
+        );
     }
 }
 

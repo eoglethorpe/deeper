@@ -251,13 +251,15 @@ export default class CountryKeyFigures extends React.PureComponent {
                     <NonFieldErrors formerror="" />
                     <div className={styles.actionButtons}>
                         <DangerButton
-                            type="button"
                             onClick={this.handleFormCancel}
                             disabled={pending || !pristine}
                         >
                             {this.props.countriesStrings('cancelButtonLabel')}
                         </DangerButton>
-                        <PrimaryButton disabled={pending || !pristine} >
+                        <PrimaryButton
+                            disabled={pending || !pristine}
+                            type="submit"
+                        >
                             {this.props.countriesStrings('saveChangesButtonLabel')}
                         </PrimaryButton>
                     </div>

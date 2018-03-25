@@ -306,13 +306,13 @@ export default class FilterLeadsForm extends React.PureComponent {
                     <Button
                         className="button apply-filter-button"
                         disabled={isApplyDisabled}
+                        type="submit"
                     >
                         {leadsStrings('filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
                     className="button clear-filter-button"
-                    type="button"
                     disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >
@@ -322,7 +322,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                     isTruthy(filters.similar) && (
                         <DangerButton
                             className="button clear-similar-filter-button"
-                            type="button"
                             onClick={this.handleClearSimilarSelection}
                         >
                             {leadsStrings('filterClearSimilarFilter')}

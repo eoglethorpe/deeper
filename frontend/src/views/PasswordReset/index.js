@@ -195,7 +195,9 @@ export default class PasswordReset extends React.PureComponent {
                                     siteKey={reCaptchaSiteKey}
                                 />
                                 <div className={styles.actionButtons}>
-                                    <PrimaryButton>
+                                    <PrimaryButton
+                                        type="submit"
+                                    >
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>

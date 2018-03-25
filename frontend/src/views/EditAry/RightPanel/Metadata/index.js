@@ -308,7 +308,9 @@ export default class Metadata extends React.PureComponent {
                         formerror=""
                     />
                     <div className={styles.actionButtons}>
-                        <SuccessButton>
+                        <SuccessButton
+                            type="submit"
+                        >
                             { saveButtonLabel }
                         </SuccessButton>
                     </div>

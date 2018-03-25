@@ -257,13 +257,13 @@ export default class AddRegion extends React.PureComponent {
                     placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton
-                        onClick={this.props.onModalClose}
-                        type="button"
-                    >
+                    <DangerButton onClick={this.props.onModalClose}>
                         {this.props.countriesStrings('cancelButtonLabel')}
                     </DangerButton>
-                    <PrimaryButton disabled={pending || !pristine} >
+                    <PrimaryButton
+                        type="submit"
+                        disabled={pending || !pristine}
+                    >
                         {this.props.countriesStrings('addRegionButtonLabel')}
                     </PrimaryButton>
                 </div>

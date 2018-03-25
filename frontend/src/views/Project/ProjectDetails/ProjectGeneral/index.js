@@ -163,7 +163,6 @@ export default class ProjectGeneral extends React.PureComponent {
                         <Fragment>
                             <PrimaryButton
                                 smallVerticalPadding
-                                type="button"
                                 key="role-change"
                                 title={
                                     isAdmin
@@ -177,7 +176,6 @@ export default class ProjectGeneral extends React.PureComponent {
                             {/*
                             <PrimaryButton
                                 smallVerticalPadding
-                                type="button"
                                 key="goto-link"
                                 title={this.props.projectStrings('viewMemberLinkTitle')}
                                 onClick={() => this.handleGotoUserClick(row.member)}
@@ -187,7 +185,6 @@ export default class ProjectGeneral extends React.PureComponent {
                             */}
                             <DangerButton
                                 smallVerticalPadding
-                                type="button"
                                 key="delete-member"
                                 title={this.props.projectStrings('deleteMemberLinkTitle')}
                                 onClick={() => this.handleDeleteMemberClick(row)}
