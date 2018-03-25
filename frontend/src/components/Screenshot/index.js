@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import ReactResizeDetector from 'react-resize-detector';
 
 import { brush as d3Brush } from 'd3-brush';
 import { select, event } from 'd3-selection';
@@ -11,12 +12,14 @@ const propTypes = {
     className: PropTypes.string,
     onCapture: PropTypes.func,
     onCaptureError: PropTypes.func,
+    onCancel: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
     onCapture: undefined,
     onCaptureError: undefined,
+    onCancel: undefined,
 };
 
 
@@ -36,6 +39,7 @@ export default class Screenshot extends React.PureComponent {
     }
 
     componentDidMount() {
+        this.justMounted = true;
         this.capture();
         this.createBrush();
     }
@@ -84,7 +88,14 @@ export default class Screenshot extends React.PureComponent {
             .on('end', this.handleBrush);
         g.call(brush);
 
-        this.g = g;
+        this.brushGroup = g;
+    }
+
+    handleResize = (width, height) => {
+        if (!this.justMounted && width > 0 && height > 0 && this.props.onCancel) {
+            this.props.onCancel();
+        }
+        this.justMounted = false;
     }
 
     handleBrush = () => {
@@ -154,6 +165,11 @@ export default class Screenshot extends React.PureComponent {
                     <g ref={(ref) => { this.brushContainer = ref; }} />
                 </svg>
                 <canvas ref={(ref) => { this.canvas = ref; }} width={0} height={0} />
+                <ReactResizeDetector
+                    onResize={this.handleResize}
+                    handleWidth
+                    handleHeight
+                />
             </div>
         );
     }
