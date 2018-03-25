@@ -1,5 +1,10 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/grid-item';
+@import '../page-basic';
+@import '../widget-list';
+
 .overview {
-    @extend %page;
+    @extend %page-basic;
 
     .content {
         display: flex;

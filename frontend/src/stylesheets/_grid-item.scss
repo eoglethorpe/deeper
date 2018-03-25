@@ -19,33 +19,8 @@ $color-grid-item-border: $color-separator;
             font-size: $font-size-small;
             font-weight: $font-weight-bold;
         }
-
-        .action-buttons {
-            @include transition-medium;
-            display: flex;
-            flex-shrink: 0;
-            opacity: 0;
-            margin: 0 $spacing-extra-small;
-
-            button,
-            span {
-                padding: 0 $spacing-extra-small-alt;
-            }
-
-            .icon {
-                cursor: pointer;
-                color: $color-info;
-            }
-        }
     }
 
-    &:hover {
-        .header {
-            .action-buttons {
-                opacity: 1;
-            }
-        }
-    }
 
     .content {
         border: $width-separator-thin solid $color-grid-item-border;

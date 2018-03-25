@@ -1,0 +1,78 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/grid-item';
+@import '../page-basic';
+@import '../widget-list';
+
+$height-grid-layout: 50vh;
+
+.list {
+    @extend %page-basic;
+
+    >.content {
+        display: flex;
+        flex-direction: column;
+
+        .grid-layout-wrapper {
+            border-bottom: $width-separator-thin solid $color-separator;
+            background-color: $color-background-alt;
+            height: $height-grid-layout;
+            overflow: auto;
+
+            .grid-layout {
+                background-color: $color-foreground-alt;
+                min-width: 100%;
+                min-height: 100%;
+
+                :global {
+                    .grid-item {
+                        @extend %grid-item;
+
+                        .header {
+                            @include background-color($color-background-header);
+
+                            .action-buttons {
+                                @include transition-medium;
+                                display: flex;
+                                flex-shrink: 0;
+                                opacity: 0;
+                                margin: 0 $spacing-extra-small;
+
+                                button {
+                                    padding: 0 $spacing-extra-small-alt;
+                                }
+                            }
+
+                            .info-icon {
+                                flex-shrink: 0;
+                                opacity: 0;
+                                cursor: pointer;
+                                padding: 0 $spacing-extra-small-alt;
+                                color: $color-info;
+                            }
+                        }
+
+                        .content {
+                            @include background-color($color-foreground-alt);
+                        }
+
+                        &:hover {
+                            .header {
+                                .action-buttons,
+                                .info-icon {
+                                    opacity: 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .widget-list {
+            @extend %widget-list;
+            flex-grow: 1;
+            border-right: $width-separator-thin solid $color-separator;
+            width: 30%;
+        }
+    }
+}

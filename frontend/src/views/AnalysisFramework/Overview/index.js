@@ -30,7 +30,7 @@ import {
 } from '../../../redux';
 
 import widgetStore from '../../../widgets';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
