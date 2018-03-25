@@ -12,10 +12,6 @@ $color-text-on-primary: get-text-color($color-primary);
     padding: 0 $spacing-medium-alt;
     color: $color-text-on-navbar;
 
-    .dropdown-title {
-        align-self: stretch;
-    }
-
     .brand {
         display: flex;
         position: relative;
@@ -90,89 +86,5 @@ $color-text-on-primary: get-text-color($color-primary);
         align-self: stretch;
         flex-shrink: 0;
         min-width: 156px;
-    }
-
-}
-
-.nav-menu {
-    display: flex;
-    justify-content: flex-start;
-    overflow-x: hidden;
-
-    .menu-item {
-        @include transition-medium;
-        display: inline-flex;
-        align-items: center;
-        flex-shrink: 0;
-        justify-content: center;
-        border-top: $width-separator-thick solid transparent;
-        border-bottom: $width-separator-thick solid transparent;
-        padding: 0 $spacing-medium-alt;
-        font-weight: $font-weight-bold;
-
-        &:hover {
-            color: $color-accent;
-        }
-
-        &.active {
-            border-bottom-color: $color-accent;
-            color: $color-accent;
-            // color: $color-text-on-navbar;
-        }
-    }
-
-    .overflow-menu {
-        display: none;
-        flex-shrink: 0;
-
-        >button {
-            padding: $spacing-small;
-        }
-    }
-}
-
-.overflow-menu-item {
-    display: block;
-    padding: $spacing-medium $spacing-medium-alt;
-
-    &:hover {
-        background-color: $color-background-hover;
-    }
-
-    &.active {
-        @include background-color($color-accent);
-    }
-}
-
-.navbar-overflow-dropdown {
-    min-width: 156px;
-}
-
-.dropdown-item {
-    display: flex;
-    outline: none;
-    border: 0;
-    background-color: transparent;
-    cursor: pointer;
-    padding: $spacing-medium-alt $spacing-large;
-    width: 100%;
-    text-align: left;
-    text-transform: uppercase;
-    font-family: inherit;
-    font-size: inherit;
-
-    .icon {
-        display: inline-block;
-        flex-basis: $width-icon-extra-large;
-        flex-shrink: 0;
-    }
-
-    .label {
-        flex-basis: calc(100% - #{$width-icon-extra-large});
-        color: $color-text;
-    }
-
-    &:hover {
-        background-color: $color-background-header;
     }
 }
