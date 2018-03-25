@@ -79,12 +79,16 @@ export default class Screenshot extends React.PureComponent {
             return;
         }
 
+        const scale = window.devicePixelRatio;
         const rect = this.svg.getBoundingClientRect();
 
         const container = select(this.brushContainer);
         const g = container.append('g').attr('class', 'brush');
         const brush = d3Brush()
-            .extent([[rect.left, rect.top], [rect.right, rect.bottom]])
+            .extent([
+                [rect.left * scale, rect.top * scale],
+                [rect.right * scale, rect.bottom * scale],
+            ])
             .on('end', this.handleBrush);
         g.call(brush);
 
