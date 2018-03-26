@@ -12,7 +12,6 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 
 import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../components/BoundError';
-
 import styles from './styles.scss';
 
 const propTypes = {
@@ -68,8 +67,6 @@ export default class ExcerptTextOverview extends React.PureComponent {
         const { title } = this.state;
 
         this.props.onChange(
-            undefined,
-            undefined,
             undefined,
             title,
         );

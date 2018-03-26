@@ -51,8 +51,8 @@ export default class NumberMatrixOverview extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const rowHeaders = (this.props.data || emptyObject).rowHeaders || emptyList;
-        const columnHeaders = (this.props.data || emptyObject).columnHeaders || emptyList;
+        const rowHeaders = (props.data || emptyObject).rowHeaders || emptyList;
+        const columnHeaders = (props.data || emptyObject).columnHeaders || emptyList;
 
         this.state = {
             showEditModal: false,
@@ -61,7 +61,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
             title: props.title,
         };
 
-        this.props.editAction(this.handleEdit);
+        props.editAction(this.handleEdit);
     }
 
     handleRowListSortChange = (rowHeaders) => {

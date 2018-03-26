@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../components/BoundError';
-
 import styles from './styles.scss';
 
 const propTypes = {
