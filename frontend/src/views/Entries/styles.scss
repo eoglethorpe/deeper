@@ -84,12 +84,12 @@
 
             .entries {
                 display: inline-block;
+                min-width: 100%;
                 line-height: initial;
 
                 .entry {
                     border-bottom: $width-separator-thin solid $color-separator-alt;
                     background-color: $color-background-row;
-                    min-width: 100%;
 
                     :global {
                         .grid-item {

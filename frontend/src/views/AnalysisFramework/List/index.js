@@ -30,7 +30,7 @@ import {
 } from '../../../redux';
 
 import widgetStore from '../../../widgets';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -103,14 +103,12 @@ export default class List extends React.PureComponent {
         const minSize = this.widgets.find(w => w.id === widgetId).listMinSize;
 
         const headerRightComponent = widget.overviewComponent ? (
-            <div className={`${styles.actionButtons} action-buttons`} >
-                <span
-                    className={`${iconNames.info} icon`}
-                    title="Widget added from overview page" // FIXME: use strings
-                />
-            </div>
+            <span
+                className={`${iconNames.info} info-icon`}
+                title="Widget added from overview page" // FIXME: use strings
+            />
         ) : (
-            <div className={`${styles.actionButtons} action-buttons`} >
+            <div className="action-buttons">
                 <Button
                     transparent
                     onClick={() => this.handleWidgetEditButtonClick(key)}
@@ -289,7 +287,38 @@ export default class List extends React.PureComponent {
         mainHistory.push(url);
     }
 
+    renderWidgetList = () => (
+        <div className={styles.widgetList}>
+            {
+                this.widgets.map(widget => (
+                    <div
+                        className={styles.widgetListItem}
+                        key={widget.id}
+                    >
+                        <div className={styles.title}>
+                            {this.props.afStrings(widget.title)}
+                        </div>
+                        <div className={styles.actions}>
+                            <Button
+                                transparent
+                                onClick={
+                                    () => {
+                                        this.handleAddWidgetButtonClick(widget.id);
+                                    }
+                                }
+                            >
+                                <span className={iconNames.add} />
+                            </Button>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    )
+
     render() {
+        const WidgetList = this.renderWidgetList;
+
         return (
             <div className={styles.list}>
                 <header className={styles.header}>
@@ -316,6 +345,7 @@ export default class List extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
+
                 <div className={styles.content}>
                     <div className={styles.gridLayoutWrapper}>
                         <GridLayout
@@ -324,44 +354,19 @@ export default class List extends React.PureComponent {
                             items={this.gridItems}
                             onLayoutChange={this.handleLayoutChange}
                         />
-                        <Confirm
-                            title="Remove widget" // FIXME: strings
-                            onClose={this.handleWidgetClose}
-                            show={this.state.showDeleteModal}
-                        >
-                            <p>
-                                {this.props.afStrings('confirmDeletewWidget')}
-                            </p>
-                        </Confirm>
-                        {/* FIXME: strings */}
                     </div>
-                    <div className={styles.widgetList}>
-                        {
-                            this.widgets.map(widget => (
-                                <div
-                                    className={styles.widgetListItem}
-                                    key={widget.id}
-                                >
-                                    <div className={styles.title}>
-                                        {this.props.afStrings(widget.title)}
-                                    </div>
-                                    <div className={styles.actions}>
-                                        <Button
-                                            transparent
-                                            onClick={
-                                                () => {
-                                                    this.handleAddWidgetButtonClick(widget.id);
-                                                }
-                                            }
-                                        >
-                                            <span className={iconNames.add} />
-                                        </Button>
-                                    </div>
-                                </div>
-                            ))
-                        }
-                    </div>
+                    <WidgetList />
                 </div>
+
+                <Confirm
+                    title="Remove widget" // FIXME: strings
+                    onClose={this.handleWidgetClose}
+                    show={this.state.showDeleteModal}
+                >
+                    <p>
+                        {this.props.afStrings('confirmDeletewWidget')}
+                    </p>
+                </Confirm>
             </div>
         );
     }

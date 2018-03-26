@@ -30,7 +30,7 @@ import {
 } from '../../../redux';
 
 import widgetStore from '../../../widgets';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -102,15 +102,13 @@ export default class Overview extends React.PureComponent {
                 <Button
                     onClick={() => this.handleWidgetEditButtonClick(item.key)}
                     transparent
-                >
-                    <span className={iconNames.edit} />
-                </Button>
+                    iconName={iconNames.edit}
+                />
                 <DangerButton
                     onClick={() => this.handleWidgetRemoveButtonClick(item.key)}
                     transparent
-                >
-                    <span className={iconNames.close} />
-                </DangerButton>
+                    iconName={iconNames.close}
+                />
             </div>
         ),
     }))

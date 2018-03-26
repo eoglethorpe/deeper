@@ -1,0 +1,21 @@
+%widget-list {
+    background-color: $color-background-row-alt;
+    overflow-y: auto;
+
+    .widget-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background-color: $color-background-row-alt;
+        padding: $spacing-small $spacing-medium;
+
+        .title {
+            color: inherit;
+        }
+
+        &:nth-child(odd) {
+            background-color: $color-background-row;
+        }
+    }
+}
+

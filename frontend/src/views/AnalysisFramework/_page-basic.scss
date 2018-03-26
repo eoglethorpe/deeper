@@ -1,0 +1,32 @@
+%page-basic {
+    display: flex;
+    flex-direction: column;
+    background-color: $color-foreground-alt;
+    height: 100%;
+
+    .header {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        justify-content: space-between;
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-foreground;
+        padding: $spacing-small $spacing-medium-alt;
+
+        .actions {
+            >* {
+                margin-left: $spacing-medium;
+            }
+
+            .link-to-overview,
+            .link-to-list {
+                @extend %button-like-link;
+            }
+        }
+    }
+
+    .content {
+        flex-grow: 1;
+        overflow-y: auto;
+    }
+}
