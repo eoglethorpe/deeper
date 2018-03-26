@@ -258,6 +258,7 @@ export default class GalleryViewer extends React.PureComponent {
                         <Screenshot
                             onCapture={this.handleScreenshot}
                             onCaptureError={this.handleScreenshotError}
+                            onCancel={this.handleScreenshotClose}
                         />
                     )}
                     {
