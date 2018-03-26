@@ -82,7 +82,7 @@ export default class NumberFrameworkList extends React.PureComponent {
         const {
             title,
             showEditModal,
-        } = this;
+        } = this.state;
 
         if (!showEditModal) {
             return null;
