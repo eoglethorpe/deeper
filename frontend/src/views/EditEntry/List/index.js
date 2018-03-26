@@ -292,9 +292,8 @@ export default class List extends React.PureComponent {
     }
 
     renderActionButtons = (item, entryId) => (
-        <div className="action-buttons">
+        <div className="apply-buttons">
             <AccentButton
-                className={styles.applyButton}
                 title={this.props.entryStrings('applyAllButtonTitle')}
                 onClick={() =>
                     this.setState({
@@ -306,11 +305,9 @@ export default class List extends React.PureComponent {
                 }
                 tabIndex="-1"
                 transparent
-            >
-                <span className={iconNames.applyAll} />
-            </AccentButton>
+                iconName={iconNames.applyAll}
+            />
             <WarningButton
-                className={styles.applyButton}
                 title={this.props.entryStrings('applyAllBelowButtonTitle')}
                 onClick={() =>
                     this.setState({
@@ -321,9 +318,8 @@ export default class List extends React.PureComponent {
                     })}
                 tabIndex="-1"
                 transparent
-            >
-                <span className={iconNames.applyAllBelow} />
-            </WarningButton>
+                iconName={iconNames.applyAllBelow}
+            />
         </div>
     )
 

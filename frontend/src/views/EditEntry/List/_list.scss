@@ -47,20 +47,11 @@ $height-header: 48px;
             border-bottom: $width-separator-thin solid $color-separator-alt;
             line-height: initial;
 
-            .apply-buttons {
-                display: flex;
-
-                .apply-button {
-                    margin: 0;
-                    padding: 0 $spacing-extra-small;
-                }
-            }
-
             .action-buttons {
-                @include transition-medium;
                 position: absolute;
                 right: 0;
                 bottom: 0;
+                transition: .2s opacity ease-in-out;
                 opacity: 0;
                 padding: $spacing-extra-small;
 
@@ -75,7 +66,8 @@ $height-header: 48px;
             }
 
             &:hover {
-                .action-buttons {
+                .action-buttons,
+                .apply-buttons {
                     opacity: 1;
                 }
             }
@@ -86,10 +78,30 @@ $height-header: 48px;
 
                     .header {
                         border: 0;
+
+                        .apply-buttons {
+                            @include transition-medium;
+                            display: flex;
+                            opacity: 0;
+
+                            button {
+                                margin: 0 $spacing-extra-small-alt;
+                                padding: 0;
+                            }
+                        }
+
                     }
 
                     .content {
                         border: 0;
+                    }
+
+                    &:hover {
+                        .header {
+                            .apply-buttons {
+                                opacity: 1;
+                            }
+                        } 
                     }
                 }
             }
