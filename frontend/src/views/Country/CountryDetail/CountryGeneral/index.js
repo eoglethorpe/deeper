@@ -66,24 +66,21 @@ export default class CountryGeneral extends React.PureComponent {
 
         return (
             <div className={styles.countryGeneral}>
-                <div className={styles.detailsEdit}>
-                    <div className={styles.mapContainer}>
-                        <RegionMap
-                            regionId={countryDetail.id}
-                        />
-                    </div>
-                    <div className={styles.detailContainer}>
-                        <RegionDetail
-                            className={styles.regionDetailForm}
-                            countryId={countryDetail.id}
-                            dataLoading={dataLoading}
-                        />
-                        <RegionAdminLevel
-                            className={styles.adminLevels}
-                            countryId={countryDetail.id}
-                        />
-                    </div>
+                <div className={styles.topContainer}>
+                    <RegionMap
+                        regionId={countryDetail.id}
+                        className={styles.regionMap}
+                    />
+                    <RegionDetail
+                        className={styles.regionDetailForm}
+                        countryId={countryDetail.id}
+                        dataLoading={dataLoading}
+                    />
                 </div>
+                <RegionAdminLevel
+                    className={styles.adminLevelTable}
+                    countryId={countryDetail.id}
+                />
             </div>
         );
     }

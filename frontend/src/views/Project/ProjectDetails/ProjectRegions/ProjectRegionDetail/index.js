@@ -314,10 +314,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             className={styles.regionDetailForm}
                         />
                     </div>
-                    <RegionAdminLevel
-                        className="admin-level-table"
-                        countryId={countryId}
-                    />
+                    <RegionAdminLevel countryId={countryId} />
                 </div>
             );
         }
@@ -396,6 +393,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const DeleteRegionConfirm = this.renderDeleteRegionConfirm;
         const CloneAndEditRegionConfirm = this.renderCloneAndEditRegionConfirm;
 
+        console.warn(Confirm);
         return (
             <div className={styles.regionDetailsContainer}>
                 <Header />

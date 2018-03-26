@@ -448,6 +448,17 @@ const initialSiloDomainData = {
             },
         },
     },
+
+    countryPanelView: {
+        /*
+        // index is regionId
+        1: {
+            fullName: 'American Samoa',
+            iso: 'ASM',
+            countryId: 'ASM',
+        },
+        */
+    },
 };
 
 export default initialSiloDomainData;

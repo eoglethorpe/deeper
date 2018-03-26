@@ -1,9 +1,15 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
+import {
+    Redirect,
+    Route,
+    HashRouter,
+    NavLink,
+} from 'react-router-dom';
 
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+import List from '../../../vendor/react-store/components/View/List';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
@@ -59,6 +65,7 @@ const mapDispatchToProps = dispatch => ({
 export default class CountryDetail extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static keyExtractor = d => d;
 
     constructor(props) {
         super(props);
@@ -67,6 +74,40 @@ export default class CountryDetail extends React.PureComponent {
             // Delete Modal state
             deleteCountry: false,
             deletePending: false,
+        };
+
+        this.routes = [
+            'general',
+            'keyFigures',
+            'mediaSources',
+            'populationData',
+            'seasonalCalendar',
+        ];
+
+        this.defaultRoute = 'general';
+
+        this.pathNames = {
+            general: '/general',
+            keyFigures: '/key-figures',
+            mediaSources: '/media-sources',
+            populationData: '/population-data',
+            seasonalCalendar: '/seasonal-calendar',
+        };
+
+        this.views = {
+            general: CountryGeneral,
+            keyFigures: CountryKeyFigures,
+            mediaSources: CountryMediaSources,
+            populationData: CountryPopulationData,
+            seasonalCalendar: CountrySeasonalCalendar,
+        };
+
+        this.titles = {
+            general: props.countriesStrings('generalTabLabel'),
+            keyFigures: props.countriesStrings('keyFiguesTabLabel'),
+            mediaSources: props.countriesStrings('mediaTabLabel'),
+            populationData: props.countriesStrings('populationTabLabel'),
+            seasonalCalendar: props.countriesStrings('seasonalTabLabel'),
         };
     }
 
@@ -103,6 +144,40 @@ export default class CountryDetail extends React.PureComponent {
         this.setState({ deleteCountry: false });
     }
 
+    renderLink = (key, routeId) => (
+        <NavLink
+            key={key}
+            to={this.pathNames[routeId]}
+            activeClassName={styles.active}
+            className={styles.tab}
+            replace
+            exact
+        >
+            { this.titles[routeId] }
+        </NavLink>
+    )
+
+    renderRoute = (key, routeId) => {
+        const Component = this.views[routeId];
+        const { projectId } = this.props;
+
+        return (
+            <Route
+                key={key}
+                path={this.pathNames[routeId]}
+                exact
+                render={() => (
+                    <Component
+                        mainHistory={this.props.mainHistory}
+                        className={styles.content}
+                        projectId={projectId}
+                    />
+                )}
+            />
+        );
+    }
+
+
     render() {
         const {
             deleteCountry,
@@ -117,117 +192,62 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         return (
-            <div className={`${className} ${styles.countryDetail}`}>
-                { deletePending && <LoadingAnimation /> }
-                <header className={styles.header}>
-                    <h2>
-                        {countryDetail.title}
-                    </h2>
-                    {
-                        activeUser.isSuperuser &&
-                            <DangerButton onClick={this.onClickDeleteButton}>
-                                {countriesStrings('deleteCountryButtonLabel')}
-                            </DangerButton>
-                    }
-                    <Confirm
-                        show={deleteCountry}
-                        closeOnEscape
-                        onClose={this.deleteActiveCountry}
-                    >
-                        <p>
-                            {countriesStrings('deleteCountryConfirm', { title: countryDetail.title })}
-                        </p>
-                    </Confirm>
-                </header>
-                { !activeUser.isSuperuser ? (
-                    <div className={styles.detailsNoEdit}>
-                        <RegionDetailView
-                            className={styles.regionDetailBox}
-                            countryId={countryDetail.id}
-                        />
-                        <div className={styles.mapContainer}>
-                            <RegionMap regionId={countryDetail.id} />
+            <HashRouter>
+                <div className={`${className} ${styles.countryDetail}`}>
+                    { deletePending && <LoadingAnimation /> }
+                    <Route
+                        exact
+                        path="/"
+                        component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
+                    />
+                    { !activeUser.isSuperuser ? (
+                        <div className={styles.detailsNoEdit}>
+                            <RegionDetailView
+                                className={styles.regionDetailBox}
+                                countryId={countryDetail.id}
+                            />
+                            <div className={styles.mapContainer}>
+                                <RegionMap regionId={countryDetail.id} />
+                            </div>
                         </div>
-                    </div>
-                ) : (
-                    <Tabs
-                        activeLinkStyle={{ none: 'none' }}
-                        className={styles.tabsContainer}
-                        renderActiveTabContentOnly
-                    >
-                        <div className={styles.tabsHeaderContainer}>
-                            <TabLink
-                                className={styles.tabHeader}
-                                to="general"
-                            >
-                                {countriesStrings('generalTabLabel')}
-                            </TabLink>
-                            <TabLink
-                                className={styles.tabHeader}
-                                to="key-figures"
-                            >
-                                {countriesStrings('keyFiguesTabLabel')}
-                            </TabLink>
-                            <TabLink
-                                className={styles.tabHeader}
-                                to="population-data"
-                            >
-                                {countriesStrings('populationTabLabel')}
-                            </TabLink>
-                            <TabLink
-                                className={styles.tabHeader}
-                                to="seasonal-calendar"
-                            >
-                                {countriesStrings('seasonalTabLabel')}
-                            </TabLink>
-                            <TabLink
-                                className={styles.tabHeader}
-                                to="media-sources"
-                            >
-                                {countriesStrings('mediaTabLabel')}
-                            </TabLink>
-                            {/* Essential for border bottom, for more info contact AdityaKhatri */}
-                            <div className={styles.emptyTab} />
-                        </div>
-                        <TabContent
-                            for="general"
-                            className={styles.tabContent}
+                    ) : ([
+                        <header
+                            key="header"
+                            className={styles.header}
                         >
-                            <CountryGeneral countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="key-figures"
-                            className={styles.tabContent}
-                        >
-                            <CountryKeyFigures countryId={countryDetail.id} />
-                        </TabContent>
-                        <TabContent
-                            for="population-data"
-                            className={styles.tabContent}
-                        >
-                            <CountryPopulationData
-                                countryId={countryDetail.id}
-                            />
-                        </TabContent>
-                        <TabContent
-                            for="seasonal-calendar"
-                            className={styles.tabContent}
-                        >
-                            <CountrySeasonalCalendar
-                                countryId={countryDetail.id}
-                            />
-                        </TabContent>
-                        <TabContent
-                            for="media-sources"
-                            className={styles.tabContent}
-                        >
-                            <CountryMediaSources
-                                countryId={countryDetail.id}
-                            />
-                        </TabContent>
-                    </Tabs>
-                )}
-            </div>
+                            <div className={styles.tabs}>
+                                <List
+                                    data={this.routes}
+                                    modifier={this.renderLink}
+                                    keyExtractor={CountryDetail.keyExtractor}
+                                />
+                                <div className={styles.rightContainer}>
+                                    {
+                                        activeUser.isSuperuser &&
+                                            <DangerButton onClick={this.onClickDeleteButton}>
+                                                {this.props.countriesStrings('deleteCountryButtonLabel')}
+                                            </DangerButton>
+                                    }
+                                    <Confirm
+                                        show={deleteCountry}
+                                        closeOnEscape
+                                        onClose={this.deleteActiveCountry}
+                                    >
+                                        <p>{`${this.props.countriesStrings('deleteCountryConfirm')}
+                                            ${countryDetail.title}?`}</p>
+                                    </Confirm>
+                                </div>
+                            </div>
+                        </header>,
+                        <List
+                            key="list"
+                            data={this.routes}
+                            modifier={this.renderRoute}
+                            keyExtractor={CountryDetail.keyExtractor}
+                        />,
+                    ])}
+                </div>
+            </HashRouter>
         );
     }
 }

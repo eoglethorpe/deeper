@@ -204,159 +204,153 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </PrimaryButton>
                     </div>
                 </header>
-                <div className={styles.section}>
-                    <h3>
-                        {this.props.countriesStrings('humanDevelopmentIndexLabel')}
-                        <a
-                            href="http://www.hdr.undp.org/en/countries"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span
-                                className={`${iconNames.link} ${styles.icon}`}
-                                // FIXME: use strings
-                                title="Click to open"
+                <div className={styles.sections} >
+                    <div className={styles.section}>
+                        <h3 className={styles.heading} >
+                            {this.props.countriesStrings('humanDevelopmentIndexLabel')}
+                            <a
+                                href="http://www.hdr.undp.org/en/countries"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span
+                                    className={`${iconNames.link} ${styles.icon}`}
+                                    // FIXME: use strings
+                                    title="Click to open"
+                                />
+                            </a>
+                        </h3>
+                        <div className={styles.inputs} >
+                            <TextInput
+                                label={this.props.countriesStrings('indexLabel')}
+                                type="number"
+                                step="any"
+                                min="0"
+                                max="1"
+                                formname="index"
                             />
-                        </a>
-                    </h3>
-                    <TextInput
-                        label={this.props.countriesStrings('indexLabel')}
-                        className={styles.textInput}
-                        type="number"
-                        step="any"
-                        min="0"
-                        max="1"
-                        formname="index"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('geoRankLabel')}
-                        className={styles.textInput}
-                        readOnly
-                        formname="geoRank"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('geoScoreLabel')}
-                        className={styles.textInput}
-                        readOnly
-                        formname="geoScore"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('rankLabel')}
-                        className={styles.textInput}
-                        formname="rank"
-                    />
-                </div>
-                <div className={styles.section}>
-                    <h3>
-                        {this.props.countriesStrings('underFiveMortalityLabel')}
-                        <a
-                            href="http://www.inform-index.org/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span
-                                className={`${iconNames.link} ${styles.icon}`}
-                                // FIXME: use strings
-                                title="Click to open"
+                            <TextInput
+                                label={this.props.countriesStrings('geoRankLabel')}
+                                readOnly
+                                formname="geoRank"
                             />
-                        </a>
-                    </h3>
-                    <TextInput
-                        label={this.props.countriesStrings('u5mLabel')}
-                        className={styles.textInput}
-                        formname="u5m"
-                        type="number"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('geoScoreLabel')}
-                        className={styles.textInput}
-                        readOnly
-                        formname="geoScoreU5m"
-                    />
-                </div>
-                <div className={styles.section}>
-                    <h3>
-                        {this.props.countriesStrings('uprootedPeopleLabel')}
-                        <a
-                            href="http://www.inform-index.org/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span
-                                className={`${iconNames.link} ${styles.icon}`}
-                                // FIXME: use strings
-                                title="Click to open"
+                            <TextInput
+                                label={this.props.countriesStrings('geoScoreLabel')}
+                                readOnly
+                                formname="geoScore"
                             />
-                        </a>
-                    </h3>
-                    <TextInput
-                        label={this.props.countriesStrings('numberOfRefugeesLabel')}
-                        className={styles.textInput}
-                        formname="numberOfRefugees"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
-                        className={styles.textInput}
-                        readOnly
-                        formname="percentageUprootedPeople"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('geoScoreLabel')}
-                        className={styles.textInput}
-                        readOnly
-                        formname="geoScoreUprooted"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('numberIdpLabel')}
-                        className={styles.textInput}
-                        formname="numberIdp"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
-                        className={styles.textInput}
-                        formname="numberReturnedRefugees"
-                    />
-                </div>
-                <div className={styles.section}>
-                    <h3>
-                        {this.props.countriesStrings('informScoreLabel')}
-                        <a
-                            href="http://www.hdr.undp.org/en/countries"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            <span
-                                className={`${iconNames.link} ${styles.icon}`}
-                                // FIXME: use strings
-                                title="Click to open"
+                            <TextInput
+                                label={this.props.countriesStrings('rankLabel')}
+                                formname="rank"
                             />
-                        </a>
-                    </h3>
-                    <TextInput
-                        label={this.props.countriesStrings('riskClassLabel')}
-                        className={styles.textInput}
-                        formname="riskClass"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('informRiskIndexLabel')}
-                        className={styles.textInput}
-                        formname="informRiskIndex"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('hazardAndExposureLabel')}
-                        className={styles.textInput}
-                        formname="hazardAndExposure"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('vulnerabilityLabel')}
-                        className={styles.textInput}
-                        formname="vulnerability"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
-                        className={styles.textInput}
-                        formname="lackOfCopingCapacity"
-                    />
+                        </div>
+                    </div>
+                    <div className={styles.section}>
+                        <h3 className={styles.heading} >
+                            {this.props.countriesStrings('underFiveMortalityLabel')}
+                            <a
+                                href="http://www.inform-index.org/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span
+                                    className={`${iconNames.link} ${styles.icon}`}
+                                    // FIXME: use strings
+                                    title="Click to open"
+                                />
+                            </a>
+                        </h3>
+                        <div className={styles.inputs} >
+                            <TextInput
+                                label={this.props.countriesStrings('u5mLabel')}
+                                formname="u5m"
+                                type="number"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('geoScoreLabel')}
+                                readOnly
+                                formname="geoScoreU5m"
+                            />
+                        </div>
+                    </div>
+                    <div className={styles.section}>
+                        <h3 className={styles.heading} >
+                            {this.props.countriesStrings('uprootedPeopleLabel')}
+                            <a
+                                href="http://www.inform-index.org/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span
+                                    className={`${iconNames.link} ${styles.icon}`}
+                                    // FIXME: use strings
+                                    title="Click to open"
+                                />
+                            </a>
+                        </h3>
+                        <div className={styles.inputs} >
+                            <TextInput
+                                label={this.props.countriesStrings('numberOfRefugeesLabel')}
+                                formname="numberOfRefugees"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
+                                readOnly
+                                formname="percentageUprootedPeople"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('geoScoreLabel')}
+                                readOnly
+                                formname="geoScoreUprooted"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('numberIdpLabel')}
+                                formname="numberIdp"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
+                                formname="numberReturnedRefugees"
+                            />
+                        </div>
+                    </div>
+                    <div className={styles.section}>
+                        <h3 className={styles.heading} >
+                            {this.props.countriesStrings('informScoreLabel')}
+                            <a
+                                href="http://www.hdr.undp.org/en/countries"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <span
+                                    className={`${iconNames.link} ${styles.icon}`}
+                                    // FIXME: use strings
+                                    title="Click to open"
+                                />
+                            </a>
+                        </h3>
+                        <div className={styles.inputs} >
+                            <TextInput
+                                label={this.props.countriesStrings('riskClassLabel')}
+                                formname="riskClass"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('informRiskIndexLabel')}
+                                formname="informRiskIndex"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('hazardAndExposureLabel')}
+                                formname="hazardAndExposure"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('vulnerabilityLabel')}
+                                formname="vulnerability"
+                            />
+                            <TextInput
+                                label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
+                                formname="lackOfCopingCapacity"
+                            />
+                        </div>
+                    </div>
                 </div>
             </Form>
         );
