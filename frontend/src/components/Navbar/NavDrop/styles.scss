@@ -1,0 +1,30 @@
+@import '../../../stylesheets/base';
+
+.dropdown-item {
+    display: flex;
+    outline: none;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-medium-alt $spacing-large;
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: inherit;
+    font-size: inherit;
+
+    .icon {
+        display: inline-block;
+        flex-basis: $width-icon-extra-large;
+        flex-shrink: 0;
+    }
+
+    .label {
+        flex-basis: calc(100% - #{$width-icon-extra-large});
+        color: $color-text;
+    }
+
+    &:hover {
+        background-color: $color-background-header;
+    }
+}
