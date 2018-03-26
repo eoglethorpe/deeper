@@ -157,7 +157,11 @@ export default class FilterEntriesForm extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                console.warn(response);
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.entryStrings('entriesTabLabel'),
                     type: notify.type.ERROR,

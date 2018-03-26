@@ -243,7 +243,10 @@ export default class CategoryEditor extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).nonFieldErrors.join(' ');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: 'Category Editor', // FIXME: write
                     type: notify.type.ERROR,

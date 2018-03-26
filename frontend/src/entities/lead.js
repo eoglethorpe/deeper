@@ -1,5 +1,5 @@
 import update from '../vendor/react-store/utils/immutable-update';
-import { iconNames } from '../constants';
+import iconNames from '../constants/iconNames';
 
 export const LEAD_TYPE = {
     dropbox: 'dropbox',

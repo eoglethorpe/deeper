@@ -34,9 +34,7 @@ export default class Root extends React.Component {
     render() {
         if (!this.state.rehydrated) {
             // NOTE: showing empty div, this lasts for a fraction of a second
-            return (
-                <div />
-            );
+            return <div />;
         }
 
         return (

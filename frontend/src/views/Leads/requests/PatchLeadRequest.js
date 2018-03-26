@@ -38,12 +38,14 @@ export default class PatchLeadRequest {
                 this.setState({ loadingLeads: false });
             })
             .failure((response) => {
-                const { formErrors: { errors = [] } } =
-                    transformResponseErrorToFormError(response.errors);
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: 'Leads',
                     type: notify.type.ERROR,
-                    message: errors.join(''),
+                    message,
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({ loadingLeads: false });

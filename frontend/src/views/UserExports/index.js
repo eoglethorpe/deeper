@@ -267,7 +267,10 @@ export default class UserExports extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,
@@ -307,7 +310,10 @@ export default class UserExports extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.exportStrings('userExportsTitle'),
                     type: notify.type.ERROR,

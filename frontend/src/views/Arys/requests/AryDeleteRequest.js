@@ -34,7 +34,10 @@ export default class AryDeleteRequest {
                 this.pullArys();
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: 'Arys', // FIXME: strings
                     type: notify.type.ERROR,
