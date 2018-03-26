@@ -29,6 +29,7 @@ $height-grid-layout: 50vh;
 
                         .header {
                             @include background-color($color-background-header);
+                            cursor: grab;
 
                             .action-buttons {
                                 @include transition-medium;
