@@ -288,7 +288,10 @@ export default class Export extends React.PureComponent {
             })
             .failure((response) => {
                 this.setState({ pendingAf: false });
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.exportStrings('projectLabel'),
                     type: notify.type.ERROR,
@@ -334,7 +337,10 @@ export default class Export extends React.PureComponent {
             })
             .failure((response) => {
                 console.warn(response);
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.exportStrings('afLabel'),
                     type: notify.type.ERROR,
@@ -376,7 +382,10 @@ export default class Export extends React.PureComponent {
                 this.setSelectedLeads(response);
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: this.props.exportStrings('leadsLabel'),
                     type: notify.type.ERROR,

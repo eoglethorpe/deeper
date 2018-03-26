@@ -56,7 +56,10 @@ export default class ArysGetRequest {
                 }
             })
             .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors).formErrors.join('');
+                const message = transformResponseErrorToFormError(response.errors)
+                    .formErrors
+                    .errors
+                    .join(' ');
                 notify.send({
                     title: 'Assessment Registry', // FIXME: strings
                     type: notify.type.ERROR,
