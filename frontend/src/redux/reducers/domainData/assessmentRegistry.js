@@ -7,9 +7,10 @@ export const ARY__SET_ARY_FILTER_OPTIONS = 'domain-data/ARY__SET_ARY_FILTER_OPTI
 
 // ACTION-CREATOR
 
-export const setAryTemplateAction = ({ template }) => ({
+export const setAryTemplateAction = ({ template, projectId }) => ({
     type: ARY__SET_TEMPLATE,
     template,
+    projectId,
 });
 
 export const setAryFilterOptionsAction = ({ projectId, aryFilterOptions }) => ({
@@ -23,10 +24,10 @@ export const setAryFilterOptionsAction = ({ projectId, aryFilterOptions }) => ({
 // REDUCER
 
 const setAryTemplate = (state, action) => {
-    const { template } = action;
+    const { template, projectId } = action;
     const settings = {
         aryTemplates: {
-            [template.id]: { $auto: {
+            [projectId]: { $auto: {
                 $set: template,
             } },
         },

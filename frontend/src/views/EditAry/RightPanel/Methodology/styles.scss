@@ -1,71 +1,137 @@
 @import '../../../../stylesheets/base';
-@import '../../../../stylesheets/tabs';
 
+$width-action-buttons: 48px;
+$height-bottom: 320px;
 
 .methodology {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
     background-color: $color-foreground-alt;
-    padding: $spacing-medium;
-    height: 100%;
 
-    .overview {
+    >.header {
         display: flex;
-        flex-direction: column;
+        flex-shrink: 0;
+        padding: $spacing-small;
 
-        .fields {
-            display: flex;
-            flex-direction: column;
+        .non-field-errors {
             flex-grow: 1;
-
-            .field-title {
-                display: flex;
-                margin-bottom: $spacing-large;
-
-                h3 {
-                    flex-basis: 16%;
-                    margin-right: $spacing-large;
-                    border-bottom: $width-separator-thin solid $color-separator;
-                }
-
-                .add {
-                    flex-basis: 3%;
-                }
-            }
-
-            .field-values {
-                display: flex;
-                flex-basis: 100%;
-                flex-direction: column;
-
-                >div {
-                    display: flex;
-                    flex-grow: 1;
-
-                }
-            }
+            padding: 0;
         }
 
         .action-buttons {
-            display: flex;
+            flex-shrink: 0;
+        }
+    }
 
+    .scroll-wrap {
+        flex-grow: 1;
+        overflow-x: auto;
+        overflow-y: scroll;
+
+        .attributes {
+            display: table;
+            padding: 0;
+            width: 100%;
+
+            %cell {
+                display: table-cell;
+                padding: $spacing-small $spacing-medium;
+
+                &:not(:last-child) {
+                    border-right: $width-separator-thin solid $color-separator;
+                }
+            }
+
+            %action-buttons {
+                @extend %cell;
+                width: $width-action-buttons;
+            }
+
+            >.header {
+                @include background-color($color-background-header);
+                display: table-row;
+
+                .title {
+                    @extend %cell;
+                    @include background-color($color-background-header);
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                    border-top: $width-separator-thin solid $color-separator-alt;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
+                    text-transform: uppercase;
+                }
+
+                .action-buttons {
+                    @extend %action-buttons;
+                    @include background-color($color-background-header);
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                    border-top: $width-separator-thin solid $color-separator-alt;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
+                }
+            }
+
+            .row {
+                @extend %background-alternating-row;
+                display: table-row;
+
+                .cell {
+                    @extend %cell;
+                }
+
+                .action-buttons {
+                    @extend %action-buttons;
+                }
+            }
+        }
+    }
+
+    .bottom {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-evenly;
+        border-top: $width-separator-thin solid $color-separator;
+        height: $height-bottom;
+
+        %content {
+            flex-basis: calc(100% / 6);
+            flex-shrink: 0;
+
+            &:not(:last-child) {
+                border-right: $width-separator-thin solid $color-separator;
+            }
+        }
+
+        .assessment-topics {
+            @extend %content;
+        }
+
+        .affected-groups {
+            @extend %content;
+        }
+
+        .location-selection {
+            @extend %content;
+        }
+
+        .additional-document {
+            @extend %content;
+        }
+
+        .collection-techniques {
+            @extend %content;
+        }
+
+        .sampling {
+            @extend %content;
+        }
+
+        .limitations {
+            @extend %content;
         }
     }
 }
 
-
-.values {
-    display: flex;
-    padding: $spacing-medium;
-
-    .field-inputs {
-        flex-basis: 16%;
-        margin-right: $spacing-large;
-    }
-
-    .remove-button {
-        flex-basis: 3%;
-    }
-
-    &:nth-child(odd) {
-        background-color: $color-background-row;
-    }
-}

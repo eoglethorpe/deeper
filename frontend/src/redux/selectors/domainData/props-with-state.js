@@ -231,7 +231,7 @@ export const aryTemplateSelector = createSelector(
     aryTemplatesSelector,
     projectDetailsSelector,
     (aryTemplates, project) => (
-        aryTemplates[project.assessmentTemplate] || emptyObject
+        aryTemplates[project.id] || emptyObject
     ),
 );
 
@@ -246,6 +246,13 @@ export const aryTemplateMethodologySelector = createSelector(
     aryTemplateSelector,
     aryTemplate => (
         aryTemplate.methodologyGroups || emptyList
+    ),
+);
+
+export const assessmentTopicsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.assessmentTopics || emptyList
     ),
 );
 

@@ -24,7 +24,7 @@ export default class AryTemplateRequest {
             .success((response) => {
                 try {
                     schema.validate(response, 'aryTemplateGetResponse');
-                    this.setAryTemplate({ template: response });
+                    this.setAryTemplate({ template: response, projectId });
                     this.setState({ pendingAryTemplate: false });
                 } catch (er) {
                     console.error(er);

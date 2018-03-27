@@ -22,6 +22,7 @@ import {
     entryFilterOptionsForProjectSelector,
     setEntryFilterOptionsAction,
     setGeoOptionsAction,
+    geoOptionsForProjectSelector,
     entryStringsSelector,
 } from '../../redux';
 import {
@@ -44,6 +45,7 @@ const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     entryFilterOptions: entryFilterOptionsForProjectSelector(state, props),
     entryStrings: entryStringsSelector(state),
+    geoOptions: geoOptionsForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -61,6 +63,7 @@ const propTypes = {
     setEntriesViewFilter: PropTypes.func.isRequired,
     unsetEntriesViewFilter: PropTypes.func.isRequired,
     setGeoOptions: PropTypes.func.isRequired,
+    geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     pending: PropTypes.bool,
     applyOnChange: PropTypes.bool,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -75,6 +78,7 @@ const propTypes = {
 const defaultProps = {
     pending: true,
     filters: [],
+    geoOptions: {},
     applyOnChange: false,
 };
 
@@ -304,6 +308,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     key={key}
                     className="entries-filter"
                     label={title}
+                    geoOptions={this.props.geoOptions}
                     onChange={values => this.handleFilterChange(key, values)}
                     regions={this.props.projectDetails.regions}
                     value={filters[key] || emptyList}
