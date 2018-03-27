@@ -41,19 +41,19 @@ const prepareSettings = (semantics) => {
 };
 
 const commonLinks = {
-    leads: 'lp',
-    entries: 'lp',
-    arys: 'lpd',
+    leads: 'l,p',
+    entries: 'l,p',
+    arys: 'l,p,d',
     projects: 'l',
     countries: 'l',
-    export: 'lp',
+    export: 'l,p',
 
     userProfile: 'l',
-    apiDocs: 'ld',
-    userExports: 'lp',
+    apiDocs: 'l,d',
+    userExports: 'l,p',
 
-    adminPanel: 'la',
-    stringManagement: 'lad',
+    adminPanel: 'l,a',
+    stringManagement: 'l,a,d',
 };
 
 export const noLinks = {};
