@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import stringFormat from 'string-format';
 
 const emptyObject = {};
 
@@ -29,12 +30,15 @@ export const selectedViewStringsSelector = createSelector(
 const createSelectorForView = name => createSelector(
     selectedViewStringsSelector,
     selectedRawStringsSelector,
-    (selectedViewStrings, selectedRawStrings) => (identifier) => {
+    (selectedViewStrings, selectedRawStrings) => (identifier, params) => {
         const namedViewStrings = selectedViewStrings[name] || emptyObject;
         const id = namedViewStrings[identifier];
         if (!id || !selectedRawStrings[id]) {
             console.warn(`String not found for ${name}:${identifier}`);
             return `{${name}:${identifier}}`;
+        }
+        if (params) {
+            return stringFormat(selectedRawStrings[id], params);
         }
         return selectedRawStrings[id];
     },
