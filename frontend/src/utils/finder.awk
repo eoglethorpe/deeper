@@ -14,7 +14,7 @@ BEGIN {
     capture[""] = 0
 }
 {
-    while (match($0, /(\w+)Strings\('(\w+)'\)/, capture)) {
+    while (match($0, /(\w+)Strings\('(\w+)'/, capture)) {
         file = FILENAME
         linenumber = FNR
         class = capture[1]
