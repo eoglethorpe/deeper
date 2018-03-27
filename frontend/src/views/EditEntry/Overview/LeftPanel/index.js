@@ -125,6 +125,7 @@ export default class LeftPanel extends React.PureComponent {
                 />
             ),
             mount: true,
+            lazyMount: true,
             wrapContainer: true,
         },
         'original-preview': {
@@ -137,6 +138,7 @@ export default class LeftPanel extends React.PureComponent {
                 </div>
             ),
             mount: true,
+            lazyMount: true,
             wrapContainer: true,
         },
         'images-preview': {
