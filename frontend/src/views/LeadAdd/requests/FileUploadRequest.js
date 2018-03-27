@@ -8,22 +8,19 @@ import {
 } from '../../../rest';
 
 export default class FileUploadRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-        this.getState = name => parent.state[name];
-
+    constructor(params) {
         const {
             uploadCoordinator,
             addLeadViewLeadChange,
             leadsStrings,
             getLeadFromId,
+            setState,
         } = params;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.uploadCoordinator = uploadCoordinator;
         this.leadsStrings = leadsStrings;
         this.getLeadFromId = getLeadFromId;
+        this.setState = setState;
     }
 
     create = ({ file, leadId }) => {

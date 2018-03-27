@@ -9,13 +9,15 @@ import {
 } from '../../../rest';
 
 export default class LeadCDIdRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-        const { stopNlpRequests, startNlpRequests } = params;
+    constructor(params) {
+        const {
+            stopNlpRequests,
+            startNlpRequests,
+            setState,
+        } = params;
         this.stopNlpRequests = stopNlpRequests;
         this.startNlpRequests = startNlpRequests;
+        this.setState = setState;
     }
 
     create = ({ activeProject, filters }) => {

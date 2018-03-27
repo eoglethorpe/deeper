@@ -424,14 +424,12 @@ export default class LeadAdd extends React.PureComponent {
     // HANDLE SELECTION
 
     handleGoogleDriveSelect = (uploads) => {
-        const googleDriveRequest = new GoogleDriveRequest(
-            this,
-            {
-                driveUploadCoordinator: this.driveUploadCoordinator,
-                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
-                getLeadFromId: this.getLeadFromId,
-            },
-        );
+        const googleDriveRequest = new GoogleDriveRequest({
+            driveUploadCoordinator: this.driveUploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setState: params => this.setState(params),
+        });
 
         uploads.forEach((upload) => {
             const request = googleDriveRequest.create(upload);
@@ -457,14 +455,12 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleDropboxSelect = (uploads) => {
-        const dropboxRequest = new DropboxRequest(
-            this,
-            {
-                dropboxUploadCoordinator: this.dropboxUploadCoordinator,
-                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
-                getLeadFromId: this.getLeadFromId,
-            },
-        );
+        const dropboxRequest = new DropboxRequest({
+            dropboxUploadCoordinator: this.dropboxUploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setState: params => this.setState(params),
+        });
 
         uploads.forEach((upload) => {
             const request = dropboxRequest.create(upload);
@@ -489,15 +485,13 @@ export default class LeadAdd extends React.PureComponent {
     }
 
     handleFileSelect = (uploads) => {
-        const fileUploadRequest = new FileUploadRequest(
-            this,
-            {
-                uploadCoordinator: this.uploadCoordinator,
-                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
-                leadsStrings: this.props.leadsStrings,
-                getLeadFromId: this.getLeadFromId,
-            },
-        );
+        const fileUploadRequest = new FileUploadRequest({
+            uploadCoordinator: this.uploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            leadsStrings: this.props.leadsStrings,
+            getLeadFromId: this.getLeadFromId,
+            setState: params => this.setState(params),
+        });
 
         uploads.forEach((upload) => {
             const request = fileUploadRequest.create(upload);
@@ -525,15 +519,13 @@ export default class LeadAdd extends React.PureComponent {
 
     handleFormSubmitSuccess = (lead, newValues) => {
         // FIXME: show notifiy if individual save
-        const formSaveRequest = new FormSaveRequest(
-            this,
-            {
-                formCoordinator: this.formCoordinator,
-                addLeadViewLeadSave: this.props.addLeadViewLeadSave,
-                addLeadViewLeadChange: this.props.addLeadViewLeadChange,
-                getLeadFromId: this.getLeadFromId,
-            },
-        );
+        const formSaveRequest = new FormSaveRequest({
+            formCoordinator: this.formCoordinator,
+            addLeadViewLeadSave: this.props.addLeadViewLeadSave,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setState: params => this.setState(params),
+        });
         const request = formSaveRequest.create(lead, newValues);
         return request;
     }
