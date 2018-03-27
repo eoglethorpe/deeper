@@ -342,9 +342,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             projectStrings,
         } = this.props;
         const { showDeleteConfirm } = this.state;
-        const confirmRemoveText = projectStrings('confirmRemoveText');
 
-        // FIXME: use templating for combined strings
         return (
             <Confirm
                 show={showDeleteConfirm}
@@ -356,10 +354,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {`
-                        ${confirmRemoveText}
-                        ${regionDetails.title} from project ${projectDetails.title}?
-                    `}
+                    {
+                        projectStrings('confirmRemoveText', {
+                            title: regionDetails.title,
+                            projectTitle: projectDetails.title,
+                        })
+                    }
                 </p>
             </Confirm>
         );
@@ -373,9 +373,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             projectStrings,
         } = this.props;
         const { showCloneAndEditConfirm } = this.state;
-        const confirmCloneText = projectStrings('confirmCloneText');
 
-        // FIXME: use templating for combined strings
         return (
             <Confirm
                 show={showCloneAndEditConfirm}
@@ -386,10 +384,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {`
-                        ${confirmCloneText}
-                        ${regionDetails.title}?
-                    `}
+                    {projectStrings('confirmCloneText', { title: regionDetails.title })}
                 </p>
             </Confirm>
         );

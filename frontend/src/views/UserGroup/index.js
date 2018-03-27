@@ -165,8 +165,15 @@ export default class UserGroup extends React.PureComponent {
     }
 
     render() {
-        const { userGroup, userGroupId } = this.props;
-        const { showUserGroupEditModal, pending } = this.state;
+        const {
+            userGroup,
+            userGroupId,
+            userStrings,
+        } = this.props;
+        const {
+            showUserGroupEditModal,
+            pending,
+        } = this.state;
 
         const isCurrentUserAdmin = this.isCurrentUserAdmin(userGroup.memberships || emptyList);
 
@@ -182,7 +189,7 @@ export default class UserGroup extends React.PureComponent {
             return (
                 <div className={styles.usergroup}>
                     <div className={styles.usergroupAlt}>
-                        {this.props.userStrings('userGroupNotFound')}
+                        {userStrings('userGroupNotFound')}
                     </div>
                 </div>
             );
@@ -192,7 +199,7 @@ export default class UserGroup extends React.PureComponent {
             <div className={styles.usergroup}>
                 <header className={styles.header}>
                     <h2>
-                        {this.props.userStrings('userGroupTitle')}
+                        {userStrings('userGroupTitle')}
                     </h2>
                 </header>
                 <div className={styles.info}>
@@ -214,7 +221,7 @@ export default class UserGroup extends React.PureComponent {
                 </div>
                 <div className={styles.stats}>
                     <h2>
-                        {this.props.userStrings('userGroupActivtyLogTitle')}
+                        {userStrings('userGroupActivtyLogTitle')}
                     </h2>
                 </div>
                 <ProjectsTable
@@ -236,7 +243,7 @@ export default class UserGroup extends React.PureComponent {
                         className={styles.userGroupEditModal}
                     >
                         <ModalHeader
-                            title={`${this.props.userStrings('userGroupEditModalLabel')}: ${userGroup.title}`}
+                            title={userStrings('userGroupEditModalLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleUserGroupEditModalClose}

@@ -258,8 +258,9 @@ export default class ProjectsTable extends React.PureComponent {
     }
 
     handleDeleteProjectClick = (project) => {
-        const confirmText = `${this.props.userStrings('confirmTextDeleteProject')}
-        ${project.title}?`;
+        const confirmText = this.props.userStrings('confirmTextDeleteProject', {
+            title: project.title,
+        });
 
         this.setState({
             showDeleteProjectModal: true,

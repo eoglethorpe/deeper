@@ -399,11 +399,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        {/* FIXME: Use string template */}
-                        {`
-                            ${projectStrings('confirmUseAf')}
-                            ${afDetails.title}?
-                        `}
+                        { projectStrings('confirmUseAf', { title: afDetails.title }) }
                     </p>
                     <p>
                         { projectStrings('confirmUseAfText') }
@@ -416,11 +412,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        {/* FIXME: Use string template */}
-                        {`
-                            ${projectStrings('confirmCloneAf')}
-                            ${afDetails.title}?
-                        `}
+                        { projectStrings('confirmCloneAf', { title: afDetails.title }) }
                     </p>
                 </Confirm>
             </div>

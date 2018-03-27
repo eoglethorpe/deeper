@@ -249,6 +249,7 @@ export default class ProjectCeDetail extends React.PureComponent {
             ceDetails,
             categoryEditorId,
             projectDetails,
+            projectStrings,
         } = this.props;
 
         const {
@@ -277,7 +278,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeUseClick}
                                 disabled={pending}
                             >
-                                {this.props.projectStrings('useCeButtonLabel')}
+                                {projectStrings('useCeButtonLabel')}
                             </PrimaryButton>
                         }
                         {ceDetails.isAdmin &&
@@ -286,33 +287,43 @@ export default class ProjectCeDetail extends React.PureComponent {
                                 onClick={this.handleCeEditClick}
                                 disabled={pending}
                             >
-                                {this.props.projectStrings('editCeButtonLabel')}
+                                {projectStrings('editCeButtonLabel')}
                             </PrimaryButton>
                         }
                         <PrimaryButton
                             onClick={this.handleCeCloneClick}
                             disabled={pending}
                         >
-                            {this.props.projectStrings('cloneEditCeButtonLabel')}
+                            {projectStrings('cloneEditCeButtonLabel')}
                         </PrimaryButton>
                     </div>
+                    {/* FIXME: don't use inline functions */}
                     <Confirm
                         show={useConfirmModalShow}
                         onClose={useConfirm => this.handleCeUse(
                             useConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`${this.props.projectStrings('confirmUseCe')} ${ceDetails.title}?`}</p>
-                        <p>{this.props.projectStrings('confirmUseCeText')}</p>
+                        <p>
+                            {projectStrings('confirmUseCe', { title: ceDetails.title })}
+                        </p>
+                        <p>
+                            {projectStrings('confirmUseCeText')}
+                        </p>
                     </Confirm>
+                    {/* FIXME: don't use inline functions */}
                     <Confirm
                         show={cloneConfirmModalShow}
                         onClose={cloneConfirm => this.handleCeClone(
                             cloneConfirm, categoryEditorId, projectDetails.id,
                         )}
                     >
-                        <p>{`${this.props.projectStrings('confirmCloneCe')} ${ceDetails.title}?`}</p>
-                        <p>{this.props.projectStrings('confirmCloneCeText')}.</p>
+                        <p>
+                            {projectStrings('confirmCloneCe', { title: ceDetails.title })}
+                        </p>
+                        <p>
+                            {projectStrings('confirmCloneCeText')}
+                        </p>
                     </Confirm>
                 </header>
                 <div className={styles.ceDetails}>
