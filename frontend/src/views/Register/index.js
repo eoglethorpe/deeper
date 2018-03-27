@@ -231,12 +231,14 @@ export default class Register extends React.PureComponent {
         );
     }
 
-    renderSuccess = () => (
-        <div className={styles.registerSuccess}>
-            {this.props.loginStrings('checkYourEmailText')}
-            {this.state.formValues.email}
-        </div>
-    )
+    renderSuccess = () => {
+        const { email } = this.state.formValues;
+        return (
+            <div className={styles.registerSuccess}>
+                {this.props.loginStrings('checkYourEmailText', { email })}
+            </div>
+        );
+    }
 
     render() {
         const {
