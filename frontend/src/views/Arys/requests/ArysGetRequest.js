@@ -9,13 +9,13 @@ import {
 } from '../../../rest';
 
 export default class ArysGetRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
-        const { setArys } = params;
+    constructor(params) {
+        const {
+            setArys,
+            setState,
+        } = params;
         this.setArys = setArys;
+        this.setState = setState;
     }
 
     create = ({

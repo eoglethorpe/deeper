@@ -10,11 +10,7 @@ import { entryAccessor } from '../../../entities/entry';
 import schema from '../../../schema';
 
 export default class SaveEntryRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             api,
             changeEntry,
@@ -23,6 +19,7 @@ export default class SaveEntryRequest {
             getEntries,
             getLeadId,
             getCoordinator,
+            setState,
         } = params;
         this.api = api;
         this.changeEntry = changeEntry;
@@ -31,6 +28,7 @@ export default class SaveEntryRequest {
         this.getEntries = getEntries;
         this.getLeadId = getLeadId;
         this.getCoordinator = getCoordinator;
+        this.setState = setState;
     }
 
     create = (entryId) => {

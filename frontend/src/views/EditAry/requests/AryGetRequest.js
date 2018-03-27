@@ -6,13 +6,13 @@ import {
 import schema from '../../../schema';
 
 export default class AryGetRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
-        const { setAry } = params;
+    constructor(params) {
+        const {
+            setAry,
+            setState,
+        } = params;
         this.setAry = setAry;
+        this.setState = setState;
     }
 
     create = (id) => { // id is lead id

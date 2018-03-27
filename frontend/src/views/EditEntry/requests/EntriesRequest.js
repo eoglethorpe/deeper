@@ -13,21 +13,19 @@ import notify from '../../../notify';
 import schema from '../../../schema';
 
 export default class EntriesRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             api,
             getEntries,
             diffEntries,
             notificationStrings,
+            setState,
         } = params;
         this.api = api;
         this.getEntries = getEntries;
         this.diffEntries = diffEntries;
         this.notificationStrings = notificationStrings;
+        this.setState = setState;
     }
 
     create = (leadId) => {

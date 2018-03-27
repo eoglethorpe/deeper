@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { isObjectEmpty } from '../../vendor/react-store/utils/common';
-import Button from '../../vendor/react-store/components/Action/Button';
-import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
-import Form from '../../vendor/react-store/components/Input/Form';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
-import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
-import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import { isObjectEmpty } from '../../../vendor/react-store/utils/common';
+import Button from '../../../vendor/react-store/components/Action/Button';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+import Form from '../../../vendor/react-store/components/Input/Form';
+import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import DateFilter from '../../../vendor/react-store/components/Input/DateFilter';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
 
 import {
     activeProjectSelector,
@@ -19,7 +19,7 @@ import {
     arysStringsSelector,
     aryFilterOptionsForProjectSelector,
     setAryFilterOptionsAction,
-} from '../../redux';
+} from '../../../redux';
 
 import AryFilterOptionsGetRequest from './requests/AryFilterOptionsGetRequest';
 
@@ -124,7 +124,8 @@ export default class FilterArysForm extends React.PureComponent {
             this.aryFilterOptionsRequest.stop();
         }
 
-        const aryFilterOptionsGetRequest = new AryFilterOptionsGetRequest(this, {
+        const aryFilterOptionsGetRequest = new AryFilterOptionsGetRequest({
+            setState: params => this.setState(params),
             setAryFilterOptions: this.props.setAryFilterOptions,
         });
 

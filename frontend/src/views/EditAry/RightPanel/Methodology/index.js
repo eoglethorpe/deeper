@@ -192,7 +192,10 @@ export default class Methodology extends React.PureComponent {
             this.aryPutRequest.stop();
         }
 
-        const aryPutRequest = new AryPutRequest(this, { setAry });
+        const aryPutRequest = new AryPutRequest({
+            setAry,
+            setState: params => this.setState(params),
+        });
         this.aryPutRequest = aryPutRequest.create(activeLeadId, { methodology_data: value });
         this.aryPutRequest.start();
     };

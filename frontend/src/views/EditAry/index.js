@@ -105,7 +105,9 @@ export default class EditAry extends React.PureComponent {
             this.leadRequest.stop();
         }
 
-        const leadRequest = new LeadRequest(this);
+        const leadRequest = new LeadRequest({
+            setState: params => this.setState(params),
+        });
         this.leadRequest = leadRequest.create(leadId);
         this.leadRequest.start();
     }
@@ -120,10 +122,10 @@ export default class EditAry extends React.PureComponent {
             this.aryGetRequest.stop();
         }
 
-        const aryGetRequest = new AryGetRequest(
-            this,
-            { setAry },
-        );
+        const aryGetRequest = new AryGetRequest({
+            setAry,
+            setState: params => this.setState(params),
+        });
         this.aryGetRequest = aryGetRequest.create(leadId);
         this.aryGetRequest.start();
     }
