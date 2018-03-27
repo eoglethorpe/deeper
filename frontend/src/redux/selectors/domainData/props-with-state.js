@@ -231,7 +231,7 @@ export const aryTemplateSelector = createSelector(
     aryTemplatesSelector,
     projectDetailsSelector,
     (aryTemplates, project) => (
-        aryTemplates[project.assessmentTemplate] || emptyObject
+        aryTemplates[project.id] || emptyObject
     ),
 );
 
