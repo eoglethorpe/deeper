@@ -8,7 +8,10 @@ import {
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
     setAryAction,
+    assessmentTopicsSelector,
 } from '../../../../redux';
+import OrganigramWithList from '../../../../components/OrganigramWithList/';
+import GeoSelection from '../../../../components/GeoSelection/';
 
 import Form, {
     requiredCondition,
@@ -20,9 +23,10 @@ import DateInput from '../../../../vendor/react-store/components/Input/DateInput
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import Button from '../../../../vendor/react-store/components/Action/Button';
+import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
 // import RegionMap from '../../../../components/RegionMap';
 import { iconNames } from '../../../../constants';
@@ -36,6 +40,7 @@ const propTypes = {
     // aryStrings: PropTypes.func.isRequired,
     methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    assessmentTopics: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setAry: PropTypes.func.isRequired,
 };
 
@@ -49,6 +54,7 @@ const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     methodology: aryViewMethodologySelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
+    assessmentTopics: assessmentTopicsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -95,7 +101,7 @@ export default class Methodology extends React.PureComponent {
         );
     }
 
-    static getSchema = (methodologyGroups) => {
+    static getSchema = (attributesTemplate) => {
         const schema = {
             fields: {
                 attributes: {
@@ -113,10 +119,11 @@ export default class Methodology extends React.PureComponent {
                     },
                 },
             },
+            assessmentTopics: [],
         };
 
-        Object.keys(methodologyGroups).forEach((key) => {
-            const methodologyGroup = methodologyGroups[key];
+        Object.keys(attributesTemplate).forEach((key) => {
+            const methodologyGroup = attributesTemplate[key];
             methodologyGroup.fields.forEach((field) => {
                 schema.fields.attributes.member.fields[field.id] = [requiredCondition];
             });
@@ -129,10 +136,10 @@ export default class Methodology extends React.PureComponent {
         super(props);
 
         const {
-            aryTemplateMethodology: methodologyGroups,
+            aryTemplateMethodology: attributesTemplate,
             methodology,
         } = props;
-        const schema = Methodology.getSchema(methodologyGroups);
+        const schema = Methodology.getSchema(attributesTemplate);
 
         this.state = {
             formValues: methodology,
@@ -144,8 +151,8 @@ export default class Methodology extends React.PureComponent {
 
     componentWillReceiveProps(nextProps) {
         if (this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology) {
-            const { aryTemplateMethodology: methodologyGroups } = nextProps;
-            const schema = Methodology.getSchema(methodologyGroups);
+            const { aryTemplateMethodology: attributesTemplate } = nextProps;
+            const schema = Methodology.getSchema(attributesTemplate);
             this.setState({
                 schema,
                 formFieldErrors: {},
@@ -190,59 +197,60 @@ export default class Methodology extends React.PureComponent {
         this.aryPutRequest.start();
     };
 
-    render() {
-        const { aryTemplateMethodology: methodologyGroups } = this.props;
-        const {
-            pending,
-            schema,
-            formValues,
-            formErrors,
-            formFieldErrors,
-        } = this.state;
+    renderAttributeHeader = (key) => {
+        const { aryTemplateMethodology: attributesTemplate } = this.props;
+        const methodologyGroup = attributesTemplate[key];
 
-        const renderMethodologyGroupHeaders = (key) => {
-            const methodologyGroup = methodologyGroups[key];
-            return (
-                <h3 key={methodologyGroup.id}>
-                    {methodologyGroup.title}
-                </h3>
-            );
-        };
-
-        const renderMethodologyField = (context, field) => {
-            const formname = `attributes:${context}:${field.id}`;
-            const newField = {
-                ...field,
-                id: formname,
-            };
-            return Methodology.renderWidget(newField);
-        };
-
-        const renderMethodologyGroup = (context, key) => {
-            const methodologyGroup = methodologyGroups[key];
-            return (
-                <div
-                    key={key}
-                    className={styles.fieldInputs}
-                >
-                    {
-                        methodologyGroup.fields
-                            .map(field => renderMethodologyField(context, field))
-                    }
-                </div>
-            );
-        };
-
-        const renderMethodologyRow = (attribute, index) => (
+        return (
             <div
-                key={index}
-                className={styles.values}
+                className={styles.title}
+                key={methodologyGroup.id}
+            >
+                {methodologyGroup.title}
+            </div>
+        );
+    };
+
+    renderField = (context, field) => {
+        const formname = `attributes:${context}:${field.id}`;
+
+        const newField = {
+            ...field,
+            id: formname,
+        };
+        return Methodology.renderWidget(newField);
+    };
+
+    renderAttribute = (context, key) => {
+        const { aryTemplateMethodology: attributesTemplate } = this.props;
+        const methodologyGroup = attributesTemplate[key];
+
+        return (
+            <div
+                key={key}
+                className={styles.cell}
             >
                 {
-                    Object.keys(methodologyGroups)
-                        .map(key => renderMethodologyGroup(index, key))
+                    methodologyGroup.fields
+                        .map(field => this.renderField(context, field))
                 }
-                <div className={styles.removeButton}>
+            </div>
+        );
+    }
+
+    renderAttributeRow = (attribute, index) => {
+        const { aryTemplateMethodology: attributesTemplate } = this.props;
+
+        return (
+            <div
+                key={index}
+                className={styles.row}
+            >
+                {
+                    Object.keys(attributesTemplate)
+                        .map(key => this.renderAttribute(index, key))
+                }
+                <div className={styles.actionButtons}>
                     <DangerButton
                         formname={`attributes:${index}`}
                         formpop
@@ -251,25 +259,58 @@ export default class Methodology extends React.PureComponent {
                 </div>
             </div>
         );
+    }
+
+    render() {
+        const {
+            aryTemplateMethodology: attributesTemplate,
+            assessmentTopics,
+        } = this.props;
+        const {
+            pending,
+            schema,
+            formValues,
+            formErrors,
+            formFieldErrors,
+        } = this.state;
+
+        const { attributes = [] } = formValues;
+        const attributesTemplateKeys = Object.keys(attributesTemplate);
+
+        // FIXME: use strings
+        const saveButtonLabel = 'Save';
+        const assessmentTopicsTitle = 'Assessment topics';
+        const affectedGroupsTitle = 'Affected groups';
 
         return (
-            <div className={styles.methodology}>
-                <Form
-                    className={styles.overview}
-                    schema={schema}
-                    value={formValues}
-                    formErrors={formErrors}
-                    fieldErrors={formFieldErrors}
-                    changeCallback={this.changeCallback}
-                    successCallback={this.successCallback}
-                    failureCallback={this.failureCallback}
-                    disabled={pending}
-                >
-                    { pending && <LoadingAnimation /> }
-                    <div className={styles.fields}>
-                        <div className={styles.fieldTitle}>
-                            { Object.keys(methodologyGroups).map(renderMethodologyGroupHeaders) }
-                            <div className={styles.add}>
+            <Form
+                className={styles.methodology}
+                schema={schema}
+                value={formValues}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
+                changeCallback={this.changeCallback}
+                successCallback={this.successCallback}
+                failureCallback={this.failureCallback}
+                disabled={pending}
+            >
+                { pending && <LoadingAnimation /> }
+                <div className={styles.header}>
+                    <NonFieldErrors
+                        className={styles.nonFieldErrors}
+                        formerror="attributes"
+                    />
+                    <div className={styles.actionButtons}>
+                        <SuccessButton type="submit">
+                            { saveButtonLabel }
+                        </SuccessButton>
+                    </div>
+                </div>
+                <div className={styles.scrollWrap}>
+                    <div className={styles.attributes}>
+                        <div className={styles.header}>
+                            { attributesTemplateKeys.map(this.renderAttributeHeader) }
+                            <div className={styles.actionButtons}>
                                 <PrimaryButton
                                     formname="attributes"
                                     formpush="start"
@@ -277,151 +318,36 @@ export default class Methodology extends React.PureComponent {
                                 />
                             </div>
                         </div>
-                        <div className={styles.fieldValues}>
-                            { (formValues.attributes || []).map(renderMethodologyRow) }
-                        </div>
+                        { attributes.map(this.renderAttributeRow) }
                     </div>
-                    <NonFieldErrors formerror="attributes" />
-                    <div className={styles.actionButtons}>
-                        <Button
-                            type="submit"
-                        >
-                            Submit
-                        </Button>
-                    </div>
-                </Form>
-                {/*
-                <div className={styles.overview}>
-                    <div className={styles.technique}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('collectionTechniqueLabel')}
-                        </h3>
-                        <SelectInput
-                            showHintAndError={false}
-                            className={styles.techniqueChild}
-                        />
+                </div>
+                <div className={styles.bottom}>
+                    <CheckGroup
+                        title={assessmentTopicsTitle}
+                        formname="assessmentTopics"
+                        options={assessmentTopics}
+                        className={styles.assessmentTopics}
+                        keySelector={d => d.id}
+                        labelSelector={d => d.title}
+                    />
+                    <OrganigramWithList
+                        title={affectedGroupsTitle}
+                        className={styles.affectedGroups}
+                    />
+                    <GeoSelection
+                        className={styles.locationSelection}
+                    />
+                    <div className={styles.collectionTechniques}>
+                        Data collection techniques
                     </div>
                     <div className={styles.sampling}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('samplingLabel')}
-                        </h3>
-                        <TextInput
-                            showHintAndError={false}
-                            label={this.props.aryStrings('approachLabel')}
-                            className={styles.samplingChild}
-                        />
-                        <TextInput
-                            showHintAndError={false}
-                            label={this.props.aryStrings('sizeLabel')}
-                            className={styles.samplingChild}
-                        />
+                        Sampling (Site and respondent)
                     </div>
-                    <div className={styles.proximity}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('proximityLabel')}
-                        </h3>
-                        <SelectInput
-                            showHintAndError={false}
-                            className={styles.proximityChild}
-                        />
-                    </div>
-                    <div className={styles.unit}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('unitOfAnalysisLabel')}
-                        </h3>
-                        <SelectInput
-                            showHintAndError={false}
-                            className={styles.unitChild}
-                        />
-                    </div>
-                    <div className={styles.disaggregation}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('disaggregationLabel')}
-                        </h3>
-                        <SelectInput
-                            showHintAndError={false}
-                            className={styles.disaggregationChild}
-                        />
-                    </div>
-                    <div className={styles.questions}>
-                        <div className={styles.heading}>
-                            <h3>
-                                {this.props.aryStrings('questionsLabel')}
-                            </h3>
-                            <PrimaryButton
-                                iconName={iconNames.add}
-                                onClick={this.handleAddQuestionButtonClick}
-                                transparent
-                            />
-                        </div>
-                        <div className={styles.questionsList}>
-                            <TextInput
-                                showHintAndError={false}
-                                label="Question #1"
-                                className={styles.questionsChild}
-                            />
-                            <TextInput
-                                showHintAndError={false}
-                                label="Question #1"
-                                className={styles.questionsChild}
-                            />
-                            <TextInput
-                                showHintAndError={false}
-                                label="Question #1"
-                                className={styles.questionsChild}
-                            />
-                            <TextInput
-                                showHintAndError={false}
-                                label="Question #1"
-                                className={styles.questionsChild}
-                            />
-                        </div>
+                    <div className={styles.limitations}>
+                        Limitations
                     </div>
                 </div>
-                <div className={styles.middle}>
-                    <div className={styles.topicsAssessed}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('topicAssessedLabel')}
-                        </h3>
-                    </div>
-                    <div className={styles.affectedGroups}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('affectedGroupsLabel')}
-                        </h3>
-                    </div>
-                    <div className={styles.location}>
-                        <h3 className={styles.heading}>
-                            {this.props.aryStrings('locationLabel')}
-                        </h3>
-                        <div
-                            className={styles.mapContainer}
-                        >
-                            <RegionMap regionId={155} />
-                        </div>
-                    </div>
-                </div>
-                <div className={styles.structure}>
-                    <h3 className={styles.heading}>
-                        {this.props.aryStrings('structureSectionLabel')}
-                    </h3>
-                    <div
-                        className={styles.collectionTechnique}
-                    >
-                        {this.props.aryStrings('dragDataCollectionlabel')}
-                    </div>
-                    <div
-                        className={styles.samplingData}
-                    >
-                        {this.props.aryStrings('dragSamplingLabel')}
-                    </div>
-                    <div
-                        className={styles.limitations}
-                    >
-                        {this.props.aryStrings('dragLimitationsLabel')}
-                    </div>
-                </div>
-                */}
-            </div>
+            </Form>
         );
     }
 }

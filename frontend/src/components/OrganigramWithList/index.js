@@ -55,7 +55,7 @@ export default class OrganigramWithList extends React.PureComponent {
                     <AccentButton
                         type="button"
                         transparent
-                        iconName={iconNames.globe}
+                        iconName={iconNames.chart}
                     />
                 </header>
             </div>

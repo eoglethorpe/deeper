@@ -9,105 +9,128 @@ $height-bottom: 320px;
     flex-grow: 1;
     background-color: $color-foreground-alt;
 
-    .overview {
+    >.header {
         display: flex;
-        flex-direction: column;
-        flex-grow: 1;
+        flex-shrink: 0;
+        padding: $spacing-small;
 
-        > .header {
-            @include background-color($color-background-header);
-            display: flex;
-            align-items: center;
-            flex-shrink: 0;
-            justify-content: space-between;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-small $spacing-medium;
+        .non-field-errors {
+            flex-grow: 1;
+            padding: 0;
         }
 
-        .scroll-wrapper {
-            @include background-color($color-background-row);
-            flex-grow: 1;
-            overflow: auto;
+        .action-buttons {
+            flex-shrink: 0;
+        }
+    }
 
-            .content {
-                display: table;
-                width: 100%;
+    .scroll-wrap {
+        flex-grow: 1;
+        overflow-x: auto;
+        overflow-y: scroll;
 
-                %cell {
-                    display: table-cell;
-                    padding: $spacing-small $spacing-medium;
+        .attributes {
+            display: table;
+            padding: 0;
+            width: 100%;
 
-                    &:not(:last-child) {
-                        border-right: $width-separator-thin solid $color-separator;
-                    }
-                }
+            %cell {
+                display: table-cell;
+                padding: $spacing-small $spacing-medium;
 
-                %action-buttons {
-                    @extend %cell;
-                    width: $width-action-buttons;
-                }
-
-                .header {
-                    display: table-row;
-
-                    .title {
-                        @extend %cell;
-                        @include background-color($color-background-header);
-                        position: sticky;
-                        top: 0;
-                        z-index: 1;
-                        border-bottom: $width-separator-thin solid $color-separator-alt;
-                        text-transform: uppercase;
-                    }
-
-                    .action-buttons {
-                        @extend %action-buttons;
-                        @include background-color($color-background-header);
-                        position: sticky;
-                        top: 0;
-                        border-bottom: $width-separator-thin solid $color-separator-alt;
-                    }
-                }
-
-                .row {
-                    @extend %background-alternating-row;
-                    display: table-row;
-
-                    .cell {
-                        @extend %cell;
-                    }
-
-                    .action-buttons {
-                        @extend %action-buttons;
-                    }
+                &:not(:last-child) {
+                    border-right: $width-separator-thin solid $color-separator;
                 }
             }
-        }
 
-        .bottom {
-            display: flex;
-            flex-shrink: 0;
-            justify-content: space-evenly;
-            height: $height-bottom;
+            %action-buttons {
+                @extend %cell;
+                width: $width-action-buttons;
+            }
 
-            .affected-groups {
-                padding: 0 $spacing-medium;
+            >.header {
+                @include background-color($color-background-header);
+                display: table-row;
 
-                .header {
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-betweeen;
+                .title {
+                    @extend %cell;
+                    @include background-color($color-background-header);
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                    border-top: $width-separator-thin solid $color-separator-alt;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
                     text-transform: uppercase;
                 }
+
+                .action-buttons {
+                    @extend %action-buttons;
+                    @include background-color($color-background-header);
+                    position: sticky;
+                    top: 0;
+                    z-index: 1;
+                    border-top: $width-separator-thin solid $color-separator-alt;
+                    border-bottom: $width-separator-thin solid $color-separator-alt;
+                }
             }
 
-            .location-selection {
-                padding: 0;
-            }
+            .row {
+                @extend %background-alternating-row;
+                display: table-row;
 
-            .additional-document {
-                padding: $spacing-small $spacing-medium;
+                .cell {
+                    @extend %cell;
+                }
+
+                .action-buttons {
+                    @extend %action-buttons;
+                }
             }
+        }
+    }
+
+    .bottom {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-evenly;
+        border-top: $width-separator-thin solid $color-separator;
+        height: $height-bottom;
+
+        %content {
+            flex-basis: calc(100% / 6);
+            flex-shrink: 0;
+
+            &:not(:last-child) {
+                border-right: $width-separator-thin solid $color-separator;
+            }
+        }
+
+        .assessment-topics {
+            @extend %content;
+        }
+
+        .affected-groups {
+            @extend %content;
+        }
+
+        .location-selection {
+            @extend %content;
+        }
+
+        .additional-document {
+            @extend %content;
+        }
+
+        .collection-techniques {
+            @extend %content;
+        }
+
+        .sampling {
+            @extend %content;
+        }
+
+        .limitations {
+            @extend %content;
         }
     }
 }
