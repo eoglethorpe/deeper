@@ -30,7 +30,7 @@ export default class RightPanel extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = { currentTabKey: 'methodology' };
+        this.state = { currentTabKey: 'metadata' };
 
         const Entries = () => <div>{this.props.aryStrings('entriesTabLabel')}</div>;
         const Summary = () => <div>{this.props.aryStrings('summaryTabLabel')}</div>;
