@@ -15,7 +15,8 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import List from '../../../vendor/react-store/components/View/List';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import { iconNames } from '../../../constants';
 import { afStringsSelector } from '../../../redux';
@@ -41,7 +42,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class NumberMatrixOverview extends React.PureComponent {
     static propTypes = propTypes;

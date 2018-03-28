@@ -7,7 +7,8 @@ import { Redirect, Link } from 'react-router-dom';
 import { reverseRoute } from '../../vendor/react-store/utils/common';
 
 import logo from '../../resources/img/deep-logo.svg';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     pathNames,
 } from '../../constants';
@@ -43,7 +44,7 @@ const defaultProps = {
     activeUser: {},
 };
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, undefined)
 export default class HomeScreen extends React.PureComponent {
     static propTypes = propTypes;

@@ -4,7 +4,8 @@ import PropTypes from 'prop-types';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import { updateAttribute } from './utils';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -19,7 +20,7 @@ const defaultProps = {
 
 const emptyList = [];
 
-@BoundError
+@BoundError(WidgetError)
 export default class Matrix1dList extends React.PureComponent {
     static rowKeyExtractor = d => d.title;
     static propTypes = propTypes;

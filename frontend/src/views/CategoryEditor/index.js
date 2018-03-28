@@ -6,7 +6,8 @@ import {
     Prompt,
 } from 'react-router-dom';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     isTruthy,
     isFalsy,
@@ -143,7 +144,7 @@ const defaultProps = {
 
 const DEPTH_LIMIT = 5;
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CategoryEditor extends React.PureComponent {
     static propTypes = propTypes;

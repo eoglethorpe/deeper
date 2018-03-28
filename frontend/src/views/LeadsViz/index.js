@@ -17,7 +17,8 @@ import CollapsibleTreeView from '../../vendor/react-store/components/Visualizati
 import RadialDendrogramView from '../../vendor/react-store/components/Visualization/RadialDendrogramView';
 import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
 import FormattedDate from '../../vendor/react-store/components/View/FormattedDate';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 
 import {
     projectDetailsSelector,
@@ -75,7 +76,7 @@ const mapDispatchToProps = dispatch => ({
     setLeadVisualization: parms => dispatch(setLeadVisualizationAction(parms)),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class LeadsViz extends React.PureComponent {
     static propTypes = propTypes;

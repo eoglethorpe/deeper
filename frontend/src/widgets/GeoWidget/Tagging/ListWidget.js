@@ -3,7 +3,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import GeoSelection from '../../../components/GeoSelection';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import {
     geoOptionsForProjectSelector,
@@ -30,7 +31,7 @@ const mapStateToProps = (state, props) => ({
 
 const emptyList = [];
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class GeoTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

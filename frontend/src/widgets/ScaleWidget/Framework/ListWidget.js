@@ -20,7 +20,8 @@ import SortableList from '../../../vendor/react-store/components/View/SortableLi
 import { randomString } from '../../../vendor/react-store/utils/common';
 
 import { iconNames } from '../../../constants';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 import { afStringsSelector } from '../../../redux';
 
 import styles from './styles.scss';
@@ -44,7 +45,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class ScaleFrameworkList extends React.PureComponent {
     static propTypes = propTypes;

@@ -7,7 +7,8 @@ import ListView from '../../../vendor/react-store/components/View/List/ListView'
 import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
 
 import { afStringsSelector } from '../../../redux';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import { updateAttribute } from './utils';
 import styles from './styles.scss';
@@ -32,7 +33,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

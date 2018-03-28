@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import { afStringsSelector } from '../../../redux';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -17,7 +18,7 @@ const mapStateToProps = state => ({
     afStrings: afStringsSelector(state),
 });
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class ExcerptTextList extends React.PureComponent {
     static propTypes = propTypes;

@@ -3,7 +3,8 @@ import React from 'react';
 
 import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import styles from './styles.scss';
 
@@ -15,7 +16,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
-@BoundError
+@BoundError(WidgetError)
 export default class GeoViewList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;

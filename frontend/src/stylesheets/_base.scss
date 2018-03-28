@@ -91,6 +91,15 @@ body {
     animation: slide-in $duration-slow ease forwards;
 }
 
+%message-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 2em;
+}
+
 @keyframes slide-in {
     from {
         transform: rotateX(1deg);

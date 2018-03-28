@@ -27,7 +27,8 @@ import schema from '../../schema';
 import { iconNames } from '../../constants';
 import AddRegion from '../../components/AddRegion';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import CountryDetail from './CountryDetail';
 import CountryListItem from './CountryListItem';
 import styles from './styles.scss';
@@ -56,7 +57,7 @@ const mapDispatchToProps = dispatch => ({
     setRegions: params => dispatch(setRegionsAction(params)),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class CountryPanel extends React.PureComponent {
     static propTypes = propTypes;

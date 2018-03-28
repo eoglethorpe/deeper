@@ -13,7 +13,8 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import ActionButtons from './ActionButtons';
 
 import {
@@ -79,7 +80,7 @@ const mapDispatchToProps = dispatch => ({
 
 const MAX_ARYS_PER_REQUEST = 24;
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Arys extends React.PureComponent {
     static propTypes = propTypes;

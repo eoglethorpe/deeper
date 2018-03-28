@@ -16,7 +16,8 @@ import Table from '../../vendor/react-store/components/View/Table';
 import FormattedDate from '../../vendor/react-store/components/View/FormattedDate';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     createUrlForExport,
     createParamsForUserExportsGET,
@@ -69,7 +70,7 @@ const mapDispatchToProps = dispatch => ({
 
 const emptyList = [];
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class UserExports extends React.PureComponent {
     static propTypes = propTypes;

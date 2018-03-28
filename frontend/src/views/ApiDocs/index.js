@@ -2,7 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { PropTypes } from 'prop-types';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { isObjectEmpty, compareString } from '../../vendor/react-store/utils/common';
 import List from '../../vendor/react-store/components/View/List';
@@ -24,7 +25,7 @@ const mapStateToProps = state => ({
     apiStrings: apiStringsSelector(state),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps)
 export default class ApiDocs extends React.PureComponent {
     static propTypes = propTypes;
