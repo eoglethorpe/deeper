@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { FgRestBuilder } from './vendor/react-store/utils/rest';
-import { getRandomFromList } from './vendor/react-store/utils/common';
+import AppLoading from './components/AppLoading';
 
 import { initializeGa } from './config/google-analytics';
 
@@ -30,7 +30,6 @@ import {
     tokenSelector,
     currentUserProjectsSelector,
     activeUserSelector,
-    commonStringsSelector,
 } from './redux';
 
 import getUserConfirmation from './utils/getUserConfirmation';
@@ -41,7 +40,6 @@ const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
     token: tokenSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -62,7 +60,6 @@ const propTypes = {
     stopSiloTasks: PropTypes.func.isRequired,
     token: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     logout: PropTypes.func.isRequired,
-    commonStrings: PropTypes.func.isRequired,
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -73,37 +70,6 @@ export default class App extends React.PureComponent {
         super(props);
 
         this.state = { pending: true };
-
-        const loadingMessages = [
-            this.props.commonStrings('loadingMessages1'),
-            this.props.commonStrings('loadingMessages2'),
-            this.props.commonStrings('loadingMessages3'),
-            this.props.commonStrings('loadingMessages4'),
-            this.props.commonStrings('loadingMessages5'),
-            this.props.commonStrings('loadingMessages6'),
-            this.props.commonStrings('loadingMessages7'),
-            this.props.commonStrings('loadingMessages8'),
-            this.props.commonStrings('loadingMessages9'),
-            this.props.commonStrings('loadingMessages10'),
-            this.props.commonStrings('loadingMessages11'),
-            this.props.commonStrings('loadingMessages12'),
-            this.props.commonStrings('loadingMessages13'),
-            this.props.commonStrings('loadingMessages14'),
-            this.props.commonStrings('loadingMessages15'),
-        ];
-
-        // Get a random message from the loading message list
-        this.randomMessage = getRandomFromList(loadingMessages);
-
-        // Style for random message page
-        this.randomMessageStyle = {
-            alignItems: 'center',
-            display: 'flex',
-            height: '100vh',
-            justifyContent: 'center',
-            color: 'rgba(0, 0, 0, 0.5)',
-            fontSize: '2em',
-        };
     }
 
     componentWillMount() {
@@ -198,19 +164,13 @@ export default class App extends React.PureComponent {
     render() {
         console.log('Rendering App');
 
+        // Show loading screen until access token is retrieved
         if (this.state.pending) {
-            // Show loading screen until access token is retrieved
-            return (
-                <div style={this.randomMessageStyle} >
-                    { this.randomMessage }
-                </div>
-            );
+            return <AppLoading />;
         }
 
         return (
-            <BrowserRouter
-                getUserConfirmation={getUserConfirmation}
-            >
+            <BrowserRouter getUserConfirmation={getUserConfirmation}>
                 <Multiplexer />
             </BrowserRouter>
         );
