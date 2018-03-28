@@ -2,15 +2,15 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const UNSET_REGION = 'domainData/UNSET_REGION';
-export const ADD_NEW_REGION = 'domainData/ADD_NEW_REGION';
-export const REMOVE_PROJECT_REGION = 'domainData/REMOVE_PROJECT_REGION';
-export const SET_REGIONS = 'domainData/SET_REGIONS';
-export const SET_REGION_DETAILS = 'domainData/SET_REGION_DETAILS';
-export const SET_GEO_OPTIONS = 'domainData/SET_GEO_OPTIONS';
-export const SET_ADMIN_LEVELS_FOR_REGION = 'domainData/SET_ADMIN_LEVELS_FOR_REGION';
-export const ADD_ADMIN_LEVEL_FOR_REGION = 'domainData/ADD_ADMIN_LEVEL_FOR_REGION';
-export const UNSET_ADMIN_LEVEL_FOR_REGION = 'domainData/UNSET_ADMIN_LEVEL_FOR_REGION';
+export const SET_REGION_DETAILS = 'domain-data/SET_REGION_DETAILS';
+export const UNSET_REGION = 'domain-data/UNSET_REGION';
+export const ADD_NEW_REGION = 'domain-data/ADD_NEW_REGION';
+export const REMOVE_PROJECT_REGION = 'domain-data/REMOVE_PROJECT_REGION';
+export const SET_REGIONS = 'domain-data/SET_REGIONS';
+export const SET_GEO_OPTIONS = 'domain-data/SET_GEO_OPTIONS';
+export const SET_ADMIN_LEVELS_FOR_REGION = 'domain-data/SET_ADMIN_LEVELS_FOR_REGION';
+export const ADD_ADMIN_LEVEL_FOR_REGION = 'domain-data/ADD_ADMIN_LEVEL_FOR_REGION';
+export const UNSET_ADMIN_LEVEL_FOR_REGION = 'domain-data/UNSET_ADMIN_LEVEL_FOR_REGION';
 
 // ACTION-CREATOR
 
@@ -41,13 +41,6 @@ export const unsetAdminLevelForRegionAction = ({ adminLevelId, regionId }) => ({
     type: UNSET_ADMIN_LEVEL_FOR_REGION,
     adminLevelId,
     regionId,
-});
-
-export const setRegionDetailsAction = ({ regionDetails, regionId, projectId }) => ({
-    type: SET_REGION_DETAILS,
-    regionId,
-    regionDetails,
-    projectId,
 });
 
 export const setRegionsAction = ({ regions }) => ({
@@ -89,33 +82,6 @@ const setRegions = (state, action) => {
     return update(state, settings);
 };
 
-const setRegionDetails = (state, action) => {
-    const { regionId, regionDetails, projectId } = action;
-    const settings = {
-        regions: {
-            [regionId]: { $auto: {
-                $merge: regionDetails,
-            } },
-        },
-    };
-    if (projectId) {
-        const index = ((state.projects[projectId] || {}).regions
-            || []).findIndex(d => (d.id === regionId));
-        if (index !== -1) {
-            settings.projects = {
-                [projectId]: { $auto: {
-                    regions: { $autoArray: {
-                        [index]: { $set: {
-                            id: regionDetails.id,
-                            title: regionDetails.title,
-                        } },
-                    } },
-                } },
-            };
-        }
-    }
-    return update(state, settings);
-};
 
 const unsetRegion = (state, action) => {
     const { regionId } = action;
@@ -226,6 +192,34 @@ const addAdminLevelForRegion = (state, action) => {
     return update(state, settings);
 };
 
+const setRegionDetails = (state, action) => {
+    const { regionId, regionDetails, projectId } = action;
+    const settings = {
+        regions: {
+            [regionId]: { $auto: {
+                $merge: regionDetails,
+            } },
+        },
+    };
+    if (projectId) {
+        const index = ((state.projects[projectId] || {}).regions
+            || []).findIndex(d => (d.id === regionId));
+        if (index !== -1) {
+            settings.projects = {
+                [projectId]: { $auto: {
+                    regions: { $autoArray: {
+                        [index]: { $set: {
+                            id: regionDetails.id,
+                            title: regionDetails.title,
+                        } },
+                    } },
+                } },
+            };
+        }
+    }
+    return update(state, settings);
+};
+
 const removeAdminLevelForRegion = (state, action) => {
     const { adminLevelId, regionId } = action;
     const index = (state.adminLevels[regionId]
@@ -247,12 +241,12 @@ const removeAdminLevelForRegion = (state, action) => {
 const reducers = {
     [SET_REGIONS]: setRegions,
     [SET_GEO_OPTIONS]: setGeoOptions,
-    [SET_REGION_DETAILS]: setRegionDetails,
     [UNSET_REGION]: unsetRegion,
     [REMOVE_PROJECT_REGION]: removeProjectRegion,
     [ADD_NEW_REGION]: addNewRegion,
     [SET_ADMIN_LEVELS_FOR_REGION]: setAdminLevelsForRegion,
     [ADD_ADMIN_LEVEL_FOR_REGION]: addAdminLevelForRegion,
     [UNSET_ADMIN_LEVEL_FOR_REGION]: removeAdminLevelForRegion,
+    [SET_REGION_DETAILS]: setRegionDetails,
 };
 export default reducers;

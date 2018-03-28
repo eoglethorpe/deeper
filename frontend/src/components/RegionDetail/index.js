@@ -18,7 +18,7 @@ import {
     createUrlForRegion,
 } from '../../rest';
 import {
-    regionDetailForRegionSelector,
+    regionDetailSelector,
     setRegionDetailsAction,
     countriesStringsSelector,
     notificationStringsSelector,
@@ -52,7 +52,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    regionDetail: regionDetailForRegionSelector(state, props),
+    regionDetail: regionDetailSelector(state, props),
     countriesStrings: countriesStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
 });
@@ -68,20 +68,6 @@ export default class RegionDetail extends React.PureComponent {
 
     constructor(props) {
         super(props);
-
-        const { regionDetail } = this.props;
-
-        this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {
-                ...regionDetail.regionalGroups,
-                countryCode: regionDetail.code,
-                countryName: regionDetail.title,
-            },
-            pending: false,
-            pristine: false,
-        };
 
         this.schema = {
             fields: {
@@ -133,7 +119,10 @@ export default class RegionDetail extends React.PureComponent {
                 try {
                     schema.validate(response, 'regionPatchResponse');
                     this.props.setRegionDetails({
-                        regionDetails: response,
+                        regionDetails: {
+                            ...response,
+                            pristine: false,
+                        },
                         regionId,
                         projectId,
                     });
@@ -143,7 +132,6 @@ export default class RegionDetail extends React.PureComponent {
                         message: this.props.notificationStrings('regionDetailSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
-                    this.setState({ pristine: false });
                 } catch (er) {
                     console.error(er);
                 }

@@ -449,15 +449,67 @@ const initialSiloDomainData = {
         },
     },
 
-    countryPanelView: {
-        /*
+    regions: {
         // index is regionId
-        1: {
-            fullName: 'American Samoa',
-            iso: 'ASM',
-            countryId: 'ASM',
+        generalDetails: {
+            1: {
+                id: 1,
+                code: 'NPL',
+                title: 'Nepal',
+            },
+            2: {
+                title: 'Two',
+                code: 'TOW',
+            },
+            3: {
+                title: 'Three',
+                code: 'THR',
+            },
         },
-        */
+        keyFigures: {
+            1: {
+                hdiIndex: 1,
+            },
+            2: {
+                hdiIndex: 2,
+            },
+            3: {
+                hdiIndex: 3,
+            },
+        },
+        mediaSources: {
+            1: {
+                hdiIndex: 1,
+            },
+            2: {
+                hdiIndex: 2,
+            },
+            3: {
+                hdiIndex: 3,
+            },
+        },
+        populationData: {
+            1: {
+                hdiIndex: 1,
+            },
+            2: {
+                hdiIndex: 2,
+            },
+            3: {
+                hdiIndex: 3,
+            },
+        },
+        seasonalCalendar: {
+            1: {
+                hdiIndex: 1,
+            },
+            2: {
+                hdiIndex: 2,
+            },
+            3: {
+                hdiIndex: 3,
+            },
+        },
     },
 };
 

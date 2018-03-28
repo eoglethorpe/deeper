@@ -18,7 +18,7 @@ import {
 import {
     activeProjectSelector,
 
-    regionDetailForRegionSelector,
+    regionDetailSelector,
     projectDetailsSelector,
     setRegionDetailsAction,
     removeProjectRegionAction,
@@ -59,7 +59,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
-    regionDetails: regionDetailForRegionSelector(state, props),
+    regionDetails: regionDetailSelector(state, props),
     notificationStrings: notificationStringsSelector(state),
     projectStrings: projectStringsSelector(state),
 });
@@ -107,6 +107,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
+                    console.warn('incoming');
                     this.props.setRegionDetails({
                         regionDetails: response,
                         regionId,
@@ -393,7 +394,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const DeleteRegionConfirm = this.renderDeleteRegionConfirm;
         const CloneAndEditRegionConfirm = this.renderCloneAndEditRegionConfirm;
 
-        console.warn(Confirm);
         return (
             <div className={styles.regionDetailsContainer}>
                 <Header />
