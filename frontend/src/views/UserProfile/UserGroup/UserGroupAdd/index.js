@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import Form, { requiredCondition } from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
@@ -15,18 +14,13 @@ import PrimaryButton from '../../../../vendor/react-store/components/Action/Butt
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    transformResponseErrorToFormError,
-    createParamsForUserGroupsCreate,
-    urlForUserGroups,
-} from '../../../../rest';
-import {
     activeUserSelector,
     setUserGroupAction,
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../../redux';
-import notify from '../../../../notify';
-import schema from '../../../../schema';
+
+import UserGroupPostRequest from '../../requests/UserGroupPostRequest';
 
 import styles from './styles.scss';
 
@@ -80,63 +74,18 @@ export default class UserGroupAdd extends React.PureComponent {
         }
     }
 
-    createRequestForUserGroupCreate = ({ title }) => {
-        const userGroupCreateRequest = new FgRestBuilder()
-            .url(urlForUserGroups)
-            .params(() => createParamsForUserGroupsCreate({ title }))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupCreateResponse');
-                    this.props.setUserGroup({
-                        userId: this.props.activeUser.userId,
-                        userGroup: response,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userGroupCreate'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userGroupCreateSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                    this.props.handleModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupCreate'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupCreateFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupCreate'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupCreateFatal'),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({
-                    formErrors: { errors: ['Error while trying to save user group.'] },
-                });
-            })
-            .build();
-        return userGroupCreateRequest;
+    startRequestForUserGroupCreate = (values, userId) => {
+        if (this.userGroupCreateRequest) {
+            this.userGroupCreateRequest.stop();
+        }
+        const userGroupCreateRequest = new UserGroupPostRequest({
+            setUserGroup: this.props.setUserGroup,
+            notificationStrings: this.props.notificationStrings,
+            handleModalClose: this.props.handleModalClose,
+            setState: v => this.setState(v),
+        });
+        this.userGroupCreateRequest = userGroupCreateRequest.create(values, userId);
+        this.userGroupCreateRequest.start();
     }
 
     // FORM RELATED
@@ -158,12 +107,8 @@ export default class UserGroupAdd extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        if (this.userGroupCreateRequest) {
-            this.userGroupCreateRequest.stop();
-        }
-
-        this.userGroupCreateRequest = this.createRequestForUserGroupCreate(values);
-        this.userGroupCreateRequest.start();
+        const { userId } = this.props.activeUser;
+        this.startRequestForUserGroupCreate(values, userId);
     };
 
     // BUTTONS

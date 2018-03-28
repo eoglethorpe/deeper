@@ -15,7 +15,6 @@ import {
     compareLength,
     compareString,
 } from '../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
@@ -26,12 +25,6 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import Table from '../../../vendor/react-store/components/View/Table';
 
-import {
-    createParamsForProjectDelete,
-    createParamsForProjects,
-    createUrlForProject,
-    createUrlForProjectsOfUser,
-} from '../../../rest';
 import {
     userProjectsSelector,
     setUserProjectsAction,
@@ -47,8 +40,9 @@ import {
     pathNames,
 } from '../../../constants';
 import UserProjectAdd from '../../../components/UserProjectAdd';
-import schema from '../../../schema';
-import notify from '../../../notify';
+
+import UserProjectsGetRequest from '../requests/UserProjectsGetRequest';
+import ProjectDeleteRequest from '../requests/ProjectDeleteRequest';
 
 import styles from './styles.scss';
 
@@ -208,16 +202,13 @@ export default class UserProject extends React.PureComponent {
 
     componentWillMount() {
         const { userId } = this.props;
-        this.projectsRequest = this.createRequestForProjects(userId);
-        this.projectsRequest.start();
+        this.startRequestForProjects(userId);
     }
 
     componentWillReceiveProps(nextProps) {
         const { userId } = nextProps;
         if (this.props.userId !== userId) {
-            this.projectsRequest.stop();
-            this.projectsRequest = this.createRequestForProjects(userId);
-            this.projectsRequest.start();
+            this.startRequestForProjects(userId);
         }
     }
 
@@ -225,80 +216,29 @@ export default class UserProject extends React.PureComponent {
         this.projectsRequest.stop();
     }
 
-    createRequestForProjectDelete = (projectId) => {
-        const urlForProject = createUrlForProject(projectId);
-        const userId = this.props.activeUser.userId;
-
-        const projectDeleteRequest = new FgRestBuilder()
-            .url(urlForProject)
-            .params(() => createParamsForProjectDelete())
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unSetProject({
-                        userId,
-                        projectId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userProjectDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userProjectDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userProjectDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userProjectDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectDeleteFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return projectDeleteRequest;
+    startRequestForProjects = (userId) => {
+        if (this.projectsRequest) {
+            this.projectsRequest.stop();
+        }
+        const projectsRequest = new UserProjectsGetRequest({
+            setUserProjects: this.props.setUserProjects,
+            // setState: v => this.setState(v),
+        });
+        this.projectsRequest = projectsRequest.create(userId);
+        this.projectsRequest.start();
     }
 
-    createRequestForProjects = (userId) => {
-        const projectsRequest = new FgRestBuilder()
-            .url(createUrlForProjectsOfUser(userId))
-            .params(() => createParamsForProjects())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectsGetResponse');
-                    this.props.setUserProjects({
-                        userId,
-                        projects: response.results,
-                        extra: response.extra,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return projectsRequest;
+    startRequestForProjectDelete = (projectId, userId) => {
+        if (this.projectDeleteRequest) {
+            this.projectDeleteRequest.stop();
+        }
+        const projectDeleteRequest = new ProjectDeleteRequest({
+            unSetProject: this.props.unSetProject,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.projectDeleteRequest = projectDeleteRequest.create({ projectId, userId });
+        this.projectDeleteRequest.start();
     }
 
     // BUTTONS
@@ -315,8 +255,7 @@ export default class UserProject extends React.PureComponent {
 
     // Delete Click
     handleDeleteProjectClick = (project) => {
-        const confirmText = `Are you sure you want to delete the project
-            ${project.title}?`;
+        const confirmText = `${this.props.userStrings('confirmTextDeleteProject')} ${project.title} ?`;
 
         this.setState({
             deleteProject: true,
@@ -328,15 +267,9 @@ export default class UserProject extends React.PureComponent {
     // Delete Close
     handleDeleteProjectClose = (confirm) => {
         if (confirm) {
-            if (this.projectDeleteRequest) {
-                this.projectDeleteRequest.stop();
-            }
-
             const { selectedProject } = this.state;
-            this.projectDeleteRequest = this.createRequestForProjectDelete(
-                selectedProject.id,
-            );
-            this.projectDeleteRequest.start();
+            const { userId } = this.props.activeUser;
+            this.startRequestForProjectDelete(selectedProject.id, userId);
         }
         this.setState({ deleteProject: false });
     }

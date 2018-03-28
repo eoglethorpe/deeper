@@ -14,7 +14,6 @@ import {
     compareString,
     compareDate,
 } from '../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
@@ -25,12 +24,6 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import Table from '../../../vendor/react-store/components/View/Table';
 
-import {
-    createParamsForUserGroups,
-    createParamsForUserGroupsDelete,
-    createUrlForUserGroup,
-    createUrlForUserGroupsOfUser,
-} from '../../../rest';
 import {
     userGroupsSelector,
     setUserGroupsAction,
@@ -44,8 +37,9 @@ import {
     iconNames,
     pathNames,
 } from '../../../constants';
-import schema from '../../../schema';
-import notify from '../../../notify';
+
+import UserGroupGetRequest from '../requests/UserGroupGetRequest';
+import UserGroupDeleteRequest from '../requests/UserGroupDeleteRequest';
 
 import UserGroupAdd from './UserGroupAdd';
 import styles from './styles.scss';
@@ -191,90 +185,50 @@ export default class UserGroup extends React.PureComponent {
 
     componentWillMount() {
         const { userId } = this.props;
-        this.userGroupsRequest = this.createRequestForUserGroups(userId);
-        this.userGroupsRequest.start();
+        this.startRequestForUserGroups(userId);
     }
 
     componentWillReceiveProps(nextProps) {
         const { userId } = nextProps;
         if (this.props.userId !== userId) {
-            this.userGroupsRequest.stop();
-            this.userGroupsRequest = this.createRequestForUserGroups(userId);
-            this.userGroupsRequest.start();
+            this.startRequestForUserGroups(userId);
         }
     }
 
     componentWillUnmount() {
-        this.userGroupsRequest.stop();
+        if (this.userGroupsRequest) {
+            this.userGroupsRequest.stop();
+        }
+        if (this.userGroupDeleteRequest) {
+            this.userGroupDeleteRequest.stop();
+        }
     }
 
-    createRequestForUserGroupDelete = (userGroupId) => {
-        const urlForUserGroup = createUrlForUserGroup(userGroupId);
-        const userId = this.props.activeUser.userId;
-
-        const userGroupDeletRequest = new FgRestBuilder()
-            .url(urlForUserGroup)
-            .params(() => createParamsForUserGroupsDelete())
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unSetUserGroup({
-                        userGroupId,
-                        userId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userGroupDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userGroupDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupDeleteFatal'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return userGroupDeletRequest;
+    startRequestForUserGroups = (userId) => {
+        if (this.userGroupsRequest) {
+            this.userGroupsRequest.stop();
+        }
+        const userGroupsRequest = new UserGroupGetRequest({
+            setUserGroups: this.props.setUserGroups,
+            // setState: v => this.setState(v),
+        });
+        this.userGroupsRequest = userGroupsRequest.create(userId);
+        this.userGroupsRequest.start();
     }
 
-    createRequestForUserGroups = (userId) => {
-        const userGroupsRequest = new FgRestBuilder()
-            .url(createUrlForUserGroupsOfUser(userId))
-            .params(() => createParamsForUserGroups())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupsGetResponse');
-                    this.props.setUserGroups({
-                        userId,
-                        userGroups: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return userGroupsRequest;
+    startRequestForUserGroupDelete = (userGroupId, userId) => {
+        if (this.userGroupDeleteRequest) {
+            this.userGroupDeleteRequest.stop();
+        }
+        const userGroupDeleteRequest = new UserGroupDeleteRequest({
+            unSetUserGroup: this.props.unSetUserGroup,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.userGroupDeleteRequest = userGroupDeleteRequest.create({
+            userGroupId, userId,
+        });
+        this.userGroupDeleteRequest.start();
     }
 
     // BUTTONS
@@ -291,9 +245,7 @@ export default class UserGroup extends React.PureComponent {
 
     // Delete Click
     handleDeleteUserGroupClick = (userGroup) => {
-        const confirmText = `Are you sure you want to delete the usergroup
-            ${userGroup.title}?`;
-
+        const confirmText = `${this.props.userStrings('confirmTextDeleteUserGroup')} ${userGroup.title} ?`;
         this.setState({
             deleteUserGroup: true,
             activeUserGroup: userGroup,
@@ -304,13 +256,9 @@ export default class UserGroup extends React.PureComponent {
     // Delete Close
     handleDeleteUserGroupClose = (confirm) => {
         if (confirm) {
-            if (this.userGroupDeleteRequest) {
-                this.userGroupDeleteRequest.stop();
-            }
-            this.userGroupDeleteRequest = this.createRequestForUserGroupDelete(
-                this.state.activeUserGroup.id,
-            );
-            this.userGroupDeleteRequest.start();
+            const { id } = this.state.activeUserGroup;
+            const userId = this.props.activeUser.userId;
+            this.startRequestForUserGroupDelete(id, userId);
         }
         this.setState({ deleteUserGroup: false });
     }

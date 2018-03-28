@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -17,10 +16,6 @@ import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
 import { InternalGallery } from '../../components/DeepGallery';
-import {
-    createParamsForUser,
-    createUrlForUser,
-} from '../../rest';
 import {
     userInformationSelector,
     setUserInformationAction,
@@ -30,9 +25,9 @@ import {
 
     userStringsSelector,
 } from '../../redux';
-import schema from '../../schema';
 import { iconNames } from '../../constants';
 
+import UserGetRequest from './requests/UserGetRequest';
 import UserProject from './UserProject';
 import UserGroup from './UserGroup';
 import UserEdit from './UserEdit';
@@ -82,53 +77,33 @@ export default class UserProfile extends React.PureComponent {
 
     componentDidMount() {
         const { userId } = this.props;
-        this.userRequest = this.createRequestForUser(userId);
-        this.userRequest.start();
+        this.startRequestForUser(userId);
     }
 
     componentWillReceiveProps(nextProps) {
         const { userId } = nextProps;
         if (this.props.userId !== userId) {
-            this.userRequest.stop();
-            this.userRequest = this.createRequestForUser(userId);
-            this.userRequest.start();
+            this.startRequestForUser(userId);
         }
     }
 
     componentWillUnmount() {
-        this.userRequest.stop();
+        if (this.userRequest) {
+            this.userRequest.stop();
+        }
     }
 
-    createRequestForUser = (userId) => {
-        const urlForUser = createUrlForUser(userId);
-        const userRequest = new FgRestBuilder()
-            .url(urlForUser)
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGetResponse');
-                    this.props.setUserInformation({
-                        userId,
-                        information: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                if (response.errorCode === 404) {
-                    this.props.unsetUser({ userId });
-                } else {
-                    console.info('FAILURE:', response);
-                }
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return userRequest;
+    startRequestForUser = (userId) => {
+        if (this.userRequest) {
+            this.userRequest.stop();
+        }
+        const userRequest = new UserGetRequest({
+            unsetUser: this.props.unsetUser,
+            setUserInformation: this.props.setUserInformation,
+            setState: v => this.setState(v),
+        });
+        this.userRequest = userRequest.create(userId);
+        this.userRequest.start();
     }
 
     // BUTTONS

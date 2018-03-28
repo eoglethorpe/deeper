@@ -12,14 +12,14 @@
     }
 
     .gallery-image-select {
-        @extend %button-like-link;
-        @include background-color($color-primary);
         margin: auto;
         width: auto;
 
+        // FIXME: use component props for primary styling
         :global {
             label {
-                padding: 0;
+                @extend %button-like-link;
+                @include background-color($color-primary);
             }
         }
     }
