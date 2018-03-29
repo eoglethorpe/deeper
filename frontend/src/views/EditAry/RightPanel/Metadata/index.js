@@ -77,9 +77,15 @@ export default class Metadata extends React.PureComponent {
             });
         });
 
-        schema.fields.questionnaire = [];
-        schema.fields.executiveSummary = [];
+        schema.fields.questionnaire = [
+            Baksa.bothPageRequiredCondition,
+            Baksa.validPageRangeCondition,
+        ];
         schema.fields.assessmentData = [];
+        schema.fields.executiveSummary = [
+            Baksa.bothPageRequiredCondition,
+            Baksa.validPageRangeCondition,
+        ];
 
         return schema;
     }

@@ -29,6 +29,11 @@ const propTypes = {
     showPageRange: PropTypes.bool,
     acceptUrl: PropTypes.bool,
     urlLabel: PropTypes.string,
+
+    disabled: PropTypes.bool,
+    error: PropTypes.string,
+    hint: PropTypes.string,
+    showHintAndError: PropTypes.bool,
 };
 
 const defaultProps = {
@@ -40,11 +45,32 @@ const defaultProps = {
     showPageRange: false,
     acceptUrl: false,
     urlLabel: 'External link',
+
+    disabled: false,
+    error: '',
+    hint: '',
+    showHintAndError: true,
 };
 
 export default class Baksa extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static bothPageRequiredCondition = ({ startPage, endPage }) => {
+        const ok = (startPage && endPage) || (!startPage && !endPage);
+        return {
+            ok,
+            message: 'Both start page and end page must be specified',
+        };
+    }
+
+    static validPageRangeCondition = ({ startPage, endPage }) => {
+        const ok = !startPage || !endPage || startPage <= endPage;
+        return {
+            ok,
+            message: 'Start page must be less than end page',
+        };
+    }
 
     constructor(props) {
         super(props);
@@ -61,12 +87,23 @@ export default class Baksa extends React.PureComponent {
     }
 
     getClassName() {
-        const { className } = this.props;
+        const { className, error, disabled } = this.props;
+
         const classNames = [
             className,
-            'baksa', // FIXME
+            'baksa',
             styles.baksa,
         ];
+
+        if (error) {
+            classNames.push('error');
+            classNames.push(styles.error);
+        }
+
+        if (disabled) {
+            classNames.push('disabled');
+            classNames.push(styles.disabled);
+        }
 
         return classNames.join(' ');
     }
@@ -185,8 +222,7 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderDropFileInput = () => {
-        const { acceptUrl, urlLabel } = this.props;
-
+        const { acceptUrl, urlLabel, disabled } = this.props;
         const elements = [];
 
         // TODO: use string below:
@@ -195,12 +231,14 @@ export default class Baksa extends React.PureComponent {
                 className={styles.dropZone}
                 onDrop={this.handleFileChange}
                 key="drop-zone"
+                disabled={disabled}
             >
                 {/* Empty value in FileInput below cancels the selection automatically */}
                 <FileInput
                     onChange={this.handleFileChange}
                     showStatus={false}
                     value=""
+                    disabled={disabled}
                 >
                     Drop a file or click to select
                 </FileInput>
@@ -219,10 +257,12 @@ export default class Baksa extends React.PureComponent {
                         value={this.state.url}
                         onChange={this.handleUrlChange}
                         showHintAndError={false}
+                        disabled={disabled}
                     />
                     <PrimaryButton
                         className={styles.action}
                         onClick={this.handleUrlAdd}
+                        disabled={disabled}
                     >
                         Add
                     </PrimaryButton>
@@ -234,7 +274,7 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderUpload = () => {
-        const { value: { file, pending } } = this.props;
+        const { value: { file, pending }, disabled } = this.props;
 
         return (
             <div className={styles.upload}>
@@ -247,6 +287,7 @@ export default class Baksa extends React.PureComponent {
                         <DangerButton
                             iconName={iconNames.close}
                             onClick={this.resetValue}
+                            disabled={disabled}
                             transparent
                         >
                             Clear
@@ -258,7 +299,7 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderSelection = () => {
-        const { value } = this.props;
+        const { value, disabled } = this.props;
 
         return (
             <div className={styles.selection}>
@@ -269,6 +310,7 @@ export default class Baksa extends React.PureComponent {
                     className={styles.action}
                     iconName={iconNames.close}
                     onClick={this.resetValue}
+                    disabled={disabled}
                     transparent
                 >
                     Clear
@@ -278,31 +320,78 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderPageRange = () => {
-        const { value: { startPage, endPage } } = this.props;
+        const { value: { startPage, endPage }, disabled } = this.props;
 
         return (
             <div className={styles.pageRange}>
-                <div className={styles.label}>
-                    Choose page range
-                </div>
-                <div className={styles.inputs}>
-                    <NumberInput
-                        className={styles.page}
-                        value={startPage}
-                        onChange={this.handleStartPageChange}
-                    />
-                    <span className={styles.separator}>
-                        to
-                    </span>
-                    <NumberInput
-                        className={styles.page}
-                        value={endPage}
-                        onChange={this.handleEndPageChange}
-                    />
-                </div>
+                <NumberInput
+                    className={styles.page}
+                    value={startPage}
+                    onChange={this.handleStartPageChange}
+                    disabled={disabled}
+                    hint="Start Page"
+                />
+                <span className={styles.separator}>
+                    to
+                </span>
+                <NumberInput
+                    className={styles.page}
+                    value={endPage}
+                    onChange={this.handleEndPageChange}
+                    disabled={disabled}
+                    hint="End Page"
+                />
             </div>
         );
     }
+
+    renderHintAndError = () => {
+        const {
+            showHintAndError,
+            hint,
+            error,
+        } = this.props;
+
+        if (!showHintAndError) {
+            return null;
+        }
+
+        if (error) {
+            const classNames = [
+                'error',
+                styles.error,
+            ];
+
+            return (
+                <p className={classNames.join(' ')}>
+                    {error}
+                </p>
+            );
+        }
+
+        if (hint) {
+            const classNames = [
+                'hint',
+                styles.hint,
+            ];
+            return (
+                <p className={classNames.join(' ')}>
+                    {hint}
+                </p>
+            );
+        }
+
+        const classNames = [
+            'empty',
+            styles.empty,
+        ];
+        return (
+            <p className={classNames.join(' ')}>
+                -
+            </p>
+        );
+    }
+
 
     render() {
         const { value, showPageRange } = this.props;
@@ -312,6 +401,7 @@ export default class Baksa extends React.PureComponent {
         const Upload = this.renderUpload;
         const Selection = this.renderSelection;
         const PageRange = this.renderPageRange;
+        const HintAndError = this.renderHintAndError;
 
         return (
             <div className={this.getClassName()}>
@@ -320,6 +410,7 @@ export default class Baksa extends React.PureComponent {
                 {value.type === 'upload' && <Upload />}
                 {value.type && value.type !== 'upload' && <Selection />}
                 {value.type && showPageRange && <PageRange />}
+                <HintAndError />
             </div>
         );
     }
