@@ -245,7 +245,9 @@ export default class UserGroup extends React.PureComponent {
 
     // Delete Click
     handleDeleteUserGroupClick = (userGroup) => {
-        const confirmText = `${this.props.userStrings('confirmTextDeleteUserGroup')} ${userGroup.title} ?`;
+        const confirmText = this.props.userStrings('confirmTextDeleteUserGroup', {
+            title: userGroup.title,
+        });
         this.setState({
             deleteUserGroup: true,
             activeUserGroup: userGroup,

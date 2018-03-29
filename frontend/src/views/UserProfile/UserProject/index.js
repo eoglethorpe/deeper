@@ -255,7 +255,9 @@ export default class UserProject extends React.PureComponent {
 
     // Delete Click
     handleDeleteProjectClick = (project) => {
-        const confirmText = `${this.props.userStrings('confirmTextDeleteProject')} ${project.title} ?`;
+        const confirmText = this.props.userStrings('confirmTextDeleteProject', {
+            title: project.title,
+        });
 
         this.setState({
             deleteProject: true,
