@@ -2,15 +2,16 @@ import React from 'react';
 import styles from './styles.scss';
 
 export default class WidgetError extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        console.warn('Error Occured');
-    }
+    getErrorText = () => (
+        'Widget has failed'
+    )
 
     render() {
+        const errorText = this.getErrorText();
+
         return (
             <div className={styles.messageContainer}>
-                I am the widget error now!
+                { errorText }
             </div>
         );
     }
