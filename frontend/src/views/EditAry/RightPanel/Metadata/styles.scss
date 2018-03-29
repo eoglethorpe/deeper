@@ -1,7 +1,6 @@
 @import '../../../../stylesheets/base';
 
-$height-bottom: 320px;
-$width-documents: 480px;
+$height-bottom: 256px;
 
 .metadata {
     display: flex;
@@ -60,25 +59,15 @@ $width-documents: 480px;
             border-top: $width-separator-thin solid $color-separator;
             border-bottom: $width-separator-thin solid $color-separator;
             padding: $spacing-small $spacing-medium;
-
-            .action-buttons {
-                button {
-                    margin-left: $spacing-small;
-                }
-            }
         }
 
         .documents {
+            display: flex;
             flex-grow: 1;
-            width: $width-documents;
-            overflow-y: auto;
+            padding: 20px;
 
-            .document {
-                @extend %background-alternating-row;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                padding: 0 $spacing-medium;
+            .baksa {
+                width: 192px;
             }
         }
     }

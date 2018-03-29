@@ -1,0 +1,55 @@
+@import '../../stylesheets/base';
+@import '../../vendor/react-store/stylesheets/input-label';
+
+// TODO: Change baksa to better name
+.baksa {
+    display: flex;
+    flex-direction: column;
+
+    .label {
+        @extend %input-label;
+        margin-bottom: $spacing-extra-small;
+    }
+
+    .page-range {
+        display: flex;
+        flex-shrink: 0;
+
+        .page {
+            flex-grow: 1;
+        }
+
+        .separator {
+            flex-shrink: 0;
+            margin: 0 $spacing-large;
+            text-transform: uppercase;
+        }
+    }
+
+    .drop-zone {
+        flex-grow: 1;
+    }
+
+    .selection,
+    .upload {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        a {
+            text-transform: initial;
+            word-break: break-all;
+        }
+    }
+
+    .url-box {
+        display: flex;
+        align-items: flex-end;
+        flex-shrink: 0;
+        margin-top: $spacing-small;
+
+        .action {
+            margin-left: $spacing-small;
+        }
+    }
+}
