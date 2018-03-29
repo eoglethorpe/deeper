@@ -9,7 +9,7 @@ import {
 
 // ACTION-CREATOR
 
-export const setRegionDetailsAction = ({ regionDetails, regionId, projectId }) => ({
+export const setRegionGeneralDetailsAction = ({ regionDetails, regionId, projectId }) => ({
     type: SET_REGION_DETAILS,
     regionId,
     regionDetails,
@@ -17,12 +17,12 @@ export const setRegionDetailsAction = ({ regionDetails, regionId, projectId }) =
 });
 
 // REDUCER
-const setRegionDetails = (state, action) => {
+const setRegionGeneralDetails = (state, action) => {
     const { regionId, regionDetails } = action;
     const settings = {
         regions: { $auto: {
-            generalDetails: { $auto: {
-                [regionId]: { $auto: {
+            [regionId]: { $auto: {
+                generalDetails: { $auto: {
                     $merge: regionDetails,
                 } },
             } },
@@ -35,8 +35,8 @@ const addNewRegion = (state, action) => {
     const { regionDetail } = action;
     const settings = {
         regions: { $auto: {
-            generalDetails: { $auto: {
-                [regionDetail.id]: { $auto: {
+            [regionDetail.id]: { $auto: {
+                generalDetails: { $auto: {
                     $merge: regionDetail,
                 } },
             } },
@@ -49,10 +49,8 @@ const unsetRegion = (state, action) => {
     const { regionId } = action;
     const settings = {
         regions: { $auto: {
-            generalDetails: { $auto: {
-                [regionId]: { $auto: {
-                    $set: undefined,
-                } },
+            [regionId]: { $auto: {
+                $set: undefined,
             } },
         } },
     };
@@ -62,7 +60,7 @@ const unsetRegion = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [SET_REGION_DETAILS]: setRegionDetails,
+    [SET_REGION_DETAILS]: setRegionGeneralDetails,
     [UNSET_REGION]: unsetRegion,
     [ADD_NEW_REGION]: addNewRegion,
 };

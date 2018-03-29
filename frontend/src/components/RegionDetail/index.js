@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Prompt } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
@@ -18,10 +19,11 @@ import {
     createUrlForRegion,
 } from '../../rest';
 import {
-    regionDetailSelector,
-    setRegionDetailsAction,
+    generalDetailsForRegionSelector,
+    setRegionGeneralDetailsAction,
     countriesStringsSelector,
     notificationStringsSelector,
+    commonStringsSelector,
 } from '../../redux';
 import schema from '../../schema';
 
@@ -37,7 +39,7 @@ const propTypes = {
         title: PropTypes.string,
         regionalGroups: PropTypes.shape({}),
     }),
-    setRegionDetails: PropTypes.func.isRequired,
+    setRegionGeneralDetails: PropTypes.func.isRequired,
     dataLoading: PropTypes.bool,
     projectId: PropTypes.number,
     countriesStrings: PropTypes.func.isRequired,
@@ -52,13 +54,14 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    regionDetail: regionDetailSelector(state, props),
+    regionDetail: generalDetailsForRegionSelector(state, props),
     countriesStrings: countriesStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
+    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -68,6 +71,20 @@ export default class RegionDetail extends React.PureComponent {
 
     constructor(props) {
         super(props);
+
+        const { regionDetail } = this.props;
+
+        this.state = {
+            formErrors: {},
+            formFieldErrors: {},
+            formValues: {
+                ...regionDetail.regionalGroups,
+                countryCode: regionDetail.code,
+                countryName: regionDetail.title,
+            },
+            pending: false,
+            pristine: false,
+        };
 
         this.schema = {
             fields: {
@@ -118,7 +135,7 @@ export default class RegionDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'regionPatchResponse');
-                    this.props.setRegionDetails({
+                    this.props.setRegionGeneralDetails({
                         regionDetails: {
                             ...response,
                             pristine: false,
@@ -231,8 +248,6 @@ export default class RegionDetail extends React.PureComponent {
             pristine,
         } = this.state;
 
-        // FIXME: use strings
-        const headingText = 'Region details';
         return (
             <Form
                 className={`${className} ${styles.regionDetailForm}`}
@@ -246,10 +261,14 @@ export default class RegionDetail extends React.PureComponent {
                 value={formValues}
                 disabled={pending}
             >
+                <Prompt
+                    when={pristine}
+                    message={this.props.commonStrings('youHaveUnsavedChanges')}
+                />
                 { (pending || dataLoading) && <LoadingAnimation /> }
                 <header className={styles.header}>
                     <h4 className={styles.heading} >
-                        { headingText }
+                        {this.props.countriesStrings('regionGeneralInfoLabel')}
                     </h4>
                     <div className={styles.actionButtons}>
                         <DangerButton

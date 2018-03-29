@@ -451,62 +451,60 @@ const initialSiloDomainData = {
 
     regions: {
         // index is regionId
-        generalDetails: {
-            1: {
+        1: {
+            generalDetails: {
                 id: 1,
                 code: 'NPL',
                 title: 'Nepal',
             },
-            2: {
-                title: 'Two',
-                code: 'TOW',
-            },
-            3: {
-                title: 'Three',
-                code: 'THR',
-            },
-        },
-        keyFigures: {
-            1: {
+            keyFigures: {
                 hdiIndex: 1,
             },
-            2: {
+            mediaSources: {
+                hdiIndex: 1,
+            },
+            populationData: {
+                hdiIndex: 1,
+            },
+            seasonalCalendar: {
+                hdiIndex: 1,
+            },
+        },
+        2: {
+            generalDetails: {
+                id: 1,
+                code: 'NPL',
+                title: 'Nepal',
+            },
+            keyFigures: {
                 hdiIndex: 2,
             },
-            3: {
+            mediaSources: {
+                hdiIndex: 2,
+            },
+            populationData: {
+                hdiIndex: 2,
+            },
+            seasonalCalendar: {
+                hdiIndex: 2,
+            },
+        },
+        3: {
+            generalDetails: {
+                id: 1,
+                code: 'NPL',
+                title: 'Nepal',
+            },
+            keyFigures: {
                 hdiIndex: 3,
             },
-        },
-        mediaSources: {
-            1: {
-                hdiIndex: 1,
-            },
-            2: {
-                hdiIndex: 2,
-            },
-            3: {
+            mediaSources: {
                 hdiIndex: 3,
             },
-        },
-        populationData: {
-            1: {
-                hdiIndex: 1,
-            },
-            2: {
-                hdiIndex: 2,
-            },
-            3: {
+            populationData: {
                 hdiIndex: 3,
             },
-        },
-        seasonalCalendar: {
-            1: {
-                hdiIndex: 1,
-            },
-            2: {
-                hdiIndex: 2,
-            },
-            3: {
+            seasonalCalendar: {
                 hdiIndex: 3,
             },
         },

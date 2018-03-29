@@ -12,6 +12,7 @@ import DangerButton from '../../../vendor/react-store/components/Action/Button/D
 import List from '../../../vendor/react-store/components/View/List';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
+import getUserConfirmation from '../../../utils/getUserConfirmation';
 
 import {
     countryDetailSelector,
@@ -19,6 +20,7 @@ import {
     activeUserSelector,
     notificationStringsSelector,
     countriesStringsSelector,
+    setRegionGeneralDetailsAction,
 } from '../../../redux';
 import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
@@ -40,6 +42,7 @@ const propTypes = {
         title: PropTypes.string,
     }).isRequired,
     unSetRegion: PropTypes.func.isRequired,
+    countryId: PropTypes.number.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     notificationStrings: PropTypes.func.isRequired,
     countriesStrings: PropTypes.func.isRequired,
@@ -59,6 +62,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     unSetRegion: params => dispatch(unSetRegionAction(params)),
+    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -74,6 +78,7 @@ export default class CountryDetail extends React.PureComponent {
             // Delete Modal state
             deleteCountry: false,
             deletePending: false,
+            dataLoading: true,
         };
 
         this.routes = [
@@ -95,7 +100,7 @@ export default class CountryDetail extends React.PureComponent {
         };
 
         this.views = {
-            general: CountryGeneral,
+            general: this.renderCountryGeneral,
             keyFigures: CountryKeyFigures,
             mediaSources: CountryMediaSources,
             populationData: CountryPopulationData,
@@ -159,7 +164,6 @@ export default class CountryDetail extends React.PureComponent {
 
     renderRoute = (key, routeId) => {
         const Component = this.views[routeId];
-        const { projectId } = this.props;
 
         return (
             <Route
@@ -167,16 +171,15 @@ export default class CountryDetail extends React.PureComponent {
                 path={this.pathNames[routeId]}
                 exact
                 render={() => (
-                    <Component
-                        mainHistory={this.props.mainHistory}
-                        className={styles.content}
-                        projectId={projectId}
-                    />
+                    <Component countryId={this.props.countryId} />
                 )}
             />
         );
     }
 
+    renderCountryGeneral = () => (
+        <CountryGeneral dataLoading={this.state.dataLoading} />
+    )
 
     render() {
         const {
@@ -192,7 +195,7 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         return (
-            <HashRouter>
+            <HashRouter getUserConfirmation={getUserConfirmation} >
                 <div className={`${className} ${styles.countryDetail}`}>
                     { deletePending && <LoadingAnimation /> }
                     <Route

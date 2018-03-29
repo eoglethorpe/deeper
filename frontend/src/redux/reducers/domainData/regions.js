@@ -192,12 +192,19 @@ const addAdminLevelForRegion = (state, action) => {
     return update(state, settings);
 };
 
-const setRegionDetails = (state, action) => {
+const setRegionGeneralDetails = (state, action) => {
     const { regionId, regionDetails, projectId } = action;
     const settings = {
         regions: {
-            [regionId]: { $auto: {
-                $merge: regionDetails,
+            [regionId]: { $set: {
+                id: regionDetails.id,
+                code: regionDetails.code,
+                title: regionDetails.title,
+                versionId: regionDetails.versionId,
+                public: regionDetails.public,
+                createdAt: regionDetails.createdAt,
+                createdBy: regionDetails.createdBy,
+                modifiedAt: regionDetails.modifiedAt,
             } },
         },
     };
@@ -247,6 +254,6 @@ const reducers = {
     [SET_ADMIN_LEVELS_FOR_REGION]: setAdminLevelsForRegion,
     [ADD_ADMIN_LEVEL_FOR_REGION]: addAdminLevelForRegion,
     [UNSET_ADMIN_LEVEL_FOR_REGION]: removeAdminLevelForRegion,
-    [SET_REGION_DETAILS]: setRegionDetails,
+    [SET_REGION_DETAILS]: setRegionGeneralDetails,
 };
 export default reducers;

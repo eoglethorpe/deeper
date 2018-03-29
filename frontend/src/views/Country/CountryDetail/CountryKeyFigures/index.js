@@ -11,7 +11,7 @@ import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonF
 
 import {
     countryDetailSelector,
-    setRegionDetailsAction,
+    setRegionGeneralDetailsAction,
     countriesStringsSelector,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
@@ -28,7 +28,6 @@ const propTypes = {
         title: PropTypes.string.isRequired,
         keyFigures: PropTypes.shape({}),
     }).isRequired,
-    setRegionDetails: PropTypes.func.isRequired,
     countriesStrings: PropTypes.func.isRequired,
 };
 
@@ -42,7 +41,7 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -122,46 +121,6 @@ export default class CountryKeyFigures extends React.PureComponent {
     successCallback = (values) => {
         const data = { keyFigures: values };
         this.startRequestForRegionDetailPatch(this.props.regionDetail.id, data);
-    };
-
-    startRegionKeyFiguresRequest = (regionId) => {
-        if (this.regionKeyFiguresRequest) {
-            this.regionKeyFiguresRequest.stop();
-        }
-        const regionKeyFiguresRequest = new RegionKeyFiguresRequest({
-            setRegionDetails: this.props.setRegionDetails,
-            setState: v => this.setState(v),
-        });
-        this.regionKeyFiguresRequest = regionKeyFiguresRequest.create(regionId);
-        this.regionKeyFiguresRequest.start();
-    }
-
-    startRequestForRegionDetailPatch = (regionId, data) => {
-        if (this.regionDetailPatchRequest) {
-            this.regionDetailPatchRequest.stop();
-        }
-        const regionDetailPatchRequest = new RegionDetailPatchRequest({
-            setRegionDetails: this.props.setRegionDetails,
-            countriesStrings: this.props.countriesStrings,
-            setState: v => this.setState(v),
-        });
-        this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
-        this.regionDetailPatchRequest.start();
-    }
-
-    handleFormCancel = () => {
-        // TODO: use prompt
-        this.resetForm(this.props);
-    }
-
-    resetForm = (props) => {
-        this.setState({
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: props.regionDetail.keyFigures || {},
-            pending: false,
-            pristine: false,
-        });
     };
 
     render() {

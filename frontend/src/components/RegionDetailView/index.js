@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import {
-    regionDetailSelector,
+    generalDetailsForRegionSelector,
     countriesStringsSelector,
 } from '../../redux';
 
@@ -26,7 +26,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    regionDetail: regionDetailSelector(state, props),
+    regionDetail: generalDetailsForRegionSelector(state, props),
     countriesStrings: countriesStringsSelector(state),
 });
 
