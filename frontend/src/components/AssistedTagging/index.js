@@ -12,7 +12,7 @@ import WarningButton from '../../vendor/react-store/components/Action/Button/War
 import SegmentButton from '../../vendor/react-store/components/Action/SegmentButton';
 import FloatingContainer from '../../vendor/react-store/components/View/FloatingContainer';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
-import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 
 import {
     urlForLeadClassify,

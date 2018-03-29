@@ -14,7 +14,7 @@ import Form, {
     requiredCondition,
 } from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../../../vendor/react-store/components/Input/MultiSelectInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';

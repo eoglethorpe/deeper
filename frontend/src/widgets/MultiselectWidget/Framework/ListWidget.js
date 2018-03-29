@@ -13,7 +13,7 @@ import ModalHeader from '../../../vendor/react-store/components/View/Modal/Heade
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
-import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { iconNames } from '../../../constants';

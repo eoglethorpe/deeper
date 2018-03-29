@@ -4,7 +4,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DateInput from '../vendor/react-store/components/Input/DateInput';
 import SelectInput from '../vendor/react-store/components/Input/SelectInput';
-import MultiSelectInput from '../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../vendor/react-store/components/Input/MultiSelectInput';
 import TextInput from '../vendor/react-store/components/Input/TextInput';
 import LoadingAnimation from '../vendor/react-store/components/View/LoadingAnimation';
 import Form, {

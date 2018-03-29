@@ -8,7 +8,7 @@ import Form, {
 } from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../../../vendor/react-store/components/Input/MultiSelectInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import HiddenInput from '../../../../vendor/react-store/components/Input/HiddenInput';
