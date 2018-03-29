@@ -19,7 +19,8 @@ import TableHeader from '../../vendor/react-store/components/View/TableHeader';
 import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
 import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import ActionButtons from './ActionButtons';
 
 import {
@@ -113,7 +114,7 @@ const ACTION = {
     markAsProcessed: 'markAsProcessed',
 };
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Leads extends React.PureComponent {
     static propTypes = propTypes;

@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import { fourHundredFourStringsSelector } from '../../redux';
 import { pathNames } from '../../constants';
 import logo from '../../resources/img/deep-logo.svg';
@@ -22,7 +23,7 @@ const mapStateToProps = state => ({
     fourHundredFourStrings: fourHundredFourStringsSelector(state),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps)
 export default class FourHundredFour extends React.PureComponent {
     static propTypes = propTypes;

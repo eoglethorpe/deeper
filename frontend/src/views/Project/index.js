@@ -16,7 +16,8 @@ import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import UserProjectAdd from '../../components/UserProjectAdd';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     currentUserAdminProjectsSelector,
     setActiveProjectAction,
@@ -60,7 +61,7 @@ const mapDispatchToProps = dispatch => ({
     setActiveProject: params => dispatch(setActiveProjectAction(params)),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ProjectPanel extends React.PureComponent {
     static propTypes = propTypes;

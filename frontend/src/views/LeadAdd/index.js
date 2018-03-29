@@ -19,7 +19,8 @@ import update from '../../vendor/react-store/utils/immutable-update';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import List from '../../vendor/react-store/components/View/List';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     leadFilterOptionsSelector,
 
@@ -128,7 +129,7 @@ const DELETE_MODE = {
     saved: 'saved',
 };
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 @CSSBuilders(styles, { allowMultiple: true })
 export default class LeadAdd extends React.PureComponent {

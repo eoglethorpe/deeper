@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 
 import { currentUserActiveProjectSelector } from '../../redux';
 import logo from '../../resources/img/deep-logo.svg';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 
 import styles from './styles.scss';
 
@@ -18,7 +19,7 @@ const mapStateToProps = (state, props) => ({
     currentUserActiveProject: currentUserActiveProjectSelector(state, props),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, undefined)
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;

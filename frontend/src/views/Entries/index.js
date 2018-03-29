@@ -11,7 +11,8 @@ import ListView from '../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Pager from '../../vendor/react-store/components/View/Pager';
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 
 import {
     iconNames,
@@ -105,7 +106,7 @@ const defaultProps = {
 const MAX_ENTRIES_PER_REQUEST = 5;
 const emptyList = [];
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Entries extends React.PureComponent {
     static leadKeyExtractor = d => d.id;

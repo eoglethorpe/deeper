@@ -3,7 +3,8 @@ import React from 'react';
 
 import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import styles from './styles.scss';
 
@@ -20,7 +21,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
-@BoundError
+@BoundError(WidgetError)
 export default class NumberMatrixList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;

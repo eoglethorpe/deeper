@@ -19,7 +19,8 @@ import ListView from '../../../vendor/react-store/components/View/List/ListView'
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
 
 import { iconNames } from '../../../constants';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 import { afStringsSelector } from '../../../redux';
 
 import MatrixRow from './MatrixRow';
@@ -45,7 +46,7 @@ const mapStateToProps = state => ({
 
 const emptyList = [];
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;

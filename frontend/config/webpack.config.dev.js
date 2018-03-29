@@ -167,7 +167,7 @@ module.exports = {
               {
                 loader: require.resolve('style-loader'),
                 options: {
-                  sourceMap: true,
+                  sourceMap: false,
                 }
               },
               {
@@ -178,13 +178,13 @@ module.exports = {
                   camelCase: true,
                   localIdentName: '[local]-[hash:base64:5]',
                   // localIdentName: '[path]___[name]__[local]___[hash:base64:5]',
-                  sourceMap: true,
+                  sourceMap: false,
                 },
               },
               {
                 loader: require.resolve('sass-loader'),
                 options: {
-                  sourceMap: true,
+                  sourceMap: false,
                 }
               },
               {

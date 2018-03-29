@@ -8,7 +8,8 @@ import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 
 import MembersTable from './MembersTable';
 import ProjectsTable from './ProjectsTable';
@@ -62,7 +63,7 @@ const mapDispatchToProps = dispatch => ({
 
 const emptyList = [];
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class UserGroup extends React.PureComponent {
     static propTypes = propTypes;

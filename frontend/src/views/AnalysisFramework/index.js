@@ -10,7 +10,8 @@ import {
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
-import BoundError from '../../components/BoundError';
+import BoundError from '../../vendor/react-store/components/General/BoundError';
+import AppError from '../../components/AppError';
 import {
     createParamsForUser,
     createParamsForAnalysisFrameworkEdit,
@@ -52,7 +53,7 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAfViewAnalysisFrameworkAction(params)),
 });
 
-@BoundError
+@BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
 export default class AnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;

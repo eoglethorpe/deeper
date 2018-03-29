@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import Numeral from '../../../vendor/react-store/components/View/Numeral';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 
 import styles from './styles.scss';
 
@@ -14,7 +15,7 @@ const defaultProps = {
     attribute: undefined,
 };
 
-@BoundError
+@BoundError(WidgetError)
 export default class NumberViewList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

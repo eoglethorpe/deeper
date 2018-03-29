@@ -24,7 +24,8 @@ import {
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 import { afStringsSelector } from '../../../redux';
-import BoundError from '../../../components/BoundError';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import WidgetError from '../../../components/WidgetError';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -49,7 +50,7 @@ const mapStateToProps = state => ({
 
 const emptyList = [];
 
-@BoundError
+@BoundError(WidgetError)
 @connect(mapStateToProps)
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.id;
