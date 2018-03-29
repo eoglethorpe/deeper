@@ -166,8 +166,7 @@ export default class PasswordReset extends React.PureComponent {
                         resetSuccess ? (
                             <div className={styles.info}>
                                 <p>
-                                    {this.props.loginStrings('checkInboxText')}
-                                    {formValues.email || this.props.loginStrings('emailPlaceholder')}
+                                    {this.props.loginStrings('checkInboxText', { email: formValues.email })}
                                 </p>
                             </div>
                         ) : (

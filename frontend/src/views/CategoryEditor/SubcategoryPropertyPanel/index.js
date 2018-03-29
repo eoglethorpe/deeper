@@ -142,8 +142,9 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
 
     handleSubcategoryRemove = () => {
         const { subcategory } = this.props;
-        // const activeSubCategory = subcategory.find(cat => cat.id === activeSubCategoryId);
-        const confirmText = `${this.props.ceStrings('confirmTextDeleteSubCategory')} ${subcategory.title} ?`;
+        const confirmText = this.props.ceStrings('confirmTextDeleteSubCategory', {
+            subcategory: subcategory.title,
+        });
 
         this.setState({
             deleteSubCategory: true,

@@ -330,7 +330,9 @@ export default class CategoryEditor extends React.PureComponent {
     handleRemoveCategory = () => {
         const { activeCategoryId, categories } = this.props;
         const activeCategory = categories.find(cat => cat.id === activeCategoryId);
-        const confirmText = `${this.props.ceStrings('confirmTextDeleteCategory')} ${activeCategory.title} ?`;
+        const confirmText = this.props.ceStrings('confirmTextDeleteCategory', {
+            category: activeCategory.title,
+        });
 
         this.setState({
             deleteCategory: true,

@@ -77,40 +77,42 @@ export default class RegionAdminLevel extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { countriesStrings } = props;
+
         this.adminLevelHeaders = [
             {
                 key: 'level',
-                label: this.props.countriesStrings('levelLabel'),
+                label: countriesStrings('levelLabel'),
                 order: 1,
             },
             {
                 key: 'title',
-                label: this.props.countriesStrings('adminLevelNameText'),
+                label: countriesStrings('adminLevelNameText'),
                 order: 2,
             },
             {
                 key: 'nameProp',
-                label: this.props.countriesStrings('namePropertyLabel'),
+                label: countriesStrings('namePropertyLabel'),
                 order: 3,
             },
             {
                 key: 'codeProp',
-                label: this.props.countriesStrings('pcodePropertyLabel'),
+                label: countriesStrings('pcodePropertyLabel'),
                 order: 4,
             },
             {
                 key: 'parentNameProp',
-                label: this.props.countriesStrings('parentNamePropPlaceholder'),
+                label: countriesStrings('parentNamePropPlaceholder'),
                 order: 5,
             },
             {
                 key: 'parentCodeProp',
-                label: this.props.countriesStrings('parentCodePropLabel'),
+                label: countriesStrings('parentCodePropLabel'),
                 order: 6,
             },
             {
                 key: 'actions',
-                label: this.props.countriesStrings('actionsLabel'),
+                label: countriesStrings('actionsLabel'),
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
@@ -270,22 +272,31 @@ export default class RegionAdminLevel extends React.PureComponent {
     keyExtractor = rowData => rowData.id
 
     render() {
-        const { className, adminLevelList, countryId } = this.props;
-        const { activeAdminLevelDelete, showDeleteModal, deletePending } = this.state;
+        const {
+            className,
+            adminLevelList,
+            countryId,
+            countriesStrings,
+        } = this.props;
+        const {
+            activeAdminLevelDelete: { title },
+            showDeleteModal,
+            deletePending,
+        } = this.state;
 
         return (
             <div className={`${className} ${styles.adminLevels}`}>
                 { deletePending && <LoadingAnimation /> }
                 <div className={styles.header}>
                     <h5>
-                        {this.props.countriesStrings('adminLevelsHeader')}
+                        {countriesStrings('adminLevelsHeader')}
                     </h5>
                     <PrimaryButton
                         iconName={iconNames.add}
                         disabled={deletePending}
                         onClick={this.addAdminLevel}
                     >
-                        {this.props.countriesStrings('addAdminLevelButtonLabel')}
+                        {countriesStrings('addAdminLevelButtonLabel')}
                     </PrimaryButton>
                     { this.state.addAdminLevel &&
                         <Modal
@@ -293,7 +304,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                             onClose={this.handleModalClose}
                         >
                             <ModalHeader
-                                title={this.props.countriesStrings('addAdminLevelButtonLabel')}
+                                title={countriesStrings('addAdminLevelButtonLabel')}
                                 rightComponent={
                                     <PrimaryButton
                                         onClick={this.handleModalClose}
@@ -325,7 +336,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                             onClose={this.handleModalClose}
                         >
                             <ModalHeader
-                                title={this.props.countriesStrings('editAdminLevelModalTitle')}
+                                title={countriesStrings('editAdminLevelModalTitle')}
                                 rightComponent={
                                     <PrimaryButton
                                         onClick={this.handleModalClose}
@@ -351,8 +362,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                     onClose={this.handleDeleteActiveAdminLevelConfirmClose}
                 >
                     <p>
-                        {`${this.props.countriesStrings('removeAdminLevelConfirm')}
-                        ${activeAdminLevelDelete.title}?`}
+                        {countriesStrings('removeAdminLevelConfirm', { adminLevel: title })}
                     </p>
                 </Confirm>
             </div>

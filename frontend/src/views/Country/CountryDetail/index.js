@@ -150,6 +150,7 @@ export default class CountryDetail extends React.PureComponent {
             className,
             countryDetail,
             activeUser,
+            countriesStrings,
         } = this.props;
 
         return (
@@ -162,7 +163,7 @@ export default class CountryDetail extends React.PureComponent {
                     {
                         activeUser.isSuperuser &&
                             <DangerButton onClick={this.onClickDeleteButton}>
-                                {this.props.countriesStrings('deleteCountryButtonLabel')}
+                                {countriesStrings('deleteCountryButtonLabel')}
                             </DangerButton>
                     }
                     <Confirm
@@ -170,8 +171,9 @@ export default class CountryDetail extends React.PureComponent {
                         closeOnEscape
                         onClose={this.deleteActiveCountry}
                     >
-                        <p>{`${this.props.countriesStrings('deleteCountryConfirm')}
-                            ${countryDetail.title}?`}</p>
+                        <p>
+                            {countriesStrings('deleteCountryConfirm', { title: countryDetail.title })}
+                        </p>
                     </Confirm>
                 </header>
                 { !activeUser.isSuperuser ? (
@@ -195,31 +197,31 @@ export default class CountryDetail extends React.PureComponent {
                                 className={styles.tabHeader}
                                 to="general"
                             >
-                                {this.props.countriesStrings('generalTabLabel')}
+                                {countriesStrings('generalTabLabel')}
                             </TabLink>
                             <TabLink
                                 className={styles.tabHeader}
                                 to="key-figures"
                             >
-                                {this.props.countriesStrings('keyFiguesTabLabel')}
+                                {countriesStrings('keyFiguesTabLabel')}
                             </TabLink>
                             <TabLink
                                 className={styles.tabHeader}
                                 to="population-data"
                             >
-                                {this.props.countriesStrings('populationTabLabel')}
+                                {countriesStrings('populationTabLabel')}
                             </TabLink>
                             <TabLink
                                 className={styles.tabHeader}
                                 to="seasonal-calendar"
                             >
-                                {this.props.countriesStrings('seasonalTabLabel')}
+                                {countriesStrings('seasonalTabLabel')}
                             </TabLink>
                             <TabLink
                                 className={styles.tabHeader}
                                 to="media-sources"
                             >
-                                {this.props.countriesStrings('mediaTabLabel')}
+                                {countriesStrings('mediaTabLabel')}
                             </TabLink>
                             {/* Essential for border bottom, for more info contact AdityaKhatri */}
                             <div className={styles.emptyTab} />

@@ -245,7 +245,6 @@ export default class RegionDetail extends React.PureComponent {
 
         // FIXME: use strings
         const headingText = 'Region details';
-
         return (
             <Form
                 className={`${className} ${styles.regionDetailForm}`}
