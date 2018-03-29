@@ -9,24 +9,32 @@ import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import NumberInput from '../../vendor/react-store/components/Input/NumberInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
+import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import { UploadBuilder } from '../../vendor/react-store/utils/upload';
+
+import {
+    urlForUpload,
+    createParamsForFileUpload,
+} from '../../rest';
 
 
 const propTypes = {
     className: PropTypes.string,
     label: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func,
     value: PropTypes.shape({
         type: PropTypes.string,
     }),
     showLabel: PropTypes.bool,
     showPageRange: PropTypes.bool,
-    acceptUrl: PropTypes.string,
+    acceptUrl: PropTypes.bool,
     urlLabel: PropTypes.string,
 };
 
 const defaultProps = {
     className: '',
     label: '',
+    onChange: undefined,
     showLabel: true,
     value: {},
     showPageRange: false,
@@ -46,6 +54,12 @@ export default class Baksa extends React.PureComponent {
         };
     }
 
+    componentWillUnmount() {
+        if (this.uploader) {
+            this.uploader.stop();
+        }
+    }
+
     getClassName() {
         const { className } = this.props;
         const classNames = [
@@ -59,7 +73,9 @@ export default class Baksa extends React.PureComponent {
 
     resetValue = () => {
         const { onChange, value: { startPage, endPage } } = this.props;
-        onChange({ startPage, endPage });
+        if (onChange) {
+            onChange({ startPage, endPage });
+        }
     }
 
     handleUrlChange = (url) => {
@@ -70,59 +86,80 @@ export default class Baksa extends React.PureComponent {
         const { onChange, value: { startPage, endPage } } = this.props;
         const { url } = this.state;
 
-        onChange({
-            type: 'url',
-            name: url,
-            url,
-            startPage,
-            endPage,
-        });
-    }
+        // TODO: Check if url is valid
 
-    handleUpload = () => {
-        const { onChange, value } = this.props;
-        onChange({
-            ...value,
-            pending: true,
-        });
-
-        setTimeout(() => {
-            const { startPage, endPage, file } = value;
+        if (onChange) {
             onChange({
-                type: 'file',
-                name: file.name,
-                url: 'https://google.com',
+                type: 'url',
+                name: url,
+                url,
                 startPage,
                 endPage,
-                pending: false,
             });
-        }, 3000);
+        }
     }
 
     handleFileChange = (files) => {
         const { onChange, value: { startPage, endPage } } = this.props;
+        const file = files[0];
+
+        if (!onChange) {
+            return;
+        }
+
         onChange({
             type: 'upload',
-            file: files[0],
+            file,
             startPage,
             endPage,
+            pending: true,
         });
+
+        if (this.uploader) {
+            this.uploader.stop();
+        }
+
+        this.uploader = new UploadBuilder()
+            .file(file)
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload())
+            .success((response) => {
+                onChange({
+                    type: 'file',
+                    id: response.id,
+                    name: file.name,
+                    url: response.file,
+                    startPage,
+                    endPage,
+                    pending: false,
+                });
+            })
+            .progress((progress) => {
+                console.warn(progress);
+            })
+            .build();
+
+        this.uploader.start();
     }
 
     handleStartPageChange = (startPage) => {
         const { onChange, value } = this.props;
-        onChange({
-            ...value,
-            startPage,
-        });
+        if (onChange) {
+            onChange({
+                ...value,
+                startPage,
+            });
+        }
     }
 
     handleEndPageChange = (endPage) => {
         const { value, onChange } = this.props;
-        onChange({
-            ...value,
-            endPage,
-        });
+        if (onChange) {
+            onChange({
+                ...value,
+                endPage,
+            });
+        }
     }
 
     renderLabel = () => {
@@ -172,8 +209,12 @@ export default class Baksa extends React.PureComponent {
 
         if (acceptUrl) {
             elements.push(
-                <div className={styles.urlBox}>
+                <div
+                    className={styles.urlBox}
+                    key="url-box"
+                >
                     <TextInput
+                        className={styles.urlInput}
                         label={urlLabel}
                         value={this.state.url}
                         onChange={this.handleUrlChange}
@@ -200,22 +241,17 @@ export default class Baksa extends React.PureComponent {
                 <div>
                     { file.name }
                 </div>
+                {pending && <LoadingAnimation />}
                 <div className={styles.action}>
-                    {pending && (
-                        <span className={iconNames.loading} />
-                    )}
                     {!pending && (
-                        <PrimaryButton
-                            iconName={iconNames.upload}
-                            onClick={this.handleUpload}
+                        <DangerButton
+                            iconName={iconNames.close}
+                            onClick={this.resetValue}
                             transparent
-                        />
+                        >
+                            Clear
+                        </DangerButton>
                     )}
-                    <DangerButton
-                        iconName={iconNames.close}
-                        onClick={this.resetValue}
-                        transparent
-                    />
                 </div>
             </div>
         );
@@ -234,7 +270,9 @@ export default class Baksa extends React.PureComponent {
                     iconName={iconNames.close}
                     onClick={this.resetValue}
                     transparent
-                />
+                >
+                    Clear
+                </DangerButton>
             </div>
         );
     }
@@ -244,19 +282,24 @@ export default class Baksa extends React.PureComponent {
 
         return (
             <div className={styles.pageRange}>
-                <NumberInput
-                    className={styles.page}
-                    value={startPage}
-                    onChange={this.handleStartPageChange}
-                />
-                <span className={styles.separator}>
-                    to
-                </span>
-                <NumberInput
-                    className={styles.page}
-                    value={endPage}
-                    onChange={this.handleEndPageChange}
-                />
+                <div className={styles.label}>
+                    Choose page range
+                </div>
+                <div className={styles.inputs}>
+                    <NumberInput
+                        className={styles.page}
+                        value={startPage}
+                        onChange={this.handleStartPageChange}
+                    />
+                    <span className={styles.separator}>
+                        to
+                    </span>
+                    <NumberInput
+                        className={styles.page}
+                        value={endPage}
+                        onChange={this.handleEndPageChange}
+                    />
+                </div>
             </div>
         );
     }
@@ -273,10 +316,10 @@ export default class Baksa extends React.PureComponent {
         return (
             <div className={this.getClassName()}>
                 <Label />
-                {value.type && showPageRange && <PageRange />}
                 {!value.type && <DropFileInput />}
                 {value.type === 'upload' && <Upload />}
                 {value.type && value.type !== 'upload' && <Selection />}
+                {value.type && showPageRange && <PageRange />}
             </div>
         );
     }

@@ -340,15 +340,6 @@ export default class Methodology extends React.PureComponent {
                     <GeoSelection
                         className={styles.locationSelection}
                     />
-                    <div className={styles.collectionTechniques}>
-                        Data collection techniques
-                    </div>
-                    <div className={styles.sampling}>
-                        Sampling (Site and respondent)
-                    </div>
-                    <div className={styles.limitations}>
-                        Limitations
-                    </div>
                 </div>
             </Form>
         );

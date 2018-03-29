@@ -77,6 +77,10 @@ export default class Metadata extends React.PureComponent {
             });
         });
 
+        schema.fields.questionnaire = [];
+        schema.fields.executiveSummary = [];
+        schema.fields.assessmentData = [];
+
         return schema;
     }
 
@@ -130,7 +134,6 @@ export default class Metadata extends React.PureComponent {
             formErrors: {},
             formFieldErrors: {},
             schema,
-            baksaValue: undefined,
         };
     }
 
@@ -192,10 +195,6 @@ export default class Metadata extends React.PureComponent {
         this.aryPutRequest.start();
     };
 
-    handleBaksaChange = (baksaValue) => {
-        this.setState({ baksaValue });
-    }
-
     renderMetadata = (data) => {
         const {
             fields,
@@ -219,32 +218,6 @@ export default class Metadata extends React.PureComponent {
         );
     }
 
-    renderAdditionalDocumentsSection = () => {
-        // FIXME: use strings
-        const headingText = 'Additional documents';
-        const { baksaValue } = this.state;
-
-        return (
-            <div className={styles.bottom}>
-                <header className={styles.header}>
-                    <h3 className={styles.heading}>
-                        { headingText }
-                    </h3>
-                </header>
-                <div className={styles.documents}>
-                    <Baksa
-                        label="Questionnaire"
-                        className={styles.baksa}
-                        onChange={this.handleBaksaChange}
-                        value={baksaValue}
-                        showPageRange
-                        acceptUrl
-                    />
-                </div>
-            </div>
-        );
-    }
-
     render() {
         const { aryTemplateMetadata: metadataGroups } = this.props;
 
@@ -260,8 +233,7 @@ export default class Metadata extends React.PureComponent {
 
         // FIXME: use strings
         const saveButtonLabel = 'Save';
-
-        const AdditionalDocumentsSection = this.renderAdditionalDocumentsSection;
+        const bottomHeader = 'Additional Documents';
 
         return (
             <Form
@@ -292,7 +264,33 @@ export default class Metadata extends React.PureComponent {
                 <div className={styles.top}>
                     {metadataList.map(this.renderMetadata)}
                 </div>
-                <AdditionalDocumentsSection />
+                <div className={styles.bottom}>
+                    <header className={styles.header}>
+                        <h3 className={styles.heading}>
+                            { bottomHeader }
+                        </h3>
+                    </header>
+                    <div className={styles.documents}>
+                        <Baksa
+                            label="Executive Summary"
+                            className={styles.baksa}
+                            formname="executiveSummary"
+                            showPageRange
+                        />
+                        <Baksa
+                            label="Assessment Database"
+                            className={styles.baksa}
+                            formname="assessmentData"
+                            acceptUrl
+                        />
+                        <Baksa
+                            label="Questionnaire"
+                            className={styles.baksa}
+                            formname="questionnaire"
+                            showPageRange
+                        />
+                    </div>
+                </div>
             </Form>
         );
     }

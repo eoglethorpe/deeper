@@ -12,17 +12,19 @@
     }
 
     .page-range {
-        display: flex;
         flex-shrink: 0;
 
-        .page {
-            flex-grow: 1;
-        }
+        .inputs {
+            display: flex;
 
-        .separator {
-            flex-shrink: 0;
-            margin: 0 $spacing-large;
-            text-transform: uppercase;
+            .page {
+                flex-grow: 1;
+            }
+
+            .separator {
+                flex-shrink: 0;
+                margin: 0 $spacing-large;
+            }
         }
     }
 
@@ -33,12 +35,19 @@
     .selection,
     .upload {
         display: flex;
+        position: relative;
         align-items: center;
         justify-content: space-between;
+        margin: $spacing-medium 0;
 
         a {
             text-transform: initial;
             word-break: break-all;
+        }
+
+        .action {
+            display: flex;
+            margin-left: $spacing-small;
         }
     }
 
@@ -48,7 +57,12 @@
         flex-shrink: 0;
         margin-top: $spacing-small;
 
+        .url-input {
+            flex-grow: 1;
+        }
+
         .action {
+            flex-shrink: 0;
             margin-left: $spacing-small;
         }
     }
