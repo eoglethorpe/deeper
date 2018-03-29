@@ -297,9 +297,9 @@ export default class Arys extends React.PureComponent {
             activePage,
         } = this.props;
 
-        // FIXME: use strings
         return (
             <footer className={styles.footer}>
+                <div />
                 <Pager
                     activePage={activePage}
                     className={styles.pager}

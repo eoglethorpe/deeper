@@ -82,16 +82,5 @@
             display: flex;
             justify-content: center;
         }
-
-        .link-container {
-            display: flex;
-            height: 32px;
-
-            .link {
-                @extend %button-like-link;
-                background-color: $color-primary;
-                color: $color-foreground-alt;
-            }
-        }
     }
 }
