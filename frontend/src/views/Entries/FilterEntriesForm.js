@@ -7,7 +7,7 @@ import { isObjectEmpty } from '../../vendor/react-store/utils/common';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import RangeFilter from '../../vendor/react-store/components/Input/RangeFilter';
-import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 import Button from '../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 

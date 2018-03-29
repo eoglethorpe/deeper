@@ -9,7 +9,7 @@ import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../vendor/react-store/components/View/Modal/Footer';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
-import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 import Button from '../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';

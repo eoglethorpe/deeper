@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
-import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
 
 import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';

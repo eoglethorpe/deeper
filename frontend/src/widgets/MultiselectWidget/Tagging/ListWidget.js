@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import MultiSelectInput from '../../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
 import BoundError from '../../../vendor/react-store/components/General/BoundError';

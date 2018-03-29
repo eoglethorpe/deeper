@@ -8,7 +8,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
-import MultiSelectInput from '../../vendor/react-store/components/Input/SelectInput/MultiSelectInput';
+import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
