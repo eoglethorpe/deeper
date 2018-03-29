@@ -127,7 +127,7 @@ export default class ExternalGallery extends React.PureComponent {
                         httpsUrl,
                     });
                 } catch (err) {
-                    console.error('Error Occured', err);
+                    console.warn('External Gallery Error', err);
                     this.setState({ ...this.initialState });
                 }
             })
