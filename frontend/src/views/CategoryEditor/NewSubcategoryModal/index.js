@@ -8,6 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -31,24 +32,42 @@ export default class NewSubcategoryModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
 
+    static schema = {
+        fields: {
+            titleValue: [requiredCondition],
+            descriptionValue: [],
+        },
+    };
+
     constructor(props) {
         super(props);
+
         this.state = {
-            showModal: false,
-            titleValue: '',
-            descriptionValue: '',
+            schema: NewSubcategoryModal.schema,
+            formErrors: {},
+            formFieldErrors: {},
+            formValues: {},
+            pristine: false,
         };
     }
 
-    handleTitleValueChange = (value) => {
+    changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
-            titleValue: value,
+            formValues: values,
+            formErrors,
+            formFieldErrors: fieldErrors,
+            pristine: true,
         });
-    }
+    };
 
-    handleDescriptionValueChange = (value) => {
-        this.setState({
-            descriptionValue: value,
+    failureCallback = (formFieldErrors, formErrors) => {
+        this.setState({ formFieldErrors, formErrors });
+    };
+
+    successCallback = ({ titleValue, descriptionValue }) => {
+        this.props.onSubmit({
+            title: titleValue,
+            description: descriptionValue,
         });
     }
 
@@ -56,46 +75,55 @@ export default class NewSubcategoryModal extends React.PureComponent {
         this.props.onClose();
     }
 
-    handleModalOk = () => {
-        const { titleValue, descriptionValue } = this.state;
-        this.props.onSubmit({
-            title: titleValue,
-            description: descriptionValue,
-        });
-    }
-
     render() {
-        return ([
-            <ModalHeader
-                key="header"
-                title={this.props.ceStrings('addNewSubCategoryModalTitle')}
-            />,
-            <ModalBody key="body">
-                <TextInput
-                    label={this.props.ceStrings('addSubCategoryTitleLabel')}
-                    placeholder={this.props.ceStrings('addSubCategoryTitlePlaceholder')}
-                    onChange={this.handleTitleValueChange}
-                    value={this.state.titleValue}
-                    autoFocus
+        const {
+            formErrors,
+            formFieldErrors,
+            formValues,
+            schema,
+            pristine,
+        } = this.state;
+
+        return (
+            <Form
+                changeCallback={this.changeCallback}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                schema={schema}
+                value={formValues}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
+            >
+                <ModalHeader
+                    key="header"
+                    title={this.props.ceStrings('addNewSubCategoryModalTitle')}
                 />
-                <TextInput
-                    label={this.props.ceStrings('addSubCategoryDescriptionLabel')}
-                    placeholder={this.props.ceStrings('addSubCategoryDescriptionPlaceholder')}
-                    onChange={this.handleDescriptionValueChange}
-                    value={this.state.descriptionValue}
-                />
-            </ModalBody>,
-            <ModalFooter key="footer">
-                <Button onClick={this.handleModalClose}>
-                    {this.props.ceStrings('modalCancel')}
-                </Button>
-                <PrimaryButton
-                    onClick={this.handleModalOk}
-                    className={styles.okButton}
-                >
-                    {this.props.ceStrings('modalOk')}
-                </PrimaryButton>
-            </ModalFooter>,
-        ]);
+                <ModalBody key="body">
+                    <TextInput
+                        formname="titleValue"
+                        label={this.props.ceStrings('addSubCategoryTitleLabel')}
+                        placeholder={this.props.ceStrings('addSubCategoryTitlePlaceholder')}
+                        autoFocus
+                    />
+                    <TextInput
+                        formname="descriptionValue"
+                        label={this.props.ceStrings('addSubCategoryDescriptionLabel')}
+                        placeholder={this.props.ceStrings('addSubCategoryDescriptionPlaceholder')}
+                    />
+                </ModalBody>
+                <ModalFooter key="footer">
+                    <Button onClick={this.handleModalClose}>
+                        {this.props.ceStrings('modalCancel')}
+                    </Button>
+                    <PrimaryButton
+                        className={styles.okButton}
+                        disabled={!pristine}
+                        type="submit"
+                    >
+                        {this.props.ceStrings('modalOk')}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Form>
+        );
     }
 }

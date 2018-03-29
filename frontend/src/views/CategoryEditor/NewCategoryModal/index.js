@@ -8,6 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -35,60 +36,95 @@ export default class NewCategoryModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
 
+    static schema = {
+        fields: {
+            titleValue: [requiredCondition],
+        },
+    };
+
     constructor(props) {
         super(props);
 
         const { title: titleValue = '' } = props.initialValue || {};
         this.state = {
-            showModal: false,
-            titleValue,
+            schema: NewCategoryModal.schema,
+            formErrors: {},
+            formFieldErrors: {},
+            formValues: { titleValue },
+            pristine: false,
         };
     }
 
-    handleTitleValueChange = (value) => {
+    changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
-            titleValue: value,
+            formValues: values,
+            formErrors,
+            formFieldErrors: fieldErrors,
+            pristine: true,
         });
+    };
+
+    failureCallback = (formFieldErrors, formErrors) => {
+        this.setState({ formFieldErrors, formErrors });
+    };
+
+    successCallback = ({ titleValue }) => {
+        this.props.onSubmit(titleValue);
     }
 
     handleModalClose = () => {
         this.props.onClose();
     }
 
-    handleModalOk = () => {
-        this.props.onSubmit(this.state.titleValue);
-    }
-
     render() {
         const { editMode } = this.props;
+        const {
+            formErrors,
+            formFieldErrors,
+            formValues,
+            schema,
+            pristine,
+        } = this.state;
+
         const title = editMode
             ? this.props.ceStrings('editCategoryTooltip')
             : this.props.ceStrings('addCategoryTooltip');
-        return ([
-            <ModalHeader
-                key="header"
-                title={title}
-            />,
-            <ModalBody key="body">
-                <TextInput
-                    autoFocus
-                    label={this.props.ceStrings('addCategoryTitleLabel')}
-                    placeholder={this.props.ceStrings('addCategoryTitlePlaceholder')}
-                    onChange={this.handleTitleValueChange}
-                    value={this.state.titleValue}
+
+        return (
+            <Form
+                changeCallback={this.changeCallback}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                schema={schema}
+                value={formValues}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
+            >
+                <ModalHeader
+                    key="header"
+                    title={title}
                 />
-            </ModalBody>,
-            <ModalFooter key="footer">
-                <Button onClick={this.handleModalClose} >
-                    {this.props.ceStrings('modalCancel')}
-                </Button>
-                <PrimaryButton
-                    onClick={this.handleModalOk}
-                    className={styles.okButton}
-                >
-                    {this.props.ceStrings('modalOk')}
-                </PrimaryButton>
-            </ModalFooter>,
-        ]);
+                <ModalBody key="body">
+                    <TextInput
+                        formname="titleValue"
+                        label={this.props.ceStrings('addCategoryTitleLabel')}
+                        placeholder={this.props.ceStrings('addCategoryTitlePlaceholder')}
+                        autoFocus
+                    />
+                </ModalBody>
+                <ModalFooter key="footer">
+                    <Button onClick={this.handleModalClose} >
+                        {this.props.ceStrings('modalCancel')}
+                    </Button>
+                    <PrimaryButton
+                        className={styles.okButton}
+                        disabled={!pristine}
+                        type="submit"
+                    >
+                        {this.props.ceStrings('modalOk')}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Form>
+        );
     }
 }

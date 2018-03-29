@@ -8,6 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -19,8 +20,7 @@ const propTypes = {
     ceStrings: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-};
+const defaultProps = { };
 
 const mapStateToProps = state => ({
     ceStrings: ceStringsSelector(state),
@@ -31,54 +31,88 @@ export default class NewManualNgramModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
 
+    static schema = {
+        fields: {
+            wordValue: [requiredCondition],
+        },
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            showModal: false,
-            titleValue: '',
+            schema: NewManualNgramModal.schema,
+            formErrors: {},
+            formFieldErrors: {},
+            formValues: {},
+            pristine: false,
         };
     }
 
-    handleWordValueChange = (value) => {
+    changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
-            wordValue: value,
+            formValues: values,
+            formErrors,
+            formFieldErrors: fieldErrors,
+            pristine: true,
         });
+    };
+
+    failureCallback = (formFieldErrors, formErrors) => {
+        this.setState({ formFieldErrors, formErrors });
+    };
+
+    successCallback = ({ wordValue }) => {
+        this.props.onSubmit(wordValue);
     }
 
     handleModalClose = () => {
         this.props.onClose();
     }
 
-    handleModalOk = () => {
-        this.props.onSubmit(this.state.wordValue);
-    }
-
     render() {
-        return ([
-            <ModalHeader
-                key="header"
-                title={this.props.ceStrings('addNewWordModalTitle')}
-            />,
-            <ModalBody key="body">
-                <TextInput
-                    label={this.props.ceStrings('addNewWordLabel')}
-                    placeholder={this.props.ceStrings('addNewWordPlaceholder')}
-                    onChange={this.handleWordValueChange}
-                    value={this.state.wordValue}
-                    autoFocus
+        const {
+            formErrors,
+            formFieldErrors,
+            formValues,
+            schema,
+            pristine,
+        } = this.state;
+
+        return (
+            <Form
+                changeCallback={this.changeCallback}
+                failureCallback={this.failureCallback}
+                successCallback={this.successCallback}
+                schema={schema}
+                value={formValues}
+                formErrors={formErrors}
+                fieldErrors={formFieldErrors}
+            >
+                <ModalHeader
+                    key="header"
+                    title={this.props.ceStrings('addNewWordModalTitle')}
                 />
-            </ModalBody>,
-            <ModalFooter key="footer">
-                <Button onClick={this.handleModalClose}>
-                    {this.props.ceStrings('modalCancel')}
-                </Button>
-                <PrimaryButton
-                    onClick={this.handleModalOk}
-                    className={styles.okButton}
-                >
-                    {this.props.ceStrings('modalOk')}
-                </PrimaryButton>
-            </ModalFooter>,
-        ]);
+                <ModalBody key="body">
+                    <TextInput
+                        formname="wordValue"
+                        label={this.props.ceStrings('addNewWordLabel')}
+                        placeholder={this.props.ceStrings('addNewWordPlaceholder')}
+                        autoFocus
+                    />
+                </ModalBody>
+                <ModalFooter key="footer">
+                    <Button onClick={this.handleModalClose}>
+                        {this.props.ceStrings('modalCancel')}
+                    </Button>
+                    <PrimaryButton
+                        className={styles.okButton}
+                        disabled={!pristine}
+                        type="submit"
+                    >
+                        {this.props.ceStrings('modalOk')}
+                    </PrimaryButton>
+                </ModalFooter>
+            </Form>
+        );
     }
 }
