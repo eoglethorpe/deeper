@@ -6,23 +6,21 @@ import {
 import schema from '../../../schema';
 
 export default class AfRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             api,
             getAf,
             removeAllEntries,
             setAnalysisFramework,
             startEntriesRequest,
+            setState,
         } = params;
         this.api = api;
         this.getAf = getAf;
         this.removeAllEntries = removeAllEntries;
         this.setAnalysisFramework = setAnalysisFramework;
         this.startEntriesRequest = startEntriesRequest;
+        this.setState = setState;
     }
 
     create = (analysisFrameworkId, leadId) => {

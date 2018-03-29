@@ -8,13 +8,13 @@ import {
 } from '../../../rest';
 
 export default class LeadKeywordCorrelationRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
-        const { setLeadVisualization } = params;
+    constructor(params) {
+        const {
+            setLeadVisualization,
+            setState,
+        } = params;
         this.setLeadVisualization = setLeadVisualization;
+        this.setState = setState;
     }
 
     create = ({ docIds, activeProject, isFilter }) => {

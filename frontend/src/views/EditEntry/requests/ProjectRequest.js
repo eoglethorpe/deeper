@@ -6,19 +6,17 @@ import {
 import schema from '../../../schema';
 
 export default class ProjectRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             api,
             setProject,
             startAfRequest,
+            setState,
         } = params;
         this.setProject = setProject;
         this.api = api;
         this.startAfRequest = startAfRequest;
+        this.setState = setState;
     }
 
     create = (projectId, leadId) => {

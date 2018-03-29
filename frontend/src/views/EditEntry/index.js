@@ -176,14 +176,12 @@ export default class EditEntry extends React.PureComponent {
     }
 
     componentWillMount() {
-        const request = new LeadRequest(
-            this,
-            {
-                api: this.api,
-                setLead: this.props.setLead,
-                startProjectRequest: this.startProjectRequest,
-            },
-        );
+        const request = new LeadRequest({
+            api: this.api,
+            setLead: this.props.setLead,
+            startProjectRequest: this.startProjectRequest,
+            setState: params => this.setState(params),
+        });
         this.leadRequest = request.create(this.props.leadId);
         this.leadRequest.start();
     }
@@ -207,43 +205,37 @@ export default class EditEntry extends React.PureComponent {
     }
 
     startProjectRequest = (project, leadId) => {
-        const request = new ProjectRequest(
-            this,
-            {
-                api: this.api,
-                setProject: this.props.setProject,
-                startAfRequest: this.startAfRequest,
-            },
-        );
+        const request = new ProjectRequest({
+            api: this.api,
+            setProject: this.props.setProject,
+            startAfRequest: this.startAfRequest,
+            setState: params => this.setState(params),
+        });
         this.projectRequest = request.create(project, leadId);
         this.projectRequest.start();
     }
 
     startAfRequest = (analysisFramework, leadId) => {
-        const request = new AfRequest(
-            this,
-            {
-                api: this.api,
-                getAf: () => this.props.analysisFramework,
-                removeAllEntries: this.props.removeAllEntries,
-                setAnalysisFramework: this.props.setAnalysisFramework,
-                startEntriesRequest: this.startEntriesRequest,
-            },
-        );
+        const request = new AfRequest({
+            api: this.api,
+            getAf: () => this.props.analysisFramework,
+            removeAllEntries: this.props.removeAllEntries,
+            setAnalysisFramework: this.props.setAnalysisFramework,
+            startEntriesRequest: this.startEntriesRequest,
+            setState: params => this.setState(params),
+        });
         this.analysisFrameworkRequest = request.create(analysisFramework, leadId);
         this.analysisFrameworkRequest.start();
     }
 
     startEntriesRequest = (leadId) => {
-        const request = new EntriesRequest(
-            this,
-            {
-                api: this.api,
-                getEntries: () => this.props.entries,
-                diffEntries: this.props.diffEntries,
-                notificationStrings: this.props.notificationStrings,
-            },
-        );
+        const request = new EntriesRequest({
+            api: this.api,
+            getEntries: () => this.props.entries,
+            diffEntries: this.props.diffEntries,
+            notificationStrings: this.props.notificationStrings,
+            setState: params => this.setState(params),
+        });
         this.entriesRequest = request.create(leadId);
         this.entriesRequest.start();
     }
@@ -343,29 +335,25 @@ export default class EditEntry extends React.PureComponent {
                 };
                 request = proxyRequest;
             } else if (isMarkedForDelete && serverId) {
-                const deleteEntryRequest = new DeleteEntryRequest(
-                    this,
-                    {
-                        api: this.api,
-                        removeEntry: this.props.removeEntry,
-                        getCoordinator: () => this.saveRequestCoordinator,
-                        getChoices: () => this.choices,
-                    },
-                );
+                const deleteEntryRequest = new DeleteEntryRequest({
+                    api: this.api,
+                    removeEntry: this.props.removeEntry,
+                    getCoordinator: () => this.saveRequestCoordinator,
+                    getChoices: () => this.choices,
+                    setState: params => this.setState(params),
+                });
                 request = deleteEntryRequest.create(leadId, entry);
             } else {
-                const saveEntryRequest = new SaveEntryRequest(
-                    this,
-                    {
-                        api: this.api,
-                        changeEntry: this.props.changeEntry,
-                        saveEntry: this.props.saveEntry,
-                        getChoices: () => this.choices,
-                        getCoordinator: () => this.saveRequestCoordinator,
-                        getLeadId: () => this.props.leadId,
-                        getEntries: () => this.props.entries,
-                    },
-                );
+                const saveEntryRequest = new SaveEntryRequest({
+                    api: this.api,
+                    changeEntry: this.props.changeEntry,
+                    saveEntry: this.props.saveEntry,
+                    getChoices: () => this.choices,
+                    getCoordinator: () => this.saveRequestCoordinator,
+                    getLeadId: () => this.props.leadId,
+                    getEntries: () => this.props.entries,
+                    setState: params => this.setState(params),
+                });
                 request = saveEntryRequest.create(id);
             }
             this.saveRequestCoordinator.add(id, request);

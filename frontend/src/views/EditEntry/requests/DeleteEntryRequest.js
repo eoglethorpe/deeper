@@ -7,21 +7,19 @@ import {
 import { entryAccessor } from '../../../entities/entry';
 
 export default class DeleteEntryRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             api,
             removeEntry,
             getCoordinator,
             getChoices,
+            setState,
         } = params;
         this.api = api;
         this.removeEntry = removeEntry;
         this.getCoordinator = getCoordinator;
         this.getChoices = getChoices;
+        this.setState = setState;
     }
 
     create = (leadId, entry) => {

@@ -1,18 +1,18 @@
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import schema from '../../../schema';
+import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
+import schema from '../../../../schema';
 import {
     createUrlForAryFilterOptions,
     commonParamsForGET,
-} from '../../../rest';
+} from '../../../../rest';
 
 export default class AryFilterOptionsGetRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
-        const { setAryFilterOptions } = params;
+    constructor(params) {
+        const {
+            setAryFilterOptions,
+            setState,
+        } = params;
         this.setAryFilterOptions = setAryFilterOptions;
+        this.setState = setState;
     }
 
     create = (activeProject) => {

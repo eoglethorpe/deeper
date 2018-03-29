@@ -9,20 +9,18 @@ import {
 } from '../../../rest';
 
 export default class GoogleDriveUploadRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             driveUploadCoordinator,
             addLeadViewLeadChange,
             getLeadFromId,
+            setState,
         } = params;
 
         this.driveUploadCoordinator = driveUploadCoordinator;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.getLeadFromId = getLeadFromId;
+        this.setState = setState;
     }
 
     create = ({ leadId, title, accessToken, fileId, mimeType }) => {

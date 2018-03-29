@@ -193,8 +193,10 @@ export default class LeadsViz extends React.PureComponent {
         }
         const { activeProject, filters } = props;
         const { stopNlpRequests, startNlpRequests } = this;
-        const leadCDIdRequest = new LeadCDIdRequest(this, {
-            stopNlpRequests, startNlpRequests,
+        const leadCDIdRequest = new LeadCDIdRequest({
+            stopNlpRequests,
+            startNlpRequests,
+            setState: params => this.setState(params),
         });
         this.leadCDIdRequest = leadCDIdRequest.create({ activeProject, filters });
         this.leadCDIdRequest.start();
@@ -205,8 +207,9 @@ export default class LeadsViz extends React.PureComponent {
             this.leadTopicModelingRequest.stop();
         }
         const { activeProject } = props;
-        const leadTopicModelingRequest = new LeadTopicModelingRequest(this, {
+        const leadTopicModelingRequest = new LeadTopicModelingRequest({
             setLeadVisualization: this.props.setLeadVisualization,
+            setState: params => this.setState(params),
         });
         this.leadTopicModelingRequest = leadTopicModelingRequest.create({
             activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
@@ -219,8 +222,9 @@ export default class LeadsViz extends React.PureComponent {
             this.leadNerRequest.stop();
         }
         const { activeProject, setLeadVisualization } = props;
-        const leadNerRequest = new LeadNerRequest(this, {
+        const leadNerRequest = new LeadNerRequest({
             setLeadVisualization,
+            setState: params => this.setState(params),
         });
         this.leadNerRequest = leadNerRequest.create({
             activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
@@ -233,8 +237,9 @@ export default class LeadsViz extends React.PureComponent {
             this.leadTopicCorrelationRequest.stop();
         }
         const { activeProject, setLeadVisualization } = props;
-        const leadTopicCorrelationRequest = new LeadTopicCorrelationRequest(this, {
+        const leadTopicCorrelationRequest = new LeadTopicCorrelationRequest({
             setLeadVisualization,
+            setState: params => this.setState(params),
         });
         this.leadTopicCorrelationRequest = leadTopicCorrelationRequest.create({
             activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),
@@ -247,8 +252,9 @@ export default class LeadsViz extends React.PureComponent {
             this.leadKeywordCorrelationRequest.stop();
         }
         const { activeProject, setLeadVisualization } = props;
-        const leadKeywordCorrelationRequest = new LeadKeywordCorrelationRequest(this, {
+        const leadKeywordCorrelationRequest = new LeadKeywordCorrelationRequest({
             setLeadVisualization,
+            setState: params => this.setState(params),
         });
         this.leadKeywordCorrelationRequest = leadKeywordCorrelationRequest.create({
             activeProject, docIds, isFilter: !isObjectEmpty(this.props.filters),

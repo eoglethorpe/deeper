@@ -6,10 +6,9 @@ import {
 import schema from '../../../schema';
 
 export default class LeadRequest {
-    constructor(parent) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
+    constructor(params) {
+        const { setState } = params;
+        this.setState = setState;
     }
 
     create = (leadId) => {

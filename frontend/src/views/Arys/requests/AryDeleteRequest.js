@@ -7,13 +7,13 @@ import {
 } from '../../../rest';
 
 export default class AryDeleteRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
-        const { pullArys } = params;
+    constructor(params) {
+        const {
+            pullArys,
+            setState,
+        } = params;
         this.pullArys = pullArys;
+        this.setState = setState;
     }
 
     create = (ary) => {

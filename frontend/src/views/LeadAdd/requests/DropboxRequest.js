@@ -9,19 +9,17 @@ import {
 } from '../../../rest';
 
 export default class DropboxRequest {
-    constructor(parent, params) {
-        this.setState = (state) => {
-            parent.setState(state);
-        };
-
+    constructor(params) {
         const {
             dropboxUploadCoordinator,
             addLeadViewLeadChange,
             getLeadFromId,
+            setState,
         } = params;
         this.dropboxUploadCoordinator = dropboxUploadCoordinator;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.getLeadFromId = getLeadFromId;
+        this.setState = setState;
     }
 
     create = ({ leadId, title, fileUrl }) => {

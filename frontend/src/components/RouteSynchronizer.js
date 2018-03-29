@@ -198,10 +198,7 @@ class RouteSynchronizer extends React.PureComponent {
                         { title }
                     </title>
                 </Helmet>
-                <Bundle
-                    key="component"
-                    {...otherProps}
-                />
+                <Bundle {...otherProps} />
             </Fragment>
         );
     }

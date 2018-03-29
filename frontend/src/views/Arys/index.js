@@ -189,7 +189,8 @@ export default class Arys extends React.PureComponent {
             this.arysRequest.stop();
         }
 
-        const arysRequest = new ArysGetRequest(this, {
+        const arysRequest = new ArysGetRequest({
+            setState: params => this.setState(params),
             setArys: this.props.setArys,
         });
 
@@ -219,10 +220,10 @@ export default class Arys extends React.PureComponent {
             if (this.aryDeleteRequest) {
                 this.aryDeleteRequest.stop();
             }
-            const aryDeleteRequest = new AryDeleteRequest(
-                this,
-                { pullArys: this.pullArys },
-            );
+            const aryDeleteRequest = new AryDeleteRequest({
+                setState: params => this.setState(params),
+                pullArys: this.pullArys,
+            });
             this.aryDeleteRequest = aryDeleteRequest.create(aryToDelete);
             this.aryDeleteRequest.start();
         }
