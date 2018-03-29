@@ -16,8 +16,6 @@ import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
-import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
-import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
@@ -126,7 +124,6 @@ export default class Leads extends React.PureComponent {
         { label: '75', key: 75 },
         { label: '100', key: 100 },
     ];
-
 
     static leadKeyExtractor = lead => String(lead.id)
 
@@ -249,26 +246,6 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     <div className={styles.status}>
                         {row.status}
-                        {
-                            row.status === 'pending' &&
-                            <SuccessButton
-                                tabIndex="-1"
-                                className={`${styles.markButton} mark-button`}
-                                title="Mark as processed"
-                                iconName={iconNames.check}
-                                onClick={() => this.handleLeadAction(row, ACTION.markAsProcessed)}
-                            />
-                        }
-                        {
-                            row.status === 'processed' &&
-                            <WarningButton
-                                tabIndex="-1"
-                                className={`${styles.markButton} mark-button`}
-                                title="Mark as pending"
-                                iconName={iconNames.undo}
-                                onClick={() => this.handleLeadAction(row, ACTION.markAsPending)}
-                            />
-                        }
                     </div>
                 ),
             },
@@ -290,6 +267,8 @@ export default class Leads extends React.PureComponent {
                         leadsStrings={this.props.leadsStrings}
                         onSearchSimilarLead={this.handleSearchSimilarLead}
                         onRemoveLead={r => this.handleLeadAction(r, ACTION.delete)}
+                        onMarkProcessed={r => this.handleLeadAction(r, ACTION.markAsProcessed)}
+                        onMarkPending={r => this.handleLeadAction(r, ACTION.markAsPending)}
                         activeProject={this.props.activeProject}
                     />
                 ),
@@ -571,8 +550,6 @@ export default class Leads extends React.PureComponent {
                     >
                         Show Visualization
                     </Link>
-                </div>
-                <div className={styles.pagerContainer}>
                     <span className={styles.label}>
                         Leads per page
                     </span>
@@ -585,6 +562,8 @@ export default class Leads extends React.PureComponent {
                         value={this.props.leadsPerPage}
                         onChange={this.handleLeadsPerPageChange}
                     />
+                </div>
+                <div className={styles.pagerContainer}>
                     <Pager
                         activePage={activePage}
                         className={styles.pager}
@@ -637,16 +616,18 @@ export default class Leads extends React.PureComponent {
             <div className={styles.leads}>
                 <Header />
                 <div className={styles.tableContainer}>
-                    <RawTable
-                        data={this.props.leads}
-                        dataModifier={this.leadModifier}
-                        headerModifier={this.headerModifier}
-                        headers={this.headers}
-                        onHeaderClick={this.handleTableHeaderClick}
-                        keyExtractor={Leads.leadKeyExtractor}
-                        className={styles.leadsTable}
-                    />
-                    { loadingLeads && <LoadingAnimation /> }
+                    <div className={styles.scrollWrapper}>
+                        <RawTable
+                            data={this.props.leads}
+                            dataModifier={this.leadModifier}
+                            headerModifier={this.headerModifier}
+                            headers={this.headers}
+                            onHeaderClick={this.handleTableHeaderClick}
+                            keyExtractor={Leads.leadKeyExtractor}
+                            className={styles.leadsTable}
+                        />
+                        { loadingLeads && <LoadingAnimation /> }
+                    </div>
                 </div>
                 <Footer />
                 <Confirm

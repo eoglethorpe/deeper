@@ -13,6 +13,8 @@ import {
 
 import Button from '../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 
 import styles from './styles.scss';
 
@@ -22,6 +24,8 @@ const propTypes = {
     activeProject: PropTypes.number.isRequired,
     onSearchSimilarLead: PropTypes.func.isRequired,
     onRemoveLead: PropTypes.func.isRequired,
+    onMarkProcessed: PropTypes.func.isRequired,
+    onMarkPending: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -91,13 +95,40 @@ export default class ActionButtons extends React.PureComponent {
         const {
             onSearchSimilarLead,
             onRemoveLead,
+            onMarkProcessed,
+            onMarkPending,
             row,
             leadsStrings,
         } = this.props;
 
         return (
             <Fragment>
+                {
+                    row.status === 'pending' &&
+                    <SuccessButton
+                        tabIndex="-1"
+                        // FIXME: Use strings
+                        title="Mark as processed"
+                        iconName={iconNames.check}
+                        onClick={() => onMarkProcessed(row)}
+                        smallVerticalPadding
+                        transparent
+                    />
+                }
+                {
+                    row.status === 'processed' &&
+                    <WarningButton
+                        tabIndex="-1"
+                        // FIXME: Use strings
+                        title="Mark as pending"
+                        iconName={iconNames.undo}
+                        onClick={() => onMarkPending(row)}
+                        smallVerticalPadding
+                        transparent
+                    />
+                }
                 <Button
+                    tabIndex="-1"
                     title={leadsStrings('searchSimilarLeadButtonTitle')}
                     onClick={() => onSearchSimilarLead(row)}
                     smallVerticalPadding
@@ -106,6 +137,7 @@ export default class ActionButtons extends React.PureComponent {
                     <i className={iconNames.search} />
                 </Button>
                 <DangerButton
+                    tabIndex="-1"
                     title={leadsStrings('removeLeadLeadButtonTitle')}
                     onClick={() => onRemoveLead(row)}
                     smallVerticalPadding
@@ -115,6 +147,7 @@ export default class ActionButtons extends React.PureComponent {
                 </DangerButton>
                 <Link
                     className={styles.editLink}
+                    tabIndex="-1"
                     title={leadsStrings('editLeadButtonTitle')}
                     to={links.editLead}
                 >
@@ -124,6 +157,7 @@ export default class ActionButtons extends React.PureComponent {
                     process.env.NODE_ENV === 'development' &&
                     <Link
                         className={styles.addAssessmentLink}
+                        tabIndex="-1"
                         title={leadsStrings('addAssessmentFromLeadButtonTitle')}
                         to={links.addAssessment}
                     >
@@ -132,6 +166,7 @@ export default class ActionButtons extends React.PureComponent {
                 }
                 <Link
                     className={styles.addEntryLink}
+                    tabIndex="-1"
                     title={leadsStrings('addEntryFromLeadButtonTitle')}
                     to={links.editEntries}
                 >
