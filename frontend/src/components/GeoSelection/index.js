@@ -52,7 +52,6 @@ const mapStateToProps = state => ({
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static adminLevelKeySelector = d => d.title;
-    static shortLabelSelector = d => d.shortLabel;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -112,7 +111,7 @@ export default class GeoSelection extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { geoOptions, value } = nextProps;
 
-        if (geoOptions !== this.props.geoOptions || value !== this.props.value) {
+        if (geoOptions !== this.props.geoOptions) {
             const locations = geoOptions;
             const flatLocations = GeoSelection.createFlatLocations(locations);
 
@@ -124,6 +123,15 @@ export default class GeoSelection extends React.PureComponent {
                 locations,
                 flatValues,
                 flatLocations,
+            });
+        } else if (value !== this.props.value) {
+            const { locations } = this.state;
+            const flatValues = value || emptyList;
+            const values = GeoSelection.createNonFlatValues(locations, flatValues);
+
+            this.setState({
+                values,
+                flatValues,
             });
         }
     }
@@ -240,7 +248,7 @@ export default class GeoSelection extends React.PureComponent {
             className={styles.regionItem}
             key={key}
         >
-            {data.shortLabel}
+            {data.label}
             <DangerButton
                 onClick={() => this.handleRegionRemove(key)}
                 transparent
@@ -382,7 +390,6 @@ export default class GeoSelection extends React.PureComponent {
                                     />
                                     <MultiSelectInput
                                         label={this.props.entryStrings('locationSelectTitle')}
-                                        labelSelector={GeoSelection.shortLabelSelector}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
                                         optionsIdentifier="location-select-options"
