@@ -9,7 +9,6 @@ import {
     leadIdFromRouteSelector,
     setAryAction,
 } from '../../../../redux';
-import iconNames from '../../../../constants/iconNames.js';
 import Form, {
     requiredCondition,
 } from '../../../../vendor/react-store/components/Input/Form';
@@ -21,9 +20,7 @@ import SelectInput from '../../../../vendor/react-store/components/Input/SelectI
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
-import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import Button from '../../../../vendor/react-store/components/Action/Button';
-import ListView from '../../../../vendor/react-store/components/View/List/ListView';
+import Baksa from '../../../../components/Baksa';
 
 import AryPutRequest from '../../requests/AryPutRequest';
 
@@ -79,6 +76,22 @@ export default class Metadata extends React.PureComponent {
                 schema.fields[field.id] = [requiredCondition];
             });
         });
+
+        schema.fields.questionnaire = [
+            Baksa.bothPageRequiredCondition,
+            Baksa.validPageRangeCondition,
+            Baksa.validPageNumbersCondition,
+            Baksa.pendingCondition,
+        ];
+        schema.fields.assessmentData = [
+            Baksa.pendingCondition,
+        ];
+        schema.fields.executiveSummary = [
+            Baksa.bothPageRequiredCondition,
+            Baksa.validPageRangeCondition,
+            Baksa.validPageNumbersCondition,
+            Baksa.pendingCondition,
+        ];
 
         return schema;
     }
@@ -217,63 +230,6 @@ export default class Metadata extends React.PureComponent {
         );
     }
 
-    renderAdditionalDocument = (key, data) => (
-        <div
-            className={styles.document}
-            key={data.id}
-        >
-            <span className={styles.title}>
-                { data.title }
-            </span>
-            <DangerButton
-                transparent
-                iconName={iconNames.close}
-            />
-        </div>
-    )
-
-    renderAdditionalDocumentsSection = () => {
-        // FIXME: use strings
-        const headingText = 'Additional documents';
-        const additionalDocuments = [
-            { id: '1', title: 'Additional document #1' },
-            { id: '2', title: 'Additional document #2' },
-            { id: '3', title: 'Additional document #1' },
-            { id: '4', title: 'Additional document #2' },
-            { id: '5', title: 'Additional document #1' },
-            { id: '6', title: 'Additional document #2' },
-            { id: '7', title: 'Additional document #1' },
-            { id: '8', title: 'Additional document #2' },
-            { id: '9', title: 'Additional document #1' },
-            { id: '10', title: 'Additional document #2' },
-            { id: '11', title: 'Additional document #2' },
-            { id: '12', title: 'Additional document #2' },
-        ];
-
-        return (
-            <div className={styles.bottom}>
-                <header className={styles.header}>
-                    <h3 className={styles.heading}>
-                        { headingText }
-                    </h3>
-                    <div className={styles.actionButtons}>
-                        <Button>
-                            Add link
-                        </Button>
-                        <Button>
-                            Add files
-                        </Button>
-                    </div>
-                </header>
-                <ListView
-                    className={styles.documents}
-                    data={additionalDocuments}
-                    modifier={this.renderAdditionalDocument}
-                />
-            </div>
-        );
-    }
-
     render() {
         const { aryTemplateMetadata: metadataGroups } = this.props;
 
@@ -289,8 +245,7 @@ export default class Metadata extends React.PureComponent {
 
         // FIXME: use strings
         const saveButtonLabel = 'Save';
-
-        const AdditionalDocumentsSection = this.renderAdditionalDocumentsSection;
+        const bottomHeader = 'Additional Documents';
 
         return (
             <Form
@@ -321,7 +276,33 @@ export default class Metadata extends React.PureComponent {
                 <div className={styles.top}>
                     {metadataList.map(this.renderMetadata)}
                 </div>
-                <AdditionalDocumentsSection />
+                <div className={styles.bottom}>
+                    <header className={styles.header}>
+                        <h3 className={styles.heading}>
+                            { bottomHeader }
+                        </h3>
+                    </header>
+                    <div className={styles.documents}>
+                        <Baksa
+                            label="Executive Summary"
+                            className={styles.baksa}
+                            formname="executiveSummary"
+                            showPageRange
+                        />
+                        <Baksa
+                            label="Assessment Database"
+                            className={styles.baksa}
+                            formname="assessmentData"
+                            acceptUrl
+                        />
+                        <Baksa
+                            label="Questionnaire"
+                            className={styles.baksa}
+                            formname="questionnaire"
+                            showPageRange
+                        />
+                    </div>
+                </div>
             </Form>
         );
     }
