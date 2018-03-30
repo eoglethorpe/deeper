@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -88,7 +87,6 @@ const defaultProps = {
 const renderEmpty = () => 'Select a project for available option(s)';
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class AddLead extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -414,12 +412,6 @@ export default class AddLead extends React.PureComponent {
         });
     }
 
-    handleSubmitButtonClick = () => {
-        if (this.form) {
-            this.form.submit();
-        }
-    }
-
     handleFormSuccess = (values) => {
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
@@ -473,13 +465,13 @@ export default class AddLead extends React.PureComponent {
 
         if (leadSubmittedSuccessfully === true) {
             return (
-                <div styleName="submit-success">
+                <div className={styles.submitSuccess}>
                     <p>Lead submitted successfully</p>
                     {
                         submittedLeadId && (
                             <a
                                 target="_blank"
-                                styleName="add-entry-link"
+                                className={styles.addEntryLink}
                                 href={`${serverAddress}/projects/${submittedProjectId}/leads/${submittedLeadId}/edit-entries/`}
                             >
                                 Add entry
@@ -490,7 +482,7 @@ export default class AddLead extends React.PureComponent {
             );
         } else if (leadSubmittedSuccessfully === false) {
             return (
-                <div styleName="submit-failure">
+                <div className={styles.submitFailure}>
                     An error occured while submitting the lead
                 </div>
             );
@@ -502,10 +494,10 @@ export default class AddLead extends React.PureComponent {
             || pendingLeadCreate;
 
         return (
-            <div styleName="add-lead">
+            <div className={styles.addLead}>
                 { pending && <LoadingAnimation /> }
                 <header
-                    styleName="header"
+                    className={styles.header}
                     formskip
                 >
                     <h1>
@@ -521,8 +513,7 @@ export default class AddLead extends React.PureComponent {
                     </AccentButton>
                 </header>
                 <Form
-                    styleName="inputs"
-                    ref={(el) => { this.form = el; }}
+                    className={styles.inputs}
                     successCallback={this.handleFormSuccess}
                     changeCallback={this.handleFormChange}
                     failureCallback={this.handleFormFailure}
@@ -575,9 +566,9 @@ export default class AddLead extends React.PureComponent {
                         label="website"
                     />
                 </Form>
-                <div styleName="action-buttons">
+                <div className={styles.actionButtons}>
                     <PrimaryButton
-                        onClick={this.handleSubmitButtonClick}
+                        type="submit"
                         disabled={pending}
                     >
                         Submit
