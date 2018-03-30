@@ -9,7 +9,6 @@ import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import NumberInput from '../../vendor/react-store/components/Input/NumberInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
-import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import { UploadBuilder } from '../../vendor/react-store/utils/upload';
 
 import {
@@ -57,7 +56,8 @@ export default class Baksa extends React.PureComponent {
     static defaultProps = defaultProps;
 
     static bothPageRequiredCondition = ({ startPage, endPage }) => {
-        const ok = (startPage && endPage) || (!startPage && !endPage);
+        const ok = (startPage && endPage) ||
+            (startPage === undefined && endPage === undefined);
         return {
             ok,
             message: 'Both start page and end page must be specified',
@@ -69,6 +69,23 @@ export default class Baksa extends React.PureComponent {
         return {
             ok,
             message: 'Start page must be less than end page',
+        };
+    }
+
+    static validPageNumbersCondition = ({ startPage, endPage }) => {
+        const ok = (startPage === undefined || startPage > 0) &&
+            (endPage === undefined || endPage > 0);
+        return {
+            ok,
+            message: 'Page numbers must be greater than 0',
+        };
+    }
+
+    static pendingCondition = ({ type }) => {
+        const ok = type !== 'upload';
+        return {
+            ok,
+            message: 'File is being uploaded',
         };
     }
 
@@ -149,7 +166,6 @@ export default class Baksa extends React.PureComponent {
             file,
             startPage,
             endPage,
-            pending: true,
         });
 
         if (this.uploader) {
@@ -168,11 +184,7 @@ export default class Baksa extends React.PureComponent {
                     url: response.file,
                     startPage,
                     endPage,
-                    pending: false,
                 });
-            })
-            .progress((progress) => {
-                console.warn(progress);
             })
             .build();
 
@@ -235,6 +247,7 @@ export default class Baksa extends React.PureComponent {
             >
                 {/* Empty value in FileInput below cancels the selection automatically */}
                 <FileInput
+                    className={styles.fileInput}
                     onChange={this.handleFileChange}
                     showStatus={false}
                     value=""
@@ -274,26 +287,14 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderUpload = () => {
-        const { value: { file, pending }, disabled } = this.props;
+        const { value: { file } } = this.props;
 
         return (
             <div className={styles.upload}>
                 <div>
                     { file.name }
                 </div>
-                {pending && <LoadingAnimation />}
-                <div className={styles.action}>
-                    {!pending && (
-                        <DangerButton
-                            iconName={iconNames.close}
-                            onClick={this.resetValue}
-                            disabled={disabled}
-                            transparent
-                        >
-                            Clear
-                        </DangerButton>
-                    )}
-                </div>
+                <span className={`${styles.action} ${iconNames.loading} ${styles.loadingIcon}`} />
             </div>
         );
     }
@@ -311,10 +312,10 @@ export default class Baksa extends React.PureComponent {
                     iconName={iconNames.close}
                     onClick={this.resetValue}
                     disabled={disabled}
+                    // FIXME: Use strings
+                    title="Remove"
                     transparent
-                >
-                    Clear
-                </DangerButton>
+                />
             </div>
         );
     }
@@ -330,6 +331,7 @@ export default class Baksa extends React.PureComponent {
                     onChange={this.handleStartPageChange}
                     disabled={disabled}
                     hint="Start Page"
+                    separator=" "
                 />
                 <span className={styles.separator}>
                     to
@@ -340,6 +342,7 @@ export default class Baksa extends React.PureComponent {
                     onChange={this.handleEndPageChange}
                     disabled={disabled}
                     hint="End Page"
+                    separator=" "
                 />
             </div>
         );

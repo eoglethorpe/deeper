@@ -13,6 +13,7 @@
 
     .page-range {
         display: flex;
+        align-items: baseline;
         flex-shrink: 0;
 
         .page {
@@ -26,7 +27,22 @@
     }
 
     .drop-zone {
+        display: flex;
+        flex-direction: column;
         flex-grow: 1;
+
+        .file-input {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+
+            :global .label {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                justify-content: center;
+            }
+        }
     }
 
     .selection,
@@ -38,13 +54,17 @@
         margin: $spacing-medium 0;
 
         a {
-            text-transform: initial;
             word-break: break-all;
+            color: $color-accent;
         }
 
         .action {
             display: flex;
             margin-left: $spacing-small;
+        }
+
+        .loading-icon {
+            animation: spin 1s linear infinite;
         }
     }
 

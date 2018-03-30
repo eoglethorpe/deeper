@@ -80,11 +80,17 @@ export default class Metadata extends React.PureComponent {
         schema.fields.questionnaire = [
             Baksa.bothPageRequiredCondition,
             Baksa.validPageRangeCondition,
+            Baksa.validPageNumbersCondition,
+            Baksa.pendingCondition,
         ];
-        schema.fields.assessmentData = [];
+        schema.fields.assessmentData = [
+            Baksa.pendingCondition,
+        ];
         schema.fields.executiveSummary = [
             Baksa.bothPageRequiredCondition,
             Baksa.validPageRangeCondition,
+            Baksa.validPageNumbersCondition,
+            Baksa.pendingCondition,
         ];
 
         return schema;
