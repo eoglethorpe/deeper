@@ -1,4 +1,3 @@
-import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -42,7 +41,6 @@ const defaultProps = {
 };
 
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSModules(styles, { allowMultiple: true })
 export default class Settings extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -126,7 +124,7 @@ export default class Settings extends React.PureComponent {
         } = this.state;
 
         return (
-            <div styleName="settings">
+            <div className={styles.settings}>
                 <Form
                     successCallback={this.handleFormSuccess}
                     failureCallback={this.handleFormFailure}
@@ -137,7 +135,7 @@ export default class Settings extends React.PureComponent {
                 >
                     <header
                         formskip
-                        styleName="header"
+                        className={styles.header}
                     >
                         <h1>
                             Settings
@@ -149,7 +147,7 @@ export default class Settings extends React.PureComponent {
                             Back
                         </AccentButton>
                     </header>
-                    <div styleName="content">
+                    <div className={styles.content}>
                         <TextInput
                             formname="serverAddress"
                             label="Server address"
@@ -161,11 +159,11 @@ export default class Settings extends React.PureComponent {
                             placeholder="eg: https://api.thedeep.io"
                         />
                     </div>
-                    <footer styleName="footer">
-                        <div styleName="save-status">
+                    <footer className={styles.footer}>
+                        <div className={styles.saveStatus}>
                             { saveStatus }
                         </div>
-                        <PrimaryButton>
+                        <PrimaryButton type="submit">
                             Save
                         </PrimaryButton>
                     </footer>
