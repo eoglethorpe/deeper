@@ -7,6 +7,7 @@ function alphabetical_sort(i1, v1, i2, v2) {
     return (v1 != v2)
 }
 BEGIN {
+    RS = ""
     labels[""] = 0
     filenameLens[""] = 0
 
@@ -14,7 +15,7 @@ BEGIN {
     capture[""] = 0
 }
 {
-    while (match($0, /(\w+)Strings\('(\w+)'/, capture)) {
+    while (match($0, /(\w+)Strings\([ \n\t]*'(\w+)'/, capture)) {
         file = FILENAME
         linenumber = FNR
         class = capture[1]

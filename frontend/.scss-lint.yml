@@ -9,3 +9,5 @@ linters:
         max_depth: 9
     NestingDepth:
         max_depth: 9
+    SpaceAfterPropertyColon:
+      style: one_space_or_newline

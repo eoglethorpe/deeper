@@ -9,8 +9,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { InternalGallery } from '../../../components/DeepGallery';
 
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import { UploadBuilder } from '../../../vendor/react-store/utils/upload';
 import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../vendor/react-store/components/Input/NonFieldErrors';
 import ImageInput from '../../../vendor/react-store/components/Input/FileInput/ImageInput';
@@ -21,20 +19,14 @@ import PrimaryButton from '../../../vendor/react-store/components/Action/Button/
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    transformResponseErrorToFormError,
-    createParamsForFileUpload,
-    createParamsForUserPatch,
-    createUrlForUserPatch,
-    urlForUpload,
-} from '../../../rest';
-import {
     setUserInformationAction,
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../redux';
-import schema from '../../../schema';
 import notify from '../../../notify';
 
+import UserPatchRequest from '../requests/UserPatchRequest';
+import UserImageUploadRequest from '../requests/UserImageUploadRequest';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -93,73 +85,36 @@ export default class UserEdit extends React.PureComponent {
         if (this.userPatchRequest) {
             this.userPatchRequest.stop();
         }
-        if (this.uploader) {
-            this.uploader.stop();
+        if (this.userImageUploader) {
+            this.userImageUploader.stop();
         }
     }
 
-    createRequestForUserPatch = (userId, { firstName, lastName, organization, displayPicture }) => {
-        const urlForUser = createUrlForUserPatch(userId);
-        const userPatchRequest = new FgRestBuilder()
-            .url(urlForUser)
-            .params(
-                () => createParamsForUserPatch({
-                    firstName, lastName, organization, displayPicture,
-                }),
-            )
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userPatchResponse');
-                    this.props.setUserInformation({
-                        userId,
-                        information: response,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userProfileEdit'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userEditSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                    this.props.handleModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditFatal'),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({
-                    formErrors: { errors: ['Error while trying to save user.'] },
-                });
-            })
-            .build();
-        return userPatchRequest;
+    startRequestForUserPatch = (userId, values) => {
+        if (this.userPatchRequest) {
+            this.userPatchRequest.stop();
+        }
+        const userPatchRequest = new UserPatchRequest({
+            setUserInformation: this.props.setUserInformation,
+            notificationStrings: this.props.notificationStrings,
+            handleModalClose: this.props.handleModalClose,
+            setState: v => this.setState(v),
+        });
+        this.userPatchRequest = userPatchRequest.create(userId, values);
+        this.userPatchRequest.start();
+    }
+
+    startRequestForUserImageUpload = (file) => {
+        if (this.userImageUploader) {
+            this.userImageUploader.stop();
+        }
+        const userImageUploader = new UserImageUploadRequest({
+            handleImageUploadSuccess: this.handleImageUploadSuccess,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.userImageUploader = userImageUploader.create(file);
+        this.userImageUploader.start();
     }
 
     // FORM RELATED
@@ -181,15 +136,8 @@ export default class UserEdit extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        // Stop old patch request
-        if (this.userPatchRequest) {
-            this.userPatchRequest.stop();
-        }
-
         const userId = this.props.userId;
-        // Create new patch request and start it
-        this.userPatchRequest = this.createRequestForUserPatch(userId, values);
-        this.userPatchRequest.start();
+        this.startRequestForUserPatch(userId, values);
     };
 
     // BUTTONS
@@ -214,51 +162,15 @@ export default class UserEdit extends React.PureComponent {
         }
 
         const file = files[0];
+        this.startRequestForUserImageUpload(file);
+    }
 
-        if (this.uploader) {
-            this.uploader.stop();
-        }
-
-        this.uploader = new UploadBuilder()
-            .file(file)
-            .url(urlForUpload)
-            .params(() => createParamsForFileUpload({ is_public: true }))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                this.setState({
-                    formValues: { ...this.state.formValues, displayPicture: response.id },
-                    pristine: true,
-                    pending: false,
-                });
-            })
-            .failure((response) => {
-                console.warn('Failure', response);
-                notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditImageUploadFailure'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .fatal((response) => {
-                console.warn('Failure', response);
-                notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditImageUploadFailure'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .progress((progress) => {
-                console.warn(progress);
-            })
-            .build();
-        this.uploader.start();
+    handleImageUploadSuccess = (displayPicture) => {
+        this.setState({
+            formValues: { ...this.state.formValues, displayPicture },
+            pristine: true,
+            pending: false,
+        });
     }
 
     render() {
