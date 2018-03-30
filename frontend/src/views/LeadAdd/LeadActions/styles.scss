@@ -1,0 +1,55 @@
+@import '../../../stylesheets/base';
+
+$radius-button-border: 2px;
+
+.action-buttons {
+    display: flex;
+    flex-shrink: 0;
+
+    .movement-buttons {
+        margin-right: $spacing-medium;
+
+        >button:first-child {
+            margin-right: $spacing-extra-small-alt;
+        }
+    }
+
+    %button-basic {
+        flex-shrink: 0;
+        margin-left: $spacing-extra-small-alt;
+        border-radius: $radius-button-border;
+    }
+
+    .save-buttons {
+        @extend %button-basic;
+        @include background-color($color-success);
+    }
+
+    .remove-buttons {
+        @extend %button-basic;
+        @include background-color($color-warning);
+    }
+}
+
+.dropdown-button {
+    display: block;
+    border: 0;
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-small $spacing-medium;
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+    color: $color-text;
+    font-family: inherit;
+    font-size: $font-size-medium;
+
+    &:hover {
+        background-color: $color-background-hover;
+    }
+
+    &:disabled {
+        cursor: default;
+        color: $color-text-disabled;
+    }
+}

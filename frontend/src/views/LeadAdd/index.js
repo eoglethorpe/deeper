@@ -3,7 +3,6 @@
  * @co-author tnagorra <weathermist@gmail.com>
  */
 
-import CSSBuilders from 'react-css-modules';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
@@ -131,7 +130,6 @@ const DELETE_MODE = {
 
 @BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
-@CSSBuilders(styles, { allowMultiple: true })
 export default class LeadAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -492,6 +490,7 @@ export default class LeadAdd extends React.PureComponent {
             leadsStrings: this.props.leadsStrings,
             getLeadFromId: this.getLeadFromId,
             setState: params => this.setState(params),
+            getState: name => this.state[name],
         });
 
         uploads.forEach((upload) => {

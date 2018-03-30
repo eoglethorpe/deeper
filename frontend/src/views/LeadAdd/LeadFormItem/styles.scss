@@ -1,0 +1,72 @@
+@import '../../../stylesheets/base';
+
+.right {
+    display: flex;
+    flex-basis: 70%;
+    flex-direction: column;
+    background-color: $color-background-alt;
+    overflow-y: auto;
+
+    .top {
+        min-height: 108px;
+        overflow-y: auto;
+
+        .add-lead-form {
+            flex-shrink: 0;
+        }
+    }
+
+    .bottom {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        min-height: 196px;
+
+        .lead-preview {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            border-top: $width-separator-thin solid $color-separator;
+
+            .gallery-file {
+                display: flex;
+                flex-direction: column;
+                flex-grow: 1;
+
+                :global {
+                    .urlbar {
+                        flex-shrink: 0;
+                    }
+
+                    .doc-container {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+
+                        .gallery-docs {
+                            display: flex;
+                            flex-direction: column;
+                            flex-grow: 1;
+                        }
+
+                        iframe {
+                            flex-grow: 1;
+                        }
+                    }
+                }
+            }
+
+            .preview-text {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                justify-content: center;
+                color: $color-text-disabled;
+            }
+        }
+    }
+
+    &.hidden {
+        display: none;
+    }
+}

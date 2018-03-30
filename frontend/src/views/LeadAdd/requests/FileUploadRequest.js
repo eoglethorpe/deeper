@@ -15,12 +15,14 @@ export default class FileUploadRequest {
             leadsStrings,
             getLeadFromId,
             setState,
+            getState,
         } = params;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.uploadCoordinator = uploadCoordinator;
         this.leadsStrings = leadsStrings;
         this.getLeadFromId = getLeadFromId;
         this.setState = setState;
+        this.getState = getState;
     }
 
     create = ({ file, leadId }) => {

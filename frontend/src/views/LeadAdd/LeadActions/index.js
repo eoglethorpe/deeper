@@ -7,17 +7,17 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Button from '../../vendor/react-store/components/Action/Button';
-import DropdownMenu from '../../vendor/react-store/components/Action/DropdownMenu';
+import Button from '../../../vendor/react-store/components/Action/Button';
+import DropdownMenu from '../../../vendor/react-store/components/Action/DropdownMenu';
 
-import { iconNames } from '../../constants';
+import { iconNames } from '../../../constants';
 import {
     addLeadViewCanNextSelector,
     addLeadViewCanPrevSelector,
     addLeadViewLeadNextAction,
     addLeadViewLeadPrevAction,
     leadsStringsSelector,
-} from '../../redux';
+} from '../../../redux';
 
 import styles from './styles.scss';
 

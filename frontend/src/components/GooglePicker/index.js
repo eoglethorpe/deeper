@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import Button from '../../vendor/react-store/components/Action/Button';
 import { commonStringsSelector } from '../../redux';
 
 const propTypes = {
@@ -178,7 +178,7 @@ export default class GooglePicker extends React.Component {
         const ready = authApiReady && pickerApiReady;
 
         return (
-            <PrimaryButton
+            <Button
                 className={className}
                 onClick={this.onChoose}
                 disabled={disabled || !ready}
@@ -187,7 +187,7 @@ export default class GooglePicker extends React.Component {
                 {
                     children || this.props.commonStrings('openGoogleChooserText')
                 }
-            </PrimaryButton>
+            </Button>
         );
     }
 }

@@ -7,11 +7,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
-import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
-import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
-import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
+import { BgRestBuilder } from '../../../vendor/react-store/utils/rest';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
+import SelectInput from '../../../vendor/react-store/components/Input/SelectInput';
+import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 
 import {
     activeProjectSelector,
@@ -21,19 +21,18 @@ import {
     addLeadViewIsFilterEmptySelector,
     setLeadFilterOptionsAction,
     leadsStringsSelector,
-} from '../../redux';
+} from '../../../redux';
 import {
     createParamsForUser,
     createUrlForLeadFilterOptions,
-} from '../../rest';
+} from '../../../rest';
 import {
     LEAD_TYPE,
     LEAD_FILTER_STATUS,
-} from '../../entities/lead';
-import schema from '../../schema';
+} from '../../../entities/lead';
+import schema from '../../../schema';
 
 import styles from './styles.scss';
-
 
 const leadTypeOptions = [
     { key: LEAD_TYPE.dropbox, label: 'Dropbox' },
@@ -153,9 +152,7 @@ export default class LeadFilter extends React.PureComponent {
         const { filters, isFilterEmpty } = this.props;
 
         return (
-            <div
-                className={styles.leadFilters}
-            >
+            <div className={styles.leadFilters}>
                 <TextInput
                     label={this.props.leadsStrings('placeholderSearch')}
                     onChange={this.handleSearchChange}

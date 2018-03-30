@@ -2,11 +2,11 @@
 
 .gallery-image {
     position: relative;
+    flex-grow: 1;
+    overflow: auto;
 
     .image {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        object-fit: none;
         object-position: center center;
     }
 

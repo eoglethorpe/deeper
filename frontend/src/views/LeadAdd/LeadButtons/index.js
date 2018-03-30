@@ -7,26 +7,26 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { randomString } from '../../vendor/react-store/utils/common';
-import Button from '../../vendor/react-store/components/Action/Button';
-import FileInput from '../../vendor/react-store/components/Input/FileInput';
+import { randomString } from '../../../vendor/react-store/utils/common';
+import Button from '../../../vendor/react-store/components/Action/Button';
+import FileInput from '../../../vendor/react-store/components/Input/FileInput';
 
 import {
     addLeadViewAddLeadsAction,
     activeProjectSelector,
     leadsStringsSelector,
     notificationStringsSelector,
-} from '../../redux';
-import DropboxChooser from '../../components/DropboxChooser';
-import GooglePicker from '../../components/GooglePicker';
-import notify from '../../notify';
-import { iconNames } from '../../constants';
-import { LEAD_TYPE } from '../../entities/lead';
-import { dropboxAppKey } from '../../config/dropbox';
+} from '../../../redux';
+import DropboxChooser from '../../../components/DropboxChooser';
+import GooglePicker from '../../../components/GooglePicker';
+import notify from '../../../notify';
+import { iconNames } from '../../../constants';
+import { LEAD_TYPE } from '../../../entities/lead';
+import { dropboxAppKey } from '../../../config/dropbox';
 import {
     googleDriveClientId,
     googleDriveDeveloperKey,
-} from '../../config/google-drive';
+} from '../../../config/google-drive';
 
 import styles from './styles.scss';
 
