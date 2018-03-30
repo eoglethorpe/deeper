@@ -8,7 +8,6 @@ import {
     compareLength,
     compareString,
 } from '../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
@@ -29,19 +28,13 @@ import {
     userStringsSelector,
 } from '../../../redux';
 import {
-    createUrlForUserGroupProjects,
-    createParamsForUser,
-    createParamsForProjectDelete,
-    createUrlForProject,
-} from '../../../rest';
-import {
     iconNames,
     pathNames,
 } from '../../../constants';
-import schema from '../../../schema';
-import notify from '../../../notify';
 
 import UserProjectAdd from '../../../components/UserProjectAdd';
+import UserGroupProjectsRequest from '../requests/UserGroupProjectsRequest';
+import ProjectDeleteRequest from '../requests/ProjectDeleteRequest';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -169,10 +162,7 @@ export default class ProjectsTable extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.requestForUserGroupProjects = this.createRequestForUserGroupProjects(
-            this.props.userGroup.id,
-        );
-        this.requestForUserGroupProjects.start();
+        this.startRequestForUserGroupProjects(this.props.userGroup.id);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -187,74 +177,29 @@ export default class ProjectsTable extends React.PureComponent {
         }
     }
 
-    createRequestForUserGroupProjects = (id) => {
-        const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
-        const userGroupRequest = new FgRestBuilder()
-            .url(urlForUserGroupProjects)
-            .params(() => createParamsForUser())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'projectsGetResponse');
-                    this.props.setUserGroupProject({
-                        projects: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return userGroupRequest;
+    startRequestForUserGroupProjects = (id) => {
+        if (this.requestForUserGroupProjects) {
+            this.requestForUserGroupProjects.stop();
+        }
+        const requestForUserGroupProjects = new UserGroupProjectsRequest({
+            setUserGroupProject: this.props.setUserGroupProject,
+        });
+        this.requestForUserGroupProjects = requestForUserGroupProjects.create(id);
+        this.requestForUserGroupProjects.start();
     }
 
-    createRequestForProjectDelete = (projectId) => {
-        const urlForProject = createUrlForProject(projectId);
-
-        const projectDeleteRequest = new FgRestBuilder()
-            .url(urlForProject)
-            .params(() => createParamsForProjectDelete())
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
-            })
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unSetProject({
-                        projectId,
-                        userId: this.props.activeUser.userId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userProjectDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userProjectDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                    this.setState({ showDeleteProjectModal: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userProjectDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return projectDeleteRequest;
+    startRequestForProjectDelete = (id) => {
+        if (this.projectDeleteRequest) {
+            this.projectDeleteRequest.stop();
+        }
+        const { id: userId } = this.props.activeUser;
+        const projectDeleteRequest = new ProjectDeleteRequest({
+            unSetProject: this.props.unSetProject,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.projectDeleteRequest = projectDeleteRequest.create({ id, userId });
+        this.projectDeleteRequest.start();
     }
 
     handleDeleteProjectClick = (project) => {
@@ -276,10 +221,7 @@ export default class ProjectsTable extends React.PureComponent {
             }
 
             const { selectedProject } = this.state;
-            this.projectDeleteRequest = this.createRequestForProjectDelete(
-                selectedProject.id,
-            );
-            this.projectDeleteRequest.start();
+            this.startRequestForProjectDelete(selectedProject.id);
         }
         this.setState({ showDeleteProjectModal: false });
     }
