@@ -18,7 +18,7 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import Table from '../../../vendor/react-store/components/View/Table';
-import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../../vendor/react-store/components/Input/SearchInput';
 
 import {
     userGroupProjectSelector,
@@ -325,11 +325,10 @@ export default class ProjectsTable extends React.PureComponent {
                         {this.props.userStrings('headerProjects')}
                     </h2>
                     <div className={styles.pusher} />
-                    <TextInput
+                    <SearchInput
                         placeholder={this.props.userStrings('placeholderSearch')}
                         onChange={this.handleSearchProjectChange}
                         value={searchProjectInputValue}
-                        type="search"
                         className={styles.searchInput}
                         showLabel={false}
                         showHintAndError={false}

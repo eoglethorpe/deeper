@@ -6,7 +6,7 @@ import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
 
 import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../../../vendor/react-store/components/Input/SearchInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
@@ -264,14 +264,13 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
                     >
                         {addAFButtonLabel}
                     </AccentButton>
-                    <TextInput
+                    <SearchInput
                         className={styles.searchAfInput}
                         value={searchInputValue}
                         onChange={this.handleSearchInputChange}
                         placeholder={searchAFPlaceholder}
                         showHintAndError={false}
                         showLabel={false}
-                        type="search"
                     />
                 </header>
                 <ListView

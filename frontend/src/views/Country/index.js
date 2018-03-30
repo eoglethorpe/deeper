@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { caseInsensitiveSubmatch, compareString } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Modal from '../../vendor/react-store/components/View/Modal';
@@ -236,11 +236,10 @@ export default class CountryPanel extends React.PureComponent {
                                 {this.props.countriesStrings('addCountryButtonLabel')}
                             </PrimaryButton>
                         }
-                        <TextInput
+                        <SearchInput
                             className={styles.searchInput}
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.countriesStrings('searchCountryPlaceholer')}
-                            type="search"
                             value={this.state.searchInputValue}
                             showLabel={false}
                             showHintAndError={false}

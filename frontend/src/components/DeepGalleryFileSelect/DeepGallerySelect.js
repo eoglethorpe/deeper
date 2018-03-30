@@ -17,7 +17,7 @@ import FormattedDate from '../../vendor/react-store/components/View/FormattedDat
 import Button from '../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 
 import {
     urlForUsersGalleryFiles,
@@ -272,11 +272,10 @@ export default class DgSelect extends React.PureComponent {
                 className={styles.modalHeader}
                 title="Select Gallery Files"
                 rightComponent={
-                    <TextInput
+                    <SearchInput
                         onChange={this.handleSearchInputChange}
                         placeholder={this.props.commonStrings('searchGalleryPlaceholder')}
                         className={styles.searchInput}
-                        type="search"
                         label={this.props.commonStrings('searchGalleryLabel')}
                         value={searchInputValue}
                         showLabel={false}

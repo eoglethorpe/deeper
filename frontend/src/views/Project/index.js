@@ -12,7 +12,7 @@ import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import UserProjectAdd from '../../components/UserProjectAdd';
@@ -168,11 +168,10 @@ export default class ProjectPanel extends React.PureComponent {
                         >
                             {this.props.projectStrings('addProjectButtonLabel')}
                         </PrimaryButton>
-                        <TextInput
+                        <SearchInput
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.projectStrings('searchProjectPlaceholder')}
                             className={styles.searchInput}
-                            type="search"
                             value={this.state.searchInputValue}
                             showLabel={false}
                             showHintAndError={false}
