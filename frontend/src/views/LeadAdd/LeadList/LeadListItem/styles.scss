@@ -68,6 +68,10 @@
             color: $color-success;
         }
 
+        .pristine {
+            color: $color-text-label;
+        }
+
         .progress-bar {
             display: block;
             flex-basis: 100%;

@@ -52,12 +52,12 @@ export default class LeadListItem extends React.PureComponent {
     };
 
     static styleMap = {
-        [LEAD_STATUS.warning]: 'warning',
-        [LEAD_STATUS.requesting]: 'pending',
-        [LEAD_STATUS.uploading]: 'pending',
-        [LEAD_STATUS.invalid]: 'error',
-        [LEAD_STATUS.nonPristine]: 'pristine',
-        [LEAD_STATUS.complete]: 'complete',
+        [LEAD_STATUS.warning]: styles.warning,
+        [LEAD_STATUS.requesting]: styles.pending,
+        [LEAD_STATUS.uploading]: styles.pending,
+        [LEAD_STATUS.invalid]: styles.error,
+        [LEAD_STATUS.nonPristine]: styles.pristine,
+        [LEAD_STATUS.complete]: styles.complete,
     };
 
     static iconMap = {
@@ -141,7 +141,7 @@ export default class LeadListItem extends React.PureComponent {
         return (
             <div className={styles.leadListItem}>
                 <button
-                    className={`${styles.addLeadListItem} ${active ? 'active' : ''} ${className}`}
+                    className={`${styles.addLeadListItem} ${active ? styles.active : ''} ${className}`}
                     onClick={this.handleClick}
                 >
                     <span className={`${styles.icon} ${LeadListItem.getIconClassName(type)}`} />
