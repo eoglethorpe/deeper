@@ -59,7 +59,7 @@ const assessmentRegistrySchema = [];
             metadataGroups: { type: 'array.aryTemplateMetadata', required: true },
             methodologyGroups: { type: 'array', required: true },
             affectedGroups: { type: 'array', required: true },
-            assessmentTopics: { type: 'array', required: true },
+            sectors: { type: 'array', required: true },
         },
     };
     assessmentRegistrySchema.push({ name, schema });
