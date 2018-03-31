@@ -1,0 +1,7 @@
+@import '../../../stylesheets/base';
+
+.lead-list {
+    flex-grow: 1;
+    background-color: $color-foreground-alt;
+    overflow-y: auto;
+}

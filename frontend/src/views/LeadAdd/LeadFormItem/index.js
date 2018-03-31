@@ -34,7 +34,7 @@ import {
 } from '../../../rest';
 
 import LeadForm from './LeadForm';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     active: PropTypes.bool.isRequired,

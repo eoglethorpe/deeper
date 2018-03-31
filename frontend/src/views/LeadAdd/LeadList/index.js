@@ -15,7 +15,7 @@ import {
 import { leadAccessor } from '../../../entities/lead';
 
 import LeadListItem from './LeadListItem';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     activeLeadId: PropTypes.string,
