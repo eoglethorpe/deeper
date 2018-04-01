@@ -773,11 +773,20 @@ export default class LeadAdd extends React.PureComponent {
                             onFileSelect={this.handleFileSelect}
                         />
                     </div>
-                    <List
-                        data={addLeadViewLeads}
-                        modifier={this.renderLeadDetail}
-                        keyExtractor={leadAccessor.getKey}
-                    />
+                    {
+                        addLeadViewLeads.length === 0 ?
+                            (<div className={styles.nolead}>
+                                <h2>{
+                                    this.props.leadsStrings('noLeadsText')
+                                } </h2>
+                            </div>
+                            ) : (
+                                <List
+                                    data={addLeadViewLeads}
+                                    modifier={this.renderLeadDetail}
+                                    keyExtractor={leadAccessor.getKey}
+                                />)
+                    }
                 </div>
                 <Confirm
                     onClose={this.handleRemoveLeadModalClose}

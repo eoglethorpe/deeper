@@ -30,5 +30,13 @@ $radius-button-border: 2px;
             background-color: $color-foreground-alt;
             overflow-y: hidden;
         }
+
+        .nolead {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: auto;
+            color: $color-text-disabled;
+        }
     }
 }

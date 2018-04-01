@@ -550,6 +550,7 @@ const initialLangState = {
                 7501: 'Couldn\'t upload file',
                 8101: 'Delete this Assessment',
                 8102: 'Edit this Assessment',
+                8501: 'Select a source to add new lead',
             },
             views: {
                 af: {
@@ -1001,6 +1002,7 @@ const initialLangState = {
                     applyToAllBelow: 2004,
                     leadDelete: 191,
                     removeAllCompletedButtonTitle: 360,
+                    noLeadsText: 8501,
                 },
                 login: {
                     welcomeToText: 803,
