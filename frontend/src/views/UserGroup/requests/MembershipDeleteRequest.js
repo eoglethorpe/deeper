@@ -14,49 +14,50 @@ export default class MembershipDeleteRequest {
         this.props = props;
     }
 
-    notifySuccess = () => {
+    success = (membershipId, userGroupId) => () => {
+        try {
+            this.props.unSetMembership({
+                membershipId,
+                userGroupId,
+            });
+            notify.send({
+                title: this.props.notificationStrings('userMembershipDelete'),
+                type: notify.type.SUCCESS,
+                message: this.props.notificationStrings('userMembershipDeleteSuccess'),
+                duration: notify.duration.MEDIUM,
+            });
+        } catch (er) {
+            console.error(er);
+        }
+    }
+
+    failure = () => {
         notify.send({
             title: this.props.notificationStrings('userMembershipDelete'),
-            type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('userMembershipDeleteSuccess'),
+            type: notify.type.ERROR,
+            message: this.props.notificationStrings('userMembershipDeleteFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
 
-    notifyFail = (message) => {
+    fatal = () => {
         notify.send({
             title: this.props.notificationStrings('userMembershipDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings(message),
-            duration: notify.duration.MEDIUM,
+            message: this.props.notificationStrings('userMembershipDeleteFatal'),
+            duration: notify.duration.SLOW,
         });
     }
 
     create = (membershipId, userGroupId) => {
-        const urlForMembership = createUrlForUserMembership(membershipId);
-
         const membershipDeleteRequest = new FgRestBuilder()
-            .url(urlForMembership)
+            .url(createUrlForUserMembership(membershipId))
             .params(createParamsForUserMembershipDelete)
             .preLoad(() => { this.props.setState({ actionPending: true }); })
             .postLoad(() => { this.props.setState({ actionPending: false }); })
-            .success(() => {
-                try {
-                    this.props.unSetMembership({
-                        membershipId,
-                        userGroupId,
-                    });
-                    this.notifySuccess();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                this.notifyFail('userMembershipDeleteFailure');
-            })
-            .fatal(() => {
-                this.notifyFail('userMembershipDeleteFatal');
-            })
+            .success(this.success(membershipId, userGroupId))
+            .failure(this.failure)
+            .fatal(this.fatal)
             .build();
         return membershipDeleteRequest;
     }

@@ -16,23 +16,39 @@ export default class MembershipPostRequest {
         this.props = props;
     }
 
-    notifySuccess = () => {
-        notify.send({
-            title: this.props.notificationStrings('userMembershipCreate'),
-            type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('userMembershipCreateSuccess'),
-            duration: notify.duration.MEDIUM,
+    success = userGroupId => (response) => {
+        try {
+            schema.validate(response, 'userMembershipCreateResponse');
+            this.props.setUsersMembership({
+                usersMembership: response.results,
+                userGroupId,
+            });
+            notify.send({
+                title: this.props.notificationStrings('userMembershipCreate'),
+                type: notify.type.SUCCESS,
+                message: this.props.notificationStrings('userMembershipCreateSuccess'),
+                duration: notify.duration.MEDIUM,
+            });
+            this.props.onModalClose();
+        } catch (er) {
+            console.error(er);
+        }
+    }
+
+    failure = (response) => {
+        const {
+            formFieldErrors,
+            formErrors,
+        } = transformResponseErrorToFormError(response.errors);
+        this.props.setState({
+            formFieldErrors,
+            formErrors,
         });
     }
 
-    notifyFail = (fatal) => {
-        notify.send({
-            title: this.props.notificationStrings('userMembershipDelete'),
-            type: notify.type.ERROR,
-            message: this.props.notificationStrings(
-                fatal ? 'userMembershipCreateFatal' : 'userMembershipCreateFailure',
-            ),
-            duration: fatal ? notify.duration.SLOW : notify.duration.MEDIUM,
+    fatal = () => {
+        this.props.setState({
+            formErrors: { errors: [this.props.userStrings('addMemberErrorText')] },
         });
     }
 
@@ -42,36 +58,9 @@ export default class MembershipPostRequest {
             .params(() => createParamsForUserMembershipCreate({ memberList }))
             .preLoad(() => { this.props.setState({ pending: true }); })
             .postLoad(() => { this.props.setState({ pending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userMembershipCreateResponse');
-                    this.props.setUsersMembership({
-                        usersMembership: response.results,
-                        userGroupId,
-                    });
-                    this.notifySuccess();
-                    this.props.onModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.notifyFail();
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.props.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                this.notifyFail(true);
-                this.props.setState({
-                    formErrors: { errors: [this.props.userStrings('addMemberErrorText')] },
-                });
-            })
+            .success(this.success(userGroupId))
+            .failure(this.failure)
+            .fatal(this.fatal)
             .build();
         return membershipCreateRequest;
     }

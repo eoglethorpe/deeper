@@ -15,21 +15,40 @@ export default class UserGroupPatchRequest {
         this.props = props;
     }
 
-    notifySuccess = () => {
-        notify.send({
-            title: this.props.notificationStrings('userGroupEdit'),
-            type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('userGroupEditSuccess'),
-            duration: notify.duration.MEDIUM,
+    success = (response) => {
+        try {
+            schema.validate(response, 'userGroupCreateResponse');
+            this.props.setUserGroup({
+                userGroup: response,
+            });
+            notify.send({
+                title: this.props.notificationStrings('userGroupEdit'),
+                type: notify.type.SUCCESS,
+                message: this.props.notificationStrings('userGroupEditSuccess'),
+                duration: notify.duration.MEDIUM,
+            });
+            this.props.handleModalClose();
+        } catch (er) {
+            console.error(er);
+        }
+    }
+
+    failure = (response) => {
+        const {
+            formFieldErrors,
+            formErrors,
+        } = transformResponseErrorToFormError(response.errors);
+        this.props.setState({
+            formFieldErrors,
+            formErrors,
         });
     }
 
-    notifyFail = (message) => {
-        notify.send({
-            title: this.props.notificationStrings('userGroupEdit'),
-            type: notify.type.ERROR,
-            message: this.props.notificationStrings(message),
-            duration: notify.duration.MEDIUM,
+    fatal = () => {
+        this.props.setState({
+            formErrors: { errors: [
+                this.props.userStrings('userGroupPatchFatal'),
+            ] },
         });
     }
 
@@ -44,37 +63,9 @@ export default class UserGroupPatchRequest {
             .postLoad(() => {
                 this.props.setState({ pending: false });
             })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupCreateResponse');
-                    this.props.setUserGroup({
-                        userGroup: response,
-                    });
-                    this.notifySuccess();
-                    this.props.handleModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                this.notifyFail('userGroupEditFailure');
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.props.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                this.notifyFail('userGroupEditFatal');
-                this.props.setState({
-                    formErrors: { errors: [
-                        this.props.userStrings('userGroupPatchFatal'),
-                    ] },
-                });
-            })
+            .success(this.success)
+            .failure(this.failure)
+            .fatal(this.fatal)
             .build();
         return userGroupCreateRequest;
     }

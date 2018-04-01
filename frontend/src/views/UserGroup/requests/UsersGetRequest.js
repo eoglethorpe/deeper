@@ -16,12 +16,34 @@ export default class UsersGetRequest {
         this.usersFields = ['display_name', 'email', 'id'];
     }
 
-    notifyFail = () => {
+    success = (response) => {
+        try {
+            schema.validate(response, 'usersGetResponse');
+            this.props.setUsers({
+                users: response.results,
+            });
+        } catch (er) {
+            console.error(er);
+        }
+    }
+
+    failure = (response) => {
+        console.warn('FAILURE:', response);
         notify.send({
             title: this.props.notificationStrings('userMembershipCreate'),
             type: notify.type.ERROR,
             message: this.props.notificationStrings('usersPullFailure'),
             duration: notify.duration.MEDIUM,
+        });
+    }
+
+    fatal = (response) => {
+        console.warn('FATAL:', response);
+        notify.send({
+            title: this.props.notificationStrings('userMembershipCreate'),
+            type: notify.type.ERROR,
+            message: this.props.notificationStrings('usersPullFailure'),
+            duration: notify.duration.SLOW,
         });
     }
 
@@ -31,24 +53,9 @@ export default class UsersGetRequest {
             .params(createParamsForUser)
             .preLoad(() => this.props.setState({ pending: true }))
             .postLoad(() => this.props.setState({ pending: false }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'usersGetResponse');
-                    this.props.setUsers({
-                        users: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                this.notifyFail();
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                this.notifyFail();
-            })
+            .success(this.success)
+            .failure(this.failure)
+            .fatal(this.fatal)
             .build();
         return usersRequest;
     }

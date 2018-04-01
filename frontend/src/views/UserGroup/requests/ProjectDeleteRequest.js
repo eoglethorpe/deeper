@@ -14,21 +14,41 @@ export default class ProjectDeleteRequest {
         this.props = props;
     }
 
-    notifySuccess = () => {
-        notify.send({
-            title: this.props.notificationStrings('userProjectDelete'),
-            type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('userProjectDeleteSuccess'),
-            duration: notify.duration.MEDIUM,
-        });
+    success = (id, userId) => () => {
+        try {
+            this.props.unSetProject({
+                projectId: id,
+                userId,
+            });
+            notify.send({
+                title: this.props.notificationStrings('userProjectDelete'),
+                type: notify.type.SUCCESS,
+                message: this.props.notificationStrings('userProjectDeleteSuccess'),
+                duration: notify.duration.MEDIUM,
+            });
+            this.props.setState({ showDeleteProjectModal: false });
+        } catch (er) {
+            console.error(er);
+        }
     }
 
-    notifyFailure = () => {
+    failure = (response) => {
+        console.warn('FAILURE:', response);
         notify.send({
             title: this.props.notificationStrings('userProjectDelete'),
             type: notify.type.ERROR,
             message: this.props.notificationStrings('userProjectDeleteFailure'),
             duration: notify.duration.MEDIUM,
+        });
+    }
+
+    fatal = (response) => {
+        console.warn('FATAL:', response);
+        notify.send({
+            title: this.props.notificationStrings('userProjectDelete'),
+            type: notify.type.ERROR,
+            message: this.props.notificationStrings('userProjectDeleteFailure'),
+            duration: notify.duration.SLOW,
         });
     }
 
@@ -42,26 +62,9 @@ export default class ProjectDeleteRequest {
             .postLoad(() => {
                 this.props.setState({ deletePending: false });
             })
-            .success(() => {
-                try {
-                    this.props.unSetProject({
-                        projectId: id,
-                        userId,
-                    });
-                    this.notifySuccess();
-                    this.props.setState({ showDeleteProjectModal: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('Failure:', response);
-                this.notifyFailure();
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                this.notifyFailure();
-            })
+            .success(this.success(id, userId))
+            .failure(this.failure)
+            .fatal(this.fatal)
             .build();
         return projectDeleteRequest;
     }
