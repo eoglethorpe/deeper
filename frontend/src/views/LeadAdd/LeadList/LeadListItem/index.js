@@ -86,9 +86,10 @@ export default class LeadListItem extends React.PureComponent {
     // RENDER
 
     renderIcon = ({ leadState }) => {
+        console.warn(LeadListItem.styleMap[leadState]);
         const classNames = [
             styles.statusIcon,
-            styles[LeadListItem.styleMap[leadState]],
+            LeadListItem.styleMap[leadState],
             iconNames[LeadListItem.iconMap[leadState]],
         ];
         const className = classNames.join(' ');

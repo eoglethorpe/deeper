@@ -258,16 +258,16 @@ export default class LeadAdd extends React.PureComponent {
                 if (totalErrors > 0) {
                     notify.send({
                         title: this.props.notificationStrings('leadSave'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('leadSaveSuccess'),
-                        duration: notify.duration.MEDIUM,
+                        type: notify.type.ERROR,
+                        message: this.props.notificationStrings('leadSaveFailure'),
+                        duration: notify.duration.SLOW,
                     });
                 } else {
                     notify.send({
                         title: this.props.notificationStrings('leadSave'),
-                        type: notify.type.ERROR,
-                        message: this.props.notificationStrings('leadSaveFailure'),
-                        duration: notify.duration.SLOW,
+                        type: notify.type.SUCCESS,
+                        message: this.props.notificationStrings('leadSaveSuccess'),
+                        duration: notify.duration.MEDIUM,
                     });
                 }
                 this.setState({ pendingSubmitAll: false });
