@@ -565,15 +565,15 @@ export default class AddLead extends React.PureComponent {
                         formname="website"
                         label="website"
                     />
+                    <div className={styles.actionButtons}>
+                        <PrimaryButton
+                            type="submit"
+                            disabled={pending}
+                        >
+                            Submit
+                        </PrimaryButton>
+                    </div>
                 </Form>
-                <div className={styles.actionButtons}>
-                    <PrimaryButton
-                        type="submit"
-                        disabled={pending}
-                    >
-                        Submit
-                    </PrimaryButton>
-                </div>
             </div>
         );
     }
