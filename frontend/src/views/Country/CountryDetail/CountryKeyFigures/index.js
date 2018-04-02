@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
@@ -11,19 +10,14 @@ import TextInput from '../../../../vendor/react-store/components/Input/TextInput
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 
 import {
-    transformResponseErrorToFormError,
-    createParamsForRegionPatch,
-    createUrlForRegion,
-    createUrlForRegionWithField,
-    createParamsForUser,
-} from '../../../../rest';
-import {
     countryDetailSelector,
     setRegionDetailsAction,
     countriesStringsSelector,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
-import schema from '../../../../schema';
+
+import RegionKeyFiguresRequest from '../../requests/RegionKeyFiguresRequest';
+import RegionDetailPatchRequest from '../../requests/RegionDetailPatchRequest';
 
 import styles from './styles.scss';
 
@@ -88,12 +82,10 @@ export default class CountryKeyFigures extends React.PureComponent {
                 lackOfCopingCapacity: [],
             },
         };
-
-        this.regionKeyFiguresRequest = this.createRegionKeyFiguresRequest(props.regionDetail.id);
     }
 
     componentWillMount() {
-        this.regionKeyFiguresRequest.start();
+        this.startRegionKeyFiguresRequest(this.props.regionDetail.id);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -103,6 +95,9 @@ export default class CountryKeyFigures extends React.PureComponent {
     componentWillUnmount() {
         if (this.regionKeyFiguresRequest) {
             this.regionKeyFiguresRequest.stop();
+        }
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
         }
     }
 
@@ -125,88 +120,32 @@ export default class CountryKeyFigures extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        // Stop old patch request
+        const data = { keyFigures: values };
+        this.startRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+    };
+
+    startRegionKeyFiguresRequest = (regionId) => {
+        if (this.regionKeyFiguresRequest) {
+            this.regionKeyFiguresRequest.stop();
+        }
+        const regionKeyFiguresRequest = new RegionKeyFiguresRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            setState: v => this.setState(v),
+        });
+        this.regionKeyFiguresRequest = regionKeyFiguresRequest.create(regionId);
+        this.regionKeyFiguresRequest.start();
+    }
+
+    startRequestForRegionDetailPatch = (regionId, data) => {
         if (this.regionDetailPatchRequest) {
             this.regionDetailPatchRequest.stop();
         }
-
-        // Create new patch request
-        const data = {
-            keyFigures: values,
-        };
-
-        this.regionDetailPatchRequest =
-            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+        const regionDetailPatchRequest = new RegionDetailPatchRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            setState: v => this.setState(v),
+        });
+        this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
         this.regionDetailPatchRequest.start();
-    };
-
-    createRegionKeyFiguresRequest = (regionId) => {
-        const urlForRegionForKeyFigures = createUrlForRegionWithField(regionId, ['key_figures']);
-
-        const regionRequest = new FgRestBuilder()
-            .url(urlForRegionForKeyFigures)
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ dataLoading: true }); })
-            .postLoad(() => { this.setState({ dataLoading: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'region');
-                    this.props.setRegionDetails({
-                        regionDetails: response,
-                        regionId,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return regionRequest;
-    }
-
-    createRequestForRegionDetailPatch = (regionId, data) => {
-        const urlForRegion = createUrlForRegion(regionId);
-        const regionDetailPatchRequest = new FgRestBuilder()
-            .url(urlForRegion)
-            .params(() => createParamsForRegionPatch(data))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'regionPatchResponse');
-                    this.props.setRegionDetails({
-                        regionDetails: response,
-                        regionId,
-                    });
-                    this.setState({ pristine: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                    pending: false,
-                });
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                this.setState({
-                    formErrors: { errors: ['Error while trying to save region detail.'] },
-                    pending: false,
-                });
-            })
-            .build();
-        return regionDetailPatchRequest;
     }
 
     handleFormCancel = () => {
