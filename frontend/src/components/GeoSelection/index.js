@@ -25,8 +25,8 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     label: PropTypes.string,
-    onChange: PropTypes.func.isRequired,
-    value: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    onChange: PropTypes.func,
+    value: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     regions: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     disabled: PropTypes.bool.isRequired,
     hideList: PropTypes.bool,
@@ -39,6 +39,8 @@ const defaultProps = {
     geoOptions: {},
     label: '',
     hideList: false,
+    onChange: undefined,
+    value: [],
 };
 
 const emptyList = [];

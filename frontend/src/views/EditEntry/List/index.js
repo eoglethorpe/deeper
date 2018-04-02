@@ -200,7 +200,6 @@ export default class List extends React.PureComponent {
                         projectId,
                         locations: response,
                     });
-                    this.setState({ pendingGeo: false });
                 } catch (er) {
                     console.error(er);
                 }

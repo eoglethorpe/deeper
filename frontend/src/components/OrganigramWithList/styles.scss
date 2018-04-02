@@ -1,13 +1,26 @@
 @import '../../stylesheets/base.scss';
 
-.container {
+.organigram-with-list {
+    display: flex;
+    flex-direction: column;
+
     .header {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        flex-shrink: 0;
+        padding: $spacing-small $spacing-medium;
 
         .title {
+            flex-grow: 1;
             text-transform: uppercase;
         }
+
+        .action {
+            flex-shrink: 0;
+        }
+    }
+
+    .list-input {
+        flex-grow: 1;
     }
 }

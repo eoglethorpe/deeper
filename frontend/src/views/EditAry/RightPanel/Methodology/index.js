@@ -2,17 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    // aryStringsSelector,
-    aryViewMethodologySelector,
-    aryTemplateMethodologySelector,
-    leadIdFromRouteSelector,
-    setAryAction,
-    sectorsSelector,
-} from '../../../../redux';
-import OrganigramWithList from '../../../../components/OrganigramWithList/';
-import GeoSelection from '../../../../components/GeoSelection/';
-
 import Form, {
     requiredCondition,
 } from '../../../../vendor/react-store/components/Input/Form';
@@ -23,6 +12,7 @@ import DateInput from '../../../../vendor/react-store/components/Input/DateInput
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
 import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -30,6 +20,23 @@ import SuccessButton from '../../../../vendor/react-store/components/Action/Butt
 
 // import RegionMap from '../../../../components/RegionMap';
 import { iconNames } from '../../../../constants';
+
+import {
+    // aryStringsSelector,
+    aryViewMethodologySelector,
+    aryTemplateMethodologySelector,
+    leadIdFromRouteSelector,
+    setAryAction,
+    sectorsSelector,
+    focusesSelector,
+    affectedGroupsSelector,
+
+    projectDetailsSelector,
+    geoOptionsForProjectSelector,
+} from '../../../../redux';
+
+import OrganigramWithList from '../../../../components/OrganigramWithList/';
+import GeoSelection from '../../../../components/GeoSelection/';
 
 import AryPutRequest from '../../requests/AryPutRequest';
 
@@ -40,21 +47,32 @@ const propTypes = {
     // aryStrings: PropTypes.func.isRequired,
     methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    sectors: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    focuses: PropTypes.arrayOf(PropTypes.object).isRequired,
+    sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+    affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     setAry: PropTypes.func.isRequired,
+
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
     className: '',
     aryTemplateMethodology: {},
+    geoOptions: {},
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state, props) => ({
     // aryStrings: aryStringsSelector(state),
     activeLeadId: leadIdFromRouteSelector(state),
     methodology: aryViewMethodologySelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
     sectors: sectorsSelector(state),
+    focuses: focusesSelector(state),
+    affectedGroups: affectedGroupsSelector(state),
+
+    projectDetails: projectDetailsSelector(state, props),
+    geoOptions: geoOptionsForProjectSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -118,8 +136,16 @@ export default class Methodology extends React.PureComponent {
                         return errors;
                     },
                 },
+                sectors: [],
+                focuses: [],
+                locations: [],
+                affectedGroups: [],
+
+                objectives: [],
+                dataCollectionTechniques: [],
+                sampling: [],
+                limitations: [],
             },
-            sectors: [],
         };
 
         Object.keys(attributesTemplate).forEach((key) => {
@@ -268,7 +294,12 @@ export default class Methodology extends React.PureComponent {
         const {
             aryTemplateMethodology: attributesTemplate,
             sectors,
+            focuses,
+            affectedGroups,
+            projectDetails,
+            geoOptions,
         } = this.props;
+
         const {
             pending,
             schema,
@@ -282,8 +313,10 @@ export default class Methodology extends React.PureComponent {
 
         // FIXME: use strings
         const saveButtonLabel = 'Save';
-        const sectorsTitle = 'Assessment topics';
+        const focusesTitle = 'Focuses';
+        const sectorsTitle = 'Sectors';
         const affectedGroupsTitle = 'Affected groups';
+        const locationsTitle = 'Locations';
 
         return (
             <Form
@@ -324,7 +357,15 @@ export default class Methodology extends React.PureComponent {
                         { attributes.map(this.renderAttributeRow) }
                     </div>
                 </div>
-                <div className={styles.bottom}>
+                <div className={styles.center}>
+                    <CheckGroup
+                        title={focusesTitle}
+                        formname="focuses"
+                        options={focuses}
+                        className={styles.focuses}
+                        keySelector={d => d.id}
+                        labelSelector={d => d.title}
+                    />
                     <CheckGroup
                         title={sectorsTitle}
                         formname="sectors"
@@ -335,11 +376,47 @@ export default class Methodology extends React.PureComponent {
                     />
                     <OrganigramWithList
                         title={affectedGroupsTitle}
+                        formname="affectedGroups"
                         className={styles.affectedGroups}
+                        data={affectedGroups}
                     />
                     <GeoSelection
+                        formname="locations"
                         className={styles.locationSelection}
+                        geoOptions={geoOptions}
+                        regions={projectDetails.regions}
                     />
+                </div>
+                <div className={styles.bottom}>
+                    <div className={styles.title}>
+                        Methodology content
+                    </div>
+                    <div className={styles.body}>
+                        <TextArea
+                            formname="objectives"
+                            className={styles.methodologyContent}
+                            placeholder="Drag and drop objectives here"
+                            label="Objectives"
+                        />
+                        <TextArea
+                            formname="dataCollectionTechniques"
+                            className={styles.methodologyContent}
+                            placeholder="Drag and drop data collection techniques here"
+                            label="Data collection techniques"
+                        />
+                        <TextArea
+                            formname="sampling"
+                            className={styles.methodologyContent}
+                            placeholder="Drag and drop sampling (site and respondent selection) here"
+                            label="Sampling"
+                        />
+                        <TextArea
+                            formname="limitations"
+                            className={styles.methodologyContent}
+                            placeholder="Drag and drop limitations here"
+                            label="Limitations"
+                        />
+                    </div>
                 </div>
             </Form>
         );

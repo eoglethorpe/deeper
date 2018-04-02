@@ -256,6 +256,20 @@ export const sectorsSelector = createSelector(
     ),
 );
 
+export const focusesSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.focuses || emptyList
+    ),
+);
+
+export const affectedGroupsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.affectedGroups || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,
