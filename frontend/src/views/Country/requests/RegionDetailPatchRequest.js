@@ -7,7 +7,7 @@ import {
 import schema from '../../../schema';
 
 /*
- * setState, setRegionDetails
+ * setState, setRegionDetails, countriesStrings
 */
 export default class RegionDetailPatchRequest {
     constructor(props) {
@@ -41,7 +41,7 @@ export default class RegionDetailPatchRequest {
 
     fatal = () => {
         this.props.setState({
-            formErrors: { errors: ['Error while trying to save region detail.'] },
+            formErrors: { errors: [this.props.countriesStrings('regionPatchErrorText')] },
             pending: false,
         });
     }

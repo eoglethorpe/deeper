@@ -142,6 +142,7 @@ export default class CountryKeyFigures extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
+            countriesStrings: this.props.countriesStrings,
             setState: v => this.setState(v),
         });
         this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);

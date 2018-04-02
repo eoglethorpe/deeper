@@ -14,7 +14,6 @@ export default class RegionDeleteRequest {
     }
 
     success = regionId => () => {
-        // FIXME: write schema
         try {
             this.props.unSetRegion({ regionId });
             notify.send({
