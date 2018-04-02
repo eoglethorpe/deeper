@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "DEEP-2: Add Lead",
     "short_name": "DEEP Extension",
-    "version": "1.04",
+    "version": "1.06",
 
     "description": "Browser Extension for DEEP",
     "icons": {
