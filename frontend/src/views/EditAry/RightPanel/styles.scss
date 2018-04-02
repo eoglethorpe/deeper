@@ -3,3 +3,8 @@
 .tabs {
     flex-shrink: 0;
 }
+
+.entries-link {
+    padding: $spacing-small $spacing-medium;
+    color: $color-text-label;
+}
