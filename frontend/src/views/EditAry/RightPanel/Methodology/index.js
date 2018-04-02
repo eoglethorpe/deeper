@@ -8,7 +8,7 @@ import {
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
     setAryAction,
-    assessmentTopicsSelector,
+    sectorsSelector,
 } from '../../../../redux';
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoSelection from '../../../../components/GeoSelection/';
@@ -40,7 +40,7 @@ const propTypes = {
     // aryStrings: PropTypes.func.isRequired,
     methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    assessmentTopics: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    sectors: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setAry: PropTypes.func.isRequired,
 };
 
@@ -54,7 +54,7 @@ const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     methodology: aryViewMethodologySelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
-    assessmentTopics: assessmentTopicsSelector(state),
+    sectors: sectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -119,7 +119,7 @@ export default class Methodology extends React.PureComponent {
                     },
                 },
             },
-            assessmentTopics: [],
+            sectors: [],
         };
 
         Object.keys(attributesTemplate).forEach((key) => {
@@ -267,7 +267,7 @@ export default class Methodology extends React.PureComponent {
     render() {
         const {
             aryTemplateMethodology: attributesTemplate,
-            assessmentTopics,
+            sectors,
         } = this.props;
         const {
             pending,
@@ -282,7 +282,7 @@ export default class Methodology extends React.PureComponent {
 
         // FIXME: use strings
         const saveButtonLabel = 'Save';
-        const assessmentTopicsTitle = 'Assessment topics';
+        const sectorsTitle = 'Assessment topics';
         const affectedGroupsTitle = 'Affected groups';
 
         return (
@@ -326,10 +326,10 @@ export default class Methodology extends React.PureComponent {
                 </div>
                 <div className={styles.bottom}>
                     <CheckGroup
-                        title={assessmentTopicsTitle}
-                        formname="assessmentTopics"
-                        options={assessmentTopics}
-                        className={styles.assessmentTopics}
+                        title={sectorsTitle}
+                        formname="sectors"
+                        options={sectors}
+                        className={styles.sectors}
                         keySelector={d => d.id}
                         labelSelector={d => d.title}
                     />
