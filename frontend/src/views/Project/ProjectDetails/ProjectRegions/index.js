@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
 import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../../../vendor/react-store/components/Input/SearchInput';
 import RadioInput from '../../../../vendor/react-store/components/Input/RadioInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
@@ -289,11 +289,10 @@ export default class ProjectRegions extends React.PureComponent {
                     >
                         {addRegionButtonLabel}
                     </AccentButton>
-                    <TextInput
+                    <SearchInput
                         className={styles.regionSearchInput}
                         onChange={this.handleSearchInputChange}
                         placeholder={searchPlaceholder}
-                        type="search"
                         value={searchInputValue}
                         showHintAndError={false}
                         showLabel={false}

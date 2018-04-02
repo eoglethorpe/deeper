@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../../../vendor/react-store/components/Input/SearchInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
@@ -231,12 +231,11 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             <div className={styles.projectCategoryEditor}>
                 <div className={styles.listContainer}>
                     <div className={styles.listHeader}>
-                        <TextInput
+                        <SearchInput
                             className={styles.searchInput}
                             value={searchInputValue}
                             onChange={this.handleSearchInputChange}
                             placeholder={this.props.projectStrings('searchCePlaceholder')}
-                            type="search"
                         />
                         <PrimaryButton
                             className={styles.addBtn}

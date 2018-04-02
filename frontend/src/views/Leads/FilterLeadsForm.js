@@ -10,7 +10,7 @@ import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import Button from '../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import Form from '../../vendor/react-store/components/Input/Form';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 
@@ -293,14 +293,13 @@ export default class FilterLeadsForm extends React.PureComponent {
                     showLabel
                     className="leads-filter"
                 />
-                <TextInput
+                <SearchInput
                     formname="search"
                     label={leadsStrings('placeholderSearch')}
                     placeholder={leadsStrings('placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
-                    type="search"
                 />
                 { !applyOnChange &&
                     <Button
