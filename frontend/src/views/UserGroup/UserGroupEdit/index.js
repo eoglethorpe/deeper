@@ -1,12 +1,11 @@
 /**
- * @author thenav56 <navinayer56@gmail.com>
+ * @author thenav56 <ayernavin@gmail.com>
  */
 
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../vendor/react-store/components/Input/NonFieldErrors';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -15,18 +14,13 @@ import LoadingAnimation from '../../../vendor/react-store/components/View/Loadin
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import TextArea from '../../../vendor/react-store/components/Input/TextArea';
 
-import schema from '../../../schema';
-import {
-    transformResponseErrorToFormError,
-    createParamsForUserGroupsPatch,
-    createUrlForUserGroup,
-} from '../../../rest';
 import {
     setUserGroupAction,
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../redux';
-import notify from '../../../notify';
+
+import UserGroupPatchRequest from '../requests/UserGroupPatchRequest';
 
 import styles from './styles.scss';
 
@@ -42,8 +36,7 @@ const propTypes = {
     userStrings: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-};
+const defaultProps = {};
 
 const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
@@ -87,64 +80,21 @@ export default class UserGroupEdit extends React.PureComponent {
         }
     }
 
-    createRequestForUserGroupPatch = (userGroupId, { title, description }) => {
-        const urlForUserGroup = createUrlForUserGroup(userGroupId);
-        const userGroupCreateRequest = new FgRestBuilder()
-            .url(urlForUserGroup)
-            .params(() => createParamsForUserGroupsPatch({ title, description }))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupCreateResponse');
-                    this.props.setUserGroup({
-                        userGroup: response,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userGroupEdit'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userGroupEditSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                    this.props.handleModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupEditFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userGroupEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupEditFatal'),
-                    duration: notify.duration.MEDIUM,
-                });
-                this.setState({
-                    // FIXME: use strings
-                    formErrors: { errors: ['Error while trying to save user group.'] },
-                });
-            })
-            .build();
-        return userGroupCreateRequest;
+    startRequestForUserGroupPatch = (userGroupId, { title, description }) => {
+        if (this.userGroupCreateRequest) {
+            this.userGroupCreateRequest.stop();
+        }
+        const userGroupCreateRequest = new UserGroupPatchRequest({
+            setUserGroup: this.props.setUserGroup,
+            handleModalClose: this.props.handleModalClose,
+            userStrings: this.props.userStrings,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.userGroupCreateRequest = userGroupCreateRequest.create(userGroupId, {
+            title, description,
+        });
+        this.userGroupCreateRequest.start();
     }
 
     // FORM RELATED
@@ -166,15 +116,10 @@ export default class UserGroupEdit extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        if (this.userGroupCreateRequest) {
-            this.userGroupCreateRequest.stop();
-        }
-
-        this.userGroupCreateRequest = this.createRequestForUserGroupPatch(
+        this.startRequestForUserGroupPatch(
             this.props.userGroup.id,
             values,
         );
-        this.userGroupCreateRequest.start();
     };
 
     // BUTTONS

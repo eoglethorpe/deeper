@@ -7,7 +7,6 @@ import {
     compareString,
     compareDate,
 } from '../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
@@ -25,17 +24,14 @@ import {
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../redux';
-import {
-    createUrlForUserMembership,
-    createParamsForUserMembershipDelete,
-    createParamsForUserMembershipRoleChange,
-} from '../../../rest';
 import { iconNames } from '../../../constants';
-import schema from '../../../schema';
-import notify from '../../../notify';
+
+import MembershipRoleChangeRequest from '../requests/MembershipRoleChangeRequest';
+import MembershipDeleteRequest from '../requests/MembershipDeleteRequest';
 
 import AddUserGroupMembers from './AddUserGroupMembers';
 import ActionButtons from './ActionButtons';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -83,6 +79,7 @@ export default class MembersTable extends React.PureComponent {
             actionPending: false,
             selectedMember: {},
         };
+
         this.memberHeaders = [
             {
                 key: 'memberName',
@@ -136,96 +133,45 @@ export default class MembersTable extends React.PureComponent {
         });
     }
 
-    createRequestForMembershipDelete = (membershipId) => {
-        const userGroupId = this.props.userGroupId;
-        const urlForMembership = createUrlForUserMembership(membershipId);
-
-        const membershipDeleteRequest = new FgRestBuilder()
-            .url(urlForMembership)
-            .params(() => createParamsForUserMembershipDelete())
-            .preLoad(() => { this.setState({ actionPending: true }); })
-            .postLoad(() => { this.setState({ actionPending: false }); })
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unSetMembership({
-                        membershipId,
-                        userGroupId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userMembershipDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userMembershipDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipDeleteFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return membershipDeleteRequest;
+    componentWillUnmount() {
+        if (this.membershipRoleChangeRequest) {
+            this.membershipRoleChangeRequest.stop();
+        }
+        if (this.membershipDeleteRequest) {
+            this.membershipDeleteRequest.stop();
+        }
     }
 
-    createRequestForMembershipRoleChange = ({ membershipId, newRole }) => {
-        const urlForUserMembershipPatch = createUrlForUserMembership(membershipId);
-        const userGroupId = this.props.userGroupId;
+    startRequestForMembershipRoleChange = (params) => {
+        if (this.membershipRoleChangeRequest) {
+            this.membershipRoleChangeRequest.stop();
+        }
+        const { userGroupId } = this.props;
+        const membershipRoleChangeRequest = new MembershipRoleChangeRequest({
+            setUserMembership: this.props.setUserMembership,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.membershipRoleChangeRequest = membershipRoleChangeRequest.create(
+            params, userGroupId,
+        );
+        this.membershipRoleChangeRequest.start();
+    }
 
-        const membershipRoleChangeRequest = new FgRestBuilder()
-            .url(urlForUserMembershipPatch)
-            .params(() => createParamsForUserMembershipRoleChange({ newRole }))
-            .preLoad(() => { this.setState({ actionPending: true }); })
-            .postLoad(() => { this.setState({ actionPending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate({ results: [response] }, 'userMembershipCreateResponse');
-                    this.props.setUserMembership({
-                        userMembership: response,
-                        userGroupId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userMembershipRole'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userMembershipRoleSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipRole'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipRoleFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipRole'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipRoleFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return membershipRoleChangeRequest;
+    startRequestForMembershipDelete = (membershipId) => {
+        if (this.membershipDeleteRequest) {
+            this.membershipDeleteRequest.stop();
+        }
+        const userGroupId = this.props.userGroupId;
+        const membershipDeleteRequest = new MembershipDeleteRequest({
+            unSetMembership: this.props.unSetMembership,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.membershipDeleteRequest = membershipDeleteRequest.create(
+            membershipId, userGroupId,
+        );
+        this.membershipDeleteRequest.start();
     }
 
     handleAddMemberClick = (row) => {
@@ -240,8 +186,7 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleDeleteMemberClick = (row) => {
-        const confirmText = `Are you sure you want to remove
-            ${row.memberName}?`;
+        const confirmText = this.props.userStrings('confirmTextRemoveMember', { memberName: row.memberName });
 
         this.setState({
             confirmText,
@@ -253,14 +198,7 @@ export default class MembersTable extends React.PureComponent {
     handleDeleteMemberClose = (confirm) => {
         const { selectedMember } = this.state;
         if (confirm) {
-            if (this.membershipDeleteRequest) {
-                this.membershipDeleteRequest.stop();
-            }
-
-            this.membershipDeleteRequest = this.createRequestForMembershipDelete(
-                selectedMember.id,
-            );
-            this.membershipDeleteRequest.start();
+            this.startRequestForMembershipDelete(selectedMember.id);
         }
         this.setState({ deleteMemberConfirmShow: false });
     }
@@ -277,11 +215,10 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleToggleMemberRoleClick = (member) => {
-        const accessRight = member.role === 'admin'
-            ? this.props.userStrings('confirmTextRevokeAdmin')
-            : this.props.userStrings('confirmTextGrantAdmin');
+        const confirmText = member.role === 'admin'
+            ? this.props.userStrings('confirmTextRevokeAdmin', { memberName: member.memberName })
+            : this.props.userStrings('confirmTextGrantAdmin', { memberName: member.memberName });
 
-        const confirmText = `${accessRight} ${member.memberName}?`;
         this.setState({
             toggleRoleConfirmShow: true,
             confirmText,
@@ -292,16 +229,10 @@ export default class MembersTable extends React.PureComponent {
     handleToggleMemberRole = (confirm) => {
         const { selectedMember } = this.state;
         if (confirm) {
-            if (this.membershipRoleChangeRequest) {
-                this.membershipRoleChangeRequest.stop();
-            }
-
-            this.membershipRoleChangeRequest = this.createRequestForMembershipRoleChange({
+            this.startRequestForMembershipRoleChange({
                 membershipId: selectedMember.id,
                 newRole: selectedMember.role === 'admin' ? 'normal' : 'admin',
             });
-
-            this.membershipRoleChangeRequest.start();
         }
         this.setState({ toggleRoleConfirmShow: false });
     }

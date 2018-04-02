@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { compareString } from '../../../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import Form, { requiredCondition } from '../../../../vendor/react-store/components/Input/Form';
 import update from '../../../../vendor/react-store/utils/immutable-update';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
@@ -12,13 +11,6 @@ import PrimaryButton from '../../../../vendor/react-store/components/Action/Butt
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import TabularSelectInput from '../../../../vendor/react-store/components/Input/TabularSelectInput';
 
-import {
-    transformResponseErrorToFormError,
-    urlForUserMembership,
-    createParamsForUserMembershipCreate,
-    createParamsForUser,
-    createUrlForUsers,
-} from '../../../../rest';
 import {
     usersInformationListSelector,
     setUsersInformationAction,
@@ -29,9 +21,10 @@ import {
     notificationStringsSelector,
     userStringsSelector,
 } from '../../../../redux';
-import schema from '../../../../schema';
-import notify from '../../../../notify';
 import { iconNames } from '../../../../constants';
+
+import UsersGetRequest from '../../requests/UsersGetRequest';
+import MembershipPostRequest from '../../requests/MembershipPostRequest';
 
 import styles from './styles.scss';
 
@@ -84,7 +77,9 @@ export default class AddUserGroupMembers extends React.PureComponent {
             users,
         } = props;
 
-        const usersWithRole = users.map(user => ({ ...user, role: 'normal' }));
+        const usersWithRole = users.map(
+            user => ({ ...user, role: 'normal' }),
+        );
         const membersBlackList = (userGroupDetails.memberships || emptyList).map(d => d.member);
 
         this.state = {
@@ -147,19 +142,16 @@ export default class AddUserGroupMembers extends React.PureComponent {
     }
 
     componentWillMount() {
-        if (this.usersRequest) {
-            this.usersRequest.stop();
-        }
-
-        this.usersRequest = this.createRequestForUsers();
-        this.usersRequest.start();
+        this.startRequestForUsers();
     }
 
     componentWillReceiveProps(nextProps) {
-        const { users } = this.props;
+        const { users } = nextProps;
 
-        if (nextProps.users !== users) {
-            const usersWithRole = users.map(user => ({ ...user, role: 'normal' }));
+        if (this.props.users !== users) {
+            const usersWithRole = users.map(
+                user => ({ ...user, role: 'normal' }),
+            );
             this.setState({ usersWithRole });
         }
     }
@@ -171,6 +163,35 @@ export default class AddUserGroupMembers extends React.PureComponent {
         if (this.usersRequest) {
             this.usersRequest.stop();
         }
+    }
+
+    startRequestForUsers = () => {
+        if (this.usersRequest) {
+            this.usersRequest.stop();
+        }
+        const usersRequest = new UsersGetRequest({
+            setUsers: this.props.setUsers,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.usersRequest = usersRequest.create();
+        this.usersRequest.start();
+    }
+
+    startRequestForMembershipCreate = (memberList) => {
+        if (this.membershipCreateRequest) {
+            this.membershipCreateRequest.stop();
+        }
+        const { userGroupId } = this.props;
+        const membershipCreateRequest = new MembershipPostRequest({
+            setUsersMembership: this.props.setUsersMembership,
+            onModalClose: this.props.onModalClose,
+            notificationStrings: this.props.notificationStrings,
+            userStrings: this.props.userStrings,
+            setState: v => this.setState(v),
+        });
+        this.membershipCreateRequest = membershipCreateRequest.create(memberList, userGroupId);
+        this.membershipCreateRequest.start();
     }
 
     handleRoleChangeForNewMember = (member) => {
@@ -193,84 +214,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 pristine: true,
             });
         }
-    }
-
-    createRequestForUsers = () => {
-        const usersFields = ['display_name', 'email', 'id'];
-        const usersRequest = new FgRestBuilder()
-            .url(createUrlForUsers(usersFields))
-            .params(() => createParamsForUser())
-            .preLoad(() => this.setState({ pending: true }))
-            .postLoad(() => this.setState({ pending: false }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'usersGetResponse');
-                    this.props.setUsers({
-                        users: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return usersRequest;
-    }
-
-    createRequestForMembershipCreate = (memberList) => {
-        const { userGroupId } = this.props;
-
-        const membershipCreateRequest = new FgRestBuilder()
-            .url(urlForUserMembership)
-            .params(() => createParamsForUserMembershipCreate({ memberList }))
-            .preLoad(() => { this.setState({ addPending: true }); })
-            .postLoad(() => { this.setState({ addPending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userMembershipCreateResponse');
-                    this.props.setUsersMembership({
-                        usersMembership: response.results,
-                        userGroupId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('userMembershipCreate'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userMembershipCreateSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                    this.props.onModalClose();
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipCreate'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipCreateFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('userMembershipCreate'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userMembershipCreateFatal'),
-                    duration: notify.duration.SLOW,
-                });
-                this.setState({
-                    formErrors: { errors: ['Error while trying to add members.'] },
-                });
-            })
-            .build();
-        return membershipCreateRequest;
     }
 
     // FORM RELATED
@@ -299,12 +242,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
             group: userGroupId,
         }));
 
-        if (this.membershipCreateRequest) {
-            this.membershipCreateRequest.stop();
-        }
-
-        this.membershipCreateRequest = this.createRequestForMembershipCreate(newMembersList);
-        this.membershipCreateRequest.start();
+        this.startRequestForMembershipCreate(newMembersList);
     };
 
     render() {

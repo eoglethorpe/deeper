@@ -35,12 +35,6 @@ $height-add-member-modal: 600px;
         flex-grow: 1;
         background-color: $color-background-row;
         overflow-y: auto;
-
-        .link {
-            margin: 1px;
-            padding: 0 $spacing-medium;
-            text-transform: none;
-        }
     }
 }
 

@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -18,35 +17,28 @@ import UserGroupEdit from './UserGroupEdit';
 import {
     groupSelector,
     setUserGroupAction,
-    setUsersInformationAction,
     unSetUserGroupAction,
 
     activeUserSelector,
     groupIdFromRouteSelector,
     userStringsSelector,
 } from '../../redux';
-import {
-    createParamsForUser,
-    createUrlForUserGroup,
-    createUrlForUsers,
-} from '../../rest';
 import { iconNames } from '../../constants';
-import schema from '../../schema';
+
+import UserGroupGetRequest from './requests/UserGroupGetRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
     userGroup: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setUserGroup: PropTypes.func.isRequired,
-    setUsers: PropTypes.func.isRequired,
     unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userGroupId: PropTypes.number.isRequired,
     userStrings: PropTypes.func.isRequired,
 };
 
-const defaultProps = {
-};
+const defaultProps = {};
 
 const mapStateToProps = (state, props) => ({
     userGroup: groupSelector(state, props),
@@ -57,7 +49,6 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
-    setUsers: params => dispatch(setUsersInformationAction(params)),
     unSetUserGroup: params => dispatch(unSetUserGroupAction(params)),
 });
 
@@ -72,82 +63,37 @@ export default class UserGroup extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { userGroupId } = this.props;
-
         this.state = {
             showUserGroupEditModal: false,
             pending: true,
         };
-
-        this.usersFields = ['display_name', 'email', 'id'];
-
-        this.userGroupRequest = this.createRequestForUserGroup(userGroupId);
-        this.usersRequest = this.createRequestForUsers();
     }
 
     componentWillMount() {
-        this.userGroupRequest.start();
-        this.usersRequest.start();
+        const { userGroupId } = this.props;
+        this.startRequestForUserGroup(userGroupId);
     }
 
     componentWillUnmount() {
-        this.userGroupRequest.stop();
-        this.usersRequest.stop();
+        if (this.userGroupRequest) {
+            this.userGroupRequest.stop();
+        }
+        if (this.usersRequest) {
+            this.usersRequest.stop();
+        }
     }
 
-    createRequestForUserGroup = (id) => {
-        const urlForUserGroup = createUrlForUserGroup(id);
-        const userGroupRequest = new FgRestBuilder()
-            .url(urlForUserGroup)
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ pending: true }); })
-            .postLoad(() => { this.setState({ pending: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'userGroupGetResponse');
-                    this.props.setUserGroup({
-                        userGroup: response,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                if (response.errorCode === 404) {
-                    this.props.unSetUserGroup({ userGroupId: id });
-                } else {
-                    console.info('FAILURE:', response);
-                }
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return userGroupRequest;
-    }
-
-    createRequestForUsers = () => {
-        const usersRequest = new FgRestBuilder()
-            .url(createUrlForUsers([this.usersFields]))
-            .params(() => createParamsForUser())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'usersGetResponse');
-                    this.props.setUsers({
-                        users: response.results,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-            })
-            .build();
-        return usersRequest;
+    startRequestForUserGroup = (id) => {
+        if (this.userGroupRequest) {
+            this.userGroupRequest.stop();
+        }
+        const userGroupRequest = new UserGroupGetRequest({
+            setUserGroup: this.props.setUserGroup,
+            unSetUserGroup: this.props.unSetUserGroup,
+            setState: v => this.setState(v),
+        });
+        this.userGroupRequest = userGroupRequest.create(id);
+        this.userGroupRequest.start();
     }
 
     isCurrentUserAdmin = memberData => (

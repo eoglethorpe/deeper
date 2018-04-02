@@ -62,15 +62,6 @@ $info-height: 144px;
         }
     }
 
-    .label {
-        flex-shrink: 0;
-        margin: 0;
-        padding: 0 $spacing-medium-alt;
-        text-transform: uppercase;
-        color: $color-text-label;
-        font-size: $font-size-small;
-    }
-
     .description {
         flex-grow: 1;
         margin: 0;
