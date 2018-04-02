@@ -3,15 +3,10 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Tabs, TabLink, TabContent } from 'react-tabs-redux';
 
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
-import {
-    createParamsForCountryDelete,
-    createUrlForRegion,
-} from '../../../rest';
 import {
     countryDetailSelector,
     unSetRegionAction,
@@ -21,7 +16,8 @@ import {
 } from '../../../redux';
 import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
-import notify from '../../../notify';
+
+import RegionDeleteRequest from '../requests/RegionDeleteRequest';
 
 import CountryGeneral from './CountryGeneral';
 import CountryKeyFigures from './CountryKeyFigures';
@@ -74,68 +70,35 @@ export default class CountryDetail extends React.PureComponent {
         };
     }
 
+    componentWillUnmount() {
+        if (this.regionDeleteRequest) {
+            this.regionDeleteRequest.stop();
+        }
+    }
+
     onClickDeleteButton = () => {
         this.setState({
             deleteCountry: true,
         });
     }
 
-    createRequestForRegionDelete = (regionId) => {
-        const urlForRegionDelete = createUrlForRegion(regionId);
-        const regionDeleteRequest = new FgRestBuilder()
-            .url(urlForRegionDelete)
-            .params(() => createParamsForCountryDelete())
-            .preLoad(() => {
-                this.setState({ deletePending: true });
-            })
-            .success(() => {
-                // FIXME: write schema
-                try {
-                    this.props.unSetRegion({ regionId });
-                    notify.send({
-                        title: this.props.notificationStrings('countryDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('countryDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .postLoad(() => {
-                this.setState({ deletePending: false });
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('countryDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryDeleteFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('countryDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryDeleteFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return regionDeleteRequest;
+    startRequestForRegionDelete = (regionId) => {
+        if (this.regionDeleteRequest) {
+            this.regionDeleteRequest.stop();
+        }
+        const regionDeleteRequest = new RegionDeleteRequest({
+            unSetRegion: this.props.unSetRegion,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.regionDeleteRequest = regionDeleteRequest.create(regionId);
+        this.regionDeleteRequest.start();
     }
 
     deleteActiveCountry = (confirm) => {
         if (confirm) {
             const { countryDetail } = this.props;
-
-            if (this.regionDeleteRequest) {
-                this.regionDeleteRequest.stop();
-            }
-            this.regionDeleteRequest = this.createRequestForRegionDelete(
-                countryDetail.id);
-
-            this.regionDeleteRequest.start();
+            this.startRequestForRegionDelete(countryDetail.id);
         }
         this.setState({ deleteCountry: false });
     }

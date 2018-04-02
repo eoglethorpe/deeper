@@ -2,17 +2,13 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
-
-import {
-    createParamsForUser,
-    createUrlForRegionWithField,
-} from '../../../../rest';
 import {
     countryDetailSelector,
     setRegionDetailsAction,
 } from '../../../../redux';
-import schema from '../../../../schema';
+
+import RegionGetRequest from '../../requests/RegionGetRequest';
+
 import RegionDetail from '../../../../components/RegionDetail';
 import RegionAdminLevel from '../../../../components/RegionAdminLevel';
 import RegionMap from '../../../../components/RegionMap';
@@ -46,42 +42,26 @@ export default class CountryGeneral extends React.PureComponent {
         this.state = {
             dataLoading: true,
         };
-
-        this.requestForRegion = this.createRegionRequest(props.countryDetail.id);
     }
 
     componentWillMount() {
+        this.startRegionRequest(this.props.countryDetail.id);
+    }
+
+    startRegionRequest = (regionId) => {
+        if (this.requestForRegion) {
+            this.requestForRegion.stop();
+        }
+        const requestForRegion = new RegionGetRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            setState: v => this.setState(v),
+        });
+        this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
     }
 
-    createRegionRequest = (regionId) => {
-        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
-
-        const regionRequest = new FgRestBuilder()
-            .url(urlForRegionForRegionalGroups)
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ dataLoading: true }); })
-            .postLoad(() => { this.setState({ dataLoading: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'region');
-                    this.props.setRegionDetails({
-                        regionDetails: response,
-                        regionId,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return regionRequest;
-    }
-
     render() {
-        const {
-            countryDetail,
-        } = this.props;
-
+        const { countryDetail } = this.props;
         const { dataLoading } = this.state;
 
         return (

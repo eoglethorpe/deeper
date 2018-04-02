@@ -3,7 +3,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { caseInsensitiveSubmatch, compareString } from '../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
@@ -12,10 +11,6 @@ import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 
 import {
-    createParamsForUser,
-    urlForRegions,
-} from '../../rest';
-import {
     regionsListSelector,
     countryIdFromRouteSelector,
 
@@ -23,12 +18,14 @@ import {
     activeUserSelector,
     countriesStringsSelector,
 } from '../../redux';
-import schema from '../../schema';
 import { iconNames } from '../../constants';
 import AddRegion from '../../components/AddRegion';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
+
+import CountriesGetRequest from './requests/CountriesGetRequest';
+
 import CountryDetail from './CountryDetail';
 import CountryListItem from './CountryListItem';
 import styles from './styles.scss';
@@ -75,12 +72,10 @@ export default class CountryPanel extends React.PureComponent {
             displayCountryList,
             searchInputValue: '',
         };
-
-        this.countriesRequest = this.createRequestforCountries();
     }
 
     componentWillMount() {
-        this.countriesRequest.start();
+        this.startRequestForCountries();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -96,7 +91,9 @@ export default class CountryPanel extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.countriesRequest.stop();
+        if (this.countriesRequest) {
+            this.countriesRequest.stop();
+        }
     }
 
     onAddCountry = () => {
@@ -118,22 +115,15 @@ export default class CountryPanel extends React.PureComponent {
         return styleNames.join(' ');
     }
 
-    createRequestforCountries = () => {
-        const countriesRequest = new FgRestBuilder()
-            .url(urlForRegions)
-            .params(() => createParamsForUser())
-            .success((response) => {
-                try {
-                    schema.validate(response, 'regionsGetResponse');
-                    this.props.setRegions({
-                        regions: response.results,
-                    });
-                } catch (er) {
-                    console.error(er, response);
-                }
-            })
-            .build();
-        return countriesRequest;
+    startRequestForCountries = () => {
+        if (this.countriesRequest) {
+            this.countriesRequest.stop();
+        }
+        const countriesRequest = new CountriesGetRequest({
+            setRegions: this.props.setRegions,
+        });
+        this.countriesRequest = countriesRequest.create();
+        this.countriesRequest.start();
     }
 
     handleSearchInputChange = (searchInputValue) => {

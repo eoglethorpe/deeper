@@ -555,6 +555,7 @@ const initialLangState = {
                 8101: 'Delete this Assessment',
                 8102: 'Edit this Assessment',
                 8501: 'Select a source to add new lead',
+                1003: 'Error while trying to save region detail.',
             },
             views: {
                 af: {
@@ -806,6 +807,7 @@ const initialLangState = {
                     loadGeoShapeFile: 125,
                     regionGeneralInfoLabel: 378,
                     addRegionButtonLabel: 301,
+                    regionPatchErrorText: 1003,
                 },
                 entry: {
                     serverErrorText: 500,
