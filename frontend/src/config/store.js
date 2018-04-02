@@ -8,4 +8,11 @@ const storeConfig = {
     // storage: localStorage,
     storage: localforage,
 };
+
+export const reducersToSync = [
+    'auth',
+    'domain-data',
+    'app',
+];
+
 export default storeConfig;

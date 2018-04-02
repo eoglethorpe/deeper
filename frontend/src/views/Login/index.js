@@ -211,7 +211,6 @@ export default class Login extends React.PureComponent {
                     const { refresh, access } = response;
                     this.props.login({ refresh, access });
                     this.props.startSiloTasks(() => console.log('Silo tasks started'));
-
                     this.props.authenticate();
                 } catch (err) {
                     console.error(err);

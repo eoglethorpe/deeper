@@ -1,6 +1,7 @@
 import update from '../../vendor/react-store/utils/immutable-update';
 import createReducerWithMap from '../../utils/createReducerWithMap';
 import initialAppState from '../initial-state/app';
+import { LOGOUT_ACTION } from '../reducers/auth';
 
 // TYPE
 
@@ -15,6 +16,8 @@ export const setWaitingForProjectAction = value => ({
 
 // REDUCER
 
+const logout = () => initialAppState;
+
 const setWaitingForProject = (state, action) => {
     const { value } = action;
     const settings = {
@@ -24,6 +27,7 @@ const setWaitingForProject = (state, action) => {
 };
 
 export const appReducers = {
+    [LOGOUT_ACTION]: logout,
     [SET_WAITING_FOR_PROJECT_ACTION]: setWaitingForProject,
 };
 

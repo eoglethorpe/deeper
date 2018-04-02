@@ -4,12 +4,15 @@ import logger from './redux/middlewares/logger';
 import siloBackgroundTasks from './redux/middlewares/siloBackgroundTasks';
 import { sendToken } from './utils/browserExtension';
 import { commonHeaderForPost, authorizationHeaderForPost } from './config/rest';
+import { createActionSyncMiddleware } from './vendor/react-store/utils/redux-sync.js';
 
 import reducer from './redux/reducers';
+import { reducersToSync } from './config/store';
 
 // Invoke refresh access token every 10m
 const middleware = [
     logger,
+    createActionSyncMiddleware(reducersToSync),
     siloBackgroundTasks,
     thunk,
 ];

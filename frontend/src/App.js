@@ -22,7 +22,6 @@ import {
     logoutAction,
     tokenSelector,
     activeUserSelector,
-    setWaitingForProjectAction,
     readySelector,
 } from './redux';
 import getUserConfirmation from './utils/getUserConfirmation';
@@ -42,7 +41,6 @@ const mapDispatchToProps = dispatch => ({
     startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
     stopSiloTasks: () => dispatch(stopSiloBackgroundTasksAction()),
     logout: () => dispatch(logoutAction()),
-    setWaitingForProject: params => dispatch(setWaitingForProjectAction(params)),
 });
 
 const propTypes = {
