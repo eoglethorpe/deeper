@@ -4,11 +4,11 @@ import widgetStore from '../../../widgets';
 
 // TYPE
 
-export const AF__SET_ANALYSIS_FRAMEWORK = 'silo-domain-data/AF__SET_ANALYSIS_FRAMEWORK';
+export const AF__SET_ANALYSIS_FRAMEWORK = 'siloDomainData/AF__SET_ANALYSIS_FRAMEWORK';
 
-export const AF__VIEW_ADD_WIDGET = 'silo-domain-data/AF__VIEW_ADD_WIDGET';
-export const AF__REMOVE_WIDGET = 'silo-domain-data/AF__REMOVE_WIDGET';
-export const AF__VIEW_UPDATE_WIDGET = 'silo-domain-data/AF_VIEW_UPDATE_WIDGET';
+export const AF__VIEW_ADD_WIDGET = 'siloDomainData/AF__VIEW_ADD_WIDGET';
+export const AF__REMOVE_WIDGET = 'siloDomainData/AF__REMOVE_WIDGET';
+export const AF__VIEW_UPDATE_WIDGET = 'siloDomainData/AF_VIEW_UPDATE_WIDGET';
 
 // CREATOR
 

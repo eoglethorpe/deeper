@@ -2,11 +2,11 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_ANALYSIS_FRAMEWORK = 'domain-data/SET_ANALYSIS_FRAMEWORK';
-export const SET_ANALYSIS_FRAMEWORKS = 'domain-data/SET_ANALYSIS_FRAMEWORKS';
-export const ADD_NEW_AF = 'domain-data/ADD_NEW_AF';
-export const SET_PROJECT_AF = 'domain-data/SET_PROJECT_AF';
-export const SET_AF_DETAIL = 'domain-data/SET_AF_DETAIL';
+export const SET_ANALYSIS_FRAMEWORK = 'domainData/SET_ANALYSIS_FRAMEWORK';
+export const SET_ANALYSIS_FRAMEWORKS = 'domainData/SET_ANALYSIS_FRAMEWORKS';
+export const ADD_NEW_AF = 'domainData/ADD_NEW_AF';
+export const SET_PROJECT_AF = 'domainData/SET_PROJECT_AF';
+export const SET_AF_DETAIL = 'domainData/SET_AF_DETAIL';
 
 // ACTION-CREATOR
 

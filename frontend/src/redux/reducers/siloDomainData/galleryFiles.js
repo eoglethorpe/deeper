@@ -2,12 +2,12 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const USER_GALLERY_FILES_SAVE = 'domain-data/USER/GALLERY_FILES';
+export const GF__USER_GALLERY_FILES_SAVE = 'siloDomainData/USER_GALLERY_FILES_SAVE';
 
 // ACTION-CREATOR
 
 export const setUserGalleryFilesAction = ({ galleryFiles }) => ({
-    type: USER_GALLERY_FILES_SAVE,
+    type: GF__USER_GALLERY_FILES_SAVE,
     galleryFiles,
 });
 
@@ -30,6 +30,6 @@ const setUserGalleryFiles = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [USER_GALLERY_FILES_SAVE]: setUserGalleryFiles,
+    [GF__USER_GALLERY_FILES_SAVE]: setUserGalleryFiles,
 };
 export default reducers;

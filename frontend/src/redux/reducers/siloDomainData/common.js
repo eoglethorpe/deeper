@@ -8,8 +8,8 @@ import initialSiloDomainData from '../../initial-state/siloDomainData';
 
 // TYPE
 
-export const SET_ACTIVE_PROJECT = 'silo-domain-data/SET_ACTIVE_PROJECT';
-export const SET_ACTIVE_COUNTRY = 'silo-domain-data/SET_ACTIVE_COUNTRY';
+export const SET_ACTIVE_PROJECT = 'siloDomainData/SET_ACTIVE_PROJECT';
+export const SET_ACTIVE_COUNTRY = 'siloDomainData/SET_ACTIVE_COUNTRY';
 
 // ACTION-CREATOR
 

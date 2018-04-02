@@ -2,16 +2,16 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const L__SET_LEADS = 'domain-data/L__SET_LEADS';
-export const L__PATCH_LEAD = 'domain-data/L__PATCH_LEAD';
-export const L__REMOVE_LEAD = 'domain-data/L__REMOVE_LEAD';
+export const L__SET_LEADS = 'siloDomainData/SET_LEADS';
+export const L__PATCH_LEAD = 'siloDomainData/PATCH_LEAD';
+export const L__REMOVE_LEAD = 'siloDomainData/REMOVE_LEAD';
 
-export const L__SET_FILTER = 'silo-domain-data/L__SET_FILTER';
-export const L__UNSET_FILTER = 'silo-domain-data/L__UNSET_FILTER';
+export const L__SET_FILTER = 'siloDomainData/SET_FILTER';
+export const L__UNSET_FILTER = 'siloDomainData/UNSET_FILTER';
 
-export const L__SET_ACTIVE_PAGE = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_PAGE';
-export const L__SET_ACTIVE_SORT = 'silo-domain-data/SET_LEAD_PAGE_ACTIVE_SORT';
-export const L__SET_LEADS_PER_PAGE = 'silo-domain-data/SET_LEADS_PER_PAGE';
+export const L__SET_ACTIVE_PAGE = 'siloDomainData/SET_LEAD_PAGE_ACTIVE_PAGE';
+export const L__SET_ACTIVE_SORT = 'siloDomainData/SET_LEAD_PAGE_ACTIVE_SORT';
+export const L__SET_LEADS_PER_PAGE = 'siloDomainData/SET_LEADS_PER_PAGE';
 
 // ACTION-CREATOR
 

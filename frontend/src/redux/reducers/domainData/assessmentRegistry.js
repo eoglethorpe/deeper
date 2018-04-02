@@ -2,8 +2,8 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const ARY__SET_TEMPLATE = 'domain-data/ARY__SET_TEMPLATE';
-export const ARY__SET_ARY_FILTER_OPTIONS = 'domain-data/ARY__SET_ARY_FILTER_OPTIONS';
+export const ARY__SET_TEMPLATE = 'domainData/ARY__SET_TEMPLATE';
+export const ARY__SET_ARY_FILTER_OPTIONS = 'domainData/ARY__SET_ARY_FILTER_OPTIONS';
 
 // ACTION-CREATOR
 

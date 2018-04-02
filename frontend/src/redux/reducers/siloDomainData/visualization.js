@@ -2,14 +2,14 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_LEAD_VISUALIZATION = 'domain-data/VISUALIZATION/LEAD';
+export const V__SET_LEAD_VISUALIZATION = 'siloDomainData/SET_LEAD_VISUALIZATION';
 
 // ACTION-CREATOR
 
 export const setLeadVisualizationAction = ({
     projectId, hierarchial, correlation, keywordCorrelation, geoPoints,
 }) => ({
-    type: SET_LEAD_VISUALIZATION,
+    type: V__SET_LEAD_VISUALIZATION,
     projectId,
     hierarchial,
     correlation,
@@ -167,6 +167,6 @@ const setLeadVisualization = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [SET_LEAD_VISUALIZATION]: setLeadVisualization,
+    [V__SET_LEAD_VISUALIZATION]: setLeadVisualization,
 };
 export default reducers;

@@ -2,8 +2,8 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_USER_EXPORTS = 'domain-data/SET_USER_EXPORTS';
-export const SET_USER_EXPORT = 'domain-data/SET_USER_EXPORT';
+export const SET_USER_EXPORTS = 'domainData/SET_USER_EXPORTS';
+export const SET_USER_EXPORT = 'domainData/SET_USER_EXPORT';
 
 // ACTION-CREATOR
 

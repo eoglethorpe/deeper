@@ -653,10 +653,8 @@ export default class LeadAdd extends React.PureComponent {
 
     handleSaveButtonClick = () => {
         const leadId = this.props.activeLeadId;
-        const activeLeadForm = this.leadFormRefs[leadId];
-        if (activeLeadForm) {
-            activeLeadForm.start();
-        }
+        this.formCoordinator.add(leadId, this.leadFormRefs[leadId]);
+        this.formCoordinator.start();
     }
 
     handleFilteredSaveButtonClick = () => {

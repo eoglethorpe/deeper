@@ -3,23 +3,23 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const CE__SET_CATEGORY_EDITOR = 'silo-domain-data/CE__SET_CATEGORY_EDITOR';
-export const CE__ADD_NEW_CATEGORY = 'silo-domain-data/CE__ADD_NEW_CATEGORY';
-export const CE__SET_CATEGORY = 'silo-domain-data/CE__SET_CATEGORY';
-export const CE__REMOVE_CATEGORY = 'silo-domain-data/CE__REMOVE_CATEGORY';
-export const CE__SET_ACTIVE_CATEGORY_ID = 'silo-domain-data/CE__SET_ACTIVE_CATEGORY_ID';
-export const CE__ADD_NEW_SUBCATEGORY = 'silo-domain-data/CE__ADD_NEW_SUBCATEGORY';
-export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORIES';
-export const CE__UPDATE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__UPDATE_SELECTED_SUBCATEGORY';
-export const CE__REMOVE_SELECTED_SUBCATEGORY = 'silo-domain-data/CE__REMOVE_SELECTED_SUBCATEGORY';
-export const CE__ADD_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_SUBCATEGORY_NGRAM';
+export const CE__SET_CATEGORY_EDITOR = 'siloDomainData/CE__SET_CATEGORY_EDITOR';
+export const CE__ADD_NEW_CATEGORY = 'siloDomainData/CE__ADD_NEW_CATEGORY';
+export const CE__SET_CATEGORY = 'siloDomainData/CE__SET_CATEGORY';
+export const CE__REMOVE_CATEGORY = 'siloDomainData/CE__REMOVE_CATEGORY';
+export const CE__SET_ACTIVE_CATEGORY_ID = 'siloDomainData/CE__SET_ACTIVE_CATEGORY_ID';
+export const CE__ADD_NEW_SUBCATEGORY = 'siloDomainData/CE__ADD_NEW_SUBCATEGORY';
+export const CE__UPDATE_SELECTED_SUBCATEGORIES = 'siloDomainData/CE__UPDATE_SELECTED_SUBCATEGORIES';
+export const CE__UPDATE_SELECTED_SUBCATEGORY = 'siloDomainData/CE__UPDATE_SELECTED_SUBCATEGORY';
+export const CE__REMOVE_SELECTED_SUBCATEGORY = 'siloDomainData/CE__REMOVE_SELECTED_SUBCATEGORY';
+export const CE__ADD_SUBCATEGORY_NGRAM = 'siloDomainData/CE__ADD_SUBCATEGORY_NGRAM';
 
-export const CE__REMOVE_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__REMOVE_SUBCATEGORY_NGRAM';
-export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'silo-domain-data/CE__ADD_MANUAL_SUBCATEGORY_NGRAM';
+export const CE__REMOVE_SUBCATEGORY_NGRAM = 'siloDomainData/CE__REMOVE_SUBCATEGORY_NGRAM';
+export const CE__ADD_MANUAL_SUBCATEGORY_NGRAM = 'siloDomainData/CE__ADD_MANUAL_SUBCATEGORY_NGRAM';
 
-export const CE__SET_FILES = 'domain-data/CE__SET_FILES';
-export const CE__SET_NGRAMS = 'domain-data/CE__ADD_NGRAMS';
-export const CE__SET_SIMPLIFIED_PREVIEW_ID = 'domain-data/CE__SET_SIMPLIFIED_PREVIEW_ID';
+export const CE__SET_FILES = 'siloDomainData/CE__SET_FILES';
+export const CE__SET_NGRAMS = 'siloDomainData/CE__ADD_NGRAMS';
+export const CE__SET_SIMPLIFIED_PREVIEW_ID = 'siloDomainData/CE__SET_SIMPLIFIED_PREVIEW_ID';
 
 // ACTION-CREATOR
 

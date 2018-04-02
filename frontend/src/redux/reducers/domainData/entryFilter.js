@@ -2,7 +2,7 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_ENTRY_FILTER_OPTIONS = 'domain-data/SET_ENTRY_FILTER_OPTIONS';
+export const SET_ENTRY_FILTER_OPTIONS = 'domainData/SET_ENTRY_FILTER_OPTIONS';
 
 // ACTION-CREATOR
 

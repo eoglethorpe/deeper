@@ -10,9 +10,10 @@ const storeConfig = {
 };
 
 export const reducersToSync = [
-    'auth',
-    'domain-data',
     'app',
+    'lang',
+    'auth',
+    'domainData',
 ];
 
 export default storeConfig;

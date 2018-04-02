@@ -2,10 +2,10 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_CATEGORY_EDITORS = 'domain-data/SET_CATEGORY_EDITORS';
-export const ADD_NEW_CE = 'domain-data/ADD_NEW_CE';
-export const SET_PROJECT_CE = 'domain-data/SET_PROJECT_CE';
-export const SET_CE_DETAIL = 'domain-data/SET_CE_DETAIL';
+export const SET_CATEGORY_EDITORS = 'domainData/SET_CATEGORY_EDITORS';
+export const ADD_NEW_CE = 'domainData/ADD_NEW_CE';
+export const SET_PROJECT_CE = 'domainData/SET_PROJECT_CE';
+export const SET_CE_DETAIL = 'domainData/SET_CE_DETAIL';
 
 // ACTION-CREATOR
 

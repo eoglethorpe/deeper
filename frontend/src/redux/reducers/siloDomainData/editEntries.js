@@ -8,15 +8,15 @@ import {
 
 // TYPE
 
-export const EE__ADD_ENTRY = 'domain-data/EE__ADD_ENTRY';
-export const EE__REMOVE_ENTRY = 'domain-data/EE__REMOVE_ENTRY';
-export const EE__SET_ACTIVE_ENTRY = 'domain-data/EE__SET_ACTIVE_ENTRY';
-export const EE__SET_LEAD = 'silo-domain-data/EE__SET_LEAD';
-export const EE__ENTRY_SAVE = 'domain-data/EE__ENTRY_SAVE';
-export const EE__ENTRY_CHANGE = 'domain-data/EE__ENTRY_CHANGE';
-export const EE__ENTRY_DIFF = 'domain-data/EE__ENTRY_DIFF';
-export const EE__ENTRY_MARK_FOR_DELETE = 'domain-data/EE__ENTRY_MARK_FOR_DELETE';
-export const EE_REMOVE_ALL_ENTRIES = 'domain-data/EE_REMOVE_ALL_ENTRIES';
+export const EE__ADD_ENTRY = 'siloDomainData/EE__ADD_ENTRY';
+export const EE__REMOVE_ENTRY = 'siloDomainData/EE__REMOVE_ENTRY';
+export const EE__SET_ACTIVE_ENTRY = 'siloDomainData/EE__SET_ACTIVE_ENTRY';
+export const EE__SET_LEAD = 'siloDomainData/EE__SET_LEAD';
+export const EE__ENTRY_SAVE = 'siloDomainData/EE__ENTRY_SAVE';
+export const EE__ENTRY_CHANGE = 'siloDomainData/EE__ENTRY_CHANGE';
+export const EE__ENTRY_DIFF = 'siloDomainData/EE__ENTRY_DIFF';
+export const EE__ENTRY_MARK_FOR_DELETE = 'siloDomainData/EE__ENTRY_MARK_FOR_DELETE';
+export const EE_REMOVE_ALL_ENTRIES = 'siloDomainData/EE_REMOVE_ALL_ENTRIES';
 
 // CREATOR
 
