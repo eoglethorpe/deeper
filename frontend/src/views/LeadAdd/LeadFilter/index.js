@@ -7,11 +7,12 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
-import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
-import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
-import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
+import { BgRestBuilder } from '../../../vendor/react-store/utils/rest';
+import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
+import SelectInput from '../../../vendor/react-store/components/Input/SelectInput';
+import TextInput from '../../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../../vendor/react-store/components/Input/SearchInput';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 
 import {
     activeProjectSelector,
@@ -152,15 +153,10 @@ export default class LeadFilter extends React.PureComponent {
         const { filters, isFilterEmpty } = this.props;
 
         return (
-<<<<<<< HEAD:frontend/src/views/LeadAdd/LeadFilter/index.js
-            <div className={styles.leadFilters}>
-                <TextInput
-=======
             <div
                 className={styles.leadFilters}
             >
                 <SearchInput
->>>>>>> Use SearchInput:frontend/src/views/LeadAdd/LeadFilter.js
                     label={this.props.leadsStrings('placeholderSearch')}
                     onChange={this.handleSearchChange}
                     value={filters.search}

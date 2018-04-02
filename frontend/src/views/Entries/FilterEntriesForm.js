@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { isObjectEmpty } from '../../vendor/react-store/utils/common';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import RangeFilter from '../../vendor/react-store/components/Input/RangeFilter';
 import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
@@ -333,7 +334,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                 key="filters"
                 className="entries-filters"
             >
-                <TextInput
+                <SearchInput
                     className="entries-filter"
                     key="search"
                     label={this.props.entryStrings('searchFilterLabel')}
