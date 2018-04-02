@@ -556,6 +556,7 @@ const initialLangState = {
                 8102: 'Edit this Assessment',
                 8501: 'Select a source to add new lead',
                 1003: 'Error while trying to save region detail.',
+                1004: 'Simplifying lead',
             },
             views: {
                 af: {
@@ -726,6 +727,7 @@ const initialLangState = {
                     betaLabel: 1237,
                     youHaveUnsavedChanges: 1300,
                     deepFileNotFound: 1301,
+                    simplifyingLead: 1004,
                 },
                 countries: {
                     countriesLabel: 51,
