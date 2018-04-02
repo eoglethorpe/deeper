@@ -3,7 +3,7 @@ import localforage from 'localforage';
 
 const storeConfig = {
     // blacklist: ['domainData', 'siloDomainData'],
-    blacklist: ['notify', 'route', 'lang'],
+    blacklist: ['notify', 'route', 'lang', 'app'],
     key: 'deeper',
     // storage: localStorage,
     storage: localforage,

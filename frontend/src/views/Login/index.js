@@ -34,11 +34,8 @@ import {
 import {
     loginAction,
     authenticateAction,
-
-    currentUserProjectsSelector,
     loginStringsSelector,
 } from '../../redux';
-import { startRefreshAction } from '../../redux/middlewares/refresher';
 import { startSiloBackgroundTasksAction } from '../../redux/middlewares/siloBackgroundTasks';
 import { pathNames } from '../../constants';
 import schema from '../../schema';
@@ -52,10 +49,8 @@ import styles from './styles.scss';
 
 const propTypes = {
     authenticate: PropTypes.func.isRequired,
-    currentUserProjects: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     login: PropTypes.func.isRequired,
-    startRefresh: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
     loginStrings: PropTypes.func.isRequired,
 };
@@ -64,14 +59,12 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    currentUserProjects: currentUserProjectsSelector(state),
     loginStrings: loginStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     authenticate: () => dispatch(authenticateAction()),
     login: params => dispatch(loginAction(params)),
-    startRefresh: params => dispatch(startRefreshAction(params)),
     startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
 });
 
@@ -148,22 +141,15 @@ export default class Login extends React.PureComponent {
         if (query.access_token) {
             const params = createParamsForTokenCreateHid(query);
             this.login({ url: urlForTokenCreateHid, params });
-        } else {
-            console.warn('No access_token found');
         }
     }
 
     // FORM RELATED
-    // changeCallback = (values, { formErrors, formFieldErrors }) => {
     changeCallback = (values, fieldErrors, formErrors) => {
         this.setState({
             formValues: values,
             formErrors,
             formFieldErrors: fieldErrors,
-            /*
-            formFieldErrors: { ...this.state.formFieldErrors, ...formFieldErrors },
-            formErrors,
-            */
             pristine: true,
         });
     };
@@ -224,31 +210,14 @@ export default class Login extends React.PureComponent {
 
                     const { refresh, access } = response;
                     this.props.login({ refresh, access });
+                    this.props.startSiloTasks(() => console.log('Silo tasks started'));
 
-                    // after setAccessToken, current user is verified
-                    if (this.props.currentUserProjects.length <= 0) {
-                        console.warn('No projects in cache');
-                        // if there is no projects, block and get from api
-                        this.props.startRefresh(() => {
-                            this.setState({ pending: false });
-                            this.props.authenticate();
-                        });
-                    } else {
-                        this.setState({ pending: false });
-                        this.props.startRefresh();
-                        this.props.authenticate();
-                    }
-                    // FIXME: Maybe move immediately after authenticate()
-                    // Start the locked silo tasks
-                    this.props.startSiloTasks(() => {
-                        console.log('Silo tasks started');
-                    });
+                    this.props.authenticate();
                 } catch (err) {
                     console.error(err);
                 }
             })
             .failure((response) => {
-                console.info('FAILURE:', response);
                 const {
                     formFieldErrors,
                     formErrors,
@@ -262,8 +231,7 @@ export default class Login extends React.PureComponent {
                     this.showReCaptcha();
                 }
             })
-            .fatal((response) => {
-                console.info('FATAL:', response);
+            .fatal(() => {
                 this.setState({
                     formErrors: { errors: ['Error while trying to log in.'] },
                     pending: false,

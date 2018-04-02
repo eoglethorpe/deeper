@@ -1,7 +1,6 @@
 import { compose, createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import logger from './redux/middlewares/logger';
-import refresher from './redux/middlewares/refresher';
 import siloBackgroundTasks from './redux/middlewares/siloBackgroundTasks';
 import { sendToken } from './utils/browserExtension';
 import { commonHeaderForPost, authorizationHeaderForPost } from './config/rest';
@@ -11,7 +10,6 @@ import reducer from './redux/reducers';
 // Invoke refresh access token every 10m
 const middleware = [
     logger,
-    refresher,
     siloBackgroundTasks,
     thunk,
 ];

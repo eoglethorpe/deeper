@@ -13,7 +13,7 @@ import DropdownMenu from '../../../vendor/react-store/components/Action/Dropdown
 import DropdownGroup from '../../../vendor/react-store/components/Action/DropdownMenu/Group';
 
 import { stopSiloBackgroundTasksAction } from '../../../redux/middlewares/siloBackgroundTasks';
-import { stopRefreshAction } from '../../../redux/middlewares/refresher';
+// import { stopRefreshAction } from '../../../redux/middlewares/refresher';
 import { adminEndpoint } from '../../../config/rest';
 import {
     logoutAction,
@@ -45,7 +45,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
-    stopRefresh: () => dispatch(stopRefreshAction()),
+    // stopRefresh: () => dispatch(stopRefreshAction()),
     stopSiloTasks: () => dispatch(stopSiloBackgroundTasksAction()),
 });
 
@@ -54,7 +54,7 @@ const propTypes = {
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-    stopRefresh: PropTypes.func.isRequired,
+    // stopRefresh: PropTypes.func.isRequired,
     stopSiloTasks: PropTypes.func.isRequired,
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
@@ -62,6 +62,8 @@ const propTypes = {
     userInformation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     commonStrings: PropTypes.func.isRequired,
     pageTitleStrings: PropTypes.func.isRequired,
+    links: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    adminPanelLink: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -89,7 +91,7 @@ export default class Navdrop extends React.PureComponent {
     static getDropItemKey = item => item.key
 
     handleLogoutButtonClick = () => {
-        this.props.stopRefresh();
+        // this.props.stopRefresh();
         this.props.stopSiloTasks();
         this.props.logout();
     }

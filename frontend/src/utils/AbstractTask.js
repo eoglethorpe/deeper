@@ -1,11 +1,11 @@
 export default class AbstractTask {
     start() {
         console.err(this);
-        throw new Error('start() not implemented for Task');
+        throw new Error('Method start is not implemented');
     }
 
     stop() {
         console.err(this);
-        throw new Error('stop() not implemented for Task');
+        throw new Error('Method stop is not implemented');
     }
 }

@@ -1,31 +1,19 @@
-import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
+import { BgRestBuilder } from '../../../vendor/react-store/utils/rest';
 
-import { setGaUserId } from '../../config/google-analytics';
-import schema from '../../schema';
+import schema from '../../../schema';
 import {
     createParamsForProjects,
     urlForProjects,
-} from '../../rest';
+} from '../../../rest';
 
-import { activeUserSelector } from '../selectors/auth';
-import { setUserProjectsAction } from '../reducers/domainData/projects';
+import { activeUserSelector } from '../../selectors/auth';
+import { setUserProjectsAction } from '../../reducers/domainData/projects';
+import { setWaitingForProjectAction } from '../../reducers/app';
+import AbstractTask from '../../../utils/AbstractTask';
 
-
-export const START_REFRESH = 'refresh/START';
-export const STOP_REFRESH = 'refresh/STOP';
-
-export const startRefreshAction = loadCallback => ({
-    type: START_REFRESH,
-    loadCallback,
-});
-
-export const stopRefreshAction = () => ({
-    type: STOP_REFRESH,
-});
-
-
-class Refresher {
+export default class ProjectGet extends AbstractTask {
     constructor(store) {
+        super();
         this.store = store;
     }
 
@@ -37,15 +25,13 @@ class Refresher {
                 try {
                     schema.validate(response, 'projectsMiniGetResponse');
                     const { userId } = activeUserSelector(store.getState());
+
                     store.dispatch(setUserProjectsAction({
                         userId,
                         projects: response.results,
                         extra: response.extra,
                     }));
-
-                    if (this.loadCallback) {
-                        this.loadCallback();
-                    }
+                    store.dispatch(setWaitingForProjectAction(false));
                 } catch (er) {
                     console.error(er);
                 }
@@ -62,39 +48,16 @@ class Refresher {
         return projectsRequest;
     }
 
-    start = (loadCallback) => {
+    start = () => {
         this.stop();
-        this.loadCallback = loadCallback;
+
         this.projectsRequest = this.createProjectsRequest(this.store);
         this.projectsRequest.start();
-
-        const { userId } = activeUserSelector(this.store.getState());
-        setGaUserId(userId);
     }
 
     stop = () => {
         if (this.projectsRequest) {
             this.projectsRequest.stop();
         }
-        setGaUserId(undefined);
     }
 }
-
-const refresherMiddleware = (store) => {
-    const refresher = new Refresher(store);
-    return next => (action) => {
-        // store, next, action
-        switch (action.type) {
-            case START_REFRESH:
-                refresher.start(action.loadCallback);
-                break;
-            case STOP_REFRESH:
-                refresher.stop();
-                break;
-            default:
-        }
-        return next(action);
-    };
-};
-
-export default refresherMiddleware;
