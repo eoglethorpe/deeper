@@ -36,7 +36,7 @@ import {
 } from '../../../../redux';
 
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
-import GeoSelection from '../../../../components/GeoSelection/';
+import GeoListInput from '../../../../components/GeoListInput/';
 
 import AryPutRequest from '../../requests/AryPutRequest';
 
@@ -380,10 +380,11 @@ export default class Methodology extends React.PureComponent {
                         className={styles.affectedGroups}
                         data={affectedGroups}
                     />
-                    <GeoSelection
+                    <GeoListInput
+                        title={locationsTitle}
                         formname="locations"
                         className={styles.locationSelection}
-                        geoOptions={geoOptions}
+                        geoOptionsByRegion={geoOptions}
                         regions={projectDetails.regions}
                     />
                 </div>

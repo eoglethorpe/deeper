@@ -116,7 +116,7 @@ export default class OrganigramWithList extends React.PureComponent {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.handleCancelClick} >
-                        Close
+                        Cancel
                     </Button>
                     <PrimaryButton onClick={this.handleApplyClick} >
                         Apply
