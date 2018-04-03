@@ -74,7 +74,7 @@ export default class OrganigramWithList extends React.PureComponent {
         this.setState({ showOrgChartModal: false, value });
     }
 
-    handleSaveClick = () => {
+    handleApplyClick = () => {
         const { value } = this.state;
         const { onChange } = this.props;
 
@@ -118,7 +118,7 @@ export default class OrganigramWithList extends React.PureComponent {
                     <Button onClick={this.handleCancelClick} >
                         Close
                     </Button>
-                    <PrimaryButton onClick={this.handleSaveClick} >
+                    <PrimaryButton onClick={this.handleApplyClick} >
                         Apply
                     </PrimaryButton>
                 </ModalFooter>
