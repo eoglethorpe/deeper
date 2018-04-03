@@ -3,13 +3,13 @@ import { isTruthy, compareString } from '../../../vendor/react-store/utils/commo
 
 // TYPE
 
-export const SET_USER_PROJECTS = 'domain-data/SET_USER_PROJECTS';
-export const SET_USER_PROJECT = 'domain-data/SET_USER_PROJECT';
-export const SET_USER_PROJECT_OPTIONS = 'domain-data/SET_USER_PROJECT_OPTIONS';
-export const SET_USERS_PROJECT_MEMBERSHIP = 'domain-data/SET_USERS_PROJECT_MEMBERSHIP';
-export const SET_USER_PROJECT_MEMBERSHIP = 'domain-data/SET_USER_PROJECT_MEMBERSHIP';
-export const UNSET_USER_PROJECT_MEMBERSHIP = 'domain-data/UNSET_USER_PROJECT_MEMBERSHIP';
-export const UNSET_USER_PROJECT = 'domain-data/UNSET_USER_PROJECT';
+export const SET_USER_PROJECTS = 'domainData/SET_USER_PROJECTS';
+export const SET_USER_PROJECT = 'domainData/SET_USER_PROJECT';
+export const SET_USER_PROJECT_OPTIONS = 'domainData/SET_USER_PROJECT_OPTIONS';
+export const SET_USERS_PROJECT_MEMBERSHIP = 'domainData/SET_USERS_PROJECT_MEMBERSHIP';
+export const SET_USER_PROJECT_MEMBERSHIP = 'domainData/SET_USER_PROJECT_MEMBERSHIP';
+export const UNSET_USER_PROJECT_MEMBERSHIP = 'domainData/UNSET_USER_PROJECT_MEMBERSHIP';
+export const UNSET_USER_PROJECT = 'domainData/UNSET_USER_PROJECT';
 
 // ACTION-CREATOR
 

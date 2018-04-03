@@ -1,17 +1,20 @@
-import AbstractTask from './AbstractTask';
+import { BgRestBuilder } from '../../../vendor/react-store/utils/rest';
 
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import schema from '../../schema';
+import schema from '../../../schema';
 import {
     createParamsForTokenRefresh,
     urlForTokenRefresh,
-} from '../../rest';
+} from '../../../rest';
 
-import { tokenSelector } from '../selectors/auth';
-import { setAccessTokenAction } from '../reducers/auth';
+import { tokenSelector } from '../../selectors/auth';
+import { setAccessTokenAction } from '../../reducers/auth';
+import AbstractTask from '../../../utils/AbstractTask';
+
+const REFRESH_TIME = 1000 * 60 * 10;
+const REFRESH_CHECK_TIME = 1000;
 
 export default class TokenRefresher extends AbstractTask {
-    constructor(store, refreshTime = 1000 * 60 * 10, refreshCheckTime = 1000) {
+    constructor(store, refreshTime = REFRESH_TIME, refreshCheckTime = REFRESH_CHECK_TIME) {
         super();
 
         this.store = store;
@@ -26,7 +29,7 @@ export default class TokenRefresher extends AbstractTask {
 
     createRefreshRequest = (store) => {
         const { refresh } = tokenSelector(store.getState());
-        const refreshRequest = new FgRestBuilder()
+        const refreshRequest = new BgRestBuilder()
             .url(urlForTokenRefresh)
             .params(() => createParamsForTokenRefresh({ refresh }))
             .success((response) => {
@@ -43,9 +46,15 @@ export default class TokenRefresher extends AbstractTask {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
+                // NOTE: this will probably never be called
+                // because BgRestBuilder will never stop retrying
+                this.scheduleRefreshCheck();
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                // NOTE: this will probably never be called
+                // because BgRestBuilder will never stop retrying
+                this.scheduleRefreshCheck();
             })
             .build();
         return refreshRequest;

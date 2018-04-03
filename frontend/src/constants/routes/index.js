@@ -234,7 +234,7 @@ export const routesOrder = mapObjectToArray(routes, (route, key) => ({ key, orde
     .map(row => row.key);
 export const views = mapObjectToObject(
     routes,
-    route => props => (
-        <RouteSynchronizer {...props} load={route.loader} />
+    (route, name) => props => (
+        <RouteSynchronizer {...props} load={route.loader} name={name} />
     ),
 );

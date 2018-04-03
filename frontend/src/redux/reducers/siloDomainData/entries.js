@@ -2,10 +2,10 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const E__SET_ENTRIES = 'domain-data/E__SET_ENTRIES ';
-export const E__SET_FILTER = 'silo-domain-data/E__SET_FILTER';
-export const E__UNSET_FILTER = 'silo-domain-data/E__UNSET_FILTER';
-export const E__SET_ACTIVE_PAGE = 'silo-domain-data/E__SET_ACTIVE_PAGE';
+export const E__SET_ENTRIES = 'siloDomainData/E__SET_ENTRIES';
+export const E__SET_FILTER = 'siloDomainData/E__SET_FILTER';
+export const E__UNSET_FILTER = 'siloDomainData/E__UNSET_FILTER';
+export const E__SET_ACTIVE_PAGE = 'siloDomainData/E__SET_ACTIVE_PAGE';
 
 // ACTION-CREATOR
 

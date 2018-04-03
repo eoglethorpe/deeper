@@ -2,13 +2,13 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const ARY__SET_ARYS = 'silo-domain-data/ARY__SET_ARYS';
-export const ARY__SET_FILTER = 'silo-domain-data/ARY__SET_FILTER';
-export const ARY__UNSET_FILTER = 'silo-domain-data/ARY__UNSET_FILTER';
-export const ARY__SET_ACTIVE_PAGE = 'silo-domain-data/ARY__SET_ACTIVE_PAGE';
-export const ARY__SET_ACTIVE_SORT = 'silo-domain-data/ARY__SET_ACTIVE_SORT';
+export const ARY__SET_ARYS = 'siloDomainData/ARY__SET_ARYS';
+export const ARY__SET_FILTER = 'siloDomainData/ARY__SET_FILTER';
+export const ARY__UNSET_FILTER = 'siloDomainData/ARY__UNSET_FILTER';
+export const ARY__SET_ACTIVE_PAGE = 'siloDomainData/ARY__SET_ACTIVE_PAGE';
+export const ARY__SET_ACTIVE_SORT = 'siloDomainData/ARY__SET_ACTIVE_SORT';
 
-export const ARY__UPDATE = 'silo-domain-data/ARY__UPDATE';
+export const ARY__UPDATE = 'siloDomainData/ARY__UPDATE';
 
 // ACTION-CREATOR
 

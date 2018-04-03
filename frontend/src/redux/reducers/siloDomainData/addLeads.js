@@ -18,18 +18,18 @@ import {
 
 // ACTION-TYPE
 
-export const LA__SET_FILTERS = 'silo-domain-data/LA__SET_FILTERS ';
-export const LA__UNSET_FILTERS = 'silo-domain-data/LA__UNSET_FILTERS ';
-export const LA__SET_ACTIVE_LEAD_ID = 'silo-domain-data/LA__SET_ACTIVE_LEAD_ID';
-export const LA__ADD_LEADS = 'silo-domain-data/LA__ADD_LEADS';
-export const LA__LEAD_CHANGE = 'silo-domain-data/LA__LEAD_CHANGE';
-export const LA__LEAD_SAVE = 'silo-domain-data/LA__LEAD_SAVE';
-export const LA__LEAD_REMOVE = 'silo-domain-data/LA__LEAD_REMOVE';
-export const LA__LEAD_NEXT = 'silo-domain-data/LA__LEAD_NEXT';
-export const LA__LEAD_PREV = 'silo-domain-data/LA__LEAD_PREV';
-export const LA__COPY_ALL_BELOW = 'silo-domain-data/LA__COPY_ALL_BELOW';
-export const LA__COPY_ALL = 'silo-domain-data/LA__COPY_ALL';
-export const LA__LEAD_REMOVE_SAVED = 'silo-domain-data/LA__LEAD_REMOVE_SAVED';
+export const LA__SET_FILTERS = 'siloDomainData/LA__SET_FILTERS ';
+export const LA__UNSET_FILTERS = 'siloDomainData/LA__UNSET_FILTERS ';
+export const LA__SET_ACTIVE_LEAD_ID = 'siloDomainData/LA__SET_ACTIVE_LEAD_ID';
+export const LA__ADD_LEADS = 'siloDomainData/LA__ADD_LEADS';
+export const LA__LEAD_CHANGE = 'siloDomainData/LA__LEAD_CHANGE';
+export const LA__LEAD_SAVE = 'siloDomainData/LA__LEAD_SAVE';
+export const LA__LEAD_REMOVE = 'siloDomainData/LA__LEAD_REMOVE';
+export const LA__LEAD_NEXT = 'siloDomainData/LA__LEAD_NEXT';
+export const LA__LEAD_PREV = 'siloDomainData/LA__LEAD_PREV';
+export const LA__COPY_ALL_BELOW = 'siloDomainData/LA__COPY_ALL_BELOW';
+export const LA__COPY_ALL = 'siloDomainData/LA__COPY_ALL';
+export const LA__LEAD_REMOVE_SAVED = 'siloDomainData/LA__LEAD_REMOVE_SAVED';
 
 // ACTION-CREATOR
 

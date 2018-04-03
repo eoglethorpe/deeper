@@ -2,9 +2,9 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
-export const SET_USER_INFORMATION = 'domain-data/SET_USER_INFORMATION';
-export const UNSET_USER = 'domain-data/UNSET_USER';
-export const SET_USERS_INFORMATION = 'domain-data/SET_USERS_INFORMATION';
+export const SET_USER_INFORMATION = 'domainData/SET_USER_INFORMATION';
+export const UNSET_USER = 'domainData/UNSET_USER';
+export const SET_USERS_INFORMATION = 'domainData/SET_USERS_INFORMATION';
 
 // ACTION-CREATOR
 

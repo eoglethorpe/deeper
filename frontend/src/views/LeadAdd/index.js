@@ -258,16 +258,16 @@ export default class LeadAdd extends React.PureComponent {
                 if (totalErrors > 0) {
                     notify.send({
                         title: this.props.notificationStrings('leadSave'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('leadSaveSuccess'),
-                        duration: notify.duration.MEDIUM,
+                        type: notify.type.ERROR,
+                        message: this.props.notificationStrings('leadSaveFailure'),
+                        duration: notify.duration.SLOW,
                     });
                 } else {
                     notify.send({
                         title: this.props.notificationStrings('leadSave'),
-                        type: notify.type.ERROR,
-                        message: this.props.notificationStrings('leadSaveFailure'),
-                        duration: notify.duration.SLOW,
+                        type: notify.type.SUCCESS,
+                        message: this.props.notificationStrings('leadSaveSuccess'),
+                        duration: notify.duration.MEDIUM,
                     });
                 }
                 this.setState({ pendingSubmitAll: false });
@@ -653,10 +653,8 @@ export default class LeadAdd extends React.PureComponent {
 
     handleSaveButtonClick = () => {
         const leadId = this.props.activeLeadId;
-        const activeLeadForm = this.leadFormRefs[leadId];
-        if (activeLeadForm) {
-            activeLeadForm.start();
-        }
+        this.formCoordinator.add(leadId, this.leadFormRefs[leadId]);
+        this.formCoordinator.start();
     }
 
     handleFilteredSaveButtonClick = () => {
