@@ -284,7 +284,9 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
             <div className={`${className} ${styles.leadPreview}`}>
                 {
                     pending ? (
-                        <LoadingAnimation />
+                        <LoadingAnimation>
+                            {this.props.commonStrings('simplifyingLead')}
+                        </LoadingAnimation>
                     ) : (
                         <Content />
                     )
