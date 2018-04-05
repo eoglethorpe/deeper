@@ -74,6 +74,9 @@ export default class AssistedTagging extends React.PureComponent {
             nerSelectedSectors: emptyList,
             selectedAssitedTaggingSource: 'nlp',
             highlights: [],
+            pendingNlpClassify: true,
+            pendingNerClassify: true,
+            pendingCeClassify: true,
         };
 
         this.assitedTaggingSources = [
@@ -182,14 +185,12 @@ export default class AssistedTagging extends React.PureComponent {
         if (this.ceClassifyRequest) {
             this.ceClassifyRequest.stop();
         }
-
         this.ceClassifyRequest = this.createCeClassifyRequest(leadPreview.previewId);
         this.ceClassifyRequest.start();
 
         if (this.nerClassifyRequest) {
             this.nerClassifyRequest.stop();
         }
-
         this.nerClassifyRequest = this.createNerClassifyRequest(leadPreview.text);
         this.nerClassifyRequest.start();
     }
@@ -197,31 +198,35 @@ export default class AssistedTagging extends React.PureComponent {
     createNlpClassifyRequest = (docId) => {
         const request = new FgRestBuilder()
             .url(urlForLeadClassify)
-            .params(createParamsForLeadClassify({
+            .params(() => createParamsForLeadClassify({
                 deeper: 1,
                 doc_id: docId,
             }))
+            .preLoad(() => this.setState({ pendingNlpClassify: true }))
+            .postLoad(() => this.setState({ pendingNlpClassify: false }))
             .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.extractNlpClassifications(response);
-                } catch (err) {
-                    console.error(err);
-                }
+                // FIXME: write schema
+                this.extractNlpClassifications(response);
             })
             .failure((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('serverErrorText'),
                 });
+                */
             })
             .fatal((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('connectionFailureText'),
                 });
+                */
             })
             .build();
         return request;
@@ -230,28 +235,32 @@ export default class AssistedTagging extends React.PureComponent {
     createNerClassifyRequest = (text) => {
         const request = new FgRestBuilder()
             .url(urlForNer)
-            .params(createParamsForNer(text))
+            .params(() => createParamsForNer(text))
+            .preLoad(() => this.setState({ pendingNerClassify: true }))
+            .postLoad(() => this.setState({ pendingNerClassify: false }))
             .success((response) => {
-                try {
-                    // FIXME: write schema
-                    this.extractNerClassifications(response);
-                } catch (err) {
-                    console.error(err);
-                }
+                // FIXME: write schema
+                this.extractNerClassifications(response);
             })
             .failure((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('serverErrorText'),
                 });
+                */
             })
             .fatal((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('connectionFailureText'),
                 });
+                */
             })
             .build();
         return request;
@@ -260,7 +269,9 @@ export default class AssistedTagging extends React.PureComponent {
     createCeClassifyRequest = (previewId) => {
         const request = new FgRestBuilder()
             .url(createUrlForCeClassify(this.props.project.id))
-            .params(createParamsForCeClassify({
+            .preLoad(() => this.setState({ pendingCeClassify: true }))
+            .postLoad(() => this.setState({ pendingCeClassify: false }))
+            .params(() => createParamsForCeClassify({
                 category: 'Sector',
                 previewId,
             }))
@@ -274,17 +285,23 @@ export default class AssistedTagging extends React.PureComponent {
             })
             .failure((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('serverErrorText'),
                 });
+                */
             })
             .fatal((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('connectionFailureText'),
                 });
+                */
             })
             .build();
         return request;
@@ -293,11 +310,10 @@ export default class AssistedTagging extends React.PureComponent {
     createFeedbackRequest = (feedback) => {
         const request = new FgRestBuilder()
             .url(urlForFeedback)
-            .params(createParamsForFeedback(feedback))
-            .success((response) => {
+            .params(() => createParamsForFeedback(feedback))
+            .success(() => {
                 try {
-                    console.warn('feedback sent', response);
-
+                    // console.warn('feedback sent', response);
                     notify.send({
                         title: this.props.entryStrings('assitedTaggingFeedbackTitle'),
                         type: notify.type.SUCCESS,
@@ -310,17 +326,23 @@ export default class AssistedTagging extends React.PureComponent {
             })
             .failure((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('serverErrorText'),
                 });
+                */
             })
             .fatal((response) => {
                 console.error(response);
+                // FIXME: notify
+                /*
                 this.setState({
                     pending: false,
                     error: this.props.entryStrings('connectionFailureText'),
                 });
+                */
             })
             .build();
         return request;
@@ -589,6 +611,7 @@ export default class AssistedTagging extends React.PureComponent {
                     {
                         selectedAssitedTaggingSource === 'nlp' && (
                             <MultiSelectInput
+                                disabled={this.state.pendingNlpClassify}
                                 label={this.props.entryStrings('showSuggestionText')}
                                 className={styles.selectInput}
                                 options={nlpSectorOptions}
@@ -601,6 +624,7 @@ export default class AssistedTagging extends React.PureComponent {
                     {
                         selectedAssitedTaggingSource === 'ce' && (
                             <MultiSelectInput
+                                disabled={this.state.pendingCeClassify}
                                 label={this.props.entryStrings('showSuggestionText')}
                                 className={styles.selectInput}
                                 options={ceSectorOptions}
@@ -613,6 +637,7 @@ export default class AssistedTagging extends React.PureComponent {
                     {
                         selectedAssitedTaggingSource === 'ner' && (
                             <MultiSelectInput
+                                disabled={this.state.pendingNerClassify}
                                 label={this.props.entryStrings('showSuggestionText')}
                                 className={styles.selectInput}
                                 options={nerSectorOptions}
@@ -632,6 +657,7 @@ export default class AssistedTagging extends React.PureComponent {
                             <header className={styles.header}>
                                 <div className={styles.title}>
                                     <span className={styles.label}>
+                                        {/* FIXME: use strings */}
                                         Source:
                                     </span>
                                     <span className={styles.source}>
@@ -646,7 +672,9 @@ export default class AssistedTagging extends React.PureComponent {
                                 </PrimaryButton>
                             </header>
                             <div className={styles.infoBar}>
-                                <span>{activeHighlightDetails.text}</span>
+                                <span>
+                                    {activeHighlightDetails.text}
+                                </span>
                                 <div>
                                     { activeHighlightDetails.details &&
                                         <span className={styles.details}>
