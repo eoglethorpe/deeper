@@ -1,7 +1,8 @@
 @import '../../../../stylesheets/base';
 
 $width-action-buttons: 48px;
-$height-bottom: 320px;
+$height-center: 240px;
+$height-bottom: 180px;
 
 .methodology {
     display: flex;
@@ -21,6 +22,65 @@ $height-bottom: 320px;
 
         .action-buttons {
             flex-shrink: 0;
+        }
+    }
+
+    .center {
+        display: flex;
+        flex-shrink: 0;
+        border-top: $width-separator-thin solid $color-separator;
+        height: $height-center;
+
+        %content {
+            flex-basis: calc(100% / 4);
+
+            &:not(:last-child) {
+                border-right: $width-separator-thin solid $color-separator;
+            }
+        }
+
+        .focuses {
+            @extend %content;
+        }
+
+        .sectors {
+            @extend %content;
+        }
+
+        .affected-groups {
+            @extend %content;
+        }
+
+        .location-selection {
+            @extend %content;
+        }
+    }
+
+    .bottom {
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+        border-top: $width-separator-thin solid $color-separator;
+        height: $height-bottom;
+
+        .title {
+            flex-shrink: 0;
+            padding: $spacing-small $spacing-medium;
+            text-transform: uppercase;
+        }
+
+        .body {
+            display: flex;
+            flex-grow: 1;
+
+            .methodology-content {
+                flex-basis: calc(100% / 4 - #{$spacing-medium});
+                padding: 0 $spacing-medium;
+
+                :global .input {
+                    height: 100%;
+                }
+            }
         }
     }
 
@@ -86,51 +146,6 @@ $height-bottom: 320px;
                     @extend %action-buttons;
                 }
             }
-        }
-    }
-
-    .bottom {
-        display: flex;
-        flex-shrink: 0;
-        justify-content: space-evenly;
-        border-top: $width-separator-thin solid $color-separator;
-        height: $height-bottom;
-
-        %content {
-            flex-basis: calc(100% / 6);
-            flex-shrink: 0;
-
-            &:not(:last-child) {
-                border-right: $width-separator-thin solid $color-separator;
-            }
-        }
-
-        .sectors {
-            @extend %content;
-        }
-
-        .affected-groups {
-            @extend %content;
-        }
-
-        .location-selection {
-            @extend %content;
-        }
-
-        .additional-document {
-            @extend %content;
-        }
-
-        .collection-techniques {
-            @extend %content;
-        }
-
-        .sampling {
-            @extend %content;
-        }
-
-        .limitations {
-            @extend %content;
         }
     }
 }

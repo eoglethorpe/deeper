@@ -1,0 +1,35 @@
+@import '../../stylesheets/base';
+
+.geo-modal {
+    width: 72vw;
+
+    .select-inputs {
+        display: flex;
+    }
+
+    .body {
+        display: flex;
+        padding: 0;
+        height: 60vh;
+
+        .map {
+            flex-basis: 80%;
+        }
+
+        .right {
+            flex-basis: 20%;
+
+            .selection-group {
+                .title {
+                    display: block;
+                    flex-shrink: 0;
+                    padding: $spacing-medium $spacing-small;
+                    width: 100%;
+                    text-transform: uppercase;
+                    color: $color-accent;
+                    font-size: $font-size-extra-small;
+                }
+            }
+        }
+    }
+}

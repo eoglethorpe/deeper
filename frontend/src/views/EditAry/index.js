@@ -8,6 +8,7 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 import {
     setAryTemplateAction,
     setAryAction,
+    setGeoOptionsAction,
 
     projectDetailsSelector,
     leadIdFromRouteSelector,
@@ -17,6 +18,7 @@ import {
 import LeadRequest from './requests/LeadRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
 import AryGetRequest from './requests/AryGetRequest';
+import GeoOptionsRequest from './requests/GeoOptionsRequest';
 
 import LeftPanel from './LeftPanel';
 import RightPanel from './RightPanel';
@@ -28,6 +30,7 @@ const propTypes = {
 
     setAryTemplate: PropTypes.func.isRequired,
     setAry: PropTypes.func.isRequired,
+    setGeoOptions: PropTypes.func.isRequired,
 
     aryStrings: PropTypes.func.isRequired,
 };
@@ -45,6 +48,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
     setAry: params => dispatch(setAryAction(params)),
+    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -59,6 +63,7 @@ export default class EditAry extends React.PureComponent {
             pendingAryTemplate: true,
             pendingLead: true,
             pendingAry: true,
+            pendingGeo: true,
 
             pending: true,
             noTemplate: false,
@@ -70,6 +75,7 @@ export default class EditAry extends React.PureComponent {
         this.startAryTemplateRequest(projectId);
         this.startAryGetRequest(leadId);
         this.startLeadRequest(leadId);
+        this.startGeoOptionsRequest(projectId);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -77,6 +83,7 @@ export default class EditAry extends React.PureComponent {
         const { activeProject: { id: projectId }, activeLeadId: leadId } = nextProps;
         if (oldProjectId !== projectId) {
             this.startAryTemplateRequest(projectId);
+            this.startGeoOptionsRequest(projectId);
         }
         if (oldLeadId !== leadId) {
             this.startAryGetRequest(leadId);
@@ -93,6 +100,9 @@ export default class EditAry extends React.PureComponent {
         }
         if (this.leadRequest) {
             this.leadRequest.stop();
+        }
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
         }
     }
 
@@ -146,12 +156,29 @@ export default class EditAry extends React.PureComponent {
         this.aryTemplateRequest.start();
     }
 
+    startGeoOptionsRequest = (projectId) => {
+        if (isFalsy(projectId)) {
+            return;
+        }
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
+        }
+
+        const geoOptionsRequest = new GeoOptionsRequest({
+            setGeoOptions: this.props.setGeoOptions,
+            setState: params => this.setState(params),
+        });
+        this.geoOptionsRequest = geoOptionsRequest.create(projectId);
+        this.geoOptionsRequest.start();
+    }
+
     render() {
         const { aryStrings } = this.props;
         const {
             pendingEntries,
             pendingLead,
             pendingAryTemplate,
+            pendingGeo,
             noTemplate,
             lead,
         } = this.state;
@@ -164,7 +191,7 @@ export default class EditAry extends React.PureComponent {
             );
         }
 
-        if (pendingEntries || pendingLead || pendingAryTemplate) {
+        if (pendingEntries || pendingLead || pendingAryTemplate || pendingGeo) {
             return <LoadingAnimation />;
         }
 
