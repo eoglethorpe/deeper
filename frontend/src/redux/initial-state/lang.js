@@ -4,8 +4,8 @@ const initialLangState = {
         en: {
             strings: {
                 1: 'Owner',
-                2: 'Date Created',
-                3: 'Date Published',
+                2: 'Created',
+                3: 'Published',
                 5: 'Publisher',
                 6: 'Assignee',
                 7: 'Confidentiality',
