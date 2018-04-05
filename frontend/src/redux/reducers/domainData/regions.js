@@ -217,8 +217,8 @@ const setRegionDetails = (state, action) => {
                 [projectId]: { $auto: {
                     regions: { $autoArray: {
                         [index]: { $set: {
-                            id: regionDetails.id,
-                            title: regionDetails.title,
+                            id: regionDetails.formValues.id,
+                            title: regionDetails.formValues.title,
                         } },
                     } },
                 } },

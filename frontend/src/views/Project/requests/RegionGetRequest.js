@@ -54,10 +54,10 @@ export default class RegionGetRequest {
     }
 
     create = (regionId) => {
-        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId);
+        const urlForRegion = createUrlForRegionWithField(regionId);
 
         const regionRequest = new FgRestBuilder()
-            .url(urlForRegionForRegionalGroups)
+            .url(urlForRegion)
             .params(createParamsForUser)
             .preLoad(() => { this.props.setState({ dataLoading: true }); })
             .postLoad(() => { this.props.setState({ dataLoading: false }); })

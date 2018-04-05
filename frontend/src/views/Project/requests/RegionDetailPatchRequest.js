@@ -27,6 +27,7 @@ export default class RegionDetailPatchRequest {
             this.props.setRegionDetails({
                 regionDetails,
                 regionId,
+                projectId: this.props.projectId,
             });
             notify.send({
                 type: notify.type.SUCCESS,
@@ -59,6 +60,7 @@ export default class RegionDetailPatchRequest {
     }
 
     create = (regionId, data) => {
+        console.warn(data);
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
             .params(() => createParamsForRegionPatch(data))

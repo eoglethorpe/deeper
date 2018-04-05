@@ -17,7 +17,9 @@ $height-header: 39px;
         height: $height-header;
 
         .action-buttons {
-            .clone-and-edit-button {
+            display: flex;
+
+            button {
                 margin-left: $spacing-small;
             }
         }

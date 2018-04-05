@@ -6,12 +6,12 @@ import {
     Route,
     HashRouter,
     NavLink,
+    Prompt,
 } from 'react-router-dom';
 
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import List from '../../../vendor/react-store/components/View/List';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
-import getUserConfirmation from '../../../utils/getUserConfirmation';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Form, {
@@ -26,6 +26,8 @@ import {
     notificationStringsSelector,
     countriesStringsSelector,
     setRegionDetailsAction,
+    commonStringsSelector,
+    routeUrlSelector,
 } from '../../../redux';
 import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
@@ -59,7 +61,10 @@ const propTypes = {
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     notificationStrings: PropTypes.func.isRequired,
     countriesStrings: PropTypes.func.isRequired,
+    commonStrings: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
+
+    routeUrl: PropTypes.string.isRequired,
 };
 
 const defaultProps = {
@@ -79,6 +84,8 @@ const mapStateToProps = (state, props) => ({
     activeUser: activeUserSelector(state),
     notificationStrings: notificationStringsSelector(state),
     countriesStrings: countriesStringsSelector(state),
+    commonStrings: commonStringsSelector(state),
+    routeUrl: routeUrlSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -194,12 +201,12 @@ export default class CountryDetail extends React.PureComponent {
         if (this.requestForRegion) {
             this.requestForRegion.stop();
         }
-        const versionId = this.props.regionDetail.formValues.versionId;
         const requestForRegion = new RegionGetRequest({
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
             notificationStrings: this.props.notificationStrings,
-            versionId,
+            regionDetail: this.props.regionDetail.formValues || {},
+            pristine: this.props.regionDetail.pristine,
         });
         this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
@@ -225,6 +232,7 @@ export default class CountryDetail extends React.PureComponent {
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
             countriesStrings: this.props.countriesStrings,
+            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
@@ -297,10 +305,10 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
-            pristine,
+            formErrors = {},
+            formFieldErrors = {},
+            formValues = {},
+            pristine = false,
         } = this.props.regionDetail;
 
         return (
@@ -367,40 +375,62 @@ export default class CountryDetail extends React.PureComponent {
             activeUser,
         } = this.props;
 
+        const {
+            pristine,
+        } = this.props.regionDetail;
+
         const HeaderWithTabs = this.renderHeader;
 
         return (
-            <HashRouter getUserConfirmation={getUserConfirmation} >
-                <div className={`${className} ${styles.countryDetail}`}>
-                    { deletePending && <LoadingAnimation /> }
-                    <Route
-                        exact
-                        path="/"
-                        component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
-                    />
-                    { !activeUser.isSuperuser ? (
-                        <div className={styles.detailsNoEdit}>
-                            <RegionDetailView
-                                className={styles.regionDetailBox}
-                                countryId={countryId}
-                            />
-                            <div className={styles.mapContainer}>
-                                <RegionMap regionId={countryId} />
+            <Fragment>
+                <Prompt
+                    message={
+                        (location) => {
+                            const { pathname } = location;
+                            const {
+                                routeUrl,
+                                commonStrings,
+                            } = this.props;
+
+                            if (!pristine || pathname === routeUrl) {
+                                return true;
+                            }
+                            return commonStrings('youHaveUnsavedChanges');
+                        }
+                    }
+                />
+                <HashRouter>
+                    <div className={`${className} ${styles.countryDetail}`}>
+                        { deletePending && <LoadingAnimation /> }
+                        <Route
+                            exact
+                            path="/"
+                            component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
+                        />
+                        { !activeUser.isSuperuser ? (
+                            <div className={styles.detailsNoEdit}>
+                                <RegionDetailView
+                                    className={styles.regionDetailBox}
+                                    countryId={countryId}
+                                />
+                                <div className={styles.mapContainer}>
+                                    <RegionMap regionId={countryId} />
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <Fragment>
-                            <HeaderWithTabs key="header" />
-                            <List
-                                key="list"
-                                data={this.routes}
-                                modifier={this.renderRoute}
-                                keyExtractor={CountryDetail.keyExtractor}
-                            />
-                        </Fragment>
-                    )}
-                </div>
-            </HashRouter>
+                        ) : (
+                            <Fragment>
+                                <HeaderWithTabs key="header" />
+                                <List
+                                    key="list"
+                                    data={this.routes}
+                                    modifier={this.renderRoute}
+                                    keyExtractor={CountryDetail.keyExtractor}
+                                />
+                            </Fragment>
+                        )}
+                    </div>
+                </HashRouter>
+            </Fragment>
         );
     }
 }

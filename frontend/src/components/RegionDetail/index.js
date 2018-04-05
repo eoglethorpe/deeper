@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
@@ -11,20 +10,12 @@ import Form, {
 } from '../../vendor/react-store/components/Input/Form';
 
 import {
-    transformResponseErrorToFormError,
-    createParamsForRegionPatch,
-    createUrlForRegion,
-} from '../../rest';
-import {
     regionDetailSelector,
     setRegionDetailsAction,
     countriesStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
 } from '../../redux';
-import schema from '../../schema';
-
-import notify from '../../notify';
 
 import styles from './styles.scss';
 
@@ -38,10 +29,9 @@ const propTypes = {
     }),
     setRegionDetails: PropTypes.func.isRequired,
     countryId: PropTypes.number.isRequired,
-    dataLoading: PropTypes.bool,
     projectId: PropTypes.number,
+    dataLoading: PropTypes.bool,
     countriesStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -113,72 +103,6 @@ export default class RegionDetail extends React.PureComponent {
         };
     }
 
-    createRequestForRegionDetailPatch = (regionId, data) => {
-        const { projectId } = this.props;
-        const urlForRegion = createUrlForRegion(regionId);
-        const regionDetailPatchRequest = new FgRestBuilder()
-            .url(urlForRegion)
-            .params(() => createParamsForRegionPatch(data))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'regionPatchResponse');
-                    const regionDetails = {
-                        formValues: response,
-                        formErrors: {},
-                        pristine: false,
-                    };
-                    this.props.setRegionDetails({
-                        regionDetails,
-                        regionId,
-                        projectId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('regionDetail'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('regionDetailSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                notify.send({
-                    title: this.props.notificationStrings('regionDetail'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('regionDetailFailure'),
-                    duration: notify.duration.MEDIUM,
-                });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('regionDetail'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('regionDetailFatal'),
-                    duration: notify.duration.SLOW,
-                });
-                this.setState({
-                    formErrors: { errors: ['Error while trying to save region detail.'] },
-                });
-            })
-            .build();
-        return regionDetailPatchRequest;
-    }
-
     // FORM RELATED
 
     changeCallback = (values, formFieldErrors, formErrors) => {
@@ -197,10 +121,21 @@ export default class RegionDetail extends React.PureComponent {
             },
             pristine: true,
         };
-        this.props.setRegionDetails({
-            regionDetails,
-            regionId: this.props.countryId,
-        });
+
+        const { projectId } = this.props;
+
+        if (projectId) {
+            this.props.setRegionDetails({
+                regionDetails,
+                regionId: this.props.countryId,
+                projectId,
+            });
+        } else {
+            this.props.setRegionDetails({
+                regionDetails,
+                regionId: this.props.countryId,
+            });
+        }
     };
 
     failureCallback = (formFieldErrors, formErrors) => {
@@ -210,36 +145,12 @@ export default class RegionDetail extends React.PureComponent {
             formErrors: { ...formErrors },
             pristine: true,
         };
+
         this.props.setRegionDetails({
             regionDetails,
             regionId: this.props.countryId,
         });
     };
-
-    successCallback = (values) => {
-        // Stop old patch request
-        if (this.regionDetailPatchRequest) {
-            this.regionDetailPatchRequest.stop();
-        }
-
-        // Create data for patch
-        const data = {
-            code: values.code,
-            title: values.title,
-            regionalGroups: values.regionalGroups,
-            keyFigures: values.keyFigures,
-        };
-
-        // Create new patch request
-        this.regionDetailPatchRequest =
-            this.createRequestForRegionDetailPatch(this.props.countryId, data);
-        this.regionDetailPatchRequest.start();
-    };
-
-    handleFormCancel = () => {
-        // TODO: use user prompt
-        this.resetForm(this.props);
-    }
 
     render() {
         const {
@@ -258,7 +169,6 @@ export default class RegionDetail extends React.PureComponent {
                 className={`${className} ${styles.regionDetailForm}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
                 schema={this.schema}
                 fieldErrors={formFieldErrors}
                 formErrors={formErrors}

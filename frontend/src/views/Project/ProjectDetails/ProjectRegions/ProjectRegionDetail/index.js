@@ -4,20 +4,22 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
+import SuccessButton from '../../../../../vendor/react-store/components/Action/Button/SuccessButton';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import Form, {
+    requiredCondition,
+} from '../../../../../vendor/react-store/components/Input/Form';
 
 import {
-    createParamsForUser,
     createParamsForRegionClone,
     createParamsForProjectPatch,
     createUrlForProject,
     createUrlForRegionClone,
-    createUrlForRegionWithField,
 } from '../../../../../rest';
 import {
     activeProjectSelector,
-    generalDetailsForRegionSelector,
+    regionDetailSelector,
     projectDetailsSelector,
     setRegionDetailsAction,
     removeProjectRegionAction,
@@ -28,6 +30,9 @@ import {
 } from '../../../../../redux';
 import schema from '../../../../../schema';
 import notify from '../../../../../notify';
+
+import RegionGetRequest from '../../../requests/RegionGetRequest';
+import RegionDetailPatchRequest from '../../../requests/RegionDetailPatchRequest';
 
 import RegionMap from '../../../../../components/RegionMap';
 import RegionDetail from '../../../../../components/RegionDetail';
@@ -40,7 +45,7 @@ const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number.isRequired,
-    regionDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    regionDetail: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
@@ -58,7 +63,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     activeProject: activeProjectSelector(state),
     projectDetails: projectDetailsSelector(state, props),
-    regionDetails: generalDetailsForRegionSelector(state, props),
+    regionDetail: regionDetailSelector(state, props),
     notificationStrings: notificationStringsSelector(state),
     projectStrings: projectStringsSelector(state),
 });
@@ -77,46 +82,63 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        this.regionRequest = this.createRegionRequest(props.countryId);
         this.state = {
             dataLoading: true,
             showDeleteConfirm: false,
             showCloneAndEditConfirm: false,
         };
+
+        this.schema = {
+            fields: {
+                code: [requiredCondition],
+                title: [requiredCondition],
+                regionalGroups: {
+                    fields: {
+                        wbRegion: [],
+                        wbIncomeRegion: [],
+                        ochaRegion: [],
+                        echoRegion: [],
+                        unGeoRegion: [],
+                        unGeoSubregion: [],
+                    },
+                },
+            },
+        };
     }
 
     componentWillMount() {
-        this.regionRequest.start();
+        this.startRegionRequest(this.props.countryId);
     }
 
-    componentWillUnmount() {
-        if (this.regionRequest) {
-            this.regionRequest.stop();
+    startRegionRequest = (regionId) => {
+        if (this.requestForRegion) {
+            this.requestForRegion.stop();
         }
+        const requestForRegion = new RegionGetRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            setState: v => this.setState(v),
+            notificationStrings: this.props.notificationStrings,
+            regionDetail: this.props.regionDetail.formValues || {},
+            pristine: this.props.regionDetail.pristine,
+        });
+        this.requestForRegion = requestForRegion.create(regionId);
+        this.requestForRegion.start();
     }
 
-    createRegionRequest = (regionId) => {
-        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
-
-        const regionRequest = new FgRestBuilder()
-            .url(urlForRegionForRegionalGroups)
-            .params(() => createParamsForUser())
-            .preLoad(() => { this.setState({ dataLoading: true }); })
-            .postLoad(() => { this.setState({ dataLoading: false }); })
-            .success((response) => {
-                try {
-                    schema.validate(response, 'region');
-                    this.props.setRegionDetails({
-                        regionDetails: response,
-                        regionId,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return regionRequest;
-    };
+    startRequestForRegionDetailPatch = (regionId, data) => {
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+        const regionDetailPatchRequest = new RegionDetailPatchRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            projectStrings: this.props.projectStrings,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+            projectId: this.props.activeProject,
+        });
+        this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
+        this.regionDetailPatchRequest.start();
+    }
 
     createRegionCloneRequest = (regionId, projectId) => {
         const regionCloneRequest = new FgRestBuilder()
@@ -231,14 +253,18 @@ export default class ProjectRegionDetail extends React.PureComponent {
         });
     }
 
+    successCallback = (values) => {
+        this.startRequestForRegionDetailPatch(this.props.regionDetail.formValues.id, values);
+    };
+
     renderCloneAndEditButton = () => {
         const {
-            regionDetails,
+            regionDetail,
             projectStrings,
         } = this.props;
         const { dataLoading } = this.state;
 
-        const isPublic = regionDetails.public;
+        const isPublic = regionDetail.public;
         const cloneAndEditButtonLabel = projectStrings('cloneEditButtonLabel');
 
         if (!isPublic) {
@@ -248,7 +274,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         return (
             <PrimaryButton
                 disabled={dataLoading}
-                className={styles.cloneAndEditButton}
                 onClick={this.handleRegionCloneClick}
             >
                 {cloneAndEditButtonLabel}
@@ -258,27 +283,52 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
     renderHeader = () => {
         const {
-            regionDetails,
+            regionDetail,
             projectStrings,
         } = this.props;
+
+        const {
+            formErrors = {},
+            formFieldErrors = {},
+            formValues = {},
+            pristine = false,
+        } = this.props.regionDetail;
 
         const { dataLoading } = this.state;
         const removeRegionButtonLabel = projectStrings('removeRegionButtonLabel');
         const CloneAndEditButton = this.renderCloneAndEditButton;
+        const isPublic = regionDetail.public;
 
         return (
             <header className={styles.header}>
                 <h2>
-                    {regionDetails.title}
+                    {regionDetail.title}
                 </h2>
                 <div className={styles.actionButtons}>
+                    <CloneAndEditButton />
+                    {!isPublic &&
+                        <Form
+                            failureCallback={this.failureCallback}
+                            successCallback={this.successCallback}
+                            schema={this.schema}
+                            fieldErrors={formFieldErrors}
+                            formErrors={formErrors}
+                            value={formValues}
+                        >
+                            <SuccessButton
+                                type="submit"
+                                disabled={!pristine}
+                            >
+                                {projectStrings('saveButtonLabel')}
+                            </SuccessButton>
+                        </Form>
+                    }
                     <DangerButton
                         disabled={dataLoading}
                         onClick={this.handleRegionRemoveClick}
                     >
                         { removeRegionButtonLabel }
                     </DangerButton>
-                    <CloneAndEditButton />
                 </div>
             </header>
         );
@@ -287,16 +337,14 @@ export default class ProjectRegionDetail extends React.PureComponent {
     renderContent = () => {
         const {
             countryId,
-            regionDetails,
             activeProject,
         } = this.props;
-
+        const { formValues } = this.props.regionDetail;
         const { dataLoading } = this.state;
-        const isEditable = regionDetails.public !== undefined && !regionDetails.public;
 
-        const classNames = [
-            styles.content,
-        ];
+        const isEditable = formValues.public !== undefined && !formValues.public;
+
+        const classNames = [styles.content];
 
         if (isEditable) {
             return (
@@ -308,8 +356,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         />
                         <RegionDetail
                             dataLoading={dataLoading}
-                            countryId={countryId}
                             projectId={activeProject}
+                            countryId={countryId}
                             className={styles.regionDetailForm}
                         />
                     </div>
@@ -333,7 +381,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     renderDeleteRegionConfirm = () => {
         const {
             countryId,
-            regionDetails,
+            regionDetail,
             projectDetails,
             projectStrings,
         } = this.props;
@@ -352,7 +400,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 <p>
                     {
                         projectStrings('confirmRemoveText', {
-                            title: regionDetails.title,
+                            title: regionDetail.title,
                             projectTitle: projectDetails.title,
                         })
                     }
@@ -364,7 +412,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     renderCloneAndEditRegionConfirm = () => {
         const {
             countryId,
-            regionDetails,
+            regionDetail,
             activeProject,
             projectStrings,
         } = this.props;
@@ -380,7 +428,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {projectStrings('confirmCloneText', { title: regionDetails.title })}
+                    {projectStrings('confirmCloneText', { title: regionDetail.title })}
                 </p>
             </Confirm>
         );
