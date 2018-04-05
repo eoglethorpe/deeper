@@ -17,11 +17,16 @@ export default class RegionDetailPatchRequest {
     success = regionId => (response) => {
         try {
             schema.validate(response, 'regionPatchResponse');
+            const regionDetails = {
+                formValues: { ...response },
+                formErrors: {},
+                formFieldErrors: {},
+                pristine: false,
+            };
             this.props.setRegionDetails({
-                regionDetails: response,
+                regionDetails,
                 regionId,
             });
-            this.props.setState({ pristine: false });
         } catch (er) {
             console.error(er);
         }

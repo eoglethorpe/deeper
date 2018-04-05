@@ -17,8 +17,14 @@ export default class RegionGetRequest {
     success = regionId => (response) => {
         try {
             schema.validate(response, 'region');
+            const regionDetails = {
+                formValues: { ...response },
+                formErrors: {},
+                formFieldErrors: {},
+                pristine: false,
+            };
             this.props.setRegionDetails({
-                regionDetails: response,
+                regionDetails,
                 regionId,
             });
         } catch (er) {
@@ -35,7 +41,7 @@ export default class RegionGetRequest {
     }
 
     create = (regionId) => {
-        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId, ['regional_groups']);
+        const urlForRegionForRegionalGroups = createUrlForRegionWithField(regionId);
 
         const regionRequest = new FgRestBuilder()
             .url(urlForRegionForRegionalGroups)

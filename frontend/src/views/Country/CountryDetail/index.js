@@ -31,6 +31,8 @@ import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
 
 import RegionDeleteRequest from '../requests/RegionDeleteRequest';
+import RegionGetRequest from '../requests/RegionGetRequest';
+import RegionDetailPatchRequest from '../requests/RegionDetailPatchRequest';
 
 import CountryGeneral from './CountryGeneral';
 import CountryKeyFigures from './CountryKeyFigures';
@@ -172,6 +174,10 @@ export default class CountryDetail extends React.PureComponent {
         };
     }
 
+    componentWillMount() {
+        this.startRegionRequest(this.props.countryId);
+    }
+
     componentWillUnmount() {
         if (this.regionDeleteRequest) {
             this.regionDeleteRequest.stop();
@@ -182,6 +188,18 @@ export default class CountryDetail extends React.PureComponent {
         this.setState({
             deleteCountry: true,
         });
+    }
+
+    startRegionRequest = (regionId) => {
+        if (this.requestForRegion) {
+            this.requestForRegion.stop();
+        }
+        const requestForRegion = new RegionGetRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            setState: v => this.setState(v),
+        });
+        this.requestForRegion = requestForRegion.create(regionId);
+        this.requestForRegion.start();
     }
 
     startRequestForRegionDelete = (regionId) => {
@@ -195,6 +213,19 @@ export default class CountryDetail extends React.PureComponent {
         });
         this.regionDeleteRequest = regionDeleteRequest.create(regionId);
         this.regionDeleteRequest.start();
+    }
+
+    startRequestForRegionDetailPatch = (regionId, data) => {
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+        const regionDetailPatchRequest = new RegionDetailPatchRequest({
+            setRegionDetails: this.props.setRegionDetails,
+            countriesStrings: this.props.countriesStrings,
+            setState: v => this.setState(v),
+        });
+        this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
+        this.regionDetailPatchRequest.start();
     }
 
     failureCallback = (formFieldErrors, formErrors) => {
@@ -211,19 +242,7 @@ export default class CountryDetail extends React.PureComponent {
     };
 
     successCallback = (values) => {
-        const regionDetails = {
-            formValues: {
-                ...this.props.regionDetail.formValues,
-                ...values,
-            },
-            formFieldErrors: {},
-            formErrors: {},
-            pristine: false,
-        };
-        this.props.setRegionDetails({
-            regionDetails,
-            regionId: this.props.countryId,
-        });
+        this.startRequestForRegionDetailPatch(this.props.countryId, values);
     };
 
     deleteActiveCountry = (confirm) => {
