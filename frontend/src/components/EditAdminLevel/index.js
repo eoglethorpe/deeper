@@ -415,16 +415,23 @@ export default class EditAdminLevel extends React.PureComponent {
                         >
                             {
                                 formValues.geoShapeFile ? (
-                                    <Fragment>
-                                        <span className={styles.show}>
-                                            <i className={iconNames.documentText} />
-                                            {this.props.countriesStrings('geoShapeFile')}
-                                        </span>
+                                    <div>
+                                        <Fragment>
+                                            <span
+                                                className={styles.show}
+                                                title="Update GEO File"
+                                            >
+                                                <i className={iconNames.uploadFa} />
+                                                {this.props.countriesStrings('geoShapeFile')}
+                                            </span>
+                                        </Fragment>
                                         <InternalGallery
                                             onlyFileName
                                             galleryId={formValues.geoShapeFile}
                                         />
-                                    </Fragment>
+                                        <i className={iconNames.download} />
+                                    </div>
+
                                 ) : (
                                     <span className={styles.load}>
                                         <i className={iconNames.uploadFa} />
