@@ -9,7 +9,7 @@ import {
 
 // ACTION-CREATOR
 
-export const setRegionGeneralDetailsAction = ({ regionDetails, regionId, projectId }) => ({
+export const setRegionDetailsAction = ({ regionDetails, regionId, projectId }) => ({
     type: SET_REGION_DETAILS,
     regionId,
     regionDetails,
@@ -17,14 +17,12 @@ export const setRegionGeneralDetailsAction = ({ regionDetails, regionId, project
 });
 
 // REDUCER
-const setRegionGeneralDetails = (state, action) => {
+const setRegionDetails = (state, action) => {
     const { regionId, regionDetails } = action;
     const settings = {
         regions: { $auto: {
             [regionId]: { $auto: {
-                generalDetails: { $auto: {
-                    $merge: regionDetails,
-                } },
+                $merge: regionDetails,
             } },
         } },
     };
@@ -36,7 +34,7 @@ const addNewRegion = (state, action) => {
     const settings = {
         regions: { $auto: {
             [regionDetail.id]: { $auto: {
-                generalDetails: { $auto: {
+                formValues: { $auto: {
                     $merge: regionDetail,
                 } },
             } },
@@ -60,7 +58,7 @@ const unsetRegion = (state, action) => {
 // REDUCER MAP
 
 const reducers = {
-    [SET_REGION_DETAILS]: setRegionGeneralDetails,
+    [SET_REGION_DETAILS]: setRegionDetails,
     [UNSET_REGION]: unsetRegion,
     [ADD_NEW_REGION]: addNewRegion,
 };

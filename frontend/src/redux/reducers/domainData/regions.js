@@ -131,8 +131,8 @@ const addNewRegion = (state, action) => {
                 [projectId]: { $auto: {
                     regions: { $autoArray: {
                         $push: [{
-                            id: regionDetail.id,
-                            title: regionDetail.title,
+                            id: regionDetail.formValues.id,
+                            title: regionDetail.formValues.title,
                         }],
                     } },
                 } },
@@ -192,19 +192,20 @@ const addAdminLevelForRegion = (state, action) => {
     return update(state, settings);
 };
 
-const setRegionGeneralDetails = (state, action) => {
+const setRegionDetails = (state, action) => {
     const { regionId, regionDetails, projectId } = action;
+    const regionDetailValues = regionDetails.formValues || {};
     const settings = {
         regions: {
             [regionId]: { $set: {
-                id: regionDetails.id,
-                code: regionDetails.code,
-                title: regionDetails.title,
-                versionId: regionDetails.versionId,
-                public: regionDetails.public,
-                createdAt: regionDetails.createdAt,
-                createdBy: regionDetails.createdBy,
-                modifiedAt: regionDetails.modifiedAt,
+                id: regionDetailValues.id,
+                code: regionDetailValues.code,
+                title: regionDetailValues.title,
+                versionId: regionDetailValues.versionId,
+                public: regionDetailValues.public,
+                createdAt: regionDetailValues.createdAt,
+                createdBy: regionDetailValues.createdBy,
+                modifiedAt: regionDetailValues.modifiedAt,
             } },
         },
     };
@@ -254,6 +255,6 @@ const reducers = {
     [SET_ADMIN_LEVELS_FOR_REGION]: setAdminLevelsForRegion,
     [ADD_ADMIN_LEVEL_FOR_REGION]: addAdminLevelForRegion,
     [UNSET_ADMIN_LEVEL_FOR_REGION]: removeAdminLevelForRegion,
-    [SET_REGION_DETAILS]: setRegionGeneralDetails,
+    [SET_REGION_DETAILS]: setRegionDetails,
 };
 export default reducers;

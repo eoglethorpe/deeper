@@ -1,11 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { Prompt } from 'react-router-dom';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
-import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
@@ -19,8 +16,8 @@ import {
     createUrlForRegion,
 } from '../../rest';
 import {
-    generalDetailsForRegionSelector,
-    setRegionGeneralDetailsAction,
+    regionDetailSelector,
+    setRegionDetailsAction,
     countriesStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
@@ -34,12 +31,13 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     regionDetail: PropTypes.shape({
-        id: PropTypes.number,
-        code: PropTypes.string,
-        title: PropTypes.string,
-        regionalGroups: PropTypes.shape({}),
+        formValues: PropTypes.object,
+        formFieldErrors: PropTypes.object,
+        formErrors: PropTypes.object,
+        pristine: PropTypes.bool,
     }),
-    setRegionGeneralDetails: PropTypes.func.isRequired,
+    setRegionDetails: PropTypes.func.isRequired,
+    countryId: PropTypes.number.isRequired,
     dataLoading: PropTypes.bool,
     projectId: PropTypes.number,
     countriesStrings: PropTypes.func.isRequired,
@@ -48,20 +46,25 @@ const propTypes = {
 
 const defaultProps = {
     className: '',
-    regionDetail: {},
+    regionDetail: {
+        formValues: {},
+        formFieldErrors: {},
+        formErrors: {},
+        pristine: false,
+    },
     dataLoading: false,
     projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
-    regionDetail: generalDetailsForRegionSelector(state, props),
+    regionDetail: regionDetailSelector(state, props),
     countriesStrings: countriesStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
     commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -72,52 +75,42 @@ export default class RegionDetail extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { regionDetail } = this.props;
-
-        this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {
-                ...regionDetail.regionalGroups,
-                countryCode: regionDetail.code,
-                countryName: regionDetail.title,
-            },
-            pending: false,
-            pristine: false,
-        };
-
         this.schema = {
             fields: {
-                countryCode: [requiredCondition],
-                countryName: [requiredCondition],
-                wbRegion: [],
-                wbIncomeRegion: [],
-                ochaRegion: [],
-                echoRegion: [],
-                unGeoRegion: [],
-                unGeoSubregion: [],
+                code: [requiredCondition],
+                title: [requiredCondition],
+                regionalGroups: {
+                    fields: {
+                        wbRegion: [],
+                        wbIncomeRegion: [],
+                        ochaRegion: [],
+                        echoRegion: [],
+                        unGeoRegion: [],
+                        unGeoSubregion: [],
+                    },
+                },
+                keyFigures: {
+                    fields: {
+                        index: [],
+                        geoRank: [],
+                        geoScore: [],
+                        geoScoreU5m: [],
+                        rank: [],
+                        u5m: [],
+                        numberOfRefugees: [],
+                        percentageUprootedPeople: [],
+                        geoScoreUprooted: [],
+                        numberIdp: [],
+                        numberReturnedRefugees: [],
+                        riskClass: [],
+                        hazardAndExposure: [],
+                        vulnerability: [],
+                        informRiskIndex: [],
+                        lackOfCopingCapacity: [],
+                    },
+                },
             },
         };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.resetForm(nextProps);
-    }
-
-    resetForm = (props) => {
-        const { regionDetail } = props;
-
-        this.setState({
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {
-                ...regionDetail.regionalGroups,
-                countryCode: regionDetail.code,
-                countryName: regionDetail.title,
-            },
-            pending: false,
-            pristine: false,
-        });
     }
 
     createRequestForRegionDetailPatch = (regionId, data) => {
@@ -135,11 +128,13 @@ export default class RegionDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'regionPatchResponse');
-                    this.props.setRegionGeneralDetails({
-                        regionDetails: {
-                            ...response,
-                            pristine: false,
-                        },
+                    const regionDetails = {
+                        formValues: response,
+                        formErrors: {},
+                        pristine: false,
+                    };
+                    this.props.setRegionDetails({
+                        regionDetails,
                         regionId,
                         projectId,
                     });
@@ -187,19 +182,37 @@ export default class RegionDetail extends React.PureComponent {
     // FORM RELATED
 
     changeCallback = (values, formFieldErrors, formErrors) => {
-        this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+        const regionDetails = {
+            formValues: {
+                ...this.props.regionDetail.formValues,
+                ...values,
+            },
+            formFieldErrors: {
+                ...this.props.regionDetail.formFieldErrors,
+                ...formFieldErrors,
+            },
+            formErrors: {
+                ...this.props.regionDetail.formErrors,
+                ...formErrors,
+            },
             pristine: true,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
         });
     };
 
     failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-            pristine: false,
+        const regionDetails = {
+            formValues: { ...this.props.regionDetail.formValues },
+            formFieldErrors: { ...formFieldErrors },
+            formErrors: { ...formErrors },
+            pristine: true,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
         });
     };
 
@@ -211,21 +224,15 @@ export default class RegionDetail extends React.PureComponent {
 
         // Create data for patch
         const data = {
-            code: values.countryCode,
-            title: values.countryName,
-            regionalGroups: {
-                wbRegion: values.wbRegion,
-                wbIncomeRegion: values.wbIncomeRegion,
-                ochaRegion: values.ochaRegion,
-                echoRegion: values.echoRegion,
-                unGeoRegion: values.unGeoRegion,
-                unGeoSubregion: values.unGeoSubregion,
-            },
+            code: values.code,
+            title: values.title,
+            regionalGroups: values.regionalGroups,
+            keyFigures: values.keyFigures,
         };
 
         // Create new patch request
         this.regionDetailPatchRequest =
-            this.createRequestForRegionDetailPatch(this.props.regionDetail.id, data);
+            this.createRequestForRegionDetailPatch(this.props.countryId, data);
         this.regionDetailPatchRequest.start();
     };
 
@@ -244,46 +251,24 @@ export default class RegionDetail extends React.PureComponent {
             formErrors,
             formFieldErrors,
             formValues,
-            pending,
-            pristine,
-        } = this.state;
+        } = this.props.regionDetail;
 
         return (
             <Form
                 className={`${className} ${styles.regionDetailForm}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
-                onSubmit={this.handleSubmit}
                 successCallback={this.successCallback}
                 schema={this.schema}
                 fieldErrors={formFieldErrors}
                 formErrors={formErrors}
                 value={formValues}
-                disabled={pending}
             >
-                <Prompt
-                    when={pristine}
-                    message={this.props.commonStrings('youHaveUnsavedChanges')}
-                />
-                { (pending || dataLoading) && <LoadingAnimation /> }
+                { dataLoading && <LoadingAnimation /> }
                 <header className={styles.header}>
                     <h4 className={styles.heading} >
                         {this.props.countriesStrings('regionGeneralInfoLabel')}
                     </h4>
-                    <div className={styles.actionButtons}>
-                        <DangerButton
-                            onClick={this.handleFormCancel}
-                            disabled={pending || !pristine}
-                        >
-                            {this.props.countriesStrings('cancelButtonLabel')}
-                        </DangerButton>
-                        <SuccessButton
-                            type="submit"
-                            disabled={pending || !pristine}
-                        >
-                            {this.props.countriesStrings('saveButtonLabel')}
-                        </SuccessButton>
-                    </div>
                 </header>
                 <NonFieldErrors
                     formerror=""
@@ -291,49 +276,49 @@ export default class RegionDetail extends React.PureComponent {
                 />
                 <div className={styles.inputContainer}>
                     <TextInput
-                        formname="countryCode"
+                        formname="code"
                         label={this.props.countriesStrings('countryCodeLabel')}
                         placeholder={this.props.countriesStrings('countryCodePlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="countryName"
+                        formname="title"
                         label={this.props.countriesStrings('countryNameLabel')}
                         placeholder={this.props.countriesStrings('countryNamePlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="wbRegion"
+                        formname="regionalGroups:wbRegion"
                         label={this.props.countriesStrings('wbRegionLabel')}
                         placeholder={this.props.countriesStrings('wbRegionPlaceholer')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="wbIncomeRegion"
+                        formname="regionalGroups:wbIncomeRegion"
                         label={this.props.countriesStrings('wbIncomeRegionLabel')}
                         placeholder={this.props.countriesStrings('wbIncomeRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="ochaRegion"
+                        formname="regionalGroups:ochaRegion"
                         label={this.props.countriesStrings('ochaRegionLabel')}
                         placeholder={this.props.countriesStrings('ochaRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="echoRegion"
+                        formname="regionalGroups:echoRegion"
                         label={this.props.countriesStrings('echoRegionLabel')}
                         placeholder={this.props.countriesStrings('echoRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="unGeoRegion"
+                        formname="regionalGroups:unGeoRegion"
                         label={this.props.countriesStrings('unGeoRegionLabel')}
                         placeholder={this.props.countriesStrings('unGeoRegionPlaceholer')}
                         className={styles.textInput}
                     />
                     <TextInput
-                        formname="unGeoSubregion"
+                        formname="regionalGroups:unGeoSubregion"
                         label={this.props.countriesStrings('unGeoSubregionLabel')}
                         placeholder={this.props.countriesStrings('unGeoSubregionPlaceholer')}
                         className={styles.textInput}

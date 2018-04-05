@@ -452,61 +452,16 @@ const initialSiloDomainData = {
     regions: {
         // index is regionId
         1: {
-            generalDetails: {
+            formValues: {
                 id: 1,
                 code: 'NPL',
                 title: 'Nepal',
+                regionalGroups: {},
+                keyFigures: {},
             },
-            keyFigures: {
-                hdiIndex: 1,
-            },
-            mediaSources: {
-                hdiIndex: 1,
-            },
-            populationData: {
-                hdiIndex: 1,
-            },
-            seasonalCalendar: {
-                hdiIndex: 1,
-            },
-        },
-        2: {
-            generalDetails: {
-                id: 1,
-                code: 'NPL',
-                title: 'Nepal',
-            },
-            keyFigures: {
-                hdiIndex: 2,
-            },
-            mediaSources: {
-                hdiIndex: 2,
-            },
-            populationData: {
-                hdiIndex: 2,
-            },
-            seasonalCalendar: {
-                hdiIndex: 2,
-            },
-        },
-        3: {
-            generalDetails: {
-                id: 1,
-                code: 'NPL',
-                title: 'Nepal',
-            },
-            keyFigures: {
-                hdiIndex: 3,
-            },
-            mediaSources: {
-                hdiIndex: 3,
-            },
-            populationData: {
-                hdiIndex: 3,
-            },
-            seasonalCalendar: {
-                hdiIndex: 3,
-            },
+            formErrors: {},
+            formFieldErrors: {},
+            pristine: false,
         },
     },
 };

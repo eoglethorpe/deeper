@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import {
     Redirect,
@@ -11,16 +11,21 @@ import {
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import List from '../../../vendor/react-store/components/View/List';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
-import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import getUserConfirmation from '../../../utils/getUserConfirmation';
+import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
+import Form, {
+    requiredCondition,
+} from '../../../vendor/react-store/components/Input/Form';
 
 import {
     countryDetailSelector,
+    regionDetailSelector,
     unSetRegionAction,
     activeUserSelector,
     notificationStringsSelector,
     countriesStringsSelector,
-    setRegionGeneralDetailsAction,
+    setRegionDetailsAction,
 } from '../../../redux';
 import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
@@ -41,20 +46,34 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string,
     }).isRequired,
+    regionDetail: PropTypes.shape({
+        formValues: PropTypes.object,
+        formFieldErrors: PropTypes.object,
+        formErrors: PropTypes.object,
+        pristine: PropTypes.bool,
+    }),
     unSetRegion: PropTypes.func.isRequired,
     countryId: PropTypes.number.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     notificationStrings: PropTypes.func.isRequired,
     countriesStrings: PropTypes.func.isRequired,
+    setRegionDetails: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
+    regionDetail: {
+        formValues: {},
+        formFieldErrors: {},
+        formErrors: {},
+        pristine: false,
+    },
     title: '',
 };
 
 const mapStateToProps = (state, props) => ({
     countryDetail: countryDetailSelector(state, props),
+    regionDetail: regionDetailSelector(state, props),
     activeUser: activeUserSelector(state),
     notificationStrings: notificationStringsSelector(state),
     countriesStrings: countriesStringsSelector(state),
@@ -62,7 +81,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     unSetRegion: params => dispatch(unSetRegionAction(params)),
-    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -100,7 +119,7 @@ export default class CountryDetail extends React.PureComponent {
         };
 
         this.views = {
-            general: this.renderCountryGeneral,
+            general: CountryGeneral,
             keyFigures: CountryKeyFigures,
             mediaSources: CountryMediaSources,
             populationData: CountryPopulationData,
@@ -113,6 +132,43 @@ export default class CountryDetail extends React.PureComponent {
             mediaSources: props.countriesStrings('mediaTabLabel'),
             populationData: props.countriesStrings('populationTabLabel'),
             seasonalCalendar: props.countriesStrings('seasonalTabLabel'),
+        };
+
+        this.schema = {
+            fields: {
+                code: [requiredCondition],
+                title: [requiredCondition],
+                regionalGroups: {
+                    fields: {
+                        wbRegion: [],
+                        wbIncomeRegion: [],
+                        ochaRegion: [],
+                        echoRegion: [],
+                        unGeoRegion: [],
+                        unGeoSubregion: [],
+                    },
+                },
+                keyFigures: {
+                    fields: {
+                        index: [],
+                        geoRank: [],
+                        geoScore: [],
+                        geoScoreU5m: [],
+                        rank: [],
+                        u5m: [],
+                        numberOfRefugees: [],
+                        percentageUprootedPeople: [],
+                        geoScoreUprooted: [],
+                        numberIdp: [],
+                        numberReturnedRefugees: [],
+                        riskClass: [],
+                        hazardAndExposure: [],
+                        vulnerability: [],
+                        informRiskIndex: [],
+                        lackOfCopingCapacity: [],
+                    },
+                },
+            },
         };
     }
 
@@ -140,6 +196,35 @@ export default class CountryDetail extends React.PureComponent {
         this.regionDeleteRequest = regionDeleteRequest.create(regionId);
         this.regionDeleteRequest.start();
     }
+
+    failureCallback = (formFieldErrors, formErrors) => {
+        const regionDetails = {
+            formValues: { ...this.props.regionDetail.formValues },
+            formFieldErrors: { ...formFieldErrors },
+            formErrors: { ...formErrors },
+            pristine: true,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
+        });
+    };
+
+    successCallback = (values) => {
+        const regionDetails = {
+            formValues: {
+                ...this.props.regionDetail.formValues,
+                ...values,
+            },
+            formFieldErrors: {},
+            formErrors: {},
+            pristine: false,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
+        });
+    };
 
     deleteActiveCountry = (confirm) => {
         if (confirm) {
@@ -171,28 +256,91 @@ export default class CountryDetail extends React.PureComponent {
                 path={this.pathNames[routeId]}
                 exact
                 render={() => (
-                    <Component countryId={this.props.countryId} />
+                    <Component
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
                 )}
             />
         );
     }
 
-    renderCountryGeneral = () => (
-        <CountryGeneral dataLoading={this.state.dataLoading} />
-    )
+    renderHeader = () => {
+        const { deleteCountry } = this.state;
+
+        const {
+            countryDetail,
+            activeUser,
+            countriesStrings,
+        } = this.props;
+
+        const {
+            formErrors,
+            formFieldErrors,
+            formValues,
+            pristine,
+        } = this.props.regionDetail;
+
+        return (
+            <header className={styles.header} >
+                <div className={styles.tabs}>
+                    <List
+                        data={this.routes}
+                        modifier={this.renderLink}
+                        keyExtractor={CountryDetail.keyExtractor}
+                    />
+                    <div className={styles.rightContainer}>
+                        {
+                            activeUser.isSuperuser &&
+                            <Fragment>
+                                <DangerButton onClick={this.onClickDeleteButton}>
+                                    {countriesStrings('deleteCountryButtonLabel')}
+                                </DangerButton>
+                                <Form
+                                    failureCallback={this.failureCallback}
+                                    successCallback={this.successCallback}
+                                    schema={this.schema}
+                                    fieldErrors={formFieldErrors}
+                                    formErrors={formErrors}
+                                    value={formValues}
+                                >
+                                    <SuccessButton
+                                        type="submit"
+                                        disabled={!pristine}
+                                    >
+                                        {countriesStrings('saveButtonLabel')}
+                                    </SuccessButton>
+                                </Form>
+                            </Fragment>
+                        }
+                        <Confirm
+                            show={deleteCountry}
+                            closeOnEscape
+                            onClose={this.deleteActiveCountry}
+                        >
+                            <p>{`${countriesStrings('deleteCountryConfirm')}
+                                    ${countryDetail.title}?`}
+                            </p>
+                        </Confirm>
+                    </div>
+                </div>
+            </header>
+        );
+    }
 
     render() {
         const {
-            deleteCountry,
             deletePending,
         } = this.state;
 
         const {
             className,
-            countryDetail,
+            countryId,
             activeUser,
             countriesStrings,
         } = this.props;
+
+        const HeaderWithTabs = this.renderHeader;
 
         return (
             <HashRouter getUserConfirmation={getUserConfirmation} >
@@ -207,48 +355,23 @@ export default class CountryDetail extends React.PureComponent {
                         <div className={styles.detailsNoEdit}>
                             <RegionDetailView
                                 className={styles.regionDetailBox}
-                                countryId={countryDetail.id}
+                                countryId={countryId}
                             />
                             <div className={styles.mapContainer}>
-                                <RegionMap regionId={countryDetail.id} />
+                                <RegionMap regionId={countryId} />
                             </div>
                         </div>
-                    ) : ([
-                        <header
-                            key="header"
-                            className={styles.header}
-                        >
-                            <div className={styles.tabs}>
-                                <List
-                                    data={this.routes}
-                                    modifier={this.renderLink}
-                                    keyExtractor={CountryDetail.keyExtractor}
-                                />
-                                <div className={styles.rightContainer}>
-                                    {
-                                        activeUser.isSuperuser &&
-                                            <DangerButton onClick={this.onClickDeleteButton}>
-                                                {this.props.countriesStrings('deleteCountryButtonLabel')}
-                                            </DangerButton>
-                                    }
-                                    <Confirm
-                                        show={deleteCountry}
-                                        closeOnEscape
-                                        onClose={this.deleteActiveCountry}
-                                    >
-                                        <p>{`${this.props.countriesStrings('deleteCountryConfirm')}
-                                            ${countryDetail.title}?`}</p>
-                                    </Confirm>
-                                </div>
-                            </div>
-                        </header>,
-                        <List
-                            key="list"
-                            data={this.routes}
-                            modifier={this.renderRoute}
-                            keyExtractor={CountryDetail.keyExtractor}
-                        />,
-                    ])}
+                    ) : (
+                        <Fragment>
+                            <HeaderWithTabs key="header" />
+                            <List
+                                key="list"
+                                data={this.routes}
+                                modifier={this.renderRoute}
+                                keyExtractor={CountryDetail.keyExtractor}
+                            />
+                        </Fragment>
+                    )}
                 </div>
             </HashRouter>
         );

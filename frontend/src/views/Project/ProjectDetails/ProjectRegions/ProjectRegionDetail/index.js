@@ -19,7 +19,7 @@ import {
     activeProjectSelector,
     generalDetailsForRegionSelector,
     projectDetailsSelector,
-    setRegionGeneralDetailsAction,
+    setRegionDetailsAction,
     removeProjectRegionAction,
     addNewRegionAction,
 
@@ -42,7 +42,7 @@ const propTypes = {
     countryId: PropTypes.number.isRequired,
     regionDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     addNewRegion: PropTypes.func.isRequired,
-    setRegionGeneralDetails: PropTypes.func.isRequired,
+    setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
     onRegionClone: PropTypes.func,
 
@@ -65,7 +65,7 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
-    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
     removeProjectRegion: params => dispatch(removeProjectRegionAction(params)),
     dispatch,
 });
@@ -106,7 +106,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'region');
-                    this.props.setRegionGeneralDetails({
+                    this.props.setRegionDetails({
                         regionDetails: response,
                         regionId,
                     });

@@ -2,17 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import Form from '../../../../vendor/react-store/components/Input/Form';
+import Form, {
+    requiredCondition,
+} from '../../../../vendor/react-store/components/Input/Form';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
-import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 
 import {
-    countryDetailSelector,
-    setRegionGeneralDetailsAction,
+    regionDetailSelector,
     countriesStringsSelector,
+    setRegionDetailsAction,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
 
@@ -22,13 +21,17 @@ import RegionDetailPatchRequest from '../../requests/RegionDetailPatchRequest';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string.isRequired,
     regionDetail: PropTypes.shape({
-        id: PropTypes.number.isRequired,
-        code: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        keyFigures: PropTypes.shape({}),
+        formValues: PropTypes.object.isRequired,
+        formFieldErrors: PropTypes.object.isRequired,
+        formErrors: PropTypes.object.isRequired,
+        pristine: PropTypes.bool.isRequired,
     }).isRequired,
+    dataLoading: PropTypes.bool.isRequired,
+    setRegionDetails: PropTypes.func.isRequired,
     countriesStrings: PropTypes.func.isRequired,
+    countryId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
@@ -36,12 +39,12 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    regionDetail: countryDetailSelector(state, props),
+    regionDetail: regionDetailSelector(state, props),
     countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setRegionGeneralDetails: params => dispatch(setRegionGeneralDetailsAction(params)),
+    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -52,117 +55,104 @@ export default class CountryKeyFigures extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            pristine: false,
-            pending: false,
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: props.regionDetail.keyFigures || {},
-            dataLoading: true,
-        };
-
         this.schema = {
             fields: {
-                index: [],
-                geoRank: [],
-                geoScore: [],
-                geoScoreU5m: [],
-                rank: [],
-                u5m: [],
-                numberOfRefugees: [],
-                percentageUprootedPeople: [],
-                geoScoreUprooted: [],
-                numberIdp: [],
-                numberReturnedRefugees: [],
-                riskClass: [],
-                hazardAndExposure: [],
-                vulnerability: [],
-                informRiskIndex: [],
-                lackOfCopingCapacity: [],
+                code: [requiredCondition],
+                title: [requiredCondition],
+                regionalGroups: {
+                    fields: {
+                        wbRegion: [],
+                        wbIncomeRegion: [],
+                        ochaRegion: [],
+                        echoRegion: [],
+                        unGeoRegion: [],
+                        unGeoSubregion: [],
+                    },
+                },
+                keyFigures: {
+                    fields: {
+                        index: [],
+                        geoRank: [],
+                        geoScore: [],
+                        geoScoreU5m: [],
+                        rank: [],
+                        u5m: [],
+                        numberOfRefugees: [],
+                        percentageUprootedPeople: [],
+                        geoScoreUprooted: [],
+                        numberIdp: [],
+                        numberReturnedRefugees: [],
+                        riskClass: [],
+                        hazardAndExposure: [],
+                        vulnerability: [],
+                        informRiskIndex: [],
+                        lackOfCopingCapacity: [],
+                    },
+                },
             },
         };
-    }
-
-    componentWillMount() {
-        this.startRegionKeyFiguresRequest(this.props.regionDetail.id);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        this.resetForm(nextProps);
-    }
-
-    componentWillUnmount() {
-        if (this.regionKeyFiguresRequest) {
-            this.regionKeyFiguresRequest.stop();
-        }
-        if (this.regionDetailPatchRequest) {
-            this.regionDetailPatchRequest.stop();
-        }
     }
 
     // FORM RELATED
 
     changeCallback = (values, formFieldErrors, formErrors) => {
-        this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+        const regionDetails = {
+            formValues: {
+                ...this.props.regionDetail.formValues,
+                ...values,
+            },
+            formFieldErrors: {
+                ...this.props.regionDetail.formFieldErrors,
+                ...formFieldErrors,
+            },
+            formErrors: {
+                ...this.props.regionDetail.formErrors,
+                ...formErrors,
+            },
             pristine: true,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
         });
     };
 
     failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
+        const regionDetails = {
+            formValues: { ...this.props.regionDetail.formValues },
+            formFieldErrors: { ...formFieldErrors },
+            formErrors: { ...formErrors },
+            pristine: true,
+        };
+        this.props.setRegionDetails({
+            regionDetails,
+            regionId: this.props.countryId,
         });
-    };
-
-    successCallback = (values) => {
-        const data = { keyFigures: values };
-        this.startRequestForRegionDetailPatch(this.props.regionDetail.id, data);
     };
 
     render() {
         const {
-            pristine,
-            pending,
-            formValues,
+            className,
+            dataLoading,
+        } = this.props;
+
+        const {
             formErrors,
             formFieldErrors,
-            dataLoading,
-        } = this.state;
+            formValues,
+        } = this.props.regionDetail;
 
         return (
             <Form
-                className={styles.keyFigures}
+                className={`${className} ${styles.keyFigures}`}
                 changeCallback={this.changeCallback}
                 failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
                 schema={this.schema}
                 value={formValues}
                 formErrors={formErrors}
                 fieldErrors={formFieldErrors}
-                disabled={pending}
             >
-                { (pending || dataLoading) && <LoadingAnimation /> }
-                <header className={styles.header}>
-                    <NonFieldErrors formerror="" />
-                    <div className={styles.actionButtons}>
-                        <DangerButton
-                            onClick={this.handleFormCancel}
-                            disabled={pending || !pristine}
-                        >
-                            {this.props.countriesStrings('cancelButtonLabel')}
-                        </DangerButton>
-                        <PrimaryButton
-                            disabled={pending || !pristine}
-                            type="submit"
-                        >
-                            {this.props.countriesStrings('saveChangesButtonLabel')}
-                        </PrimaryButton>
-                    </div>
-                </header>
+                { dataLoading && <LoadingAnimation /> }
                 <div className={styles.sections} >
                     <div className={styles.section}>
                         <h3 className={styles.heading} >
@@ -186,21 +176,21 @@ export default class CountryKeyFigures extends React.PureComponent {
                                 step="any"
                                 min="0"
                                 max="1"
-                                formname="index"
+                                formname="keyFigures:index"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('geoRankLabel')}
                                 readOnly
-                                formname="geoRank"
+                                formname="keyFigures:geoRank"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('geoScoreLabel')}
                                 readOnly
-                                formname="geoScore"
+                                formname="keyFigures:geoScore"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('rankLabel')}
-                                formname="rank"
+                                formname="keyFigures:rank"
                             />
                         </div>
                     </div>
@@ -222,13 +212,13 @@ export default class CountryKeyFigures extends React.PureComponent {
                         <div className={styles.inputs} >
                             <TextInput
                                 label={this.props.countriesStrings('u5mLabel')}
-                                formname="u5m"
+                                formname="keyFigures:u5m"
                                 type="number"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('geoScoreLabel')}
                                 readOnly
-                                formname="geoScoreU5m"
+                                formname="keyFigures:geoScoreU5m"
                             />
                         </div>
                     </div>
@@ -250,25 +240,25 @@ export default class CountryKeyFigures extends React.PureComponent {
                         <div className={styles.inputs} >
                             <TextInput
                                 label={this.props.countriesStrings('numberOfRefugeesLabel')}
-                                formname="numberOfRefugees"
+                                formname="keyFigures:numberOfRefugees"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
                                 readOnly
-                                formname="percentageUprootedPeople"
+                                formname="keyFigures:percentageUprootedPeople"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('geoScoreLabel')}
                                 readOnly
-                                formname="geoScoreUprooted"
+                                formname="keyFigures:geoScoreUprooted"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('numberIdpLabel')}
-                                formname="numberIdp"
+                                formname="keyFigures:numberIdp"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
-                                formname="numberReturnedRefugees"
+                                formname="keyFigures:numberReturnedRefugees"
                             />
                         </div>
                     </div>
@@ -290,23 +280,23 @@ export default class CountryKeyFigures extends React.PureComponent {
                         <div className={styles.inputs} >
                             <TextInput
                                 label={this.props.countriesStrings('riskClassLabel')}
-                                formname="riskClass"
+                                formname="keyFigures:riskClass"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('informRiskIndexLabel')}
-                                formname="informRiskIndex"
+                                formname="keyFigures:informRiskIndex"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('hazardAndExposureLabel')}
-                                formname="hazardAndExposure"
+                                formname="keyFigures:hazardAndExposure"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('vulnerabilityLabel')}
-                                formname="vulnerability"
+                                formname="keyFigures:vulnerability"
                             />
                             <TextInput
                                 label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
-                                formname="lackOfCopingCapacity"
+                                formname="keyFigures:lackOfCopingCapacity"
                             />
                         </div>
                     </div>
