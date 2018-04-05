@@ -194,9 +194,12 @@ export default class CountryDetail extends React.PureComponent {
         if (this.requestForRegion) {
             this.requestForRegion.stop();
         }
+        const versionId = this.props.regionDetail.formValues.versionId;
         const requestForRegion = new RegionGetRequest({
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
+            notificationStrings: this.props.notificationStrings,
+            versionId,
         });
         this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
@@ -302,13 +305,11 @@ export default class CountryDetail extends React.PureComponent {
 
         return (
             <header className={styles.header} >
-                <div className={styles.tabs}>
-                    <List
-                        data={this.routes}
-                        modifier={this.renderLink}
-                        keyExtractor={CountryDetail.keyExtractor}
-                    />
-                    <div className={styles.rightContainer}>
+                <div className={styles.topContainer} >
+                    <h3 className={styles.heading} >
+                        {formValues.title}
+                    </h3>
+                    <div className={styles.rightContainer} >
                         {
                             activeUser.isSuperuser &&
                             <Fragment>
@@ -343,6 +344,14 @@ export default class CountryDetail extends React.PureComponent {
                         </Confirm>
                     </div>
                 </div>
+                <div className={styles.tabs}>
+                    <List
+                        data={this.routes}
+                        modifier={this.renderLink}
+                        keyExtractor={CountryDetail.keyExtractor}
+                    />
+                    <div className={styles.rightContainer} />
+                </div>
             </header>
         );
     }
@@ -356,7 +365,6 @@ export default class CountryDetail extends React.PureComponent {
             className,
             countryId,
             activeUser,
-            countriesStrings,
         } = this.props;
 
         const HeaderWithTabs = this.renderHeader;

@@ -3,7 +3,9 @@ import {
     createUrlForRegionWithField,
     createParamsForUser,
 } from '../../../rest';
+
 import schema from '../../../schema';
+import notify from '../../../notify';
 
 /*
  * setState, setRegionDetails
@@ -17,6 +19,9 @@ export default class RegionGetRequest {
     success = regionId => (response) => {
         try {
             schema.validate(response, 'region');
+            if (response.versionId === this.props.versionId) {
+                return;
+            }
             const regionDetails = {
                 formValues: { ...response },
                 formErrors: {},
@@ -26,6 +31,12 @@ export default class RegionGetRequest {
             this.props.setRegionDetails({
                 regionDetails,
                 regionId,
+            });
+            notify.send({
+                type: notify.type.WARNING,
+                title: this.props.notificationStrings('regionUpdate'),
+                message: this.props.notificationStrings('regionUpdateOverridden'),
+                duration: notify.duration.SLOW,
             });
         } catch (er) {
             console.error(er);
