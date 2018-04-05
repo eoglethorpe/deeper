@@ -95,8 +95,8 @@ const assessmentRegistrySchema = [];
         },
         extends: 'dbentity',
         fields: {
-            metaData: { type: 'object' },
-            methodologyData: { type: 'object' },
+            metadata: { type: 'object' },
+            methodology: { type: 'object' },
             lead: { type: 'uint', required: true },
             leadTitle: { type: 'string' },
         },

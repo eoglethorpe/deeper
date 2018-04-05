@@ -31,7 +31,7 @@ export const commonParamsForGET = () => ({
     headers: commonHeaderForPost,
 });
 
-/* Ary fields: lead*, metaData, methodologyData  */
+/* Ary fields: lead*, metadata, methodology  */
 export const createParamsForAryCreate = data => ({
     method: POST,
     headers: commonHeaderForPost,

@@ -40,6 +40,7 @@ export const aryPageFilterSelector = createSelector(
     aryPageForProjectSelector,
     aryPage => aryPage.filter || emptyObject,
 );
+
 // ARY VIEW SELECTORS
 
 const aryViewSelector = ({ siloDomainData }) => (
@@ -54,10 +55,10 @@ const aryViewFromRouteSelector = createSelector(
 
 export const aryViewMetadataSelector = createSelector(
     aryViewFromRouteSelector,
-    view => view.metaData || emptyObject,
+    view => view.metadata || emptyObject,
 );
 
 export const aryViewMethodologySelector = createSelector(
     aryViewFromRouteSelector,
-    view => view.methodologyData || emptyMethodology,
+    view => view.methodology || emptyMethodology,
 );

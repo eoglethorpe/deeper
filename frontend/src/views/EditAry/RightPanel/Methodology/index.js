@@ -2,16 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Form, {
-    requiredCondition,
-} from '../../../../vendor/react-store/components/Input/Form';
+import Form from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/MultiSelectInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
-import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
-import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -22,7 +15,6 @@ import SuccessButton from '../../../../vendor/react-store/components/Action/Butt
 import { iconNames } from '../../../../constants';
 
 import {
-    // aryStringsSelector,
     aryViewMethodologySelector,
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
@@ -39,40 +31,39 @@ import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoListInput from '../../../../components/GeoListInput/';
 
 import AryPutRequest from '../../requests/AryPutRequest';
-
+import { renderWidget } from '../widgetUtils';
 import styles from './styles.scss';
 
 const propTypes = {
-    activeLeadId: PropTypes.number.isRequired,
     // aryStrings: PropTypes.func.isRequired,
-    methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    focuses: PropTypes.arrayOf(PropTypes.object).isRequired,
-    sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+    activeLeadId: PropTypes.number.isRequired,
     affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    setAry: PropTypes.func.isRequired,
-
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMethodology: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    focuses: PropTypes.arrayOf(PropTypes.object).isRequired,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+
+    setAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    className: '',
     aryTemplateMethodology: {},
+    className: '',
     geoOptions: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    // aryStrings: aryStringsSelector(state),
     activeLeadId: leadIdFromRouteSelector(state),
-    methodology: aryViewMethodologySelector(state),
-    aryTemplateMethodology: aryTemplateMethodologySelector(state),
-    sectors: sectorsSelector(state),
-    focuses: focusesSelector(state),
     affectedGroups: affectedGroupsSelector(state),
-
-    projectDetails: projectDetailsSelector(state, props),
+    aryTemplateMethodology: aryTemplateMethodologySelector(state),
+    focuses: focusesSelector(state),
     geoOptions: geoOptionsForProjectSelector(state, props),
+    methodology: aryViewMethodologySelector(state),
+    projectDetails: projectDetailsSelector(state, props),
+    sectors: sectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -84,118 +75,21 @@ export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static renderWidget = ({ id: key, fieldType, title, options, placeholder }) => {
-        const id = String(key);
-        const commonProps = {
-            key: id,
-            formname: id,
-            label: title,
-            placeholder,
-            options,
-        };
-        const typeSpecificProps = {
-            number: {
-                separator: ' ',
-            },
-        };
-        const components = {
-            string: TextInput,
-            number: NumberInput,
-            date: DateInput,
-            multiselect: MultiSelectInput,
-            select: SelectInput,
-        };
-
-        const Component = components[fieldType];
-        if (!Component) {
-            console.error('Unidentified fieldType', fieldType);
-            return null;
-        }
-        return (
-            <Component
-                {...commonProps}
-                {...typeSpecificProps[fieldType]}
-            />
-        );
-    }
-
-    static getSchema = (attributesTemplate) => {
-        const schema = {
-            fields: {
-                attributes: {
-                    member: {
-                        fields: {},
-                        // dynamically injected fields here
-                    },
-                    validation: (value) => {
-                        const errors = [];
-                        if (!value || value.length < 1) {
-                            // FIXME: Use strings
-                            errors.push('There should be at least one value');
-                        }
-                        return errors;
-                    },
-                },
-                sectors: [],
-                focuses: [],
-                locations: [],
-                affectedGroups: [],
-
-                objectives: [],
-                dataCollectionTechniques: [],
-                sampling: [],
-                limitations: [],
-            },
-        };
-
-        Object.keys(attributesTemplate).forEach((key) => {
-            const methodologyGroup = attributesTemplate[key];
-            methodologyGroup.fields.forEach((field) => {
-                schema.fields.attributes.member.fields[field.id] = [requiredCondition];
-            });
-        });
-
-        return schema;
-    }
-
     constructor(props) {
         super(props);
 
-        const {
-            aryTemplateMethodology: attributesTemplate,
-            methodology,
-        } = props;
-        const schema = Methodology.getSchema(attributesTemplate);
-
         this.state = {
-            formValues: methodology,
             formErrors: {},
             formFieldErrors: {},
-            schema,
         };
     }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology) {
-            const { aryTemplateMethodology: attributesTemplate } = nextProps;
-            const schema = Methodology.getSchema(attributesTemplate);
-            this.setState({
-                schema,
-                formFieldErrors: {},
-                formErrors: {},
-            });
-        }
-        if (this.props.methodology !== nextProps.methodology) {
-            const { methodology } = nextProps;
-            this.setState({ formValues: methodology });
-        }
-    }
-
     // FORM RELATED
+
     changeCallback = (values, formFieldErrors, formErrors) => {
         this.props.setAry({
             lead: this.props.activeLeadId,
-            methodologyData: values,
+            methodology: values,
         });
         this.setState({
             formFieldErrors,
@@ -247,7 +141,7 @@ export default class Methodology extends React.PureComponent {
             ...field,
             id: formname,
         };
-        return Methodology.renderWidget(newField);
+        return renderWidget(newField);
     };
 
     renderAttribute = (context, key) => {
@@ -298,17 +192,17 @@ export default class Methodology extends React.PureComponent {
             affectedGroups,
             projectDetails,
             geoOptions,
+            schema,
+            methodology,
         } = this.props;
 
         const {
             pending,
-            schema,
-            formValues,
             formErrors,
             formFieldErrors,
         } = this.state;
 
-        const { attributes = [] } = formValues;
+        const { attributes = [] } = methodology;
         const attributesTemplateKeys = Object.keys(attributesTemplate);
 
         // FIXME: use strings
@@ -322,7 +216,7 @@ export default class Methodology extends React.PureComponent {
             <Form
                 className={styles.methodology}
                 schema={schema}
-                value={formValues}
+                value={methodology}
                 formErrors={formErrors}
                 fieldErrors={formFieldErrors}
                 changeCallback={this.changeCallback}
@@ -390,28 +284,33 @@ export default class Methodology extends React.PureComponent {
                 </div>
                 <div className={styles.bottom}>
                     <div className={styles.title}>
+                        {/* FIXME: use strings */}
                         Methodology content
                     </div>
                     <div className={styles.body}>
                         <TextArea
+                            // FIXME: use strings
                             formname="objectives"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop objectives here"
                             label="Objectives"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="dataCollectionTechniques"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop data collection techniques here"
                             label="Data collection techniques"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="sampling"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop sampling (site and respondent selection) here"
                             label="Sampling"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="limitations"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop limitations here"

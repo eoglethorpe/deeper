@@ -3,46 +3,37 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
-    aryStringsSelector,
     aryViewMetadataSelector,
     aryTemplateMetadataSelector,
     leadIdFromRouteSelector,
     setAryAction,
 } from '../../../../redux';
-import Form, {
-    requiredCondition,
-} from '../../../../vendor/react-store/components/Input/Form';
+import Form from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/MultiSelectInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
-import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
-import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 import Baksa from '../../../../components/Baksa';
 
 import AryPutRequest from '../../requests/AryPutRequest';
-
+import { renderWidget } from '../widgetUtils';
 import styles from './styles.scss';
 
 const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
-    aryStrings: PropTypes.func.isRequired,
-    metaData: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    metadata: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     setAry: PropTypes.func.isRequired,
+    schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    metaData: {},
+    metadata: {},
     aryTemplateMetadata: {},
 };
 
 const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
-    aryStrings: aryStringsSelector(state),
-    metaData: aryViewMetadataSelector(state),
+    metadata: aryViewMetadataSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
 });
 
@@ -50,120 +41,20 @@ const mapDispatchToProps = dispatch => ({
     setAry: params => dispatch(setAryAction(params)),
 });
 
-const widgets = {
-    string: TextInput,
-    number: NumberInput,
-    date: DateInput,
-    multiselect: MultiSelectInput,
-    select: SelectInput,
-};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-
-    static getSchema = (metadataGroups) => {
-        const schema = {
-            fields: {},
-        };
-
-        Object.keys(metadataGroups).forEach((key) => {
-            const metadataGroup = metadataGroups[key];
-
-            metadataGroup.fields.forEach((field) => {
-                schema.fields[field.id] = [requiredCondition];
-            });
-        });
-
-        schema.fields.questionnaire = [
-            Baksa.bothPageRequiredCondition,
-            Baksa.validPageRangeCondition,
-            Baksa.validPageNumbersCondition,
-            Baksa.pendingCondition,
-        ];
-        schema.fields.assessmentData = [
-            Baksa.pendingCondition,
-        ];
-        schema.fields.executiveSummary = [
-            Baksa.bothPageRequiredCondition,
-            Baksa.validPageRangeCondition,
-            Baksa.validPageNumbersCondition,
-            Baksa.pendingCondition,
-        ];
-
-        return schema;
-    }
-
-    static renderWidget = (data) => {
-        const {
-            id: key,
-            fieldType,
-            title,
-            options,
-            placeholder,
-        } = data;
-
-        const id = String(key);
-        const commonProps = {
-            key: id,
-            formname: id,
-            label: title,
-            placeholder,
-            options,
-        };
-        const typeSpecificProps = {
-            number: {
-                separator: ' ',
-            },
-        };
-
-        const Component = widgets[fieldType];
-
-        if (!Component) {
-            console.error('Unidentified fieldType', fieldType);
-            return null;
-        }
-
-        return (
-            <Component
-                {...commonProps}
-                {...typeSpecificProps[fieldType]}
-            />
-        );
-    }
-
     constructor(props) {
         super(props);
 
-        const { aryTemplateMetadata: metadataGroups } = this.props;
-        const schema = Metadata.getSchema(metadataGroups);
-
         this.state = {
             pending: false,
-            formValues: this.props.metaData || {},
             formErrors: {},
             formFieldErrors: {},
-            schema,
         };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata) {
-            const { aryTemplateMetadata: metadataGroups } = nextProps;
-            const schema = Metadata.getSchema(metadataGroups);
-            this.setState({
-                schema,
-                formErrors: {},
-                formFieldErrors: {},
-            });
-        }
-        if (this.props.metaData !== nextProps.metaData) {
-            this.setState({
-                formValues: nextProps.metaData || {},
-            });
-        }
     }
 
     componentWillUnmount() {
@@ -175,10 +66,10 @@ export default class Metadata extends React.PureComponent {
     changeCallback = (values, formFieldErrors, formErrors) => {
         this.props.setAry({
             lead: this.props.activeLeadId,
-            metaData: values,
+            metadata: values,
         });
+
         this.setState({
-            formValues: values,
             formFieldErrors,
             formErrors,
             pristine: true,
@@ -203,7 +94,7 @@ export default class Metadata extends React.PureComponent {
             setAry,
             setState: params => this.setState(params),
         });
-        this.aryPutRequest = aryPutRequest.create(activeLeadId, { metaData: value });
+        this.aryPutRequest = aryPutRequest.create(activeLeadId, { metadata: value });
         this.aryPutRequest.start();
     };
 
@@ -213,7 +104,6 @@ export default class Metadata extends React.PureComponent {
             id,
             title,
         } = data;
-        const fieldWidgetList = Object.values(fields);
 
         return (
             <div
@@ -224,24 +114,23 @@ export default class Metadata extends React.PureComponent {
                     {title}
                 </h4>
                 <div className={styles.content}>
-                    {fieldWidgetList.map(Metadata.renderWidget)}
+                    {Object.values(fields).map(renderWidget)}
                 </div>
             </div>
         );
     }
 
     render() {
-        const { aryTemplateMetadata: metadataGroups } = this.props;
+        const {
+            aryTemplateMetadata: metadataGroups,
+            schema,
+        } = this.props;
 
         const {
             pending,
-            schema,
-            formValues,
             formErrors,
             formFieldErrors,
         } = this.state;
-
-        const metadataList = Object.values(metadataGroups);
 
         // FIXME: use strings
         const saveButtonLabel = 'Save';
@@ -254,7 +143,7 @@ export default class Metadata extends React.PureComponent {
                 changeCallback={this.changeCallback}
                 successCallback={this.successCallback}
                 failureCallback={this.failureCallback}
-                value={formValues}
+                value={this.props.metadata}
                 formErrors={formErrors}
                 fieldErrors={formFieldErrors}
                 disabled={pending}
@@ -266,15 +155,13 @@ export default class Metadata extends React.PureComponent {
                         formerror=""
                     />
                     <div className={styles.actionButtons}>
-                        <SuccessButton
-                            type="submit"
-                        >
+                        <SuccessButton type="submit">
                             { saveButtonLabel }
                         </SuccessButton>
                     </div>
                 </header>
                 <div className={styles.top}>
-                    {metadataList.map(this.renderMetadata)}
+                    {Object.values(metadataGroups).map(this.renderMetadata)}
                 </div>
                 <div className={styles.bottom}>
                     <header className={styles.header}>
@@ -284,18 +171,21 @@ export default class Metadata extends React.PureComponent {
                     </header>
                     <div className={styles.documents}>
                         <Baksa
+                            // FIXME: use strings
                             label="Executive Summary"
                             className={styles.baksa}
                             formname="executiveSummary"
                             showPageRange
                         />
                         <Baksa
+                            // FIXME: use strings
                             label="Assessment Database"
                             className={styles.baksa}
                             formname="assessmentData"
                             acceptUrl
                         />
                         <Baksa
+                            // FIXME: use strings
                             label="Questionnaire"
                             className={styles.baksa}
                             formname="questionnaire"

@@ -10,16 +10,16 @@ test('should update Assessment Registry metadata', () => {
     };
 
     const action = setAryAction({
-        metaData: {},
-        methodologyData: {},
+        metadata: {},
+        methodology: {},
         lead: 1,
     });
 
     const after = {
         aryView: {
             1: {
-                metaData: {},
-                methodologyData: {},
+                metadata: {},
+                methodology: {},
             },
         },
     };

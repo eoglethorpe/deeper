@@ -38,11 +38,11 @@ export const setArysAction = ({ projectId, arys, totalArysCount }) => ({
     totalArysCount,
 });
 
-export const setAryAction = ({ lead, metaData, methodologyData }) => ({
+export const setAryAction = ({ lead, metadata, methodology }) => ({
     type: ARY__UPDATE,
     lead,
-    metaData,
-    methodologyData,
+    metadata,
+    methodology,
 });
 
 // HELPERS
@@ -116,20 +116,21 @@ const aryViewSetActiveSort = (state, action) => {
     return update(state, settings);
 };
 
+// FIXME: move this elsewhere
 const setAry = (state, action) => {
     const {
         lead,
-        metaData,
-        methodologyData,
+        metadata,
+        methodology,
     } = action;
     const settings = {
         aryView: {
             [lead]: { $auto: {
-                metaData: { $auto: {
-                    $set: metaData,
+                metadata: { $auto: {
+                    $set: metadata,
                 } },
-                methodologyData: { $auto: {
-                    $set: methodologyData,
+                methodology: { $auto: {
+                    $set: methodology,
                 } },
             } },
         },

@@ -14,6 +14,7 @@ import { UploadBuilder } from '../../vendor/react-store/utils/upload';
 import {
     urlForUpload,
     createParamsForFileUpload,
+    transformAndCombineResponseErrors,
 } from '../../rest';
 
 
@@ -55,7 +56,7 @@ export default class Baksa extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static bothPageRequiredCondition = ({ startPage, endPage }) => {
+    static bothPageRequiredCondition = ({ startPage, endPage } = {}) => {
         const ok = (startPage && endPage) ||
             (startPage === undefined && endPage === undefined);
         return {
@@ -64,7 +65,7 @@ export default class Baksa extends React.PureComponent {
         };
     }
 
-    static validPageRangeCondition = ({ startPage, endPage }) => {
+    static validPageRangeCondition = ({ startPage, endPage } = {}) => {
         const ok = !startPage || !endPage || startPage <= endPage;
         return {
             ok,
@@ -72,7 +73,7 @@ export default class Baksa extends React.PureComponent {
         };
     }
 
-    static validPageNumbersCondition = ({ startPage, endPage }) => {
+    static validPageNumbersCondition = ({ startPage, endPage } = {}) => {
         const ok = (startPage === undefined || startPage > 0) &&
             (endPage === undefined || endPage > 0);
         return {
@@ -81,8 +82,8 @@ export default class Baksa extends React.PureComponent {
         };
     }
 
-    static pendingCondition = ({ type }) => {
-        const ok = type !== 'upload';
+    static pendingCondition = ({ pending } = {}) => {
+        const ok = !pending;
         return {
             ok,
             message: 'File is being uploaded',
@@ -94,7 +95,16 @@ export default class Baksa extends React.PureComponent {
 
         this.state = {
             url: undefined,
+            pending: undefined,
+            selectedFile: undefined,
+            error: undefined,
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value !== this.props.value) {
+            this.setState({ error: undefined });
+        }
     }
 
     componentWillUnmount() {
@@ -161,11 +171,14 @@ export default class Baksa extends React.PureComponent {
             return;
         }
 
+        // This is a hack
         onChange({
-            type: 'upload',
-            file,
-            startPage,
-            endPage,
+            pending: true,
+        });
+
+        this.setState({
+            pending: true,
+            selectedFile: file,
         });
 
         if (this.uploader) {
@@ -176,6 +189,7 @@ export default class Baksa extends React.PureComponent {
             .file(file)
             .url(urlForUpload)
             .params(() => createParamsForFileUpload())
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 onChange({
                     type: 'file',
@@ -185,6 +199,13 @@ export default class Baksa extends React.PureComponent {
                     startPage,
                     endPage,
                 });
+            })
+            .failure((response) => {
+                const message = transformAndCombineResponseErrors(response.errors);
+                this.setState({ error: message });
+            })
+            .fatal(() => {
+                this.setState({ error: 'Couldn\t upload file' });
             })
             .build();
 
@@ -287,7 +308,7 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderUpload = () => {
-        const { value: { file } } = this.props;
+        const { selectedFile: file } = this.state;
 
         return (
             <div className={styles.upload}>
@@ -352,8 +373,11 @@ export default class Baksa extends React.PureComponent {
         const {
             showHintAndError,
             hint,
-            error,
+            error: propsError,
         } = this.props;
+
+        const { error: stateError } = this.state;
+        const error = stateError || propsError;
 
         if (!showHintAndError) {
             return null;
@@ -398,6 +422,7 @@ export default class Baksa extends React.PureComponent {
 
     render() {
         const { value, showPageRange } = this.props;
+        const { pending } = this.state;
 
         const Label = this.renderLabel;
         const DropFileInput = this.renderDropFileInput;
@@ -409,10 +434,10 @@ export default class Baksa extends React.PureComponent {
         return (
             <div className={this.getClassName()}>
                 <Label />
-                {!value.type && <DropFileInput />}
-                {value.type === 'upload' && <Upload />}
-                {value.type && value.type !== 'upload' && <Selection />}
-                {value.type && showPageRange && <PageRange />}
+                {pending && <Upload />}
+                {!pending && !value.type && <DropFileInput />}
+                {!pending && value.type && <Selection />}
+                {!pending && value.type && showPageRange && <PageRange />}
                 <HintAndError />
             </div>
         );

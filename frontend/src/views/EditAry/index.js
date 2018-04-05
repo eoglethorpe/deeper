@@ -81,10 +81,12 @@ export default class EditAry extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { activeProject: { id: oldProjectId }, activeLeadId: oldLeadId } = this.props;
         const { activeProject: { id: projectId }, activeLeadId: leadId } = nextProps;
+
         if (oldProjectId !== projectId) {
             this.startAryTemplateRequest(projectId);
             this.startGeoOptionsRequest(projectId);
         }
+
         if (oldLeadId !== leadId) {
             this.startAryGetRequest(leadId);
             this.startLeadRequest(leadId);
@@ -175,10 +177,10 @@ export default class EditAry extends React.PureComponent {
     render() {
         const { aryStrings } = this.props;
         const {
-            pendingEntries,
             pendingLead,
             pendingAryTemplate,
             pendingGeo,
+            pendingAry,
             noTemplate,
             lead,
         } = this.state;
@@ -186,12 +188,14 @@ export default class EditAry extends React.PureComponent {
         if (noTemplate) {
             return (
                 <div className={styles.noTemplate}>
-                    <p>{aryStrings('noAryTemplateForProject')}</p>
+                    <p>
+                        {aryStrings('noAryTemplateForProject')}
+                    </p>
                 </div>
             );
         }
 
-        if (pendingEntries || pendingLead || pendingAryTemplate || pendingGeo) {
+        if (pendingLead || pendingAryTemplate || pendingAry || pendingGeo) {
             return <LoadingAnimation />;
         }
 
