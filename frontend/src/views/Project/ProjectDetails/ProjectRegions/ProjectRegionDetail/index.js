@@ -2,22 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
 import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../../../vendor/react-store/components/Action/Button/SuccessButton';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Form, {
     requiredCondition,
 } from '../../../../../vendor/react-store/components/Input/Form';
 
-import {
-    createParamsForRegionClone,
-    createParamsForProjectPatch,
-    createUrlForProject,
-    createUrlForRegionClone,
-} from '../../../../../rest';
 import {
     activeProjectSelector,
     regionDetailSelector,
@@ -29,10 +23,10 @@ import {
     notificationStringsSelector,
     projectStringsSelector,
 } from '../../../../../redux';
-import schema from '../../../../../schema';
-import notify from '../../../../../notify';
 
 import RegionGetRequest from '../../../requests/RegionGetRequest';
+import ProjectPatchRequest from '../../../requests/ProjectPatchRequest';
+import RegionCloneRequest from '../../../requests/RegionCloneRequest';
 import RegionDetailPatchRequest from '../../../requests/RegionDetailPatchRequest';
 
 import RegionMap from '../../../../../components/RegionMap';
@@ -46,7 +40,12 @@ const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number.isRequired,
-    regionDetail: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    regionDetail: PropTypes.shape({
+        formValues: PropTypes.object,
+        formFieldErrors: PropTypes.object,
+        formErrors: PropTypes.object,
+        pristine: PropTypes.bool,
+    }),
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
@@ -59,6 +58,12 @@ const propTypes = {
 const defaultProps = {
     activeProject: undefined,
     onRegionClone: undefined,
+    regionDetail: {
+        formValues: {},
+        formErrors: {},
+        formFieldErrors: {},
+        pristine: false,
+    },
 };
 
 const mapStateToProps = (state, props) => ({
@@ -85,6 +90,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
         super(props);
         this.state = {
             dataLoading: true,
+            projectPatchPending: false,
+            regionClonePending: false,
+            regionDetailPatchPending: false,
             showDeleteConfirm: false,
             showCloneAndEditConfirm: false,
         };
@@ -111,6 +119,21 @@ export default class ProjectRegionDetail extends React.PureComponent {
         this.startRegionRequest(this.props.countryId, false);
     }
 
+    componentWillUnmount() {
+        if (this.projectPatchRequest) {
+            this.projectPatchRequest.stop();
+        }
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
+        if (this.requestForRegionClone) {
+            this.requestForRegionClone.stop();
+        }
+        if (this.requestForRegion) {
+            this.requestForRegion.stop();
+        }
+    }
+
     startRegionRequest = (regionId, discard) => {
         if (this.requestForRegion) {
             this.requestForRegion.stop();
@@ -125,6 +148,22 @@ export default class ProjectRegionDetail extends React.PureComponent {
         });
         this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
+    }
+
+    startRegionCloneRequest = (regionId, projectId) => {
+        if (this.requestForRegionClone) {
+            this.requestForRegionClone.stop();
+        }
+        const requestForRegionClone = new RegionCloneRequest({
+            onRegionClone: this.props.onRegionClone,
+            addNewRegion: this.props.addNewRegion,
+            removeProjectRegion: this.props.removeProjectRegion,
+            notificationStrings: this.props.notificationStrings,
+            projectId,
+            setState: v => this.setState(v),
+        });
+        this.requestForRegionClone = requestForRegionClone.create(regionId, projectId);
+        this.requestForRegionClone.start();
     }
 
     startRequestForRegionDetailPatch = (regionId, data) => {
@@ -142,85 +181,22 @@ export default class ProjectRegionDetail extends React.PureComponent {
         this.regionDetailPatchRequest.start();
     }
 
-    createRegionCloneRequest = (regionId, projectId) => {
-        const regionCloneRequest = new FgRestBuilder()
-            .url(createUrlForRegionClone(regionId))
-            .params(() => createParamsForRegionClone({ project: projectId }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'region');
-                    this.props.addNewRegion({
-                        regionDetail: response,
-                        projectId,
-                    });
-                    this.props.removeProjectRegion({
-                        projectId,
-                        regionId,
-                    });
-                    if (this.props.onRegionClone) {
-                        this.props.onRegionClone(response.id);
-                    }
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .build();
-        return regionCloneRequest;
-    };
+    startRequestForProjectPatch = (regionId, data) => {
+        if (this.projectPatchRequest) {
+            this.projectPatchRequest.stop();
+        }
+        const projectPatchRequest = new ProjectPatchRequest({
+            removeProjectRegion: this.props.removeProjectRegion,
+            notificationStrings: this.props.notificationStrings,
+            setState: v => this.setState(v),
+        });
+        this.projectPatchRequest = projectPatchRequest.create(regionId, data);
+        this.projectPatchRequest.start();
+    }
 
-    createProjectPatchRequest = (projectDetails, removedRegionId) => {
-        const projectId = projectDetails.id;
-        const regions = [...projectDetails.regions];
-        const index = regions.findIndex(d => (d.id === removedRegionId));
-        regions.splice(index, 1);
-
-        const projectPatchRequest = new FgRestBuilder()
-            .url(createUrlForProject(projectId))
-            .params(() => createParamsForProjectPatch({ regions }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'project');
-                    this.props.removeProjectRegion({
-                        projectId,
-                        regionId: removedRegionId,
-                    });
-                    notify.send({
-                        title: this.props.notificationStrings('countryDelete'),
-                        type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('countryDeleteSuccess'),
-                        duration: notify.duration.MEDIUM,
-                    });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure(() => {
-                notify.send({
-                    title: this.props.notificationStrings('countryDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryDeleteFailure'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.notificationStrings('countryDelete'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryDeleteFatal'),
-                    duration: notify.duration.SLOW,
-                });
-            })
-            .build();
-        return projectPatchRequest;
-    };
-
-    handleRegionClone = (cloneConfirm, regionId, activeProject) => {
+    handleRegionClone = (cloneConfirm, regionId, projectId) => {
         if (cloneConfirm) {
-            if (this.regionCloneRequest) {
-                this.regionCloneRequest.stop();
-            }
-            this.regionCloneRequest = this.createRegionCloneRequest(regionId, activeProject);
-            this.regionCloneRequest.start();
+            this.startRegionCloneRequest(regionId, projectId);
         }
         this.setState({
             showCloneAndEditConfirm: false,
@@ -229,14 +205,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
     handleRegionRemove = (deleteConfirm, projectDetails, removedRegionId) => {
         if (deleteConfirm) {
-            if (this.regionRemoveRequest) {
-                this.regionRemoveRequest.stop();
-            }
-            this.regionRemoveRequest = this.createProjectPatchRequest(
-                projectDetails,
-                removedRegionId,
-            );
-            this.regionRemoveRequest.start();
+            const projectId = projectDetails.id;
+            const regions = [...projectDetails.regions];
+            const index = regions.findIndex(d => (d.id === removedRegionId));
+            regions.splice(index, 1);
+
+            this.startRequestForProjectPatch(projectId, removedRegionId, regions);
         }
         this.setState({
             showDeleteConfirm: false,
@@ -248,15 +222,11 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     handleRegionRemoveClick = () => {
-        this.setState({
-            showDeleteConfirm: true,
-        });
+        this.setState({ showDeleteConfirm: true });
     }
 
     handleRegionCloneClick = () => {
-        this.setState({
-            showCloneAndEditConfirm: true,
-        });
+        this.setState({ showCloneAndEditConfirm: true });
     }
 
     successCallback = (values) => {
@@ -264,13 +234,16 @@ export default class ProjectRegionDetail extends React.PureComponent {
     };
 
     renderCloneAndEditButton = () => {
+        const { projectStrings } = this.props;
         const {
-            regionDetail,
-            projectStrings,
-        } = this.props;
-        const { dataLoading } = this.state;
+            formValues = {},
+        } = this.props.regionDetail;
+        const {
+            dataLoading,
+            regionClonePending,
+        } = this.state;
 
-        const isPublic = regionDetail.public;
+        const isPublic = formValues.public;
         const cloneAndEditButtonLabel = projectStrings('cloneEditButtonLabel');
 
         if (!isPublic) {
@@ -279,7 +252,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
         return (
             <PrimaryButton
-                disabled={dataLoading}
+                disabled={dataLoading || regionClonePending}
                 onClick={this.handleRegionCloneClick}
             >
                 {cloneAndEditButtonLabel}
@@ -288,10 +261,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     renderHeader = () => {
-        const {
-            regionDetail,
-            projectStrings,
-        } = this.props;
+        const { projectStrings } = this.props;
 
         const {
             formErrors = {},
@@ -300,15 +270,26 @@ export default class ProjectRegionDetail extends React.PureComponent {
             pristine = false,
         } = this.props.regionDetail;
 
-        const { dataLoading } = this.state;
+        const {
+            dataLoading,
+            projectPatchPending,
+            regionClonePending,
+            regionDetailPatchPending,
+        } = this.state;
+
+        const pending = dataLoading ||
+            regionClonePending ||
+            projectPatchPending ||
+            regionDetailPatchPending;
+
         const removeRegionButtonLabel = projectStrings('removeRegionButtonLabel');
         const CloneAndEditButton = this.renderCloneAndEditButton;
-        const isPublic = regionDetail.public;
+        const isPublic = formValues.public;
 
         return (
             <header className={styles.header}>
                 <h2>
-                    {regionDetail.title}
+                    {formValues.title}
                 </h2>
                 <div className={styles.actionButtons}>
                     <CloneAndEditButton />
@@ -336,7 +317,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                         </Form>
                     }
                     <DangerButton
-                        disabled={dataLoading}
+                        disabled={pending}
                         onClick={this.handleRegionRemoveClick}
                     >
                         { removeRegionButtonLabel }
@@ -351,7 +332,9 @@ export default class ProjectRegionDetail extends React.PureComponent {
             countryId,
             activeProject,
         } = this.props;
-        const { formValues } = this.props.regionDetail;
+        const {
+            formValues = {},
+        } = this.props.regionDetail;
         const { dataLoading } = this.state;
 
         const isEditable = formValues.public !== undefined && !formValues.public;
@@ -393,10 +376,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
     renderDeleteRegionConfirm = () => {
         const {
             countryId,
-            regionDetail,
             projectDetails,
             projectStrings,
         } = this.props;
+        const {
+            formValues = {},
+        } = this.props.regionDetail;
         const { showDeleteConfirm } = this.state;
 
         return (
@@ -412,7 +397,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 <p>
                     {
                         projectStrings('confirmRemoveText', {
-                            title: regionDetail.title,
+                            title: formValues.title,
                             projectTitle: projectDetails.title,
                         })
                     }
@@ -424,10 +409,14 @@ export default class ProjectRegionDetail extends React.PureComponent {
     renderCloneAndEditRegionConfirm = () => {
         const {
             countryId,
-            regionDetail,
             activeProject,
             projectStrings,
         } = this.props;
+
+        const {
+            formValues = {},
+        } = this.props.regionDetail;
+
         const { showCloneAndEditConfirm } = this.state;
 
         return (
@@ -440,20 +429,31 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {projectStrings('confirmCloneText', { title: regionDetail.title })}
+                    {projectStrings('confirmCloneText', { title: formValues.title })}
                 </p>
             </Confirm>
         );
     }
 
     render() {
+        const {
+            projectPatchPending,
+            regionClonePending,
+            regionDetailPatchPending,
+        } = this.state;
+
         const Header = this.renderHeader;
         const Content = this.renderContent;
         const DeleteRegionConfirm = this.renderDeleteRegionConfirm;
         const CloneAndEditRegionConfirm = this.renderCloneAndEditRegionConfirm;
 
+        const pending = projectPatchPending ||
+            regionClonePending ||
+            regionDetailPatchPending;
+
         return (
             <div className={styles.regionDetailsContainer}>
+                { pending && <LoadingAnimation /> }
                 <Header />
                 <Content />
                 <DeleteRegionConfirm />

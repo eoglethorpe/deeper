@@ -123,6 +123,7 @@ const addNewRegion = (state, action) => {
             } },
         } },
     };
+
     if (projectId) {
         const index = ((state.projects[projectId] || {}).regions
             || []).findIndex(d => (d.id === regionDetail.id));
@@ -131,8 +132,8 @@ const addNewRegion = (state, action) => {
                 [projectId]: { $auto: {
                     regions: { $autoArray: {
                         $push: [{
-                            id: regionDetail.formValues.id,
-                            title: regionDetail.formValues.title,
+                            id: regionDetail.id,
+                            title: regionDetail.title,
                         }],
                     } },
                 } },
