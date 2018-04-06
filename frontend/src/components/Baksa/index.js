@@ -10,10 +10,12 @@ import NumberInput from '../../vendor/react-store/components/Input/NumberInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import { UploadBuilder } from '../../vendor/react-store/utils/upload';
+import { isTruthy, isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     urlForUpload,
     createParamsForFileUpload,
+    transformAndCombineResponseErrors,
 } from '../../rest';
 
 
@@ -55,34 +57,37 @@ export default class Baksa extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static bothPageRequiredCondition = ({ startPage, endPage }) => {
-        const ok = (startPage && endPage) ||
-            (startPage === undefined && endPage === undefined);
+    static bothPageRequiredCondition = (value) => {
+        const ok = isFalsy(value) || (isTruthy(value.startPage) && isTruthy(value.endPage));
         return {
             ok,
-            message: 'Both start page and end page must be specified',
+            message: 'Both start page and end page must not be empty',
         };
     }
 
-    static validPageRangeCondition = ({ startPage, endPage }) => {
-        const ok = !startPage || !endPage || startPage <= endPage;
+    static validPageRangeCondition = (value) => {
+        const ok = isFalsy(value)
+            || isFalsy(value.startPage) || isFalsy(value.endPage)
+            || value.startPage < value.endPage;
         return {
             ok,
             message: 'Start page must be less than end page',
         };
     }
 
-    static validPageNumbersCondition = ({ startPage, endPage }) => {
-        const ok = (startPage === undefined || startPage > 0) &&
-            (endPage === undefined || endPage > 0);
+    static validPageNumbersCondition = (value) => {
+        const ok = isFalsy(value) || (
+            (isFalsy(value.startPage) || value.startPage > 0) &&
+            (isFalsy(value.endPage) || value.endPage > 0)
+        );
         return {
             ok,
             message: 'Page numbers must be greater than 0',
         };
     }
 
-    static pendingCondition = ({ type }) => {
-        const ok = type !== 'upload';
+    static pendingCondition = (value) => {
+        const ok = isFalsy(value) || isFalsy(value.pending);
         return {
             ok,
             message: 'File is being uploaded',
@@ -94,7 +99,16 @@ export default class Baksa extends React.PureComponent {
 
         this.state = {
             url: undefined,
+            pending: undefined,
+            selectedFile: undefined,
+            error: undefined,
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.value !== this.props.value) {
+            this.setState({ error: undefined });
+        }
     }
 
     componentWillUnmount() {
@@ -126,9 +140,9 @@ export default class Baksa extends React.PureComponent {
     }
 
     resetValue = () => {
-        const { onChange, value: { startPage, endPage } } = this.props;
+        const { onChange } = this.props;
         if (onChange) {
-            onChange({ startPage, endPage });
+            onChange(undefined);
         }
     }
 
@@ -161,11 +175,14 @@ export default class Baksa extends React.PureComponent {
             return;
         }
 
+        // This is a hack
         onChange({
-            type: 'upload',
-            file,
-            startPage,
-            endPage,
+            pending: true,
+        });
+
+        this.setState({
+            pending: true,
+            selectedFile: file,
         });
 
         if (this.uploader) {
@@ -176,6 +193,7 @@ export default class Baksa extends React.PureComponent {
             .file(file)
             .url(urlForUpload)
             .params(() => createParamsForFileUpload())
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 onChange({
                     type: 'file',
@@ -185,6 +203,13 @@ export default class Baksa extends React.PureComponent {
                     startPage,
                     endPage,
                 });
+            })
+            .failure((response) => {
+                const message = transformAndCombineResponseErrors(response.errors);
+                this.setState({ error: message });
+            })
+            .fatal(() => {
+                this.setState({ error: 'Couldn\t upload file' });
             })
             .build();
 
@@ -287,7 +312,7 @@ export default class Baksa extends React.PureComponent {
     }
 
     renderUpload = () => {
-        const { value: { file } } = this.props;
+        const { selectedFile: file } = this.state;
 
         return (
             <div className={styles.upload}>
@@ -352,8 +377,11 @@ export default class Baksa extends React.PureComponent {
         const {
             showHintAndError,
             hint,
-            error,
+            error: propsError,
         } = this.props;
+
+        const { error: stateError } = this.state;
+        const error = stateError || propsError;
 
         if (!showHintAndError) {
             return null;
@@ -398,6 +426,7 @@ export default class Baksa extends React.PureComponent {
 
     render() {
         const { value, showPageRange } = this.props;
+        const { pending } = this.state;
 
         const Label = this.renderLabel;
         const DropFileInput = this.renderDropFileInput;
@@ -409,10 +438,10 @@ export default class Baksa extends React.PureComponent {
         return (
             <div className={this.getClassName()}>
                 <Label />
-                {!value.type && <DropFileInput />}
-                {value.type === 'upload' && <Upload />}
-                {value.type && value.type !== 'upload' && <Selection />}
-                {value.type && showPageRange && <PageRange />}
+                {pending && <Upload />}
+                {!pending && !value.type && <DropFileInput />}
+                {!pending && value.type && <Selection />}
+                {!pending && value.type && showPageRange && <PageRange />}
                 <HintAndError />
             </div>
         );

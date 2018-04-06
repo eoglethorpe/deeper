@@ -11,7 +11,7 @@ const galleryFileSchema = [];
         fields: {
             file: { type: 'string', required: true }, // url
             isPublic: { type: 'boolean' },
-            metaData: { type: 'object' },
+            metadata: { type: 'object' },
             mimeType: { type: 'string' }, // mime
             permittedUserGroups: { type: 'array.uint' },
             permittedUsers: { type: 'array.uint' },

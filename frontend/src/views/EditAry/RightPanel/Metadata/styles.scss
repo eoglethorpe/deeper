@@ -4,6 +4,7 @@ $height-bottom: 256px;
 
 .metadata {
     display: flex;
+    position: relative;
     flex-direction: column;
     flex-grow: 1;
     background-color: $color-foreground-alt;

@@ -1,5 +1,9 @@
 @import '../../stylesheets/base';
 
+.no-template {
+    @include background-color($color-foreground-dark);
+}
+
 .assessments {
     @extend %main-content;
     display: flex;

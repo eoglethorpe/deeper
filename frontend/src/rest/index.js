@@ -30,3 +30,11 @@ export const transformResponseErrorToFormError = (errors) => {
     );
     return { formFieldErrors, formErrors };
 };
+
+export const transformAndCombineResponseErrors = (errors) => {
+    const transformedErrors = transformResponseErrorToFormError(errors);
+    return [
+        ...transformedErrors.formErrors.errors,
+        ...Object.values(transformedErrors.formFieldErrors),
+    ];
+};

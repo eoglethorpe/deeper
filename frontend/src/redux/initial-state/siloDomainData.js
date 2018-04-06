@@ -157,12 +157,10 @@ const initialSiloDomainData = {
         },
     },
 
-    aryView: {
+    editAry: {
         /*
-        // index is lead id
         1: {
-            versionId: 0,
-            metadata: { },
+            // index is lead id
         },
         */
     },

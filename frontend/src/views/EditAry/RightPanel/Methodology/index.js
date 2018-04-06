@@ -2,81 +2,71 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Form, {
-    requiredCondition,
-} from '../../../../vendor/react-store/components/Input/Form';
-import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
-import MultiSelectInput from '../../../../vendor/react-store/components/Input/MultiSelectInput';
+import Form from '../../../../vendor/react-store/components/Input/Form';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
-import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
-import NumberInput from '../../../../vendor/react-store/components/Input/NumberInput';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
-// import RegionMap from '../../../../components/RegionMap';
 import { iconNames } from '../../../../constants';
 
 import {
-    // aryStringsSelector,
-    aryViewMethodologySelector,
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
-    setAryAction,
     sectorsSelector,
     focusesSelector,
     affectedGroupsSelector,
 
     projectDetailsSelector,
     geoOptionsForProjectSelector,
+    changeAryMethodologyForEditAryAction,
 } from '../../../../redux';
 
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoListInput from '../../../../components/GeoListInput/';
 
-import AryPutRequest from '../../requests/AryPutRequest';
-
+import { renderWidget } from '../widgetUtils';
 import styles from './styles.scss';
 
 const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
-    // aryStrings: PropTypes.func.isRequired,
-    methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     focuses: PropTypes.arrayOf(PropTypes.object).isRequired,
-    sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
-    affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    setAry: PropTypes.func.isRequired,
-
-    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    formValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+    changeAryMethodology: PropTypes.func.isRequired,
+    fieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    formErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
+    aryTemplateMethodology: [],
     className: '',
-    aryTemplateMethodology: {},
     geoOptions: {},
+    formValues: {},
+    fieldErrors: {},
+    formErrors: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    // aryStrings: aryStringsSelector(state),
     activeLeadId: leadIdFromRouteSelector(state),
-    methodology: aryViewMethodologySelector(state),
-    aryTemplateMethodology: aryTemplateMethodologySelector(state),
-    sectors: sectorsSelector(state),
-    focuses: focusesSelector(state),
     affectedGroups: affectedGroupsSelector(state),
-
-    projectDetails: projectDetailsSelector(state, props),
+    aryTemplateMethodology: aryTemplateMethodologySelector(state),
+    focuses: focusesSelector(state),
     geoOptions: geoOptionsForProjectSelector(state, props),
+    projectDetails: projectDetailsSelector(state, props),
+    sectors: sectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setAry: params => dispatch(setAryAction(params)),
+    changeAryMethodology: params => dispatch(changeAryMethodologyForEditAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -84,146 +74,13 @@ export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static renderWidget = ({ id: key, fieldType, title, options, placeholder }) => {
-        const id = String(key);
-        const commonProps = {
-            key: id,
-            formname: id,
-            label: title,
-            placeholder,
-            options,
-        };
-        const typeSpecificProps = {
-            number: {
-                separator: ' ',
-            },
-        };
-        const components = {
-            string: TextInput,
-            number: NumberInput,
-            date: DateInput,
-            multiselect: MultiSelectInput,
-            select: SelectInput,
-        };
-
-        const Component = components[fieldType];
-        if (!Component) {
-            console.error('Unidentified fieldType', fieldType);
-            return null;
-        }
-        return (
-            <Component
-                {...commonProps}
-                {...typeSpecificProps[fieldType]}
-            />
-        );
-    }
-
-    static getSchema = (attributesTemplate) => {
-        const schema = {
-            fields: {
-                attributes: {
-                    member: {
-                        fields: {},
-                        // dynamically injected fields here
-                    },
-                    validation: (value) => {
-                        const errors = [];
-                        if (!value || value.length < 1) {
-                            // FIXME: Use strings
-                            errors.push('There should be at least one value');
-                        }
-                        return errors;
-                    },
-                },
-                sectors: [],
-                focuses: [],
-                locations: [],
-                affectedGroups: [],
-
-                objectives: [],
-                dataCollectionTechniques: [],
-                sampling: [],
-                limitations: [],
-            },
-        };
-
-        Object.keys(attributesTemplate).forEach((key) => {
-            const methodologyGroup = attributesTemplate[key];
-            methodologyGroup.fields.forEach((field) => {
-                schema.fields.attributes.member.fields[field.id] = [requiredCondition];
-            });
-        });
-
-        return schema;
-    }
-
-    constructor(props) {
-        super(props);
-
-        const {
-            aryTemplateMethodology: attributesTemplate,
-            methodology,
-        } = props;
-        const schema = Methodology.getSchema(attributesTemplate);
-
-        this.state = {
-            formValues: methodology,
-            formErrors: {},
-            formFieldErrors: {},
-            schema,
-        };
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology) {
-            const { aryTemplateMethodology: attributesTemplate } = nextProps;
-            const schema = Methodology.getSchema(attributesTemplate);
-            this.setState({
-                schema,
-                formFieldErrors: {},
-                formErrors: {},
-            });
-        }
-        if (this.props.methodology !== nextProps.methodology) {
-            const { methodology } = nextProps;
-            this.setState({ formValues: methodology });
-        }
-    }
-
-    // FORM RELATED
     changeCallback = (values, formFieldErrors, formErrors) => {
-        this.props.setAry({
+        this.props.changeAryMethodology({
             lead: this.props.activeLeadId,
-            methodologyData: values,
-        });
-        this.setState({
-            formFieldErrors,
-            formErrors,
-            pristine: true,
-        });
-    };
-
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
+            formValues: values,
+            fieldErrors: formFieldErrors,
             formErrors,
         });
-    };
-
-    successCallback = (value) => {
-        const { activeLeadId, setAry } = this.props;
-
-        if (this.aryPutRequest) {
-            this.aryPutRequest.stop();
-        }
-
-        const aryPutRequest = new AryPutRequest({
-            setAry,
-            setState: params => this.setState(params),
-        });
-        this.aryPutRequest = aryPutRequest.create(activeLeadId, { methodology_data: value });
-        this.aryPutRequest.start();
     };
 
     renderAttributeHeader = (key) => {
@@ -247,7 +104,7 @@ export default class Methodology extends React.PureComponent {
             ...field,
             id: formname,
         };
-        return Methodology.renderWidget(newField);
+        return renderWidget(newField);
     };
 
     renderAttribute = (context, key) => {
@@ -298,21 +155,13 @@ export default class Methodology extends React.PureComponent {
             affectedGroups,
             projectDetails,
             geoOptions,
-        } = this.props;
-
-        const {
-            pending,
             schema,
             formValues,
-            formErrors,
-            formFieldErrors,
-        } = this.state;
+        } = this.props;
 
         const { attributes = [] } = formValues;
-        const attributesTemplateKeys = Object.keys(attributesTemplate);
 
         // FIXME: use strings
-        const saveButtonLabel = 'Save';
         const focusesTitle = 'Focuses';
         const sectorsTitle = 'Sectors';
         const affectedGroupsTitle = 'Affected groups';
@@ -323,29 +172,22 @@ export default class Methodology extends React.PureComponent {
                 className={styles.methodology}
                 schema={schema}
                 value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                fieldErrors={this.props.fieldErrors}
+                formErrors={this.props.formErrors}
                 changeCallback={this.changeCallback}
-                successCallback={this.successCallback}
-                failureCallback={this.failureCallback}
-                disabled={pending}
+                disabled={this.props.pending}
             >
-                { pending && <LoadingAnimation /> }
+                {this.props.pending && <LoadingAnimation />}
                 <div className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}
                         formerror="attributes"
                     />
-                    <div className={styles.actionButtons}>
-                        <SuccessButton type="submit">
-                            { saveButtonLabel }
-                        </SuccessButton>
-                    </div>
                 </div>
                 <div className={styles.scrollWrap}>
                     <div className={styles.attributes}>
                         <div className={styles.header}>
-                            { attributesTemplateKeys.map(this.renderAttributeHeader) }
+                            {Object.keys(attributesTemplate).map(this.renderAttributeHeader)}
                             <div className={styles.actionButtons}>
                                 <PrimaryButton
                                     formname="attributes"
@@ -390,28 +232,33 @@ export default class Methodology extends React.PureComponent {
                 </div>
                 <div className={styles.bottom}>
                     <div className={styles.title}>
+                        {/* FIXME: use strings */}
                         Methodology content
                     </div>
                     <div className={styles.body}>
                         <TextArea
+                            // FIXME: use strings
                             formname="objectives"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop objectives here"
                             label="Objectives"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="dataCollectionTechniques"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop data collection techniques here"
                             label="Data collection techniques"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="sampling"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop sampling (site and respondent selection) here"
                             label="Sampling"
                         />
                         <TextArea
+                            // FIXME: use strings
                             formname="limitations"
                             className={styles.methodologyContent}
                             placeholder="Drag and drop limitations here"

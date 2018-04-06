@@ -8,8 +8,6 @@ export const ARY__UNSET_FILTER = 'siloDomainData/ARY__UNSET_FILTER';
 export const ARY__SET_ACTIVE_PAGE = 'siloDomainData/ARY__SET_ACTIVE_PAGE';
 export const ARY__SET_ACTIVE_SORT = 'siloDomainData/ARY__SET_ACTIVE_SORT';
 
-export const ARY__UPDATE = 'siloDomainData/ARY__UPDATE';
-
 // ACTION-CREATOR
 
 export const setAryPageFilterAction = ({ filters }) => ({
@@ -37,15 +35,6 @@ export const setArysAction = ({ projectId, arys, totalArysCount }) => ({
     arys,
     totalArysCount,
 });
-
-export const setAryAction = ({ lead, metaData, methodologyData }) => ({
-    type: ARY__UPDATE,
-    lead,
-    metaData,
-    methodologyData,
-});
-
-// HELPERS
 
 // REDUCER
 
@@ -116,27 +105,6 @@ const aryViewSetActiveSort = (state, action) => {
     return update(state, settings);
 };
 
-const setAry = (state, action) => {
-    const {
-        lead,
-        metaData,
-        methodologyData,
-    } = action;
-    const settings = {
-        aryView: {
-            [lead]: { $auto: {
-                metaData: { $auto: {
-                    $set: metaData,
-                } },
-                methodologyData: { $auto: {
-                    $set: methodologyData,
-                } },
-            } },
-        },
-    };
-    return update(state, settings);
-};
-
 // REDUCER MAP
 
 const reducers = {
@@ -145,8 +113,6 @@ const reducers = {
     [ARY__UNSET_FILTER]: aryViewUnsetFilter,
     [ARY__SET_ACTIVE_PAGE]: aryViewSetActivePage,
     [ARY__SET_ACTIVE_SORT]: aryViewSetActiveSort,
-
-    [ARY__UPDATE]: setAry,
 };
 
 export default reducers;

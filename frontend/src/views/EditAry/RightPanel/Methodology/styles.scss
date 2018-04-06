@@ -6,6 +6,7 @@ $height-bottom: 180px;
 
 .methodology {
     display: flex;
+    position: relative;
     flex-direction: column;
     flex-grow: 1;
     background-color: $color-foreground-alt;

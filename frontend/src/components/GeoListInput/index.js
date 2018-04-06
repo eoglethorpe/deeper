@@ -23,6 +23,7 @@ const defaultProps = {
     onChange: undefined,
     geoOptionsByRegion: {},
     value: [],
+    regions: [],
 };
 
 export default class GeoListInput extends React.PureComponent {

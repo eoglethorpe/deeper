@@ -7,12 +7,13 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     setAryTemplateAction,
-    setAryAction,
+    setAryForEditAryAction,
     setGeoOptionsAction,
 
     projectDetailsSelector,
     leadIdFromRouteSelector,
     aryStringsSelector,
+    editAryVersionIdSelector,
 } from '../../redux';
 
 import LeadRequest from './requests/LeadRequest';
@@ -33,21 +34,24 @@ const propTypes = {
     setGeoOptions: PropTypes.func.isRequired,
 
     aryStrings: PropTypes.func.isRequired,
+    editAryVersionId: PropTypes.number,
 };
 
 const defaultProps = {
     activeProject: {},
+    editAryVersionId: undefined,
 };
 
 const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
+    editAryVersionId: editAryVersionIdSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
-    setAry: params => dispatch(setAryAction(params)),
+    setAry: params => dispatch(setAryForEditAryAction(params)),
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 });
 
@@ -81,10 +85,12 @@ export default class EditAry extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         const { activeProject: { id: oldProjectId }, activeLeadId: oldLeadId } = this.props;
         const { activeProject: { id: projectId }, activeLeadId: leadId } = nextProps;
+
         if (oldProjectId !== projectId) {
             this.startAryTemplateRequest(projectId);
             this.startGeoOptionsRequest(projectId);
         }
+
         if (oldLeadId !== leadId) {
             this.startAryGetRequest(leadId);
             this.startLeadRequest(leadId);
@@ -135,6 +141,7 @@ export default class EditAry extends React.PureComponent {
         const aryGetRequest = new AryGetRequest({
             setAry,
             setState: params => this.setState(params),
+            getAryVersionId: () => this.props.editAryVersionId,
         });
         this.aryGetRequest = aryGetRequest.create(leadId);
         this.aryGetRequest.start();
@@ -175,10 +182,10 @@ export default class EditAry extends React.PureComponent {
     render() {
         const { aryStrings } = this.props;
         const {
-            pendingEntries,
             pendingLead,
             pendingAryTemplate,
             pendingGeo,
+            pendingAry,
             noTemplate,
             lead,
         } = this.state;
@@ -186,12 +193,14 @@ export default class EditAry extends React.PureComponent {
         if (noTemplate) {
             return (
                 <div className={styles.noTemplate}>
-                    <p>{aryStrings('noAryTemplateForProject')}</p>
+                    <p>
+                        {aryStrings('noAryTemplateForProject')}
+                    </p>
                 </div>
             );
         }
 
-        if (pendingEntries || pendingLead || pendingAryTemplate || pendingGeo) {
+        if (pendingLead || pendingAryTemplate || pendingAry || pendingGeo) {
             return <LoadingAnimation />;
         }
 
