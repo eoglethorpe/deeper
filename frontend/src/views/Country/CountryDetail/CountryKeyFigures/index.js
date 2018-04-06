@@ -15,9 +15,6 @@ import {
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
 
-import RegionKeyFiguresRequest from '../../requests/RegionKeyFiguresRequest';
-import RegionDetailPatchRequest from '../../requests/RegionDetailPatchRequest';
-
 import styles from './styles.scss';
 
 const propTypes = {
