@@ -10,6 +10,7 @@ import NumberInput from '../../vendor/react-store/components/Input/NumberInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import { UploadBuilder } from '../../vendor/react-store/utils/upload';
+import { isTruthy, isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     urlForUpload,
@@ -56,34 +57,37 @@ export default class Baksa extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static bothPageRequiredCondition = ({ startPage, endPage } = {}) => {
-        const ok = (startPage && endPage) ||
-            (startPage === undefined && endPage === undefined);
+    static bothPageRequiredCondition = (value) => {
+        const ok = isFalsy(value) || (isTruthy(value.startPage) && isTruthy(value.endPage));
         return {
             ok,
-            message: 'Both start page and end page must be specified',
+            message: 'Both start page and end page must not be empty',
         };
     }
 
-    static validPageRangeCondition = ({ startPage, endPage } = {}) => {
-        const ok = !startPage || !endPage || startPage <= endPage;
+    static validPageRangeCondition = (value) => {
+        const ok = isFalsy(value)
+            || isFalsy(value.startPage) || isFalsy(value.endPage)
+            || value.startPage < value.endPage;
         return {
             ok,
             message: 'Start page must be less than end page',
         };
     }
 
-    static validPageNumbersCondition = ({ startPage, endPage } = {}) => {
-        const ok = (startPage === undefined || startPage > 0) &&
-            (endPage === undefined || endPage > 0);
+    static validPageNumbersCondition = (value) => {
+        const ok = isFalsy(value) || (
+            (isFalsy(value.startPage) || value.startPage > 0) &&
+            (isFalsy(value.endPage) || value.endPage > 0)
+        );
         return {
             ok,
             message: 'Page numbers must be greater than 0',
         };
     }
 
-    static pendingCondition = ({ pending } = {}) => {
-        const ok = !pending;
+    static pendingCondition = (value) => {
+        const ok = isFalsy(value) || isFalsy(value.pending);
         return {
             ok,
             message: 'File is being uploaded',
@@ -136,9 +140,9 @@ export default class Baksa extends React.PureComponent {
     }
 
     resetValue = () => {
-        const { onChange, value: { startPage, endPage } } = this.props;
+        const { onChange } = this.props;
         if (onChange) {
-            onChange({ startPage, endPage });
+            onChange(undefined);
         }
     }
 

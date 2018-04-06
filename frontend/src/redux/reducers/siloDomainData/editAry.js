@@ -110,7 +110,7 @@ const changeAry = groupName => (state, action) => {
                 } },
                 formErrors: { $auto: {
                     fields: { $auto: {
-                        [groupName]: { $set: { fields: formErrors } },
+                        [groupName]: { $set: formErrors },
                     } },
                 } },
             } },
@@ -138,7 +138,7 @@ const setErrorAry = (state, action) => {
         fieldErrors,
     } = action;
 
-    const hasErrors = analyzeFieldErrors(formErrors) || analyzeFormErrors(fieldErrors);
+    const hasErrors = analyzeFieldErrors(fieldErrors) || analyzeFormErrors(formErrors);
     const settings = {
         editAry: {
             [lead]: { $auto: {

@@ -99,14 +99,14 @@ export default class RightPanel extends React.PureComponent {
         } = Baksa;
 
         const schema = { fields: {
-            questionnaire: [
+            executiveSummary: [
                 bothPageRequiredCondition,
                 validPageRangeCondition,
                 validPageNumbersCondition,
                 pendingCondition,
             ],
             assessmentData: [pendingCondition],
-            executiveSummary: [
+            questionnaire: [
                 bothPageRequiredCondition,
                 validPageRangeCondition,
                 validPageNumbersCondition,
@@ -318,6 +318,7 @@ export default class RightPanel extends React.PureComponent {
                                 || this.state.pending
                             }
                         >
+                            {/* FIXME: use strings */}
                             Save
                         </Button>
                     </Form>
