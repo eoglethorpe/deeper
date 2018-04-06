@@ -60,7 +60,6 @@ export default class RegionDetailPatchRequest {
     }
 
     create = (regionId, data) => {
-        console.warn(data);
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
             .params(() => createParamsForRegionPatch(data))

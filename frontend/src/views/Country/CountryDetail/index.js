@@ -13,6 +13,7 @@ import DangerButton from '../../../vendor/react-store/components/Action/Button/D
 import List from '../../../vendor/react-store/components/View/List';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import Form, {
     requiredCondition,
@@ -182,7 +183,7 @@ export default class CountryDetail extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.startRegionRequest(this.props.countryId);
+        this.startRegionRequest(this.props.countryId, false);
     }
 
     componentWillUnmount() {
@@ -191,13 +192,15 @@ export default class CountryDetail extends React.PureComponent {
         }
     }
 
-    onClickDeleteButton = () => {
-        this.setState({
-            deleteCountry: true,
-        });
+    handleDeleteButtonClick = () => {
+        this.setState({ deleteCountry: true });
     }
 
-    startRegionRequest = (regionId) => {
+    handleDiscardButtonClick = () => {
+        this.startRegionRequest(this.props.countryId, true);
+    }
+
+    startRegionRequest = (regionId, discard) => {
         if (this.requestForRegion) {
             this.requestForRegion.stop();
         }
@@ -207,6 +210,7 @@ export default class CountryDetail extends React.PureComponent {
             notificationStrings: this.props.notificationStrings,
             regionDetail: this.props.regionDetail.formValues || {},
             pristine: this.props.regionDetail.pristine,
+            discard,
         });
         this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
@@ -321,7 +325,7 @@ export default class CountryDetail extends React.PureComponent {
                         {
                             activeUser.isSuperuser &&
                             <Fragment>
-                                <DangerButton onClick={this.onClickDeleteButton}>
+                                <DangerButton onClick={this.handleDeleteButtonClick}>
                                     {countriesStrings('deleteCountryButtonLabel')}
                                 </DangerButton>
                                 <Form
@@ -332,6 +336,12 @@ export default class CountryDetail extends React.PureComponent {
                                     formErrors={formErrors}
                                     value={formValues}
                                 >
+                                    <WarningButton
+                                        disabled={!pristine}
+                                        onClick={this.handleDiscardButtonClick}
+                                    >
+                                        {countriesStrings('discardButtonLabel')}
+                                    </WarningButton>
                                     <SuccessButton
                                         type="submit"
                                         disabled={!pristine}

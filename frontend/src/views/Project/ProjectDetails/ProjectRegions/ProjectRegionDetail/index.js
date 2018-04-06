@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
+import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../../../vendor/react-store/components/Action/Button/SuccessButton';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -107,10 +108,10 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     componentWillMount() {
-        this.startRegionRequest(this.props.countryId);
+        this.startRegionRequest(this.props.countryId, false);
     }
 
-    startRegionRequest = (regionId) => {
+    startRegionRequest = (regionId, discard) => {
         if (this.requestForRegion) {
             this.requestForRegion.stop();
         }
@@ -120,6 +121,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             notificationStrings: this.props.notificationStrings,
             regionDetail: this.props.regionDetail.formValues || {},
             pristine: this.props.regionDetail.pristine,
+            discard,
         });
         this.requestForRegion = requestForRegion.create(regionId);
         this.requestForRegion.start();
@@ -241,6 +243,10 @@ export default class ProjectRegionDetail extends React.PureComponent {
         });
     }
 
+    handleDiscardButtonClick = () => {
+        this.startRegionRequest(this.props.countryId, true);
+    }
+
     handleRegionRemoveClick = () => {
         this.setState({
             showDeleteConfirm: true,
@@ -315,6 +321,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             formErrors={formErrors}
                             value={formValues}
                         >
+                            <WarningButton
+                                disabled={!pristine}
+                                onClick={this.handleDiscardButtonClick}
+                            >
+                                {projectStrings('discardButtonLabel')}
+                            </WarningButton>
                             <SuccessButton
                                 type="submit"
                                 disabled={!pristine}

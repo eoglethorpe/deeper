@@ -17,9 +17,17 @@ export default class RegionGetRequest {
     }
 
     success = regionId => (response) => {
+        const {
+            regionDetail,
+            discard,
+            pristine,
+            setRegionDetails,
+            notificationStrings,
+        } = this.props;
+
         try {
             schema.validate(response, 'region');
-            if (response.versionId === this.props.regionDetail.versionId) {
+            if (response.versionId === regionDetail.versionId && !discard) {
                 return;
             }
             const regionDetails = {
@@ -28,15 +36,15 @@ export default class RegionGetRequest {
                 formFieldErrors: {},
                 pristine: false,
             };
-            this.props.setRegionDetails({
+            setRegionDetails({
                 regionDetails,
                 regionId,
             });
-            if (this.props.pristine) {
+            if (pristine && !discard) {
                 notify.send({
                     type: notify.type.WARNING,
-                    title: this.props.notificationStrings('regionUpdate'),
-                    message: this.props.notificationStrings('regionUpdateOverridden'),
+                    title: notificationStrings('regionUpdate'),
+                    message: notificationStrings('regionUpdateOverridden'),
                     duration: notify.duration.SLOW,
                 });
             }
