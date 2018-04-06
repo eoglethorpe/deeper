@@ -3,6 +3,7 @@ import {
     createUrlForLeadAry,
     createParamsForAryEdit,
 } from '../../../rest';
+import notify from '../../../notify';
 import schema from '../../../schema';
 
 export default class AryPutRequest {
@@ -16,7 +17,6 @@ export default class AryPutRequest {
     }
 
     create = (id, data) => {
-        // FIXME: add overwrite confirmation
         const aryPutRequest = new FgRestBuilder()
             .url(createUrlForLeadAry(id))
             .params(createParamsForAryEdit(data))
@@ -25,15 +25,31 @@ export default class AryPutRequest {
             .success((response) => {
                 try {
                     schema.validate(response, 'aryPutResponse');
-                    this.setAry(response);
+                    this.setAry({
+                        lead: response.lead,
+                        serverId: response.id,
+                        versionId: response.versionId,
+                        metadata: response.metadata,
+                        methodology: response.methodology,
+                    });
+
+                    // FIXME: use strings
+                    notify.send({
+                        type: notify.type.SUCCESS,
+                        title: 'Assessment',
+                        message: 'Assessment save successful.',
+                        duration: notify.duration.MEDIUM,
+                    });
                 } catch (err) {
                     console.error(err);
                 }
             })
             .failure((response) => {
+                // FIXME: notify
                 console.info('FAILURE:', response);
             })
             .fatal((response) => {
+                // FIXME: notify
                 console.info('FATAL:', response);
             })
             .build();

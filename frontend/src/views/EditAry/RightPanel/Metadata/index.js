@@ -8,6 +8,7 @@ import {
     changeAryMetadataForEditAryAction,
 } from '../../../../redux';
 import Form from '../../../../vendor/react-store/components/Input/Form';
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import Baksa from '../../../../components/Baksa';
 
@@ -22,6 +23,7 @@ const propTypes = {
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     changeAryMetadata: PropTypes.func.isRequired,
     schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -94,7 +96,9 @@ export default class Metadata extends React.PureComponent {
                 value={this.props.formValues}
                 fieldErrors={this.props.fieldErrors}
                 formErrors={this.props.formErrors}
+                disabled={this.props.pending}
             >
+                {this.props.pending && <LoadingAnimation />}
                 <header className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}

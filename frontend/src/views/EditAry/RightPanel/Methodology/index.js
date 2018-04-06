@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Form from '../../../../vendor/react-store/components/Input/Form';
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
@@ -42,6 +43,7 @@ const propTypes = {
     changeAryMethodology: PropTypes.func.isRequired,
     fieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     formErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -173,7 +175,9 @@ export default class Methodology extends React.PureComponent {
                 fieldErrors={this.props.fieldErrors}
                 formErrors={this.props.formErrors}
                 changeCallback={this.changeCallback}
+                disabled={this.props.pending}
             >
+                {this.props.pending && <LoadingAnimation />}
                 <div className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}

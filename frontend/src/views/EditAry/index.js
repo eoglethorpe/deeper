@@ -13,6 +13,7 @@ import {
     projectDetailsSelector,
     leadIdFromRouteSelector,
     aryStringsSelector,
+    editAryVersionIdSelector,
 } from '../../redux';
 
 import LeadRequest from './requests/LeadRequest';
@@ -33,16 +34,19 @@ const propTypes = {
     setGeoOptions: PropTypes.func.isRequired,
 
     aryStrings: PropTypes.func.isRequired,
+    editAryVersionId: PropTypes.number,
 };
 
 const defaultProps = {
     activeProject: {},
+    editAryVersionId: undefined,
 };
 
 const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
+    editAryVersionId: editAryVersionIdSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -137,6 +141,7 @@ export default class EditAry extends React.PureComponent {
         const aryGetRequest = new AryGetRequest({
             setAry,
             setState: params => this.setState(params),
+            getAryVersionId: () => this.props.editAryVersionId,
         });
         this.aryGetRequest = aryGetRequest.create(leadId);
         this.aryGetRequest.start();

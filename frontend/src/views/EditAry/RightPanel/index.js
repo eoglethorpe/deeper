@@ -16,6 +16,7 @@ import {
     aryTemplateMethodologySelector,
 
     setErrorAryForEditAryAction,
+    setAryForEditAryAction,
 
     editAryFormErrorsSelector,
     editAryFieldErrorsSelector,
@@ -28,6 +29,7 @@ import Form, {
     requiredCondition,
 } from '../../../vendor/react-store/components/Input/Form';
 import Baksa from '../../../components/Baksa';
+import AryPutRequest from '../requests/AryPutRequest';
 
 import Metadata from './Metadata';
 import Methodology from './Methodology';
@@ -45,6 +47,7 @@ const propTypes = {
     editAryIsPristine: PropTypes.bool.isRequired,
     editAryFormErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     setErrorAry: PropTypes.func.isRequired,
+    setAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -71,6 +74,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setErrorAry: params => dispatch(setErrorAryForEditAryAction(params)),
+    setAry: params => dispatch(setAryForEditAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -94,28 +98,21 @@ export default class RightPanel extends React.PureComponent {
             pendingCondition,
         } = Baksa;
 
-        const schema = {
-            validation: () => {
-                const errors = [];
-                errors.push('This form cannot be submitted.');
-                return errors;
-            },
-            fields: {
-                questionnaire: [
-                    bothPageRequiredCondition,
-                    validPageRangeCondition,
-                    validPageNumbersCondition,
-                    pendingCondition,
-                ],
-                assessmentData: [pendingCondition],
-                executiveSummary: [
-                    bothPageRequiredCondition,
-                    validPageRangeCondition,
-                    validPageNumbersCondition,
-                    pendingCondition,
-                ],
-            },
-        };
+        const schema = { fields: {
+            questionnaire: [
+                bothPageRequiredCondition,
+                validPageRangeCondition,
+                validPageNumbersCondition,
+                pendingCondition,
+            ],
+            assessmentData: [pendingCondition],
+            executiveSummary: [
+                bothPageRequiredCondition,
+                validPageRangeCondition,
+                validPageNumbersCondition,
+                pendingCondition,
+            ],
+        } };
 
         // Dynamic fields from metadataGroup
         const dynamicFields = {};
@@ -181,6 +178,7 @@ export default class RightPanel extends React.PureComponent {
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
             ),
+            pending: false,
         };
 
         this.setTabAndViews(props);
@@ -198,9 +196,12 @@ export default class RightPanel extends React.PureComponent {
                 ),
             });
         }
+    }
 
-        // FIXME: check if calculation is needed
-        // this.setTabAndViews(nextProps);
+    componentWillUnmount() {
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
     }
 
     setTabAndViews = (props) => {
@@ -219,6 +220,7 @@ export default class RightPanel extends React.PureComponent {
                         formValues={this.props.editAryFormValues.metadata}
                         fieldErrors={this.props.editAryFieldErrors.metadata}
                         formErrors={(this.props.editAryFormErrors.fields || {}).metadata}
+                        pending={this.state.pending}
                     />
                 ),
             },
@@ -229,6 +231,7 @@ export default class RightPanel extends React.PureComponent {
                         formValues={this.props.editAryFormValues.methodology}
                         fieldErrors={this.props.editAryFieldErrors.methodology}
                         formErrors={(this.props.editAryFormErrors.fields || {}).methodology}
+                        pending={this.state.pending}
                     />
                 ),
             },
@@ -249,19 +252,23 @@ export default class RightPanel extends React.PureComponent {
         };
     }
 
+    successCallback = (value) => {
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
+        const request = new AryPutRequest({
+            setState: params => this.setState(params),
+            setAry: this.props.setAry,
+        });
+        this.aryPutRequest = request.create(this.props.activeLeadId, value);
+        this.aryPutRequest.start();
+    };
+
     failureCallback = (fieldErrors, formErrors) => {
         this.props.setErrorAry({
             lead: this.props.activeLeadId,
             formErrors,
             fieldErrors,
-        });
-    };
-
-    successCallback = (value, formFieldErrors, formErrors) => {
-        console.warn({
-            value,
-            formFieldErrors,
-            formErrors,
         });
     };
 
@@ -305,7 +312,11 @@ export default class RightPanel extends React.PureComponent {
                     >
                         <Button
                             type="submit"
-                            disabled={this.props.editAryIsPristine || this.props.editAryHasErrors}
+                            disabled={
+                                this.props.editAryIsPristine
+                                || this.props.editAryHasErrors
+                                || this.state.pending
+                            }
                         >
                             Save
                         </Button>

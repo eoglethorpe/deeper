@@ -90,22 +90,18 @@ const changeAry = groupName => (state, action) => {
     const {
         lead,
 
-        // NOTE: these are individual
+        // NOTE: these are for individual groups
+        // TODO: add serverError later
+
         formValues,
         formErrors,
         fieldErrors,
     } = action;
 
-    // Calculate every groups error here
-    const hasErrors = analyzeFieldErrors(formErrors) || analyzeFormErrors(fieldErrors);
-
     const settings = {
         editAry: {
             [lead]: { $auto: {
-                hasErrors: { $set: hasErrors },
                 isPristine: { $set: false },
-                // TODO: add serverError later
-
                 formValues: { $auto: {
                     [groupName]: { $set: formValues },
                 } },
@@ -120,7 +116,18 @@ const changeAry = groupName => (state, action) => {
             } },
         },
     };
-    return update(state, settings);
+    const newState = update(state, settings);
+
+    const hasErrors = analyzeFieldErrors(newState.editAry[lead].fieldErrors) ||
+        analyzeFormErrors(newState.editAry[lead].formErrors);
+    const errorSettings = {
+        editAry: {
+            [lead]: { $auto: {
+                hasErrors: { $set: hasErrors },
+            } },
+        },
+    };
+    return update(newState, errorSettings);
 };
 
 const setErrorAry = (state, action) => {
@@ -131,9 +138,7 @@ const setErrorAry = (state, action) => {
         fieldErrors,
     } = action;
 
-    // Calculate every groups error here
     const hasErrors = analyzeFieldErrors(formErrors) || analyzeFormErrors(fieldErrors);
-
     const settings = {
         editAry: {
             [lead]: { $auto: {
