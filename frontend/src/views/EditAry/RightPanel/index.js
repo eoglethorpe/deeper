@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
+import Button from '../../../vendor/react-store/components/Action/Button';
 import { reverseRoute } from '../../../vendor/react-store/utils/common';
 import { pathNames } from '../../../constants';
 import {
@@ -13,9 +14,19 @@ import {
     aryStringsSelector,
     aryTemplateMetadataSelector,
     aryTemplateMethodologySelector,
+
+    setErrorAryForEditAryAction,
+
+    editAryFormErrorsSelector,
+    editAryFieldErrorsSelector,
+    editAryFormValuesSelector,
+    editAryHasErrorsSelector,
+    editAryIsPristineSelector,
 } from '../../../redux';
 
-import { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Form, {
+    requiredCondition,
+} from '../../../vendor/react-store/components/Input/Form';
 import Baksa from '../../../components/Baksa';
 
 import Metadata from './Metadata';
@@ -26,13 +37,22 @@ const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
     activeProjectId: PropTypes.number.isRequired,
     aryStrings: PropTypes.func.isRequired,
-    aryTemplateMetadata: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    aryTemplateMethodology: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    editAryFormValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    editAryFieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    editAryHasErrors: PropTypes.bool.isRequired,
+    editAryIsPristine: PropTypes.bool.isRequired,
+    editAryFormErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    setErrorAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    aryTemplateMetadata: {},
-    aryTemplateMethodology: {},
+    aryTemplateMetadata: [],
+    aryTemplateMethodology: [],
+    editAryFormErrors: {},
+    editAryFieldErrors: {},
+    editAryFormValues: {},
 };
 
 const mapStateToProps = state => ({
@@ -41,9 +61,19 @@ const mapStateToProps = state => ({
     activeProjectId: projectIdFromRouteSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
+
+    editAryFormErrors: editAryFormErrorsSelector(state),
+    editAryFieldErrors: editAryFieldErrorsSelector(state),
+    editAryFormValues: editAryFormValuesSelector(state),
+    editAryHasErrors: editAryHasErrorsSelector(state),
+    editAryIsPristine: editAryIsPristineSelector(state),
 });
 
-@connect(mapStateToProps)
+const mapDispatchToProps = dispatch => ({
+    setErrorAry: params => dispatch(setErrorAryForEditAryAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -64,21 +94,28 @@ export default class RightPanel extends React.PureComponent {
             pendingCondition,
         } = Baksa;
 
-        const schema = { fields: {
-            questionnaire: [
-                bothPageRequiredCondition,
-                validPageRangeCondition,
-                validPageNumbersCondition,
-                pendingCondition,
-            ],
-            assessmentData: [pendingCondition],
-            executiveSummary: [
-                bothPageRequiredCondition,
-                validPageRangeCondition,
-                validPageNumbersCondition,
-                pendingCondition,
-            ],
-        } };
+        const schema = {
+            validation: () => {
+                const errors = [];
+                errors.push('This form cannot be submitted.');
+                return errors;
+            },
+            fields: {
+                questionnaire: [
+                    bothPageRequiredCondition,
+                    validPageRangeCondition,
+                    validPageNumbersCondition,
+                    pendingCondition,
+                ],
+                assessmentData: [pendingCondition],
+                executiveSummary: [
+                    bothPageRequiredCondition,
+                    validPageRangeCondition,
+                    validPageNumbersCondition,
+                    pendingCondition,
+                ],
+            },
+        };
 
         // Dynamic fields from metadataGroup
         const dynamicFields = {};
@@ -146,39 +183,7 @@ export default class RightPanel extends React.PureComponent {
             ),
         };
 
-        this.tabs = {
-            metadata: this.props.aryStrings('metadataTabLabel'),
-            methodology: this.props.aryStrings('methodologyTabLabel'),
-            summary: this.props.aryStrings('summaryTabLabel'),
-            score: this.props.aryStrings('scoreTabLabel'),
-        };
-
-        this.views = {
-            metadata: {
-                component: () => (
-                    <Metadata schema={this.state.schema.fields.metadata} />
-                ),
-            },
-            methodology: {
-                component: () => (
-                    <Methodology schema={this.state.schema.fields.methodology} />
-                ),
-            },
-            summary: {
-                component: () => (
-                    <div>
-                        {this.props.aryStrings('summaryTabLabel')}
-                    </div>
-                ),
-            },
-            score: {
-                component: () => (
-                    <div>
-                        {this.props.aryStrings('scoreTabLabel')}
-                    </div>
-                ),
-            },
-        };
+        this.setTabAndViews(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -193,7 +198,72 @@ export default class RightPanel extends React.PureComponent {
                 ),
             });
         }
+
+        // FIXME: check if calculation is needed
+        // this.setTabAndViews(nextProps);
     }
+
+    setTabAndViews = (props) => {
+        this.tabs = {
+            metadata: props.aryStrings('metadataTabLabel'),
+            methodology: props.aryStrings('methodologyTabLabel'),
+            summary: props.aryStrings('summaryTabLabel'),
+            score: props.aryStrings('scoreTabLabel'),
+        };
+
+        this.views = {
+            metadata: {
+                component: () => (
+                    <Metadata
+                        schema={this.state.schema.fields.metadata}
+                        formValues={this.props.editAryFormValues.metadata}
+                        fieldErrors={this.props.editAryFieldErrors.metadata}
+                        formErrors={(this.props.editAryFormErrors.fields || {}).metadata}
+                    />
+                ),
+            },
+            methodology: {
+                component: () => (
+                    <Methodology
+                        schema={this.state.schema.fields.methodology}
+                        formValues={this.props.editAryFormValues.methodology}
+                        fieldErrors={this.props.editAryFieldErrors.methodology}
+                        formErrors={(this.props.editAryFormErrors.fields || {}).methodology}
+                    />
+                ),
+            },
+            summary: {
+                component: () => (
+                    <div>
+                        {props.aryStrings('summaryTabLabel')}
+                    </div>
+                ),
+            },
+            score: {
+                component: () => (
+                    <div>
+                        {props.aryStrings('scoreTabLabel')}
+                    </div>
+                ),
+            },
+        };
+    }
+
+    failureCallback = (fieldErrors, formErrors) => {
+        this.props.setErrorAry({
+            lead: this.props.activeLeadId,
+            formErrors,
+            fieldErrors,
+        });
+    };
+
+    successCallback = (value, formFieldErrors, formErrors) => {
+        console.warn({
+            value,
+            formFieldErrors,
+            formErrors,
+        });
+    };
 
     handleTabClick = (key) => {
         if (key !== this.state.currentTabKey) {
@@ -203,7 +273,6 @@ export default class RightPanel extends React.PureComponent {
 
     render() {
         const { currentTabKey } = this.state;
-
         const linkToEditEntries = reverseRoute(
             pathNames.editEntries,
             {
@@ -212,7 +281,7 @@ export default class RightPanel extends React.PureComponent {
             },
         );
 
-        console.warn(this.state.schema);
+        // FIXME: send pending inside later to disable form
 
         return (
             <Fragment>
@@ -228,6 +297,19 @@ export default class RightPanel extends React.PureComponent {
                     >
                         {this.props.aryStrings('entriesTabLabel')}
                     </Link>
+                    <Form
+                        schema={this.state.schema}
+                        value={this.props.editAryFormValues}
+                        successCallback={this.successCallback}
+                        failureCallback={this.failureCallback}
+                    >
+                        <Button
+                            type="submit"
+                            disabled={this.props.editAryIsPristine || this.props.editAryHasErrors}
+                        >
+                            Save
+                        </Button>
+                    </Form>
                 </FixedTabs>
                 <MultiViewContainer
                     active={currentTabKey}

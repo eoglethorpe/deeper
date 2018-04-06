@@ -7,7 +7,7 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 
 import {
     setAryTemplateAction,
-    setAryAction,
+    setAryForEditAryAction,
     setGeoOptionsAction,
 
     projectDetailsSelector,
@@ -47,7 +47,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setAryTemplate: params => dispatch(setAryTemplateAction(params)),
-    setAry: params => dispatch(setAryAction(params)),
+    setAry: params => dispatch(setAryForEditAryAction(params)),
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 });
 

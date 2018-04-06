@@ -4,55 +4,53 @@ import { connect } from 'react-redux';
 
 import Form from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
-import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
-// import RegionMap from '../../../../components/RegionMap';
 import { iconNames } from '../../../../constants';
 
 import {
-    aryViewMethodologySelector,
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
-    setAryAction,
     sectorsSelector,
     focusesSelector,
     affectedGroupsSelector,
 
     projectDetailsSelector,
     geoOptionsForProjectSelector,
+    changeAryMethodologyForEditAryAction,
 } from '../../../../redux';
 
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoListInput from '../../../../components/GeoListInput/';
 
-import AryPutRequest from '../../requests/AryPutRequest';
 import { renderWidget } from '../widgetUtils';
 import styles from './styles.scss';
 
 const propTypes = {
-    // aryStrings: PropTypes.func.isRequired,
     activeLeadId: PropTypes.number.isRequired,
     affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    aryTemplateMethodology: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     focuses: PropTypes.arrayOf(PropTypes.object).isRequired,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    methodology: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    formValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
-
-    setAry: PropTypes.func.isRequired,
+    changeAryMethodology: PropTypes.func.isRequired,
+    fieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    formErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
-    aryTemplateMethodology: {},
+    aryTemplateMethodology: [],
     className: '',
     geoOptions: {},
+    formValues: {},
+    fieldErrors: {},
+    formErrors: {},
 };
 
 const mapStateToProps = (state, props) => ({
@@ -61,13 +59,12 @@ const mapStateToProps = (state, props) => ({
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
     focuses: focusesSelector(state),
     geoOptions: geoOptionsForProjectSelector(state, props),
-    methodology: aryViewMethodologySelector(state),
     projectDetails: projectDetailsSelector(state, props),
     sectors: sectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setAry: params => dispatch(setAryAction(params)),
+    changeAryMethodology: params => dispatch(changeAryMethodologyForEditAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -75,49 +72,13 @@ export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-        };
-    }
-
-    // FORM RELATED
-
     changeCallback = (values, formFieldErrors, formErrors) => {
-        this.props.setAry({
+        this.props.changeAryMethodology({
             lead: this.props.activeLeadId,
-            methodology: values,
-        });
-        this.setState({
-            formFieldErrors,
-            formErrors,
-            pristine: true,
-        });
-    };
-
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
+            formValues: values,
+            fieldErrors: formFieldErrors,
             formErrors,
         });
-    };
-
-    successCallback = (value) => {
-        const { activeLeadId, setAry } = this.props;
-
-        if (this.aryPutRequest) {
-            this.aryPutRequest.stop();
-        }
-
-        const aryPutRequest = new AryPutRequest({
-            setAry,
-            setState: params => this.setState(params),
-        });
-        this.aryPutRequest = aryPutRequest.create(activeLeadId, { methodology_data: value });
-        this.aryPutRequest.start();
     };
 
     renderAttributeHeader = (key) => {
@@ -193,20 +154,12 @@ export default class Methodology extends React.PureComponent {
             projectDetails,
             geoOptions,
             schema,
-            methodology,
+            formValues,
         } = this.props;
 
-        const {
-            pending,
-            formErrors,
-            formFieldErrors,
-        } = this.state;
-
-        const { attributes = [] } = methodology;
-        const attributesTemplateKeys = Object.keys(attributesTemplate);
+        const { attributes = [] } = formValues;
 
         // FIXME: use strings
-        const saveButtonLabel = 'Save';
         const focusesTitle = 'Focuses';
         const sectorsTitle = 'Sectors';
         const affectedGroupsTitle = 'Affected groups';
@@ -216,30 +169,21 @@ export default class Methodology extends React.PureComponent {
             <Form
                 className={styles.methodology}
                 schema={schema}
-                value={methodology}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={formValues}
+                fieldErrors={this.props.fieldErrors}
+                formErrors={this.props.formErrors}
                 changeCallback={this.changeCallback}
-                successCallback={this.successCallback}
-                failureCallback={this.failureCallback}
-                disabled={pending}
             >
-                { pending && <LoadingAnimation /> }
                 <div className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}
                         formerror="attributes"
                     />
-                    <div className={styles.actionButtons}>
-                        <SuccessButton type="submit">
-                            { saveButtonLabel }
-                        </SuccessButton>
-                    </div>
                 </div>
                 <div className={styles.scrollWrap}>
                     <div className={styles.attributes}>
                         <div className={styles.header}>
-                            { attributesTemplateKeys.map(this.renderAttributeHeader) }
+                            {Object.keys(attributesTemplate).map(this.renderAttributeHeader)}
                             <div className={styles.actionButtons}>
                                 <PrimaryButton
                                     formname="attributes"

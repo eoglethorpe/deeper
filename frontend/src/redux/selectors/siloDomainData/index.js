@@ -8,3 +8,4 @@ export * from './entries';
 export * from './galleryFiles';
 export * from './leads';
 export * from './visualization';
+export * from './editAry';

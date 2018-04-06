@@ -25,7 +25,13 @@ export default class AryGetRequest {
             .success((response) => {
                 try {
                     schema.validate(response, 'aryGetResponse');
-                    this.setAry(response);
+                    this.setAry({
+                        serverId: response.id,
+                        lead: response.lead,
+                        versionId: response.versionId,
+                        metadata: response.metadata,
+                        methodology: response.methodology,
+                    });
                 } catch (err) {
                     console.error(err);
                 }

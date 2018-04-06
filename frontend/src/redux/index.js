@@ -20,6 +20,7 @@ export * from './reducers/siloDomainData/editEntries';
 export * from './reducers/siloDomainData/analysisFramework';
 export * from './reducers/siloDomainData/categoryEditor';
 export * from './reducers/siloDomainData/assessmentRegistry';
+export * from './reducers/siloDomainData/editAry';
 export * from './reducers/siloDomainData/galleryFiles';
 export * from './reducers/siloDomainData/visualization';
 export * from './reducers/domainData/analysisFrameworks';
