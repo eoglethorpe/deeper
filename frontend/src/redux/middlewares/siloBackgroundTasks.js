@@ -3,8 +3,8 @@ import SiloTasksManager from '../../utils/SiloTasksManager';
 import TokenRefresher from './tasks/TokenRefresher';
 import ProjectGet from './tasks/ProjectGet';
 
-export const START_SILO_BACKGROUND_TASKS = 'silo-bg-tasks/START';
-export const STOP_SILO_BACKGROUND_TASKS = 'silo-bg-tasks/STOP';
+export const START_SILO_BACKGROUND_TASKS = 'siloBgTasks/START';
+export const STOP_SILO_BACKGROUND_TASKS = 'siloBgTasks/STOP';
 
 export const startSiloBackgroundTasksAction = callback => ({
     type: START_SILO_BACKGROUND_TASKS,
