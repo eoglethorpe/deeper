@@ -11,12 +11,12 @@ import {
     leadPaneTypeMap,
 } from '../../../../entities/lead';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
+import LeadPreview from '../../../../components/LeadPreview';
 
 import AssistedTagging from '../../../../components/AssistedTagging';
 import ImagesGrid from '../../../../components/ImagesGrid';
 import { entryStringsSelector } from '../../../../redux';
 
-import LeadPreview from './LeadPreview';
 import EntriesListing from './EntriesListing';
 import styles from '../../styles.scss';
 
