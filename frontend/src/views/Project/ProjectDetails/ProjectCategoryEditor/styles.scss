@@ -1,64 +1,61 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/modal';
 
+$width-ce-list: 240px;
+
 .project-category-editor {
     display: flex;
     flex-grow: 1;
 
-    .list-container {
-        @include shadow-small;
+    .ce-list {
         display: flex;
-        flex-basis: 16%;
+        flex-basis: $width-ce-list;
         flex-direction: column;
-        min-width: 320px;
+        border-right: $width-separator-thin solid $color-separator-alt;
 
-        .list-header {
+        .header {
+            @include background-color($color-background-header);
             display: flex;
             align-items: center;
             flex-shrink: 0;
-            justify-content: space-between;
+            flex-wrap: wrap;
             border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-large;
+            padding: $spacing-small;
 
-            .search-input {
+            .heading {
                 flex-grow: 1;
-                padding: 0 $spacing-medium-alt 0 0;
-
-                :global .error {
-                    display: none;
-                }
             }
 
-            .add-btn {
+            .add-ce-button {
                 flex-shrink: 0;
+            }
+
+            .search-ce-input {
+                flex-basis: 100%;
             }
         }
 
-        .list {
+        .content {
             flex-grow: 1;
             overflow-y: auto;
 
             .ce-list-item {
                 display: flex;
-                align-items: center;
                 justify-content: space-between;
 
                 .check {
                     color: $color-success;
                 }
-
             }
-
         }
     }
 
     .details-container {
-        display: flex;
         position: relative;
         flex-grow: 1;
     }
 
-    .no-category-editor {
+    .empty {
         display: flex;
         align-items: center;
         flex-grow: 1;

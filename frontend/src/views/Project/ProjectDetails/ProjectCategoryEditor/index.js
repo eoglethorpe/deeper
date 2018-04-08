@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import { caseInsensitiveSubmatch, compareString } from '../../../../vendor/react-store/utils/common';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
 import SearchInput from '../../../../vendor/react-store/components/Input/SearchInput';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import ListItem from '../../../../vendor/react-store/components/View/List/ListItem';
@@ -174,10 +174,27 @@ export default class ProjectCategoryEditor extends React.PureComponent {
 
     calcCeKey = ce => ce.id;
 
-    renderCeList = (key, ce) => {
+    renderCheckmark = ({ ceId }) => {
         const { projectDetails } = this.props;
-        const isActive = ce.id === this.state.selectedCe;
-        const isProjectCe = projectDetails.categoryEditor === ce.id;
+        if (projectDetails.categoryEditor !== ceId) {
+            return null;
+        }
+
+        const className = [
+            iconNames.check,
+            styles.check,
+        ].join(' ');
+
+        return (
+            <span className={className} />
+        );
+    }
+
+    renderCeList = (key, ce) => {
+        const { selectedCe } = this.state;
+        const isActive = ce.id === selectedCe;
+        const Checkmark = this.renderCheckmark;
+
         return (
             <ListItem
                 active={isActive}
@@ -186,8 +203,52 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                 className={styles.ceListItem}
             >
                 {ce.title}
-                {isProjectCe && <span className={`${iconNames.check} ${styles.check}`} />}
+                <Checkmark ceId={ce.id} />
             </ListItem>
+        );
+    }
+
+    renderCategoryEditorList = () => {
+        const {
+            displayCeList,
+            searchInputValue,
+        } = this.state;
+
+        const sortedCes = [...displayCeList];
+        sortedCes.sort((a, b) => compareString(a.title, b.title));
+
+        // FIXME: use strings
+        const headingText = 'Category Editors';
+
+        return (
+            <div className={styles.ceList}>
+                <div className={styles.header}>
+                    <h4 className={styles.heading}>
+                        { headingText }
+                    </h4>
+                    <AccentButton
+                        className={styles.addCeButton}
+                        iconName={iconNames.add}
+                        onClick={this.handleAddCeButtonClick}
+                    >
+                        {this.props.projectStrings('addCeButtonLabel')}
+                    </AccentButton>
+                    <SearchInput
+                        className={styles.searchCeInput}
+                        value={searchInputValue}
+                        onChange={this.handleSearchInputChange}
+                        placeholder={this.props.projectStrings('searchCePlaceholder')}
+                        showHintAndError={false}
+                        showLabel={false}
+                    />
+                </div>
+                <ListView
+                    className={styles.content}
+                    modifier={this.renderCeList}
+                    data={sortedCes}
+                    keyExtractor={this.calcCeKey}
+                />
+            </div>
         );
     }
 
@@ -197,9 +258,9 @@ export default class ProjectCategoryEditor extends React.PureComponent {
 
         if (categoryEditorList.length <= 0) {
             return (
-                <h1 className={styles.noCategoryEditor}>
+                <div className={styles.empty}>
                     {this.props.projectStrings('noCeText')}
-                </h1>
+                </div>
             );
         }
 
@@ -212,65 +273,49 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         );
     }
 
-
-    render() {
-        const {
-            displayCeList,
-            pending,
-            searchInputValue,
-        } = this.state;
+    renderAddCeModal = () => {
+        const { addCeModalShow } = this.state;
 
         const {
             projectId,
         } = this.props;
 
-        const sortedCes = [...displayCeList];
-        sortedCes.sort((a, b) => compareString(a.title, b.title));
+        if (!addCeModalShow) {
+            return null;
+        }
+
+        return (
+            <Modal
+                closeOnEscape
+                onClose={this.handleModalClose}
+                closeOnBlur
+            >
+                <ModalHeader title={this.props.projectStrings('addCeModalTitle')} />
+                <ModalBody>
+                    <AddCategoryEditor
+                        projectId={projectId}
+                        onModalClose={this.handleModalClose}
+                    />
+                </ModalBody>
+            </Modal>
+        );
+    }
+
+    render() {
+        const { pending } = this.state;
+        const CeDetails = this.renderSelectedCeDetails;
+
+        const CategoryEditorList = this.renderCategoryEditorList;
+        const AddCeModal = this.renderAddCeModal;
 
         return (
             <div className={styles.projectCategoryEditor}>
-                <div className={styles.listContainer}>
-                    <div className={styles.listHeader}>
-                        <SearchInput
-                            className={styles.searchInput}
-                            value={searchInputValue}
-                            onChange={this.handleSearchInputChange}
-                            placeholder={this.props.projectStrings('searchCePlaceholder')}
-                        />
-                        <PrimaryButton
-                            className={styles.addBtn}
-                            iconName={iconNames.add}
-                            onClick={this.handleAddCeButtonClick}
-                        >
-                            {this.props.projectStrings('addCeButtonLabel')}
-                        </PrimaryButton>
-                        { this.state.addCeModalShow &&
-                            <Modal
-                                closeOnEscape
-                                onClose={this.handleModalClose}
-                                closeOnBlur
-                            >
-                                <ModalHeader title={this.props.projectStrings('addCeModalTitle')} />
-                                <ModalBody>
-                                    <AddCategoryEditor
-                                        projectId={projectId}
-                                        onModalClose={this.handleModalClose}
-                                    />
-                                </ModalBody>
-                            </Modal>
-                        }
-                    </div>
-                    <ListView
-                        className={styles.list}
-                        modifier={this.renderCeList}
-                        data={sortedCes}
-                        keyExtractor={this.calcCeKey}
-                    />
-                </div>
+                <CategoryEditorList />
                 <div className={styles.detailsContainer}>
                     {pending && <LoadingAnimation />}
-                    {this.renderSelectedCeDetails()}
+                    <CeDetails />
                 </div>
+                <AddCeModal />
             </div>
         );
     }

@@ -1,34 +1,35 @@
 @import '../../../../../stylesheets/base';
 @import '../../../../../stylesheets/modal';
 
+$ce-detail-form-width: 240px;
+$height-header: 39px;
+
 .category-editor-detail {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
+    height: 100%;
 
     .header {
+        @include background-color($color-background-header);
         display: flex;
         align-items: center;
         flex-shrink: 0;
         justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
-        padding: $spacing-small $spacing-large;
+        padding: 0 $spacing-small;
+        height: $height-header;
 
-        .action-btns {
+        .action-buttons {
             button {
-                margin-left: $spacing-medium-alt;
+                margin-left: $spacing-small;
             }
         }
     }
 
-    .ce-details {
-        display: flex;
-        flex-basis: 100%;
-        flex-direction: column;
-        flex-grow: 1;
+    .content {
+        height: calc(100% - #{$height-header});
 
-        .project-ce-form {
-            flex-shrink: 0;
+        .ce-detail-form {
+            display: block;
+            width: $ce-detail-form-width;
         }
     }
 }
