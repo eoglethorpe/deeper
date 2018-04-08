@@ -419,7 +419,7 @@ export default class EditAdminLevel extends React.PureComponent {
                                         <Fragment>
                                             <span
                                                 className={styles.show}
-                                                title="Update GEO File"
+                                                title={this.props.countriesStrings('updateGeoFile')}
                                             >
                                                 <i className={iconNames.uploadFa} />
                                                 {this.props.countriesStrings('geoShapeFile')}

@@ -557,6 +557,7 @@ const initialLangState = {
                 8501: 'Select a source to add new lead',
                 1003: 'Error while trying to save region detail.',
                 1004: 'Simplifying lead',
+                250: 'Update GEO File',
             },
             views: {
                 af: {
@@ -810,6 +811,7 @@ const initialLangState = {
                     regionGeneralInfoLabel: 378,
                     addRegionButtonLabel: 301,
                     regionPatchErrorText: 1003,
+                    updateGeoFile: 250,
                 },
                 entry: {
                     serverErrorText: 500,
