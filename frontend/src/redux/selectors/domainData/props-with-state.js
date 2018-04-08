@@ -249,7 +249,7 @@ export const aryTemplateMethodologySelector = createSelector(
     ),
 );
 
-export const sectorsSelector = createSelector(
+export const assessmentSectorsSelector = createSelector(
     aryTemplateSelector,
     aryTemplate => (
         aryTemplate.sectors || emptyList

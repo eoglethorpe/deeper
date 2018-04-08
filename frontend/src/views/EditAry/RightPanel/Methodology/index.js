@@ -15,7 +15,7 @@ import { iconNames } from '../../../../constants';
 import {
     aryTemplateMethodologySelector,
     leadIdFromRouteSelector,
-    sectorsSelector,
+    assessmentSectorsSelector,
     focusesSelector,
     affectedGroupsSelector,
 
@@ -62,7 +62,7 @@ const mapStateToProps = (state, props) => ({
     focuses: focusesSelector(state),
     geoOptions: geoOptionsForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
-    sectors: sectorsSelector(state),
+    sectors: assessmentSectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
