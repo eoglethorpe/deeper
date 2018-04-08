@@ -23,7 +23,6 @@
                 :global {
                     label {
                         @extend %button-like-link;
-                        @include background-color($color-primary);
                     }
                 }
 
@@ -44,7 +43,8 @@
                 }
 
                 a {
-                    color: inherit;
+                    margin: 0 $spacing-small;
+                    color: $color-primary;
                 }
             }
         }
