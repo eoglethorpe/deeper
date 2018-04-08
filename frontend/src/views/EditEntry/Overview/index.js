@@ -23,7 +23,7 @@ import widgetStore from '../../../widgets';
 import { entryAccessor } from '../../../entities/entry';
 
 import LeftPanel from './LeftPanel';
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     leadId: PropTypes.oneOfType([

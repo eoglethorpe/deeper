@@ -1,0 +1,44 @@
+@import '../../../../stylesheets/base';
+
+$height-tabs: 48px;
+
+.tabs {
+    height: $height-tabs;
+}
+
+%container {
+    background-color: $color-foreground-alt;
+    height: calc(100% - #{$height-tabs});
+    overflow-y: auto;
+}
+
+.simplified-preview {
+    @extend %container;
+}
+
+.original-preview {
+    @extend %container;
+}
+
+.assisted-tagging {
+    @extend %container;
+
+    :global {
+        .preview {
+            height: calc(100% - 59px);
+            overflow-y: auto;
+        }
+
+        .assistant-options {
+            border-top-color: $color-accent;
+        }
+    }
+}
+
+.images-preview {
+    @extend %container;
+}
+
+.entries-list-container {
+    @extend %container;
+}

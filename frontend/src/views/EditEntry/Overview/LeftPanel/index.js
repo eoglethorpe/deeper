@@ -18,7 +18,7 @@ import ImagesGrid from '../../../../components/ImagesGrid';
 import { entryStringsSelector } from '../../../../redux';
 
 import EntriesListing from './EntriesListing';
-import styles from '../../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types

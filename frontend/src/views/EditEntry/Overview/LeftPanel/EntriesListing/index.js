@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Button from '../../../../vendor/react-store/components/Action/Button';
-import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import ListView from '../../../../vendor/react-store/components/View/List/ListView';
+import Button from '../../../../../vendor/react-store/components/Action/Button';
+import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
+import ListView from '../../../../../vendor/react-store/components/View/List/ListView';
 
-import { entryAccessor, ENTRY_STATUS } from '../../../../entities/entry';
+import { entryAccessor, ENTRY_STATUS } from '../../../../../entities/entry';
 
-import { entryStringsSelector } from '../../../../redux';
-import { iconNames } from '../../../../constants';
+import { entryStringsSelector } from '../../../../../redux';
+import { iconNames } from '../../../../../constants';
 
-import styles from '../../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     selectedEntryId: PropTypes.string,

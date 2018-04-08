@@ -22,7 +22,4 @@
 .edit-entry {
     @extend %main-content;
     position: relative;
-
-    @import './Overview/overview';
-    @import './List/list';
 }

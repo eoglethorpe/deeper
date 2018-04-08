@@ -35,8 +35,7 @@ import schema from '../../../schema';
 import notify from '../../../notify';
 
 import widgetStore from '../../../widgets';
-import styles from '../styles.scss';
-
+import styles from './styles.scss';
 
 const propTypes = {
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -200,6 +199,7 @@ export default class List extends React.PureComponent {
                         projectId,
                         locations: response,
                     });
+                    this.setState({ pendingGeo: false });
                 } catch (er) {
                     console.error(er);
                 }
