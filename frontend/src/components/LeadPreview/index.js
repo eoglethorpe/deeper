@@ -2,14 +2,14 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { LEAD_TYPE } from '../../../entities/lead';
+import { LEAD_TYPE } from '../../entities/lead';
 import {
     InternalGallery,
     ExternalGallery,
-} from '../../../components/DeepGallery';
-import { entryStringsSelector } from '../../../redux';
+} from '../../components/DeepGallery';
+import { entryStringsSelector } from '../../redux';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     entryStrings: PropTypes.func.isRequired,

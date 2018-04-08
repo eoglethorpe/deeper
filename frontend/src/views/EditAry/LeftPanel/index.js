@@ -11,6 +11,7 @@ import {
     leadPaneTypeMap,
 } from '../../../entities/lead';
 import SimplifiedLeadPreview from '../../../components/SimplifiedLeadPreview';
+import LeadPreview from '../../../components/LeadPreview';
 
 import AssistedTagging from '../../../components/AssistedTagging';
 import ImagesGrid from '../../../components/ImagesGrid';
@@ -20,7 +21,6 @@ import {
     currentUserActiveProjectSelector,
 } from '../../../redux';
 
-import LeadPreview from './LeadPreview';
 import styles from './styles.scss';
 
 const propTypes = {
