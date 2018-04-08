@@ -2,6 +2,7 @@ import { createSelector } from 'reselect';
 import { leadIdFromRoute } from '../domainData';
 
 const emptyObject = {};
+const emptyList = [];
 
 // ARY VIEW SELECTORS
 
@@ -48,4 +49,12 @@ export const editAryHasErrorsSelector = createSelector(
 export const editAryIsPristineSelector = createSelector(
     editAryFromRouteSelector,
     ary => ary.isPristine,
+);
+
+export const editArySelectedSectorsSelector = createSelector(
+    editAryFormValuesSelector,
+    (formValues) => {
+        const methodology = formValues.methodology || emptyObject;
+        return methodology.sectors || emptyList;
+    },
 );

@@ -33,6 +33,8 @@ import AryPutRequest from '../requests/AryPutRequest';
 
 import Metadata from './Metadata';
 import Methodology from './Methodology';
+import Summary from './Summary';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -173,7 +175,7 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabKey: 'metadata',
+            currentTabKey: 'summary',
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
@@ -237,9 +239,13 @@ export default class RightPanel extends React.PureComponent {
             },
             summary: {
                 component: () => (
-                    <div>
-                        {props.aryStrings('summaryTabLabel')}
-                    </div>
+                    <Summary
+                        schema={this.state.schema.fields.summary}
+                        formValues={this.props.editAryFormValues.summary}
+                        fieldErrors={this.props.editAryFieldErrors.summary}
+                        formErrors={(this.props.editAryFormErrors.fields || {}).summary}
+                        pending={this.state.pending}
+                    />
                 ),
             },
             score: {
