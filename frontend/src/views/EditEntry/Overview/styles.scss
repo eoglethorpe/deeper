@@ -1,3 +1,6 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/grid-item';
+
 $width-entry-select-input: 400px;
 $width-left-panel-min: 436px;
 $width-right-panel-min: 654px;
@@ -14,47 +17,6 @@ $height-tabs: 48px;
         min-width: $width-left-panel-min;
         height: 100%;
 
-        .tabs {
-            height: $height-tabs;
-        }
-
-        %container {
-            background-color: $color-foreground-alt;
-            height: calc(100% - #{$height-tabs});
-            overflow-y: auto;
-        }
-
-        .simplified-preview {
-            @extend %container;
-        }
-
-        .original-preview {
-            @extend %container;
-        }
-
-        .assisted-tagging {
-            @extend %container;
-
-            :global {
-                .preview {
-                    height: calc(100% - 59px);
-                    overflow-y: auto;
-                }
-
-                .assistant-options {
-                    border-top-color: $color-accent;
-                }
-            }
-        }
-
-        .images-preview {
-            @extend %container;
-        }
-
-        .entries-list-container {
-            @extend %container;
-            @import 'entry-container';
-        }
     }
 
     .right {
