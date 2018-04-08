@@ -22,6 +22,9 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     regionDetail: PropTypes.shape({
+        id: PropTypes.number,
+        versionId: PropTypes.versionId,
+        public: PropTypes.public,
         formValues: PropTypes.object,
         formFieldErrors: PropTypes.object,
         formErrors: PropTypes.object,
@@ -105,20 +108,11 @@ export default class RegionDetail extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    changeCallback = (formValues, formFieldErrors, formErrors) => {
         const regionDetails = {
-            formValues: {
-                ...this.props.regionDetail.formValues,
-                ...values,
-            },
-            formFieldErrors: {
-                ...this.props.regionDetail.formFieldErrors,
-                ...formFieldErrors,
-            },
-            formErrors: {
-                ...this.props.regionDetail.formErrors,
-                ...formErrors,
-            },
+            formValues,
+            formFieldErrors,
+            formErrors,
             pristine: true,
         };
 
@@ -140,9 +134,9 @@ export default class RegionDetail extends React.PureComponent {
 
     failureCallback = (formFieldErrors, formErrors) => {
         const regionDetails = {
-            formValues: { ...this.props.regionDetail.formValues },
-            formFieldErrors: { ...formFieldErrors },
-            formErrors: { ...formErrors },
+            formValues: this.props.regionDetail.formValues,
+            formFieldErrors,
+            formErrors,
             pristine: true,
         };
 

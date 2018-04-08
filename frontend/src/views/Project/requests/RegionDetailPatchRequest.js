@@ -19,7 +19,7 @@ export default class RegionDetailPatchRequest {
         try {
             schema.validate(response, 'regionPatchResponse');
             const regionDetails = {
-                formValues: { ...response },
+                formValues: response,
                 formErrors: {},
                 formFieldErrors: {},
                 pristine: false,

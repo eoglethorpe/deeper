@@ -30,10 +30,12 @@ export default class RegionCloneRequest {
     }
 
     failure = (response) => {
+        // FIXME: use strings
         console.warn('FAILURE:', response);
     }
 
     fatal = (response) => {
+        // FIXME: use strings
         console.warn('FATAL:', response);
     }
 

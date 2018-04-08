@@ -190,6 +190,12 @@ export default class CountryDetail extends React.PureComponent {
         if (this.regionDeleteRequest) {
             this.regionDeleteRequest.stop();
         }
+        if (this.requestForRegion) {
+            this.requestForRegion.stop();
+        }
+        if (this.regionDetailPatchRequest) {
+            this.regionDetailPatchRequest.stop();
+        }
     }
 
     handleDeleteButtonClick = () => {
@@ -208,8 +214,7 @@ export default class CountryDetail extends React.PureComponent {
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
             notificationStrings: this.props.notificationStrings,
-            regionDetail: this.props.regionDetail.formValues || {},
-            pristine: this.props.regionDetail.pristine,
+            regionDetail: this.props.regionDetail || {},
             discard,
         });
         this.requestForRegion = requestForRegion.create(regionId);
@@ -306,6 +311,7 @@ export default class CountryDetail extends React.PureComponent {
             countryDetail,
             activeUser,
             countriesStrings,
+            regionDetail,
         } = this.props;
 
         const {
@@ -319,7 +325,7 @@ export default class CountryDetail extends React.PureComponent {
             <header className={styles.header} >
                 <div className={styles.topContainer} >
                     <h3 className={styles.heading} >
-                        {formValues.title}
+                        {regionDetail.title}
                     </h3>
                     <div className={styles.rightContainer} >
                         {

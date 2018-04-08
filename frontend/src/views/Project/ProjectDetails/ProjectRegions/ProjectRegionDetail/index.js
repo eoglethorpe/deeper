@@ -41,6 +41,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number.isRequired,
     regionDetail: PropTypes.shape({
+        id: PropTypes.number,
         formValues: PropTypes.object,
         formFieldErrors: PropTypes.object,
         formErrors: PropTypes.object,
@@ -142,8 +143,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
             notificationStrings: this.props.notificationStrings,
-            regionDetail: this.props.regionDetail.formValues || {},
-            pristine: this.props.regionDetail.pristine,
+            regionDetail: this.props.regionDetail || {},
             discard,
         });
         this.requestForRegion = requestForRegion.create(regionId);
@@ -230,20 +230,21 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     successCallback = (values) => {
-        this.startRequestForRegionDetailPatch(this.props.regionDetail.formValues.id, values);
+        this.startRequestForRegionDetailPatch(this.props.regionDetail.id, values);
     };
 
     renderCloneAndEditButton = () => {
-        const { projectStrings } = this.props;
         const {
-            formValues = {},
-        } = this.props.regionDetail;
+            projectStrings,
+            regionDetail,
+        } = this.props;
+
         const {
             dataLoading,
             regionClonePending,
         } = this.state;
 
-        const isPublic = formValues.public;
+        const isPublic = regionDetail.public;
         const cloneAndEditButtonLabel = projectStrings('cloneEditButtonLabel');
 
         if (!isPublic) {
@@ -261,7 +262,10 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     renderHeader = () => {
-        const { projectStrings } = this.props;
+        const {
+            projectStrings,
+            regionDetail,
+        } = this.props;
 
         const {
             formErrors = {},
@@ -284,7 +288,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
         const removeRegionButtonLabel = projectStrings('removeRegionButtonLabel');
         const CloneAndEditButton = this.renderCloneAndEditButton;
-        const isPublic = formValues.public;
+        const isPublic = regionDetail.public;
 
         return (
             <header className={styles.header}>
@@ -331,13 +335,14 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const {
             countryId,
             activeProject,
+            regionDetail,
         } = this.props;
         const {
             formValues = {},
         } = this.props.regionDetail;
         const { dataLoading } = this.state;
 
-        const isEditable = formValues.public !== undefined && !formValues.public;
+        const isEditable = regionDetail.public !== undefined && !regionDetail.public;
 
         const classNames = [styles.content];
 

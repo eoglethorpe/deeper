@@ -34,6 +34,9 @@ const addNewRegion = (state, action) => {
     const settings = {
         regions: { $auto: {
             [regionDetail.id]: { $auto: {
+                id: { $set: regionDetail.id },
+                versionId: { $set: regionDetail.versionId },
+                public: { $set: regionDetail.public },
                 formValues: { $auto: {
                     $merge: regionDetail,
                 } },

@@ -20,7 +20,6 @@ export default class RegionGetRequest {
         const {
             regionDetail,
             discard,
-            pristine,
             setRegionDetails,
             notificationStrings,
         } = this.props;
@@ -31,16 +30,19 @@ export default class RegionGetRequest {
                 return;
             }
             const regionDetails = {
-                formValues: { ...response },
+                formValues: response,
                 formErrors: {},
                 formFieldErrors: {},
                 pristine: false,
+                id: response.id,
+                public: response.public,
+                versionId: response.versionId,
             };
             setRegionDetails({
                 regionDetails,
                 regionId,
             });
-            if (pristine && !discard) {
+            if (regionDetail.pristine && !discard) {
                 notify.send({
                     type: notify.type.WARNING,
                     title: notificationStrings('regionUpdate'),
@@ -54,10 +56,12 @@ export default class RegionGetRequest {
     }
 
     failure = (response) => {
+        // FIXME: use strings
         console.warn('FAILURE:', response);
     }
 
     fatal = (response) => {
+        // FIXME: use strings
         console.warn('FATAL:', response);
     }
 

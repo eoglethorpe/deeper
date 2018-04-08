@@ -20,10 +20,13 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string.isRequired,
     regionDetail: PropTypes.shape({
-        formValues: PropTypes.object.isRequired,
-        formFieldErrors: PropTypes.object.isRequired,
-        formErrors: PropTypes.object.isRequired,
-        pristine: PropTypes.bool.isRequired,
+        id: PropTypes.number,
+        versionId: PropTypes.versionId,
+        public: PropTypes.public,
+        formValues: PropTypes.object,
+        formFieldErrors: PropTypes.object,
+        formErrors: PropTypes.object,
+        pristine: PropTypes.bool,
     }).isRequired,
     dataLoading: PropTypes.bool.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
@@ -92,20 +95,11 @@ export default class CountryKeyFigures extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    changeCallback = (formValues, formFieldErrors, formErrors) => {
         const regionDetails = {
-            formValues: {
-                ...this.props.regionDetail.formValues,
-                ...values,
-            },
-            formFieldErrors: {
-                ...this.props.regionDetail.formFieldErrors,
-                ...formFieldErrors,
-            },
-            formErrors: {
-                ...this.props.regionDetail.formErrors,
-                ...formErrors,
-            },
+            formValues,
+            formFieldErrors,
+            formErrors,
             pristine: true,
         };
         this.props.setRegionDetails({
@@ -116,9 +110,9 @@ export default class CountryKeyFigures extends React.PureComponent {
 
     failureCallback = (formFieldErrors, formErrors) => {
         const regionDetails = {
-            formValues: { ...this.props.regionDetail.formValues },
-            formFieldErrors: { ...formFieldErrors },
-            formErrors: { ...formErrors },
+            formValues: this.props.regionDetail.formValues,
+            formFieldErrors,
+            formErrors,
             pristine: true,
         };
         this.props.setRegionDetails({

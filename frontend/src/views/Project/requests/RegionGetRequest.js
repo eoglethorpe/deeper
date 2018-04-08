@@ -20,7 +20,6 @@ export default class RegionGetRequest {
         const {
             regionDetail,
             discard,
-            pristine,
             setRegionDetails,
             notificationStrings,
         } = this.props;
@@ -35,12 +34,15 @@ export default class RegionGetRequest {
                 formErrors: {},
                 formFieldErrors: {},
                 pristine: false,
+                id: response.id,
+                public: response.public,
+                versionId: response.versionId,
             };
             setRegionDetails({
                 regionDetails,
                 regionId,
             });
-            if (pristine && !discard) {
+            if (regionDetail.pristine && !discard) {
                 notify.send({
                     type: notify.type.WARNING,
                     title: notificationStrings('regionUpdate'),
