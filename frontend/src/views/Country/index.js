@@ -6,6 +6,7 @@ import { caseInsensitiveSubmatch, compareString } from '../../vendor/react-store
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
+import ListItem from '../../vendor/react-store/components/View/List/ListItem';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -152,12 +153,18 @@ export default class CountryPanel extends React.PureComponent {
         const activeCountryId = countryId;
         const isActive = country.id === activeCountryId;
         return (
-            <CountryListItem
+            <ListItem
                 key={key}
-                countryId={country.id}
-                title={country.title}
-                isActive={isActive}
-            />
+                scrollIntoView={isActive}
+                className={styles.countryListItem}
+            >
+                <CountryListItem
+                    key={key}
+                    countryId={country.id}
+                    title={country.title}
+                    isActive={isActive}
+                />
+            </ListItem>
         );
     }
 
@@ -235,24 +242,24 @@ export default class CountryPanel extends React.PureComponent {
                             showHintAndError={false}
                         />
                     </header>
-                    <ListView
-                        className={styles.countryList}
-                        modifier={this.renderCountryListItem}
-                        data={displayCountryList}
-                        keyExtractor={this.calcCountryListItemKey}
-                    />
                     { this.state.addCountryModal &&
                         <Modal
                             closeOnEscape
                             onClose={this.handleModalClose}
                             closeOnBlur
                         >
-                            <ModalHeader title="Add new country" />
+                            <ModalHeader title={this.props.countriesStrings('addCountryModalHeaderLabel')} />
                             <ModalBody>
                                 <AddRegion onModalClose={this.handleModalClose} />
                             </ModalBody>
                         </Modal>
                     }
+                    <ListView
+                        className={styles.countryList}
+                        modifier={this.renderCountryListItem}
+                        data={displayCountryList}
+                        keyExtractor={this.calcCountryListItemKey}
+                    />
                 </div>
                 { this.renderCountryDetail() }
             </div>

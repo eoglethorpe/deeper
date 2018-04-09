@@ -19,7 +19,7 @@ export default class RegionDetailPatchRequest {
         try {
             schema.validate(response, 'regionPatchResponse');
             const regionDetails = {
-                formValues: { ...response },
+                formValues: response,
                 formErrors: {},
                 formFieldErrors: {},
                 pristine: false,
@@ -27,6 +27,7 @@ export default class RegionDetailPatchRequest {
             this.props.setRegionDetails({
                 regionDetails,
                 regionId,
+                projectId: this.props.projectId,
             });
             notify.send({
                 type: notify.type.SUCCESS,
@@ -62,8 +63,8 @@ export default class RegionDetailPatchRequest {
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
             .params(() => createParamsForRegionPatch(data))
-            .preLoad(() => { this.props.setState({ pending: true }); })
-            .postLoad(() => { this.props.setState({ pending: false }); })
+            .preLoad(() => { this.props.setState({ regionDetailPatchPending: true }); })
+            .postLoad(() => { this.props.setState({ regionDetailPatchPending: false }); })
             .success(this.success(regionId))
             .failure(this.failure)
             .fatal(this.fatal)

@@ -2,53 +2,33 @@
 
 .key-figures {
     position: relative;
-    padding: 0 $spacing-medium-alt;
     height: 100%;
     overflow-y: auto;
 
-    .header {
+    .sections {
         display: flex;
-        justify-content: space-between;
-        padding: $spacing-small 0;
 
-        .action-buttons {
-            display: flex;
-            flex-basis: 100%;
-            justify-content: flex-end;
+        .section {
+            flex-basis: calc(100% / 4);
+            flex-shrink: 0;
 
-            button {
-                margin-left: $spacing-small;
+            .heading {
+                flex-basis: 100%;
+                padding: $spacing-medium;
             }
-        }
-    }
 
-    .section {
-        display: flex;
-        flex-wrap: wrap;
-        padding: $spacing-medium 0 0;
-
-        h3 {
-            flex-basis: 100%;
-        }
-
-        .text-input {
-            margin: $spacing-small;
-            background-color: transparent;
-            padding: 0;
-            width: auto;
-
-            input {
-                background-color: transparent;
+            .inputs {
+                padding: $spacing-medium;
             }
-        }
 
-        &:not(:last-child) {
-            border-bottom: $width-separator-thin solid $color-separator;
+            &:not(:last-child) {
+                border-right: $width-separator-thin solid $color-separator;
+            }
         }
     }
 
     .icon {
-        margin-left: $spacing-large;
+        margin-left: $spacing-small;
         font-size: $font-size-extra-large;
     }
 }

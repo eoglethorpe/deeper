@@ -6,6 +6,7 @@ export * from './common';
 export * from './editEntries';
 export * from './entries';
 export * from './galleryFiles';
-export * from './leads';
 export * from './visualization';
 export * from './editAry';
+export * from './leads';
+export * from './regions';

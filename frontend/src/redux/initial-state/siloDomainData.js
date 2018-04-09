@@ -448,6 +448,22 @@ const initialSiloDomainData = {
             },
         },
     },
+
+    regions: {
+        // index is regionId
+        1: {
+            formValues: {
+                id: 1,
+                code: 'NPL',
+                title: 'Nepal',
+                regionalGroups: {},
+                keyFigures: {},
+            },
+            formErrors: {},
+            formFieldErrors: {},
+            pristine: false,
+        },
+    },
 };
 
 export default initialSiloDomainData;

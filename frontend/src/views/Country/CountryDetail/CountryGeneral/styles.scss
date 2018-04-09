@@ -1,37 +1,33 @@
 @import '../../../../stylesheets/base';
 @import '../../../../stylesheets/modal';
 
+$region-detail-form-width: 320px;
+
 .country-general {
     display: flex;
     position: relative;
     flex-direction: column;
-    flex-grow: 1;
+    height: calc(100% - 39px);
 
-    .details-edit {
+    .top-container {
         display: flex;
+        flex-basis: 60%;
         flex-grow: 1;
 
-        .detail-container {
-            display: flex;
-            flex-direction: column;
-            border-left: $width-separator-thin solid $color-separator;
-
-            .region-detail-form {
-                flex-basis: 30%;
-                border-right: $width-separator-thin solid $color-background-hover;
-                min-width: 240px;
-            }
-
-            .admin-levels {
-                flex-grow: 1;
-            }
-        }
-
-        .map-container {
-            display: flex;
-            align-items: center;
+        .region-map {
             flex-grow: 1;
-            justify-content: center;
+            height: 100%;
         }
+
+        .region-detail-form {
+            @include background-color($color-foreground);
+            border-left: $width-separator-thin solid $color-separator;
+            width: $region-detail-form-width;
+        }
+    }
+
+    .admin-level-table {
+        flex-shrink: 1;
+        height: 40%;
     }
 }

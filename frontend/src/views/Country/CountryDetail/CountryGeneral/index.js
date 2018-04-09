@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 
 import {
     countryDetailSelector,
-    setRegionDetailsAction,
 } from '../../../../redux';
-
-import RegionGetRequest from '../../requests/RegionGetRequest';
 
 import RegionDetail from '../../../../components/RegionDetail';
 import RegionAdminLevel from '../../../../components/RegionAdminLevel';
@@ -21,69 +18,40 @@ const propTypes = {
         id: PropTypes.number.isRequired,
         title: PropTypes.string.isRequired,
     }).isRequired,
-    setRegionDetails: PropTypes.func.isRequired,
+    dataLoading: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = (state, props) => ({
     countryDetail: countryDetailSelector(state, props),
 });
 
-const mapDispatchToProps = dispatch => ({
-    setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 export default class CountryGeneral extends React.PureComponent {
     static propTypes = propTypes;
 
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            dataLoading: true,
-        };
-    }
-
-    componentWillMount() {
-        this.startRegionRequest(this.props.countryDetail.id);
-    }
-
-    startRegionRequest = (regionId) => {
-        if (this.requestForRegion) {
-            this.requestForRegion.stop();
-        }
-        const requestForRegion = new RegionGetRequest({
-            setRegionDetails: this.props.setRegionDetails,
-            setState: v => this.setState(v),
-        });
-        this.requestForRegion = requestForRegion.create(regionId);
-        this.requestForRegion.start();
-    }
-
     render() {
-        const { countryDetail } = this.props;
-        const { dataLoading } = this.state;
+        const {
+            countryDetail,
+            dataLoading,
+        } = this.props;
 
         return (
             <div className={styles.countryGeneral}>
-                <div className={styles.detailsEdit}>
-                    <div className={styles.mapContainer}>
-                        <RegionMap
-                            regionId={countryDetail.id}
-                        />
-                    </div>
-                    <div className={styles.detailContainer}>
-                        <RegionDetail
-                            className={styles.regionDetailForm}
-                            countryId={countryDetail.id}
-                            dataLoading={dataLoading}
-                        />
-                        <RegionAdminLevel
-                            className={styles.adminLevels}
-                            countryId={countryDetail.id}
-                        />
-                    </div>
+                <div className={styles.topContainer}>
+                    <RegionMap
+                        regionId={countryDetail.id}
+                        className={styles.regionMap}
+                    />
+                    <RegionDetail
+                        className={styles.regionDetailForm}
+                        countryId={countryDetail.id}
+                        dataLoading={dataLoading}
+                    />
                 </div>
+                <RegionAdminLevel
+                    className={styles.adminLevelTable}
+                    countryId={countryDetail.id}
+                />
             </div>
         );
     }

@@ -17,7 +17,9 @@ $height-header: 39px;
         height: $height-header;
 
         .action-buttons {
-            .clone-and-edit-button {
+            display: flex;
+
+            button {
                 margin-left: $spacing-small;
             }
         }
@@ -48,10 +50,6 @@ $height-header: 39px;
                 border-left: $width-separator-thin solid $color-separator;
                 width: $region-detail-form-width;
             }
-        }
-
-        .admin-level-table {
-            height: 40%;
         }
     }
 }

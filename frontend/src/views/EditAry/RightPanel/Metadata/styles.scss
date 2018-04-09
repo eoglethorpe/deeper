@@ -19,11 +19,6 @@ $height-bottom: 256px;
         .non-field-errors {
             flex-grow: 1;
         }
-
-        .action-buttons {
-            flex-shrink: 0;
-            padding: $spacing-small $spacing-medium;
-        }
     }
 
     .top {
