@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import { reverseRoute } from '../../../../../vendor/react-store/utils/common';
-import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
+import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
 
@@ -244,6 +245,83 @@ export default class ProjectCeDetail extends React.PureComponent {
         mainHistory.push(reverseRoute(pathNames.categoryEditor, params));
     }
 
+    renderUseCeButton = () => {
+        const {
+            categoryEditorId,
+            projectDetails,
+            projectStrings,
+        } = this.props;
+
+        const { pending } = this.state;
+        if (categoryEditorId === projectDetails.categoryEditor) {
+            return null;
+        }
+
+        return (
+            <WarningButton
+                iconName={iconNames.check}
+                onClick={this.handleCeUseClick}
+                disabled={pending}
+            >
+                {projectStrings('useCeButtonLabel')}
+            </WarningButton>
+        );
+    }
+
+    renderEditCeButton = () => {
+        const {
+            ceDetails,
+            projectStrings,
+        } = this.props;
+
+        if (!ceDetails.isAdmin) {
+            return null;
+        }
+
+        const { pending } = this.state;
+        const editCeButtonLabel = projectStrings('editCeButtonLabel');
+
+        return (
+            <WarningButton
+                iconName={iconNames.edit}
+                onClick={this.handleCeEditClick}
+                disabled={pending}
+            >
+                { editCeButtonLabel }
+            </WarningButton>
+        );
+    }
+
+    renderHeader = () => {
+        const {
+            ceDetails,
+            projectStrings,
+        } = this.props;
+
+        const { pending } = this.state;
+
+        const UseCeButton = this.renderUseCeButton;
+        const EditCeButton = this.renderEditCeButton;
+
+        return (
+            <header className={styles.header}>
+                <h2>
+                    {ceDetails.title}
+                </h2>
+                <div className={styles.actionButtons}>
+                    <UseCeButton />
+                    <EditCeButton />
+                    <AccentButton
+                        onClick={this.handleCeCloneClick}
+                        disabled={pending}
+                    >
+                        {projectStrings('cloneEditCeButtonLabel')}
+                    </AccentButton>
+                </div>
+            </header>
+        );
+    }
+
     render() {
         const {
             ceDetails,
@@ -262,71 +340,13 @@ export default class ProjectCeDetail extends React.PureComponent {
             formValues,
         } = this.state;
 
-        const isProjectCe = categoryEditorId === projectDetails.categoryEditor;
+        const Header = this.renderHeader;
 
         return (
             <div className={styles.categoryEditorDetail}>
                 { pending && <LoadingAnimation /> }
-                <header className={styles.header}>
-                    <h2>
-                        {ceDetails.title}
-                    </h2>
-                    <div className={styles.actionBtns}>
-                        {!isProjectCe &&
-                            <PrimaryButton
-                                iconName={iconNames.check}
-                                onClick={this.handleCeUseClick}
-                                disabled={pending}
-                            >
-                                {projectStrings('useCeButtonLabel')}
-                            </PrimaryButton>
-                        }
-                        {ceDetails.isAdmin &&
-                            <PrimaryButton
-                                iconName={iconNames.edit}
-                                onClick={this.handleCeEditClick}
-                                disabled={pending}
-                            >
-                                {projectStrings('editCeButtonLabel')}
-                            </PrimaryButton>
-                        }
-                        <PrimaryButton
-                            onClick={this.handleCeCloneClick}
-                            disabled={pending}
-                        >
-                            {projectStrings('cloneEditCeButtonLabel')}
-                        </PrimaryButton>
-                    </div>
-                    {/* FIXME: don't use inline functions */}
-                    <Confirm
-                        show={useConfirmModalShow}
-                        onClose={useConfirm => this.handleCeUse(
-                            useConfirm, categoryEditorId, projectDetails.id,
-                        )}
-                    >
-                        <p>
-                            {projectStrings('confirmUseCe', { title: ceDetails.title })}
-                        </p>
-                        <p>
-                            {projectStrings('confirmUseCeText')}
-                        </p>
-                    </Confirm>
-                    {/* FIXME: don't use inline functions */}
-                    <Confirm
-                        show={cloneConfirmModalShow}
-                        onClose={cloneConfirm => this.handleCeClone(
-                            cloneConfirm, categoryEditorId, projectDetails.id,
-                        )}
-                    >
-                        <p>
-                            {projectStrings('confirmCloneCe', { title: ceDetails.title })}
-                        </p>
-                        <p>
-                            {projectStrings('confirmCloneCeText')}
-                        </p>
-                    </Confirm>
-                </header>
-                <div className={styles.ceDetails}>
+                <Header />
+                <div className={styles.content}>
                     <ProjectCeForm
                         formValues={formValues}
                         formErrors={formErrors}
@@ -335,12 +355,39 @@ export default class ProjectCeDetail extends React.PureComponent {
                         failureCallback={this.failureCallback}
                         handleFormCancel={this.handleFormCancel}
                         successCallback={this.successCallback}
-                        className={styles.projectCeForm}
+                        className={styles.ceDetailForm}
                         pristine={pristine}
                         pending={pending}
                         readOnly={!ceDetails.isAdmin}
                     />
                 </div>
+                <Confirm
+                    show={useConfirmModalShow}
+                    onClose={useConfirm => this.handleCeUse(
+                        useConfirm, categoryEditorId, projectDetails.id,
+                    )}
+                >
+                    <p>
+                        {projectStrings('confirmUseCe', { title: ceDetails.title })}
+                    </p>
+                    <p>
+                        {projectStrings('confirmUseCeText')}
+                    </p>
+                </Confirm>
+                {/* FIXME: don't use inline functions */}
+                <Confirm
+                    show={cloneConfirmModalShow}
+                    onClose={cloneConfirm => this.handleCeClone(
+                        cloneConfirm, categoryEditorId, projectDetails.id,
+                    )}
+                >
+                    <p>
+                        {projectStrings('confirmCloneCe', { title: ceDetails.title })}
+                    </p>
+                    <p>
+                        {projectStrings('confirmCloneCeText')}
+                    </p>
+                </Confirm>
             </div>
         );
     }

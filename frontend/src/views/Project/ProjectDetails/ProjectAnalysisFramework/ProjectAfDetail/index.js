@@ -336,7 +336,7 @@ export default class ProjectAfDetail extends React.PureComponent {
 
         return (
             <header className={styles.header}>
-                <h2 className={styles.heading}>
+                <h2>
                     {afDetails.title}
                 </h2>
                 <div className={styles.actionButtons}>

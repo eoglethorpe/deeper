@@ -1,24 +1,27 @@
 @import '../../../../../../stylesheets/base';
 
 .ce-detail-form {
-    display: flex;
-    position: relative;
-    align-items: center;
-    flex-direction: column;
-    padding: $spacing-medium-alt;
+    padding: $spacing-medium;
+    width: 480px;
 
     .action-buttons {
         display: flex;
         flex-shrink: 0;
         justify-content: flex-end;
-        width: 540px;
 
         button {
-            margin-left: $spacing-medium;
+            margin-left: $spacing-large;
         }
     }
 
-    .name {
-        width: 540px;
+    .name,
+    .description {
+        width: 100%;
+    }
+
+    .description {
+        :global .input {
+            resize: none;
+        }
     }
 }

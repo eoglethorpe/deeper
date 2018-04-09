@@ -18,7 +18,7 @@ import styles from './styles.scss';
 const propTypes = {
     changeCallback: PropTypes.func.isRequired,
     failureCallback: PropTypes.func.isRequired,
-    formErrors: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    formErrors: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     formFieldErrors: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     formValues: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     handleFormCancel: PropTypes.func.isRequired,
