@@ -69,8 +69,7 @@ $height-header: 48px;
             }
 
             &:hover {
-                .action-buttons,
-                .apply-buttons {
+                .action-buttons {
                     opacity: 1;
                 }
             }
@@ -81,30 +80,10 @@ $height-header: 48px;
 
                     .header {
                         border: 0;
-
-                        .apply-buttons {
-                            @include transition-medium;
-                            display: flex;
-                            opacity: 0;
-
-                            button {
-                                margin: 0 $spacing-extra-small-alt;
-                                padding: 0;
-                            }
-                        }
-
                     }
 
                     .content {
                         border: 0;
-                    }
-
-                    &:hover {
-                        .header {
-                            .apply-buttons {
-                                opacity: 1;
-                            }
-                        } 
                     }
                 }
             }

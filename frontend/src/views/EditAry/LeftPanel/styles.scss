@@ -33,17 +33,6 @@ $height-tabs: 48px;
 
 .original-preview {
     @extend %container;
-
-    .preview {
-        height: 100%;
-    }
-
-    .empty-text {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 100%;
-    }
 }
 
 .images-preview {
