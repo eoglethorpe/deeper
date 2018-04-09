@@ -48,7 +48,7 @@ const initialLangState = {
                 52: 'Search Country',
                 53: 'Add New Country',
                 54: 'Delete Country',
-                55: 'Are you sure you want to remove country {title}?',
+                55: 'Are you sure you want to remove country',
                 56: 'General',
                 57: 'Key Figures',
                 58: 'Population Data',
