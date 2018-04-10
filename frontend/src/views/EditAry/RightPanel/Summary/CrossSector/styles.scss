@@ -1,5 +1,6 @@
 @import '../../../../../stylesheets/base';
+@import '../tabular-input-base';
 
 .cross-sector {
-    padding: 0;
+    @extend %tabular-input-base;
 }
