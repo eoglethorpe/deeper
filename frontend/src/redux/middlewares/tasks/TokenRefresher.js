@@ -98,12 +98,12 @@ export default class TokenRefresher extends AbstractTask {
         this.refreshId = undefined;
     }
 
-    start() {
+    start = () => {
         // console.warn('Refresh schedule started');
         this.scheduleRefreshCheck();
     }
 
-    stop() {
+    stop = () => {
         this.clearRefreshCheck();
     }
 }

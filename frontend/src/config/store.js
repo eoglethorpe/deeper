@@ -10,10 +10,10 @@ const storeConfig = {
 };
 
 export const reducersToSync = [
-    'app',
     'lang',
     'auth',
     'domainData',
+    'siloBgTasks', // Middleware
 ];
 
 export default storeConfig;

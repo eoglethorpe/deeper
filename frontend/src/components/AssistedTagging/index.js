@@ -272,7 +272,6 @@ export default class AssistedTagging extends React.PureComponent {
             .preLoad(() => this.setState({ pendingCeClassify: true }))
             .postLoad(() => this.setState({ pendingCeClassify: false }))
             .params(() => createParamsForCeClassify({
-                category: 'Sector',
                 previewId,
             }))
             .success((response) => {

@@ -74,6 +74,12 @@ from category_editor.views import (
     CategoryEditorCloneView,
     CategoryEditorClassifyView,
 )
+from connector.views import (
+    SourceViewSet,
+    ConnectorViewSet,
+    ConnectorUserViewSet,
+    ConnectorProjectViewSet,
+)
 from export.views import (
     ExportTriggerView,
     ExportViewSet,
@@ -172,6 +178,16 @@ router.register(r'assessment-templates', AssessmentTemplateViewSet,
 # Category editor routers
 router.register(r'category-editors', CategoryEditorViewSet,
                 base_name='category_editor')
+
+# Connector routers
+router.register(r'connector-sources', SourceViewSet,
+                base_name='connector_source')
+router.register(r'connectors', ConnectorViewSet,
+                base_name='connector')
+router.register(r'connector-users', ConnectorUserViewSet,
+                base_name='connector_users')
+router.register(r'connector-projects', ConnectorProjectViewSet,
+                base_name='connector_projects')
 
 # Export routers
 router.register(r'exports', ExportViewSet, base_name='export')
