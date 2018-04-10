@@ -1,0 +1,44 @@
+@import '../../stylesheets/base.scss';
+@import '../../vendor/react-store/stylesheets/input-label';
+
+.organigram-select-input {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+
+    .label {
+        @extend %input-label;
+        margin-bottom: $spacing-extra-small;
+    }
+
+    &.disabled {
+        .label {
+            color: $color-text-disabled;
+        }
+    }
+
+    &.error {
+        .label {
+            color: $color-danger;
+        }
+    }
+
+    .input {
+        display: flex;
+        align-items: center;
+
+        .value {
+            flex-grow: 1;
+            color: $color-text;
+            font-size: $font-size-small;
+
+            &.undefined {
+                color: $color-text-disabled;
+            }
+        }
+
+        .action {
+            flex-shrink: 0;
+        }
+    }
+}
