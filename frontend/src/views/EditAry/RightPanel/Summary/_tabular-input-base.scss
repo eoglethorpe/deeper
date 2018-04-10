@@ -1,0 +1,35 @@
+%tabular-input-base {
+    padding: $spacing-medium;
+
+    %cell {
+        border: $width-separator-thin solid $color-separator;
+        padding: $spacing-small;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+
+        .head {
+            .row {
+                .header {
+                    @extend %cell;
+                }
+            }
+        }
+
+        .body {
+            .row {
+                .section-title {
+                    @extend %cell;
+                    color: $color-accent;
+                }
+
+                .cell {
+                    @extend %cell;
+                }
+            }
+        }
+    }
+}
