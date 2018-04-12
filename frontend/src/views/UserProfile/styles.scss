@@ -43,8 +43,17 @@ $info-height: 144px;
             height: 100%;
             overflow: hidden;
 
-            :global .image {
-                object-fit: cover;
+            :global {
+                .gallery-image {
+                    overflow: unset;
+                }
+
+                .image {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    object-position: center center;
+                }
             }
         }
 

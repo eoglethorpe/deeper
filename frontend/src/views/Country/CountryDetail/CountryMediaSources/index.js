@@ -3,6 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { countriesStringsSelector } from '../../../../redux';
+import styles from './styles.scss';
 
 const propTypes = {
     countryId: PropTypes.number.isRequired,
@@ -19,9 +20,17 @@ export default class CountryMediaSources extends React.PureComponent {
 
     render() {
         const { countryId } = this.props;
+        const underConstructionText = 'Under construction';
+        const mediaTabLabel = this.props.countriesStrings('mediaTabLabel');
+
         return (
-            <div>
-                {this.props.countriesStrings('mediaTabLabel')} {countryId}
+            <div className={styles.mediaSources}>
+                <div>
+                    {mediaTabLabel} #{countryId}
+                </div>
+                <div className={styles.underConstruction}>
+                    {underConstructionText}
+                </div>
             </div>
         );
     }

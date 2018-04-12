@@ -58,10 +58,12 @@ export default class Baksa extends React.PureComponent {
     static defaultProps = defaultProps;
 
     static bothPageRequiredCondition = (value) => {
-        const ok = isFalsy(value) || (isTruthy(value.startPage) && isTruthy(value.endPage));
+        const ok = isFalsy(value) ||
+            (isTruthy(value.startPage) && isTruthy(value.endPage)) ||
+            (isFalsy(value.startPage) && isFalsy(value.endPage));
         return {
             ok,
-            message: 'Both start page and end page must not be empty',
+            message: 'Both start page and end page must be specified',
         };
     }
 
