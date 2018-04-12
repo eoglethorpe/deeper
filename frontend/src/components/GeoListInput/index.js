@@ -3,6 +3,7 @@ import React from 'react';
 
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
 import ListInput from '../../vendor/react-store/components/Input/ListInput';
+import Input from '../../vendor/react-store/utils/input';
 import { iconNames } from '../../constants';
 
 import GeoModal from '../GeoModal';
@@ -26,6 +27,7 @@ const defaultProps = {
     regions: [],
 };
 
+@Input
 export default class GeoListInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

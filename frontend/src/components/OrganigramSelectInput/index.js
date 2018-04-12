@@ -10,6 +10,7 @@ import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../vendor/react-store/components/View/Modal/Footer';
 import HintAndError from '../../vendor/react-store/components/Input/HintAndError';
+import Input from '../../vendor/react-store/utils/input';
 
 import { iconNames } from '../../constants';
 import styles from './styles.scss';
@@ -50,6 +51,7 @@ const defaultProps = {
     showHintAndError: true,
 };
 
+@Input
 export default class OrganigramSelectInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

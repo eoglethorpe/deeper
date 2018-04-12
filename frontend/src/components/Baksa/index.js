@@ -11,6 +11,7 @@ import PrimaryButton from '../../vendor/react-store/components/Action/Button/Pri
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import { UploadBuilder } from '../../vendor/react-store/utils/upload';
 import { isTruthy, isFalsy } from '../../vendor/react-store/utils/common';
+import Input from '../../vendor/react-store/utils/input';
 
 import {
     urlForUpload,
@@ -53,6 +54,7 @@ const defaultProps = {
     showHintAndError: true,
 };
 
+@Input
 export default class Baksa extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
