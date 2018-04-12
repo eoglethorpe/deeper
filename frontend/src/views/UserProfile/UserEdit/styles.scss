@@ -9,6 +9,19 @@
         margin-bottom: $spacing-small;
         width: 100%;
         height: 200px;
+
+        :global {
+            .gallery-image {
+                overflow: unset;
+            }
+
+            .image {
+                width: 100%;
+                height: 100%;
+                object-fit: contain;
+                object-position: center center;
+            }
+        }
     }
 
     .gallery-image-select {
@@ -25,8 +38,10 @@
     }
 
     .display-picture {
-        :global .image-input-preview {
-            height: 200px;
+        :global { 
+            .image-input-preview {
+                height: 200px;
+            }
         }
     }
 

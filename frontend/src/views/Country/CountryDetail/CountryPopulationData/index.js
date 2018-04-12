@@ -79,45 +79,61 @@ export default class CountryPopulationData extends React.PureComponent {
             formFieldErrors,
         } = this.state;
 
+        const khatriNoob = true;
+
+        const underConstructionText = 'Under construction';
+        const populationDataLabel = 'Population data';
+
         return (
-            <Form
-                className={styles.countryPopulation}
-                schema={this.schema}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
-                disabled={pending}
-            >
-                { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
-                <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleFormCancel}>
-                        {this.props.countriesStrings('cancelButtonLabel')}
-                    </DangerButton>
-                    <PrimaryButton
-                        disabled={pending || !pristine}
-                        type="submit"
-                    >
-                        {this.props.countriesStrings('saveChangesButtonLabel')}
-                    </PrimaryButton>
+            khatriNoob ? (
+                <div className={styles.khatriNoob}>
+                    <div>
+                        {populationDataLabel}
+                    </div>
+                    <div className={styles.underConstruction}>
+                        {underConstructionText}
+                    </div>
                 </div>
-                <div className={styles.populationContainer}>
-                    <TextInput
-                        label={this.props.countriesStrings('totalPopulationLabel')}
-                        className={styles.population}
-                        placeholder={this.props.countriesStrings('totalPopulationPlaceholder')}
-                        formname="population"
-                    />
-                    <TextInput
-                        label={this.props.countriesStrings('sourceLabel')}
-                        className={styles.source}
-                        formname="source"
-                        placeholder={this.props.countriesStrings('sourcePlaceholder')}
-                    />
-                </div>
-            </Form>
+            ) : (
+                <Form
+                    className={styles.countryPopulation}
+                    schema={this.schema}
+                    changeCallback={this.changeCallback}
+                    failureCallback={this.failureCallback}
+                    successCallback={this.successCallback}
+                    formErrors={formErrors}
+                    fieldErrors={formFieldErrors}
+                    disabled={pending}
+                >
+                    { pending && <LoadingAnimation /> }
+                    <NonFieldErrors formerror="" />
+                    <div className={styles.actionButtons}>
+                        <DangerButton onClick={this.handleFormCancel}>
+                            {this.props.countriesStrings('cancelButtonLabel')}
+                        </DangerButton>
+                        <PrimaryButton
+                            disabled={pending || !pristine}
+                            type="submit"
+                        >
+                            {this.props.countriesStrings('saveChangesButtonLabel')}
+                        </PrimaryButton>
+                    </div>
+                    <div className={styles.populationContainer}>
+                        <TextInput
+                            label={this.props.countriesStrings('totalPopulationLabel')}
+                            className={styles.population}
+                            placeholder={this.props.countriesStrings('totalPopulationPlaceholder')}
+                            formname="population"
+                        />
+                        <TextInput
+                            label={this.props.countriesStrings('sourceLabel')}
+                            className={styles.source}
+                            formname="source"
+                            placeholder={this.props.countriesStrings('sourcePlaceholder')}
+                        />
+                    </div>
+                </Form>
+            )
         );
     }
 }

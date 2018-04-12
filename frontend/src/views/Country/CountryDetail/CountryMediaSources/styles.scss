@@ -1,0 +1,17 @@
+@import '../../../../stylesheets/base';
+
+.media-sources {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: center;
+    color: $color-text-disabled;
+    font-size: $font-size-large;
+
+    .under-construction {
+        margin-top: $spacing-small;
+        font-size: $font-size-super-large;
+        font-weight: $font-weight-bold;
+    }
+}
