@@ -84,8 +84,10 @@ printf "\n\n::::: DOCKER TASK :::::\n"
                     sed "s/port:.*/port: $PAPERTRAIL_PORT/" -i ./.ebextensions/remote_log.config
                 fi
 
-                echo "      >> Creating environmentvariables"
-                    eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" > ./.ebextensions/environmentvariables.config
+                echo "      >> Creating environmentvariables [validation environmentvariables]"
+                set -e;
+                    eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" | jq -r '.' > ./.ebextensions/environmentvariables.config
+                set +e;
 
                 if [ ${TYPE} == 'web' ]; then
                     echo "      >> Creating nginx.conf"

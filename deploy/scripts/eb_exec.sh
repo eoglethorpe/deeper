@@ -5,7 +5,11 @@ BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # /code/
 ROOT_DIR=$(dirname "$(dirname "$BASE_DIR")")
 instid=`curl -s -o - http://169.254.169.254/latest/meta-data/instance-id`
-export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
+if [ -z "$IN_CERN" ]; then
+    export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
+else # In cern
+    export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}_CERN
+fi
 
 ### Aws scripts
 printenv | sed 's/^\([a-zA-Z0-9_]*\)=\(.*\)$/export \1="\2"/g' > /aws-script/env_var.sh
@@ -34,8 +38,9 @@ if [ "$EBS_ENV_TYPE" == "worker" ]; then
     elif [ "$WORKER_TYPE" == "channel" ]; then
         # Start channels
         mkdir -p /var/log/daphne/
-        daphne -b 0.0.0.0 -p 80 --access-log /var/log/daphne/access.log deep.asgi:channel_layer &
-        python3 manage.py runworker
+        daphne -b 0.0.0.0 -p 80 --access-log /var/log/daphne/access.log deep.asgi:channel_layer \
+            >> /var/log/daphne/access.log 2>&1 &
+        python3 manage.py runworker >> /var/log/daphne/access.log 2>&1
     fi
 
 fi
