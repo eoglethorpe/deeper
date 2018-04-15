@@ -1,5 +1,38 @@
 @import '../../../../stylesheets/base';
 
 .score {
-    padding: $spacing-medium;
+    overflow-y: auto;
+
+    %cell {
+        border: $width-separator-thin solid $color-separator;
+        padding: $spacing-small;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+
+        .head {
+            .row {
+                .heading {
+                    @extend %cell;
+                }
+            }
+        }
+
+        .body {
+            .row {
+                .cell {
+                    @extend %cell;
+                }
+
+                .pillar-title {
+                    @extend %cell;
+                    color: $color-accent;
+                    font-weight: $font-weight-bold;
+                }
+            }
+        }
+    }
+
 }
