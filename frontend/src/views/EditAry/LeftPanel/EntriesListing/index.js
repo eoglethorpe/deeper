@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import List from '../../../../vendor/react-store/components/View/List';
+import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
@@ -107,7 +107,8 @@ export default class EntriesListing extends React.PureComponent {
         return (
             <div className={styles.entriesList}>
                 { this.state.pendingEntries && <LoadingAnimation />}
-                <List
+                <ListView
+                    className={styles.scrollWrapper}
                     modifier={this.renderEntryItem}
                     data={this.props.entries}
                     keyExtractor={EntriesListing.calcEntryKey}

@@ -25,7 +25,7 @@ export default class OrganigramList extends React.PureComponent {
             id,
             name,
         } = data;
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

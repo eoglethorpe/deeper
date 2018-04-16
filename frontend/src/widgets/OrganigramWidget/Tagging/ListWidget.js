@@ -136,7 +136,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
             id,
             name,
         } = data;
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div
