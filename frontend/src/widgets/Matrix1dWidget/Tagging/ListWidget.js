@@ -101,7 +101,7 @@ export default class Matrix1dList extends React.PureComponent {
     )
 
     renderCellData = (key, data) => {
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

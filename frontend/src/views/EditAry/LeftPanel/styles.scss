@@ -38,3 +38,7 @@ $height-tabs: 48px;
 .images-preview {
     @extend %container;
 }
+
+.entries-list-container {
+    @extend %container;
+}

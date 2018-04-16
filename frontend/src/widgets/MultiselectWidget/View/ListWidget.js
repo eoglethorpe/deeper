@@ -29,7 +29,7 @@ export default class MultiselectList extends React.PureComponent {
     static defaultProps = defaultProps;
 
     renderSelectedOption = (key, data) => {
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

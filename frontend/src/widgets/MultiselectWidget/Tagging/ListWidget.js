@@ -40,7 +40,7 @@ export default class Multiselect extends React.PureComponent {
     }
 
     renderSelectedOption = (key, data) => {
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

@@ -106,7 +106,7 @@ export default class Matrix2dList extends React.PureComponent {
     )
 
     renderSubSector = (key, data) => {
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

@@ -279,7 +279,7 @@ export default class GeoSelection extends React.PureComponent {
     )
 
     renderList = (key, data) => {
-        const marker = '●';
+        const marker = '•';
 
         return (
             <div

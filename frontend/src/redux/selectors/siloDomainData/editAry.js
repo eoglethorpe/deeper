@@ -43,12 +43,12 @@ export const editAryVersionIdSelector = createSelector(
 
 export const editAryHasErrorsSelector = createSelector(
     editAryFromRouteSelector,
-    ary => ary.hasErrors,
+    ary => !!ary.hasErrors,
 );
 
 export const editAryIsPristineSelector = createSelector(
     editAryFromRouteSelector,
-    ary => ary.isPristine,
+    ary => !!ary.isPristine,
 );
 
 export const editArySelectedSectorsSelector = createSelector(
@@ -57,4 +57,9 @@ export const editArySelectedSectorsSelector = createSelector(
         const methodology = formValues.methodology || emptyObject;
         return methodology.sectors || emptyList;
     },
+);
+
+export const editAryEntriesSelector = createSelector(
+    editAryFromRouteSelector,
+    ary => ary.entries || emptyList,
 );

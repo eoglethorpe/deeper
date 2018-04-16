@@ -13,7 +13,6 @@
         align-items: flex-end;
         border-top: $width-separator-thin solid $color-separator;
         padding: $spacing-medium-alt;
-        animation: pop-in $duration-medium ease forwards;
 
         .assisted-source-change-btn {
             flex-basis: 60%;
@@ -23,16 +22,6 @@
             flex-basis: 40%;
             margin-left: $spacing-small;
         }
-    }
-}
-
-@keyframes pop-in {
-    from {
-        transform: translateY(100%);
-    }
-
-    to {
-        transform: translateY(0%);
     }
 }
 
