@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import InputGroup from '../../../../../vendor/react-store/components/Input/InputGroup';
+import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
 
 import TabularInputs from '../TabularInputs';
@@ -36,10 +36,7 @@ const mapStateToProps = state => ({
     specificNeedGroups: specificNeedGroupsSelector(state),
 });
 
-const mapDispatchToProps = (/* dispatch */) => ({
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 export default class CrossSector extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -147,9 +144,7 @@ export default class CrossSector extends React.PureComponent {
         const className = this.getClassName();
 
         return (
-            <InputGroup
-                inputName="crossSector"
-            >
+            <InputGroup inputName="crossSector">
                 <TabularInputs
                     rowFieldTitles={this.rowFieldTitles}
                     columnFieldTitles={this.columnFieldTitles}

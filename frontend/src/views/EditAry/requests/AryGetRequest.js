@@ -43,6 +43,7 @@ export default class AryGetRequest {
                             versionId: response.versionId,
                             metadata: response.metadata,
                             methodology: response.methodology,
+                            summary: response.summary,
                         });
                     } else if (oldVersionId < response.versionId) {
                         this.setAry({
@@ -51,6 +52,7 @@ export default class AryGetRequest {
                             versionId: response.versionId,
                             metadata: response.metadata,
                             methodology: response.methodology,
+                            summary: response.summary,
                         });
                     }
                 } catch (err) {

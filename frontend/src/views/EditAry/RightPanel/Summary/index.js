@@ -6,11 +6,14 @@ import VerticalTabs from '../../../../vendor/react-store/components/View/Vertica
 import styles from './styles.scss';
 import { listToMap } from '../../../../vendor/react-store/utils/common';
 
+import Form from '../../../../vendor/react-store/components/Input/Form';
 import InputGroup from '../../../../vendor/react-store/components/Input/InputGroup';
 
 import {
+    leadIdFromRouteSelector,
     editArySelectedSectorsSelector,
     assessmentSectorsSelector,
+    changeArySummaryForEditAryAction,
 } from '../../../../redux';
 
 import CrossSector from './CrossSector';
@@ -25,18 +28,31 @@ const propTypes = {
     //
     // eslint-disable-next-line react/forbid-prop-types
     sectors: PropTypes.array.isRequired,
+
+    activeLeadId: PropTypes.number.isRequired,
+    formValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    fieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    formErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    changeArySummary: PropTypes.func.isRequired,
+    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
+    formValues: {},
+    fieldErrors: {},
+    formErrors: {},
 };
 
 const mapStateToProps = state => ({
     selectedSectors: editArySelectedSectorsSelector(state),
     sectors: assessmentSectorsSelector(state),
+    activeLeadId: leadIdFromRouteSelector(state),
 });
 
-const mapDispatchToProps = (/* dispatch */) => ({
+const mapDispatchToProps = dispatch => ({
+    changeArySummary: params => dispatch(changeArySummaryForEditAryAction(params)),
 });
 
 const sectorIdentifier = 'sector';
@@ -63,6 +79,15 @@ export default class Summary extends React.PureComponent {
         ];
 
         return classNames.join(' ');
+    }
+
+    changeCallback = (values, formFieldErrors, formErrors) => {
+        this.props.changeArySummary({
+            lead: this.props.activeLeadId,
+            formValues: values,
+            fieldErrors: formFieldErrors,
+            formErrors,
+        });
     }
 
     handleTabClick = (key) => {
@@ -140,15 +165,20 @@ export default class Summary extends React.PureComponent {
         const View = this.renderView;
 
         return (
-            <div className={className}>
-                <InputGroup
-                    onChange={this.handleSummaryChange}
-                    value={this.state.summary}
-                >
+            <Form
+                className={className}
+                schema={this.props.schema}
+                changeCallback={this.changeCallback}
+                value={this.props.formValues}
+                fieldErrors={this.props.fieldErrors}
+                formErrors={this.props.formErrors}
+                disabled={this.props.pending}
+            >
+                <InputGroup formname="summaryTable">
                     <View />
                 </InputGroup>
                 <Tabs />
-            </div>
+            </Form>
         );
     }
 }

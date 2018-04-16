@@ -23,7 +23,7 @@ const propTypes = {
     showLabel: PropTypes.bool,
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
     onChange: PropTypes.func,
-    value: PropTypes.oneOf(PropTypes.number, PropTypes.string, PropTypes.object),
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.object]),
 
     childrenSelector: PropTypes.func,
     labelSelector: PropTypes.func.isRequired,

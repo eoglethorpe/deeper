@@ -26,7 +26,10 @@ export const setErrorAryForEditAryAction = ({
 });
 
 export const setAryForEditAryAction = ({
-    lead, serverId, versionId, metadata, methodology,
+    lead, serverId, versionId,
+    metadata,
+    methodology,
+    summary,
 }) => ({
     type: EDIT_ARY__SET_ARY,
     lead,
@@ -34,6 +37,7 @@ export const setAryForEditAryAction = ({
     versionId,
     metadata,
     methodology,
+    summary,
 });
 
 export const saveAryForEditAryAction = ({ lead }) => ({
@@ -78,6 +82,7 @@ const setAry = (state, action) => {
         versionId,
         metadata,
         methodology,
+        summary,
     } = action;
     const settings = {
         editAry: {
@@ -91,6 +96,7 @@ const setAry = (state, action) => {
                 formValues: { $set: {
                     metadata,
                     methodology,
+                    summary,
                 } },
             } },
         },

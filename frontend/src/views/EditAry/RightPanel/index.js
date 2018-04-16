@@ -90,6 +90,7 @@ export default class RightPanel extends React.PureComponent {
         const schema = { fields: {
             metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
             methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
+            summary: { fields: { summaryTable: [] } },
         } };
         return schema;
     }
