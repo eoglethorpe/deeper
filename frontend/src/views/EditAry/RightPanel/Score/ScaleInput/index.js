@@ -75,6 +75,7 @@ export default class ScaleInput extends React.PureComponent {
         return (
             <button
                 onClick={() => { this.handleOptionClick(valueKey); }}
+                type="button"
                 key={valueKey}
                 className={className}
                 title={data.title}
