@@ -9,6 +9,7 @@ $height-value-active: 32px;
 .scale-input {
     display: flex;
     align-items: center;
+    justify-content: center;
 
     .value {
         margin: 0 $spacing-extra-small;

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import iconNames from '../../../../constants/iconNames';
 import List from '../../../../vendor/react-store/components/View/List';
 
 import ScaleInput from './ScaleInput';
@@ -167,14 +168,28 @@ export default class Score extends React.PureComponent {
             detail,
         } = data;
 
+        const iconClassName = [
+            styles.infoIcon,
+            iconNames.info,
+        ].join(' ');
+
         return (
             <tr
                 key={key}
                 className={styles.row}
             >
                 <td className={styles.cell}>
-                    <h5>{ title }</h5>
-                    <div>{ detail }</div>
+                    <div className={styles.content}>
+                        { title }
+                        {
+                            detail && (
+                                <span
+                                    title={detail}
+                                    className={iconClassName}
+                                />
+                            )
+                        }
+                    </div>
                 </td>
                 <td className={styles.cell}>
                     <ScaleInput
