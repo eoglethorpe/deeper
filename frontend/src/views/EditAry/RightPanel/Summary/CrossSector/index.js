@@ -2,20 +2,27 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
+import InputGroup from '../../../../../vendor/react-store/components/Input/InputGroup';
+import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
+
 import TabularInputs from '../TabularInputs';
 import styles from './styles.scss';
 
 import {
     editArySelectedSectorsSelector,
-    assessmentSectorsSelector,
+    affectedGroupsSelector,
+    prioritySectorsSelector,
+    specificNeedGroupsSelector,
 } from '../../../../../redux';
 
 const propTypes = {
     className: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     selectedSectors: PropTypes.array.isRequired,
-    // eslint-disable-next-line react/forbid-prop-types
-    sectors: PropTypes.array.isRequired,
+    affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    prioritySectors: PropTypes.arrayOf(PropTypes.object).isRequired,
+    specificNeedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const defaultProps = {
@@ -24,7 +31,9 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     selectedSectors: editArySelectedSectorsSelector(state),
-    sectors: assessmentSectorsSelector(state),
+    affectedGroups: affectedGroupsSelector(state),
+    prioritySectors: prioritySectorsSelector(state),
+    specificNeedGroups: specificNeedGroupsSelector(state),
 });
 
 const mapDispatchToProps = (/* dispatch */) => ({
@@ -34,6 +43,10 @@ const mapDispatchToProps = (/* dispatch */) => ({
 export default class CrossSector extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    static nodeIdSelector = d => d.id;
+    static nodeLabelSelector = d => d.title;
+    static nodeChildrenSelector = d => d.children;
 
     constructor(props) {
         super(props);
@@ -70,9 +83,52 @@ export default class CrossSector extends React.PureComponent {
         return classNames.join(' ');
     }
 
+    renderInput = (column, row, subRow) => {
+        const {
+            prioritySectors,
+            affectedGroups,
+            specificNeedGroups,
+        } = this.props;
+
+        if (row === 0) {
+            return (
+                <OrganigramSelectInput
+                    inputName={`priority-sector-${subRow}-${column}`}
+                    showHintAndError={false}
+                    data={prioritySectors}
+                    idSelector={CrossSector.nodeIdSelector}
+                    labelSelector={CrossSector.nodeLabelSelector}
+                    childrenSelector={CrossSector.nodeChildrenSelector}
+                />
+            );
+        } else if (row === 1) {
+            return (
+                <OrganigramSelectInput
+                    inputName={`affected-group-${subRow}-${column}`}
+                    showHintAndError={false}
+                    data={affectedGroups}
+                    idSelector={CrossSector.nodeIdSelector}
+                    labelSelector={CrossSector.nodeLabelSelector}
+                    childrenSelector={CrossSector.nodeChildrenSelector}
+                />
+            );
+        } else if (row === 2) {
+            return (
+                <SelectInput
+                    inputName={`specific-need-group-${subRow}-${column}`}
+                    showHintAndError={false}
+                    options={specificNeedGroups}
+                    labelSelector={CrossSector.nodeLabelSelector}
+                    keySelector={CrossSector.nodeIdSelector}
+                />
+            );
+        }
+
+        return null;
+    }
+
     render() {
         const {
-            sectors,
             selectedSectors,
         } = this.props;
 
@@ -91,22 +147,26 @@ export default class CrossSector extends React.PureComponent {
         const className = this.getClassName();
 
         return (
-            <TabularInputs
-                rowFieldTitles={this.rowFieldTitles}
-                columnFieldTitles={this.columnFieldTitles}
-                rowSubFieldTitles={this.rowSubFieldTitles}
-                classNames={{
-                    wrapper: className,
-                    table: styles.table,
-                    head: styles.head,
-                    body: styles.body,
-                    row: styles.row,
-                    header: styles.header,
-                    cell: styles.cell,
-                    sectionTitle: styles.sectionTitle,
-                }}
-                inputModifier={() => null}
-            />
+            <InputGroup
+                inputName="crossSector"
+            >
+                <TabularInputs
+                    rowFieldTitles={this.rowFieldTitles}
+                    columnFieldTitles={this.columnFieldTitles}
+                    rowSubFieldTitles={this.rowSubFieldTitles}
+                    classNames={{
+                        wrapper: className,
+                        table: styles.table,
+                        head: styles.head,
+                        body: styles.body,
+                        row: styles.row,
+                        header: styles.header,
+                        cell: styles.cell,
+                        sectionTitle: styles.sectionTitle,
+                    }}
+                    inputModifier={this.renderInput}
+                />
+            </InputGroup>
         );
     }
 }

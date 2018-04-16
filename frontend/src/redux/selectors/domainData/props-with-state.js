@@ -270,6 +270,20 @@ export const affectedGroupsSelector = createSelector(
     ),
 );
 
+export const prioritySectorsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.prioritySectors || emptyList
+    ),
+);
+
+export const specificNeedGroupsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.specificNeedGroups || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,

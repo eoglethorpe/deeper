@@ -6,6 +6,8 @@ import VerticalTabs from '../../../../vendor/react-store/components/View/Vertica
 import styles from './styles.scss';
 import { listToMap } from '../../../../vendor/react-store/utils/common';
 
+import InputGroup from '../../../../vendor/react-store/components/Input/InputGroup';
+
 import {
     editArySelectedSectorsSelector,
     assessmentSectorsSelector,
@@ -48,6 +50,7 @@ export default class Summary extends React.PureComponent {
         super(props);
         this.state = {
             activeTab: 'crossSector',
+            summary: undefined,
         };
     }
 
@@ -66,6 +69,10 @@ export default class Summary extends React.PureComponent {
         this.setState({
             activeTab: key,
         });
+    }
+
+    handleSummaryChange = (v) => {
+        this.setState({ summary: v });
     }
 
     renderTabs = () => {
@@ -134,7 +141,12 @@ export default class Summary extends React.PureComponent {
 
         return (
             <div className={className}>
-                <View />
+                <InputGroup
+                    onChange={this.handleSummaryChange}
+                    value={this.state.summary}
+                >
+                    <View />
+                </InputGroup>
                 <Tabs />
             </div>
         );

@@ -9,6 +9,7 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 export const EDIT_ARY__SET_ARY = 'siloDomainData/EDIT_ARY__SET_ARY';
 export const EDIT_ARY__CHANGE_METHODOLOGY_ARY = 'siloDomainData/EDIT_ARY__CHANGE_METHODOLOGY_ARY';
 export const EDIT_ARY__CHANGE_METADATA_ARY = 'siloDomainData/EDIT_ARY__CHANGE_METADATA_ARY';
+export const EDIT_ARY__CHANGE_SUMMARY_ARY = 'siloDomainData/EDIT_ARY__CHANGE_SUMMARY_ARY';
 export const EDIT_ARY__SAVE_ARY = 'siloDomainData/EDIT_ARY__SAVE_ARY';
 export const EDIT_ARY__SET_ERROR_ARY = 'siloDomainData/EDIT_ARY__SET_ERROR_ARY';
 export const EDIT_ARY__SET_ENTRIES = 'siloDomainData/EDIT_ARY__SET_ENTRIES';
@@ -56,6 +57,9 @@ export const changeAryMetadataForEditAryAction = changeAryAction(
 
 export const changeAryMethodologyForEditAryAction = changeAryAction(
     EDIT_ARY__CHANGE_METHODOLOGY_ARY,
+);
+export const changeArySummaryForEditAryAction = changeAryAction(
+    EDIT_ARY__CHANGE_SUMMARY_ARY,
 );
 
 export const setEntriesForEditAryAction = ({ lead, entries }) => ({
@@ -198,6 +202,7 @@ const reducers = {
     [EDIT_ARY__SET_ARY]: setAry,
     [EDIT_ARY__CHANGE_METADATA_ARY]: changeAry('metadata'),
     [EDIT_ARY__CHANGE_METHODOLOGY_ARY]: changeAry('methodology'),
+    [EDIT_ARY__CHANGE_SUMMARY_ARY]: changeAry('summary'),
     [EDIT_ARY__SAVE_ARY]: saveAry,
     [EDIT_ARY__SET_ERROR_ARY]: setErrorAry,
     [EDIT_ARY__SET_ENTRIES]: setEntries,
