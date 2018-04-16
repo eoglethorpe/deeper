@@ -1,10 +1,17 @@
 @import '../../../stylesheets/base';
 
+$height-tabs: 32px;
+
 .tabs {
     flex-shrink: 0;
+    height: $height-tabs;
 }
 
 .entries-link {
     padding: $spacing-small $spacing-medium;
     color: $color-text-label;
+}
+
+.save-button {
+    margin: 0 $spacing-small;
 }

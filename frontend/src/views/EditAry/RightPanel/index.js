@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
-import Button from '../../../vendor/react-store/components/Action/Button';
+import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import { reverseRoute } from '../../../vendor/react-store/utils/common';
 import { pathNames } from '../../../constants';
 import {
@@ -34,6 +34,8 @@ import AryPutRequest from '../requests/AryPutRequest';
 import Metadata from './Metadata';
 import Methodology from './Methodology';
 import Summary from './Summary';
+import Score from './Score';
+
 
 import styles from './styles.scss';
 
@@ -175,7 +177,7 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabKey: 'summary',
+            currentTabKey: 'score',
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
@@ -250,9 +252,13 @@ export default class RightPanel extends React.PureComponent {
             },
             score: {
                 component: () => (
-                    <div>
-                        {props.aryStrings('scoreTabLabel')}
-                    </div>
+                    <Score
+                        schema={this.state.schema.fields.score}
+                        formValues={this.props.editAryFormValues.score}
+                        fieldErrors={this.props.editAryFieldErrors.score}
+                        formErrors={(this.props.editAryFormErrors.fields || {}).score}
+                        pending={this.state.pending}
+                    />
                 ),
             },
         };
@@ -316,7 +322,8 @@ export default class RightPanel extends React.PureComponent {
                         successCallback={this.successCallback}
                         failureCallback={this.failureCallback}
                     >
-                        <Button
+                        <SuccessButton
+                            className={styles.saveButton}
                             type="submit"
                             disabled={
                                 this.props.editAryIsPristine
@@ -326,7 +333,7 @@ export default class RightPanel extends React.PureComponent {
                         >
                             {/* FIXME: use strings */}
                             Save
-                        </Button>
+                        </SuccessButton>
                     </Form>
                 </FixedTabs>
                 <MultiViewContainer
