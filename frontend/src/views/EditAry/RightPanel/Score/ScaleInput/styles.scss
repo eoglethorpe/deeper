@@ -1,0 +1,27 @@
+@import '../../../../../stylesheets/base';
+
+$width-value: 12px;
+$height-value: 24px;
+
+$width-value-active: 16px;
+$height-value-active: 32px;
+
+.scale-input {
+    display: flex;
+    align-items: center;
+
+    .value {
+        margin: 0 $spacing-extra-small;
+        outline: 0;
+        border: 0;
+        border-radius: $radius-button-border;
+        cursor: pointer;
+        width: $width-value;
+        height: $height-value;
+
+        &.active {
+            width: $width-value-active;
+            height: $height-value-active;
+        }
+    }
+}

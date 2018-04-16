@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import List from '../../../../vendor/react-store/components/View/List';
+
+import ScaleInput from './ScaleInput';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -120,6 +122,29 @@ export default class Score extends React.PureComponent {
                 },
             },
         };
+
+        this.options = {
+            0: {
+                title: 'Not reliable',
+                color: 'rgba(0, 0, 255, .4)',
+            },
+            1: {
+                title: 'Maybe',
+                color: 'rgba(0, 0, 255, .5)',
+            },
+            2: {
+                title: 'Fairly',
+                color: 'rgba(0, 0, 255, .66)',
+            },
+            3: {
+                title: 'Reliable',
+                color: 'rgba(0, 0, 255, .79',
+            },
+            4: {
+                title: 'Completely',
+                color: 'rgba(0, 0, 255, .9)',
+            },
+        };
     }
 
     getClassName = () => {
@@ -152,7 +177,9 @@ export default class Score extends React.PureComponent {
                     <div>{ detail }</div>
                 </td>
                 <td className={styles.cell}>
-                    scale input maybe?
+                    <ScaleInput
+                        options={this.options}
+                    />
                 </td>
             </tr>
         );
