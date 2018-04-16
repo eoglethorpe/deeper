@@ -11,6 +11,7 @@ export const EDIT_ARY__CHANGE_METHODOLOGY_ARY = 'siloDomainData/EDIT_ARY__CHANGE
 export const EDIT_ARY__CHANGE_METADATA_ARY = 'siloDomainData/EDIT_ARY__CHANGE_METADATA_ARY';
 export const EDIT_ARY__SAVE_ARY = 'siloDomainData/EDIT_ARY__SAVE_ARY';
 export const EDIT_ARY__SET_ERROR_ARY = 'siloDomainData/EDIT_ARY__SET_ERROR_ARY';
+export const EDIT_ARY__SET_ENTRIES = 'siloDomainData/EDIT_ARY__SET_ENTRIES';
 
 // ACTION-CREATOR
 
@@ -52,9 +53,16 @@ const changeAryAction = type => ({
 export const changeAryMetadataForEditAryAction = changeAryAction(
     EDIT_ARY__CHANGE_METADATA_ARY,
 );
+
 export const changeAryMethodologyForEditAryAction = changeAryAction(
     EDIT_ARY__CHANGE_METHODOLOGY_ARY,
 );
+
+export const setEntriesForEditAryAction = ({ lead, entries }) => ({
+    type: EDIT_ARY__SET_ENTRIES,
+    lead,
+    entries,
+});
 
 // REDUCER
 
@@ -172,6 +180,18 @@ const saveAry = (state, action) => {
     return update(state, settings);
 };
 
+const setEntries = (state, action) => {
+    const { lead, entries } = action;
+    const settings = {
+        editAry: {
+            [lead]: { $auto: {
+                entries: { $set: entries },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -180,6 +200,7 @@ const reducers = {
     [EDIT_ARY__CHANGE_METHODOLOGY_ARY]: changeAry('methodology'),
     [EDIT_ARY__SAVE_ARY]: saveAry,
     [EDIT_ARY__SET_ERROR_ARY]: setErrorAry,
+    [EDIT_ARY__SET_ENTRIES]: setEntries,
 };
 
 export default reducers;

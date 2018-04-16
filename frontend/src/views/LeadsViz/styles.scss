@@ -18,14 +18,6 @@
         border-bottom: $width-separator-thin solid $color-separator-alt;
         padding: $spacing-small;
 
-        .add-lead-button {
-            align-self: flex-end;
-            flex-shrink: 0;
-            margin: $spacing-small;
-            padding: $spacing-small $spacing-medium-alt;
-            font-size: $font-size-large;
-        }
-
         .filters {
             display: flex;
             flex-grow: 1;

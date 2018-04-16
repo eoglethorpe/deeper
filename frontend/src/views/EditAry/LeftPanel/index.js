@@ -21,6 +21,7 @@ import {
     currentUserActiveProjectSelector,
 } from '../../../redux';
 
+import EntriesListing from './EntriesListing';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -99,6 +100,7 @@ export default class LeftPanel extends React.PureComponent {
                 />
             ),
             mount: true,
+            lazyMount: true,
             wrapContainer: true,
         },
         'assisted-tagging': {
@@ -133,6 +135,18 @@ export default class LeftPanel extends React.PureComponent {
                     className={styles.imagesPreview}
                     images={this.state.images}
                 />
+            ),
+            mount: true,
+            lazyMount: true,
+            wrapContainer: true,
+        },
+        'entries-listing': {
+            component: () => (
+                <div className={styles.entriesListContainer}>
+                    <EntriesListing
+                        leadId={this.props.leadId}
+                    />
+                </div>
             ),
             mount: true,
             lazyMount: true,
@@ -181,6 +195,7 @@ export default class LeftPanel extends React.PureComponent {
         if (!images || images.length <= 0) {
             tabs['images-preview'] = undefined;
         }
+        tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
         return tabs;
     }
 
