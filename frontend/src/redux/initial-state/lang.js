@@ -565,7 +565,7 @@ const initialLangState = {
                 8102: 'Edit this Assessment',
                 8501: 'Select a source to add new lead',
                 1003: 'Error while trying to save region detail.',
-                1004: 'Simplifying lead',
+                1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
                 250: 'Update GEO File',
             },
             views: {
