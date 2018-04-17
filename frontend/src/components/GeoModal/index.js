@@ -10,7 +10,7 @@ import PrimaryButton from '../../vendor/react-store/components/Action/Button/Pri
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 import ListInput from '../../vendor/react-store/components/Input/ListInput';
-import Input from '../../vendor/react-store/utils/input';
+import FaramElement from '../../vendor/react-store/components/Input/Faram/FaramElement';
 
 import RegionMap from '../RegionMap';
 import styles from './styles.scss';
@@ -37,7 +37,7 @@ const defaultProps = {
     onCancel: undefined,
 };
 
-@Input
+@FaramElement('input')
 export default class GeoModal extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

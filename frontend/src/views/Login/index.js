@@ -18,14 +18,14 @@ import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldEr
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
-import Form, {
+import Faram, {
     requiredCondition,
     emailCondition,
     lengthGreaterThanCondition,
-} from '../../vendor/react-store/components/Input/Form';
+} from '../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForTokenCreate,
     urlForTokenCreate,
     createParamsForTokenCreateHid,
@@ -104,9 +104,8 @@ export default class Login extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
             showReCaptcha: false,
@@ -145,23 +144,19 @@ export default class Login extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, fieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formErrors,
-            formFieldErrors: fieldErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = ({ email, password, recaptchaResponse }) => {
+    handleFaramValidationSuccess = ({ email, password, recaptchaResponse }) => {
         const url = urlForTokenCreate;
         const params = createParamsForTokenCreate({
             username: email,
@@ -182,13 +177,6 @@ export default class Login extends React.PureComponent {
         this.userLoginRequest = this.createRequestLogin(url, params);
         this.userLoginRequest.start();
     };
-
-    showReCaptcha = () => {
-        this.setState({
-            showReCaptcha: true,
-            schema: Login.schemaWithRecaptcha,
-        });
-    }
 
     // LOGIN REST API
 
@@ -217,22 +205,21 @@ export default class Login extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
                 this.setState({
-                    formFieldErrors,
-                    formErrors,
+                    faramErrors,
                     pending: false,
                 });
                 if (response.errorCode === 4004) {
-                    this.showReCaptcha();
+                    this.setState({
+                        showReCaptcha: true,
+                        schema: Login.schemaWithRecaptcha,
+                    });
                 }
             })
             .fatal(() => {
                 this.setState({
-                    formErrors: { errors: ['Error while trying to log in.'] },
+                    faramErrors: { $internal: ['Error while trying to log in.'] },
                     pending: false,
                 });
             })
@@ -242,9 +229,8 @@ export default class Login extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             showReCaptcha,
         } = this.state;
@@ -280,27 +266,26 @@ export default class Login extends React.PureComponent {
                         </div>
                     </div>
                     { pending && <LoadingAnimation /> }
-                    <Form
+                    <Faram
                         className={styles.loginForm}
-                        changeCallback={this.changeCallback}
-                        failureCallback={this.failureCallback}
-                        successCallback={this.successCallback}
+                        onChange={this.handleFaramChange}
+                        onValidationFailure={this.handleFaramValidationFailure}
+                        onValidationSuccess={this.handleFaramValidationSuccess}
                         schema={this.state.schema}
-                        value={formValues}
-                        formErrors={formErrors}
-                        fieldErrors={formFieldErrors}
+                        value={faramValues}
+                        errors={faramErrors}
                         disabled={pending}
                     >
-                        <NonFieldErrors formerror="" />
+                        <NonFieldErrors faramElementName="anyName" />
                         <TextInput
-                            formname="email"
+                            faramElementName="email"
                             label={this.props.loginStrings('emailLabel')}
                             // FIXME: use strings
                             placeholder="john.doe@mail.com"
                             autoFocus
                         />
                         <TextInput
-                            formname="password"
+                            faramElementName="password"
                             label={this.props.loginStrings('passwordLabel')}
                             // FIXME: use strings
                             placeholder="**********"
@@ -310,7 +295,7 @@ export default class Login extends React.PureComponent {
                         { showReCaptcha &&
                             <ReCaptcha
                                 ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
-                                formname="recaptchaResponse"
+                                faramElementName="recaptchaResponse"
                                 siteKey={reCaptchaSiteKey}
                             />
                         }
@@ -327,7 +312,7 @@ export default class Login extends React.PureComponent {
                                 {this.props.loginStrings('loginLabel')}
                             </PrimaryButton>
                         </div>
-                    </Form>
+                    </Faram>
                     <div className={styles.registerLinkContainer}>
                         <p>{this.props.loginStrings('noAccountYetText')}</p>
                         <Link

@@ -14,7 +14,7 @@ import Button from '../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
-import Input from '../../vendor/react-store/utils/input';
+import FaramElement from '../../vendor/react-store/components/Input/Faram/FaramElement';
 
 import WidgetEmptyComponent from '../WidgetEmptyComponent';
 import { entryStringsSelector } from '../../redux';
@@ -51,7 +51,7 @@ const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
 });
 
-@Input
+@FaramElement('input')
 @connect(mapStateToProps)
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d.key;

@@ -14,13 +14,13 @@ import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldEr
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
-import Form, {
+import Faram, {
     requiredCondition,
     emailCondition,
-} from '../../vendor/react-store/components/Input/Form';
+} from '../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../rest';
@@ -51,9 +51,8 @@ export default class Register extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
             success: false,
@@ -82,23 +81,19 @@ export default class Register extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, fieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formErrors,
-            formFieldErrors: fieldErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleFaramValidationSuccess = (values) => {
         this.register(values);
     };
 
@@ -150,89 +145,79 @@ export default class Register extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
                 // NOTE: server uses username, client side uses email
-                formFieldErrors.email = formFieldErrors.username;
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                faramErrors.email = faramErrors.username;
+                this.setState({ faramErrors });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
                 this.setState({
-                    formErrors: { errors: ['Error while trying to register.'] },
+                    faramErrors: { $internal: ['Error while trying to register.'] },
                 });
             })
             .build();
         return userCreateRequest;
     }
 
-    renderForm = () => {
+    renderFaram = () => {
         const {
-            formErrors = [],
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
         } = this.state;
 
         return (
-            <Form
+            <Faram
                 className={styles.registerForm}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
                 schema={this.schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                errors={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElementName="anyName" />
                 <TextInput
-                    formname="firstname"
+                    faramElementName="firstname"
                     label={this.props.loginStrings('firstNameLabel')}
                     placeholder={this.props.loginStrings('firstNamePlaceholder')}
                     autoFocus
                 />
                 <TextInput
-                    formname="lastname"
+                    faramElementName="lastname"
                     label={this.props.loginStrings('lastNameLabel')}
                     placeholder={this.props.loginStrings('lastNamePlaceholder')}
                 />
                 <TextInput
-                    formname="organization"
+                    faramElementName="organization"
                     label={this.props.loginStrings('organizationLabel')}
                     placeholder={this.props.loginStrings('organizationPlaceholder')}
                 />
                 <TextInput
-                    formname="email"
+                    faramElementName="email"
                     label={this.props.loginStrings('emailLabel')}
                     placeholder={this.props.loginStrings('emailPlaceholder')}
                 />
                 <ReCaptcha
                     ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
-                    formname="recaptchaResponse"
+                    faramElementName="recaptchaResponse"
                     siteKey={reCaptchaSiteKey}
                     reset={pending}
                 />
                 <div className={styles.actionButtons}>
-                    <PrimaryButton
-                        type="submit"
-                    >
+                    <PrimaryButton type="submit" >
                         { this.props.loginStrings('registerLabel')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 
     renderSuccess = () => {
-        const { email } = this.state.formValues;
+        const { email } = this.state.faramValues;
         return (
             <div className={styles.registerSuccess}>
                 {this.props.loginStrings('checkYourEmailText', { email })}
@@ -248,7 +233,7 @@ export default class Register extends React.PureComponent {
         return (
             <div className={styles.register}>
                 <div className={styles.registerBox}>
-                    { success ? this.renderSuccess() : this.renderForm() }
+                    { success ? this.renderSuccess() : this.renderFaram() }
                     <div className={styles.loginLinkContainer}>
                         <p>
                             { success ?
