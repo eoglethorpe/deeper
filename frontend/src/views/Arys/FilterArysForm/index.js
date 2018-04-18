@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { isObjectEmpty } from '../../../vendor/react-store/utils/common';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
-import Form from '../../../vendor/react-store/components/Input/Form';
+import Faram from '../../../vendor/react-store/components/Input/Faram';
 import SearchInput from '../../../vendor/react-store/components/Input/SearchInput';
 import DateFilter from '../../../vendor/react-store/components/Input/DateFilter';
 import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
@@ -72,7 +72,7 @@ export default class FilterArysForm extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formValues: this.props.filters,
+            faramValues: this.props.filters,
             pristine: true,
         };
 
@@ -83,6 +83,8 @@ export default class FilterArysForm extends React.PureComponent {
                 search: [],
             },
         };
+
+        this.faramRef = React.createRef();
     }
 
     componentWillMount() {
@@ -103,7 +105,7 @@ export default class FilterArysForm extends React.PureComponent {
         if (oldFilters !== newFilters) {
             // eslint-disable-next-line no-unused-vars
             this.setState({
-                formValues: newFilters,
+                faramValues: newFilters,
                 pristine: true,
             });
         }
@@ -135,21 +137,21 @@ export default class FilterArysForm extends React.PureComponent {
 
     // UI
 
-    handleChange = (values) => {
+    handleFaramChange = (values) => {
         this.setState(
             {
-                formValues: values,
+                faramValues: values,
                 pristine: false,
             },
             () => {
                 if (this.props.applyOnChange) {
-                    this.formComponent.submit();
+                    this.faramRef.current.submit();
                 }
             },
         );
     }
 
-    handleSubmit = (values) => {
+    handleFaramValidationSuccess = (values) => {
         this.props.setAryPageFilter({
             filters: values,
         });
@@ -159,7 +161,7 @@ export default class FilterArysForm extends React.PureComponent {
         if (isObjectEmpty(this.props.filters)) {
             // NOTE: Only clear component state,
             // as the filters in global state is already empty
-            this.setState({ formValues: {}, pristine: true });
+            this.setState({ faramValues: {}, pristine: true });
         } else {
             this.props.unsetAryPageFilter();
         }
@@ -177,7 +179,7 @@ export default class FilterArysForm extends React.PureComponent {
         } = this.props;
 
         const {
-            formValues,
+            faramValues,
             pristine,
         } = this.state;
 
@@ -187,16 +189,16 @@ export default class FilterArysForm extends React.PureComponent {
         const isClearDisabled = isFilterEmpty && pristine;
 
         return (
-            <Form
-                ref={(elem) => { this.formComponent = elem; }}
+            <Faram
+                ref={this.faramRef}
                 className={`arys-filters ${className}`}
-                successCallback={this.handleSubmit}
-                changeCallback={this.handleChange}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                onChange={this.handleFaramChange}
                 schema={this.schema}
-                value={formValues}
+                value={faramValues}
             >
                 <DateFilter
-                    formname="created_at"
+                    faramElementName="created_at"
                     label={arysStrings('filterDateCreated')}
                     placeholder={arysStrings('placeholderAnytime')}
                     showHintAndError={false}
@@ -205,7 +207,7 @@ export default class FilterArysForm extends React.PureComponent {
                 />
                 <MultiSelectInput
                     className="arys-filter"
-                    formname="created_by"
+                    faramElementName="created_by"
                     keySelector={FilterArysForm.optionKeySelector}
                     label={arysStrings('createdByFilterLabel')}
                     labelSelector={FilterArysForm.optionLabelSelector}
@@ -215,7 +217,7 @@ export default class FilterArysForm extends React.PureComponent {
                     showLabel
                 />
                 <SearchInput
-                    formname="search"
+                    faramElementName="search"
                     label={arysStrings('placeholderSearch')}
                     placeholder={arysStrings('placeholderSearch')}
                     showHintAndError={false}
@@ -238,7 +240,7 @@ export default class FilterArysForm extends React.PureComponent {
                 >
                     {arysStrings('filterClearFilter')}
                 </DangerButton>
-            </Form>
+            </Faram>
         );
     }
 }
