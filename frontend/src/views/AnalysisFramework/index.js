@@ -159,7 +159,7 @@ export default class AnalysisFramework extends React.PureComponent {
         if (!analysisFramework) {
             return (
                 <div className={styles.analysisFramework}>
-                    <LoadingAnimation />
+                    <LoadingAnimation large />
                 </div>
             );
         }

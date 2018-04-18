@@ -105,7 +105,7 @@ export default class CountryPopulationData extends React.PureComponent {
                     fieldErrors={formFieldErrors}
                     disabled={pending}
                 >
-                    { pending && <LoadingAnimation /> }
+                    { pending && <LoadingAnimation large /> }
                     <NonFieldErrors formerror="" />
                     <div className={styles.actionButtons}>
                         <DangerButton onClick={this.handleFormCancel}>

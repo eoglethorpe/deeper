@@ -626,7 +626,7 @@ export default class Leads extends React.PureComponent {
                             keyExtractor={Leads.leadKeyExtractor}
                             className={styles.leadsTable}
                         />
-                        { loadingLeads && <LoadingAnimation /> }
+                        { loadingLeads && <LoadingAnimation large /> }
                     </div>
                 </div>
                 <Footer />

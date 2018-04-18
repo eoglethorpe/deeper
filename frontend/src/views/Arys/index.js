@@ -344,7 +344,7 @@ export default class Arys extends React.PureComponent {
                         keyExtractor={this.aryKeyExtractor}
                         className={styles.arysTable}
                     />
-                    { loadingArys && <LoadingAnimation /> }
+                    { loadingArys && <LoadingAnimation large /> }
                 </div>
                 <Footer />
                 <Confirm

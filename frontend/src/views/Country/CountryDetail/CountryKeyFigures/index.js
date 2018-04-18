@@ -143,7 +143,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 formErrors={formErrors}
                 fieldErrors={formFieldErrors}
             >
-                { dataLoading && <LoadingAnimation /> }
+                { dataLoading && <LoadingAnimation large /> }
                 <div className={styles.sections} >
                     <div className={styles.section}>
                         <h3 className={styles.heading} >

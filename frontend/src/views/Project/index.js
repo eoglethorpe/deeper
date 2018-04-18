@@ -157,7 +157,7 @@ export default class ProjectPanel extends React.PureComponent {
         return (
             <div className={styles.projectPanel}>
                 <div className={styles.sidebar}>
-                    {pending && <LoadingAnimation />}
+                    {pending && <LoadingAnimation large />}
                     <header className={styles.header}>
                         <h3 className={styles.heading}>
                             {this.props.projectStrings('headerProjects')}

@@ -201,7 +201,7 @@ export default class EditAry extends React.PureComponent {
         }
 
         if (pendingLead || pendingAryTemplate || pendingAry || pendingGeo) {
-            return <LoadingAnimation />;
+            return <LoadingAnimation large />;
         }
 
         return (

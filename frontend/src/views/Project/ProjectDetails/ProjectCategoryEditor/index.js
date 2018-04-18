@@ -312,7 +312,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             <div className={styles.projectCategoryEditor}>
                 <CategoryEditorList />
                 <div className={styles.detailsContainer}>
-                    {pending && <LoadingAnimation />}
+                    {pending && <LoadingAnimation large />}
                     <CeDetails />
                 </div>
                 <AddCeModal />
