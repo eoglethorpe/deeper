@@ -25,7 +25,7 @@ export const renderWidget = (data) => {
 
     const id = String(key);
     const commonProps = {
-        formname: id,
+        faramElementName: id,
         key: id,
         label: title,
         options,

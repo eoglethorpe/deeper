@@ -17,25 +17,26 @@ import {
 
     setErrorAryForEditAryAction,
     setAryForEditAryAction,
+    changeAryForEditAryAction,
 
-    editAryFormErrorsSelector,
-    editAryFieldErrorsSelector,
-    editAryFormValuesSelector,
+    editAryFaramValuesSelector,
+    editAryFaramErrorsSelector,
     editAryHasErrorsSelector,
     editAryIsPristineSelector,
 } from '../../../redux';
 
-import Form, {
+import Faram, {
     requiredCondition,
-} from '../../../vendor/react-store/components/Input/Form';
+} from '../../../vendor/react-store/components/Input/Faram';
 import Baksa from '../../../components/Baksa';
 import AryPutRequest from '../requests/AryPutRequest';
 
 import Metadata from './Metadata';
+/*
 import Methodology from './Methodology';
 import Summary from './Summary';
 import Score from './Score';
-
+*/
 
 import styles from './styles.scss';
 
@@ -45,21 +46,20 @@ const propTypes = {
     aryStrings: PropTypes.func.isRequired,
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
-    editAryFormValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    editAryFieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    editAryFaramValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    editAryFaramErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editAryHasErrors: PropTypes.bool.isRequired,
     editAryIsPristine: PropTypes.bool.isRequired,
-    editAryFormErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     setErrorAry: PropTypes.func.isRequired,
     setAry: PropTypes.func.isRequired,
+    changeAry: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     aryTemplateMetadata: [],
     aryTemplateMethodology: [],
-    editAryFormErrors: {},
-    editAryFieldErrors: {},
-    editAryFormValues: {},
+    editAryFaramErrors: {},
+    editAryFaramValues: {},
 };
 
 const mapStateToProps = state => ({
@@ -69,9 +69,8 @@ const mapStateToProps = state => ({
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
 
-    editAryFormErrors: editAryFormErrorsSelector(state),
-    editAryFieldErrors: editAryFieldErrorsSelector(state),
-    editAryFormValues: editAryFormValuesSelector(state),
+    editAryFaramValues: editAryFaramValuesSelector(state),
+    editAryFaramErrors: editAryFaramErrorsSelector(state),
     editAryHasErrors: editAryHasErrorsSelector(state),
     editAryIsPristine: editAryIsPristineSelector(state),
 });
@@ -79,6 +78,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     setErrorAry: params => dispatch(setErrorAryForEditAryAction(params)),
     setAry: params => dispatch(setAryForEditAryAction(params)),
+    changeAry: params => dispatch(changeAryForEditAryAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -86,16 +86,18 @@ export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static createSchema = (aryTemplateMetadata, aryTemplateMethodology) => {
+    static createSchema = (aryTemplateMetadata /* , aryTemplateMethodology */) => {
         const schema = { fields: {
             metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
-            methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
-            summary: { fields: { summaryTable: [] } },
+            additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
+            // methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
+            // summary: { fields: { summaryTable: [] } },
         } };
+        console.warn(schema);
         return schema;
     }
 
-    static createMetadataSchema = (aryTemplateMetadata = {}) => {
+    static createAdditionalDocumentsSchema = () => {
         const {
             bothPageRequiredCondition,
             validPageRangeCondition,
@@ -118,7 +120,10 @@ export default class RightPanel extends React.PureComponent {
                 pendingCondition,
             ],
         } };
+        return schema;
+    }
 
+    static createMetadataSchema = (aryTemplateMetadata = {}) => {
         // Dynamic fields from metadataGroup
         const dynamicFields = {};
         Object.keys(aryTemplateMetadata).forEach((key) => {
@@ -127,14 +132,11 @@ export default class RightPanel extends React.PureComponent {
             });
         });
 
-        schema.fields = {
-            ...schema.fields,
-            ...dynamicFields,
-        };
-
+        const schema = { fields: dynamicFields };
         return schema;
     }
 
+    /*
     static createMethodologySchema = (aryTemplateMethodology = {}) => {
         const schema = { fields: {
             attributes: {
@@ -173,17 +175,18 @@ export default class RightPanel extends React.PureComponent {
 
         return schema;
     }
+    */
 
     constructor(props) {
         super(props);
 
         this.state = {
-            currentTabKey: 'score',
+            currentTabKey: 'metadata',
+            pending: false,
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
             ),
-            pending: false,
         };
 
         this.setTabAndViews(props);
@@ -212,60 +215,46 @@ export default class RightPanel extends React.PureComponent {
     setTabAndViews = (props) => {
         this.tabs = {
             metadata: props.aryStrings('metadataTabLabel'),
-            methodology: props.aryStrings('methodologyTabLabel'),
-            summary: props.aryStrings('summaryTabLabel'),
-            score: props.aryStrings('scoreTabLabel'),
+            // methodology: props.aryStrings('methodologyTabLabel'),
+            // summary: props.aryStrings('summaryTabLabel'),
+            // score: props.aryStrings('scoreTabLabel'),
         };
 
         this.views = {
             metadata: {
                 component: () => (
-                    <Metadata
-                        schema={this.state.schema.fields.metadata}
-                        formValues={this.props.editAryFormValues.metadata}
-                        fieldErrors={this.props.editAryFieldErrors.metadata}
-                        formErrors={(this.props.editAryFormErrors.fields || {}).metadata}
-                        pending={this.state.pending}
-                    />
+                    <Metadata pending={this.state.pending} />
                 ),
             },
+            /*
             methodology: {
                 component: () => (
-                    <Methodology
-                        schema={this.state.schema.fields.methodology}
-                        formValues={this.props.editAryFormValues.methodology}
-                        fieldErrors={this.props.editAryFieldErrors.methodology}
-                        formErrors={(this.props.editAryFormErrors.fields || {}).methodology}
-                        pending={this.state.pending}
-                    />
+                    <Methodology pending={this.state.pending} />
                 ),
             },
             summary: {
                 component: () => (
-                    <Summary
-                        schema={this.state.schema.fields.summary}
-                        formValues={this.props.editAryFormValues.summary}
-                        fieldErrors={this.props.editAryFieldErrors.summary}
-                        formErrors={(this.props.editAryFormErrors.fields || {}).summary}
-                        pending={this.state.pending}
-                    />
+                    <Summary pending={this.state.pending} />
                 ),
             },
             score: {
                 component: () => (
-                    <Score
-                        schema={this.state.schema.fields.score}
-                        formValues={this.props.editAryFormValues.score}
-                        fieldErrors={this.props.editAryFieldErrors.score}
-                        formErrors={(this.props.editAryFormErrors.fields || {}).score}
-                        pending={this.state.pending}
-                    />
+                    <Score pending={this.state.pending} />
                 ),
             },
+            */
         };
     }
 
-    successCallback = (value) => {
+    handleFaramChange = (faramValues, faramErrors) => {
+        this.props.changeAry({
+            lead: this.props.activeLeadId,
+            faramValues,
+            faramErrors,
+        });
+    }
+
+    handleFaramValidationSuccess = (value) => {
         if (this.aryPutRequest) {
             this.aryPutRequest.stop();
         }
@@ -277,11 +266,10 @@ export default class RightPanel extends React.PureComponent {
         this.aryPutRequest.start();
     };
 
-    failureCallback = (fieldErrors, formErrors) => {
+    handleFaramValidationFailure = (faramErrors) => {
         this.props.setErrorAry({
             lead: this.props.activeLeadId,
-            formErrors,
-            fieldErrors,
+            faramErrors,
         });
     };
 
@@ -301,10 +289,17 @@ export default class RightPanel extends React.PureComponent {
             },
         );
 
-        // FIXME: send pending inside later to disable form
-
         return (
-            <Fragment>
+            <Faram
+                schema={this.state.schema}
+                value={this.props.editAryFaramValues}
+                error={this.props.editAryFaramErrors}
+
+                onChange={this.handleFaramChange}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                onValidationFailure={this.handleFaramValidationFailure}
+                disabled={this.state.pending}
+            >
                 <FixedTabs
                     className={styles.tabs}
                     active={currentTabKey}
@@ -317,31 +312,24 @@ export default class RightPanel extends React.PureComponent {
                     >
                         {this.props.aryStrings('entriesTabLabel')}
                     </Link>
-                    <Form
-                        schema={this.state.schema}
-                        value={this.props.editAryFormValues}
-                        successCallback={this.successCallback}
-                        failureCallback={this.failureCallback}
+                    <SuccessButton
+                        className={styles.saveButton}
+                        type="submit"
+                        disabled={
+                            this.props.editAryIsPristine
+                            || this.props.editAryHasErrors
+                            || this.state.pending
+                        }
                     >
-                        <SuccessButton
-                            className={styles.saveButton}
-                            type="submit"
-                            disabled={
-                                this.props.editAryIsPristine
-                                || this.props.editAryHasErrors
-                                || this.state.pending
-                            }
-                        >
-                            {/* FIXME: use strings */}
-                            Save
-                        </SuccessButton>
-                    </Form>
+                        {/* FIXME: use strings */}
+                        Save
+                    </SuccessButton>
                 </FixedTabs>
                 <MultiViewContainer
                     active={currentTabKey}
                     views={this.views}
                 />
-            </Fragment>
+            </Faram>
         );
     }
 }
