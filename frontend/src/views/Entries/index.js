@@ -540,6 +540,7 @@ export default class Entries extends React.PureComponent {
             return (
                 <LoadingAnimation
                     className={styles.loadingAnimation}
+                    large
                 />
             );
         }

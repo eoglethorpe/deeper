@@ -63,14 +63,6 @@ $color-text-on-primary: get-text-color($color-primary);
 
                         .cell {
                             position: relative;
-
-                            .loading {
-                                span {
-                                    width: $font-size-medium;
-                                    height: $font-size-medium;
-                                    font-size: $font-size-medium;
-                                }
-                            }
                         }
                     }
                 }

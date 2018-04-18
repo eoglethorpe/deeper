@@ -129,7 +129,7 @@ export default class UserProfile extends React.PureComponent {
         if (pending) {
             return (
                 <div className={styles.userProfile}>
-                    <LoadingAnimation />
+                    <LoadingAnimation large />
                 </div>
             );
         }

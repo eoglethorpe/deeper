@@ -126,7 +126,7 @@ export default class UserGroup extends React.PureComponent {
         if (pending) {
             return (
                 <div className={styles.usergroup}>
-                    <LoadingAnimation />
+                    <LoadingAnimation large />
                 </div>
             );
         }

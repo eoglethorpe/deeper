@@ -530,7 +530,7 @@ export default class CategoryEditor extends React.PureComponent {
 
         return (
             <div className={styles.categoryEditor}>
-                { pending && <LoadingAnimation /> }
+                { pending && <LoadingAnimation large /> }
                 <Prompt
                     when={!categoryEditorViewPristine}
                     message={this.props.commonStrings('youHaveUnsavedChanges')}

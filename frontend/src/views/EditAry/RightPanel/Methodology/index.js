@@ -177,7 +177,7 @@ export default class Methodology extends React.PureComponent {
                 changeCallback={this.changeCallback}
                 disabled={this.props.pending}
             >
-                {this.props.pending && <LoadingAnimation />}
+                {this.props.pending && <LoadingAnimation large />}
                 <div className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}

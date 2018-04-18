@@ -417,7 +417,7 @@ export default class CountryDetail extends React.PureComponent {
                 />
                 <HashRouter>
                     <div className={`${className} ${styles.countryDetail}`}>
-                        { deletePending && <LoadingAnimation /> }
+                        { deletePending && <LoadingAnimation large /> }
                         <Route
                             exact
                             path="/"

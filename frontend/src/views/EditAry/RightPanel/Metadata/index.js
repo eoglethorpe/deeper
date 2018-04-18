@@ -98,7 +98,7 @@ export default class Metadata extends React.PureComponent {
                 formErrors={this.props.formErrors}
                 disabled={this.props.pending}
             >
-                {this.props.pending && <LoadingAnimation />}
+                {this.props.pending && <LoadingAnimation large />}
                 <header className={styles.header}>
                     <NonFieldErrors
                         className={styles.nonFieldErrors}

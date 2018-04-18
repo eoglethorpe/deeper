@@ -447,7 +447,7 @@ export default class List extends React.PureComponent {
                         <div className={styles.entryList}>
                             {
                                 this.state.pendingGeo ? (
-                                    <LoadingAnimation />
+                                    <LoadingAnimation large />
                                 ) : (
                                     entries.map(this.renderEntry)
                                 )

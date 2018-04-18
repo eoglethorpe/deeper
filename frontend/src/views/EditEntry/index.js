@@ -410,7 +410,7 @@ export default class EditEntry extends React.PureComponent {
         if (pendingEntries || pendingAf) {
             return (
                 <div className={styles.editEntry} >
-                    <LoadingAnimation />
+                    <LoadingAnimation large />
                 </div>
             );
         }

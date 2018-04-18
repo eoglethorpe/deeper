@@ -273,7 +273,7 @@ export default class Overview extends React.PureComponent {
                         key="container"
                         className={styles.container}
                     >
-                        { widgetDisabled && <LoadingAnimation /> }
+                        { widgetDisabled && <LoadingAnimation large /> }
                         <GridLayout
                             className={styles.gridLayout}
                             modifier={this.renderItemView}

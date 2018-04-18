@@ -246,7 +246,7 @@ export default class ProjectDetails extends React.PureComponent {
                         path="/"
                         component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
                     />
-                    { pending && <LoadingAnimation /> }
+                    { pending && <LoadingAnimation large /> }
                     {
                         project.role === 'admin' ? ([
                             <header

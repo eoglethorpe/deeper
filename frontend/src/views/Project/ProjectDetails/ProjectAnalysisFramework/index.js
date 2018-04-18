@@ -319,7 +319,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <div className={styles.projectAnalysisFramework}>
                 <AnalysisFrameworkList />
                 <div className={styles.detailsContainer}>
-                    {pending && <LoadingAnimation />}
+                    {pending && <LoadingAnimation large />}
                     <AFDetails />
                 </div>
                 <AddAFModal />
