@@ -567,6 +567,7 @@ const initialLangState = {
                 1003: 'Error while trying to save region detail.',
                 1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
                 250: 'Update GEO File',
+                251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
             },
             views: {
                 af: {
@@ -823,6 +824,7 @@ const initialLangState = {
                     addRegionButtonLabel: 301,
                     regionPatchErrorText: 1003,
                     updateGeoFile: 250,
+                    geoshapeTooltip: 251,
                 },
                 entry: {
                     serverErrorText: 500,
