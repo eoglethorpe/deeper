@@ -32,10 +32,10 @@ import Baksa from '../../../components/Baksa';
 import AryPutRequest from '../requests/AryPutRequest';
 
 import Metadata from './Metadata';
-/*
-import Methodology from './Methodology';
 import Summary from './Summary';
 import Score from './Score';
+/*
+import Methodology from './Methodology';
 */
 
 import styles from './styles.scss';
@@ -91,7 +91,7 @@ export default class RightPanel extends React.PureComponent {
             metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
             additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
             // methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
-            // summary: { fields: { summaryTable: [] } },
+            summary: [],
         } };
         console.warn(schema);
         return schema;
@@ -216,8 +216,8 @@ export default class RightPanel extends React.PureComponent {
         this.tabs = {
             metadata: props.aryStrings('metadataTabLabel'),
             // methodology: props.aryStrings('methodologyTabLabel'),
-            // summary: props.aryStrings('summaryTabLabel'),
-            // score: props.aryStrings('scoreTabLabel'),
+            summary: props.aryStrings('summaryTabLabel'),
+            score: props.aryStrings('scoreTabLabel'),
         };
 
         this.views = {
@@ -226,23 +226,23 @@ export default class RightPanel extends React.PureComponent {
                     <Metadata pending={this.state.pending} />
                 ),
             },
+            summary: {
+                component: () => (
+                    <Summary pending={this.state.pending} />
+                ),
+            },
             /*
             methodology: {
                 component: () => (
                     <Methodology pending={this.state.pending} />
                 ),
             },
-            summary: {
-                component: () => (
-                    <Summary pending={this.state.pending} />
-                ),
-            },
+            */
             score: {
                 component: () => (
                     <Score pending={this.state.pending} />
                 ),
             },
-            */
         };
     }
 

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import InputGroup from '../../../../../vendor/react-store/components/Input/InputGroup';
+import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import TextInput from '../../../../../vendor/react-store/components/Input/TextInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
@@ -79,14 +79,14 @@ export default class Sector extends React.PureComponent {
         if (row === 0) {
             return (
                 <TextInput
-                    inputName={`priority-sector-${subRow}-${column}`}
+                    faramElementName={`priority-sector-${subRow}-${column}`}
                     showHintAndError={false}
                 />
             );
         } else if (row === 1) {
             return (
                 <OrganigramSelectInput
-                    inputName={`affected-group-${subRow}-${column}`}
+                    faramElementName={`affected-group-${subRow}-${column}`}
                     showHintAndError={false}
                     data={affectedGroups}
                     idSelector={Sector.nodeIdSelector}
@@ -97,7 +97,7 @@ export default class Sector extends React.PureComponent {
         } else if (row === 2) {
             return (
                 <SelectInput
-                    inputName={`specific-need-group-${subRow}-${column}`}
+                    faramElementName={`specific-need-group-${subRow}-${column}`}
                     showHintAndError={false}
                     options={specificNeedGroups}
                     labelSelector={Sector.nodeLabelSelector}
@@ -114,7 +114,7 @@ export default class Sector extends React.PureComponent {
         const className = this.getClassName();
 
         return (
-            <InputGroup inputName={`sector-${sectorId}`}>
+            <FaramGroup faramElementName={`sector-${sectorId}`}>
                 <TabularInputs
                     rowFieldTitles={this.rowFieldTitles}
                     columnFieldTitles={this.columnFieldTitles}
@@ -131,7 +131,7 @@ export default class Sector extends React.PureComponent {
                     }}
                     inputModifier={this.renderInput}
                 />
-            </InputGroup>
+            </FaramGroup>
         );
     }
 }

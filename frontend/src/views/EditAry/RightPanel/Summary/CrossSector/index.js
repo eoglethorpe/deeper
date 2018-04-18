@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import InputGroup from '../../../../../vendor/react-store/components/Input/InputGroup';
+import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
 
@@ -90,7 +90,7 @@ export default class CrossSector extends React.PureComponent {
         if (row === 0) {
             return (
                 <OrganigramSelectInput
-                    inputName={`priority-sector-${subRow}-${column}`}
+                    faramElementName={`priority-sector-${subRow}-${column}`}
                     showHintAndError={false}
                     data={prioritySectors}
                     idSelector={CrossSector.nodeIdSelector}
@@ -101,7 +101,7 @@ export default class CrossSector extends React.PureComponent {
         } else if (row === 1) {
             return (
                 <OrganigramSelectInput
-                    inputName={`affected-group-${subRow}-${column}`}
+                    faramElementName={`affected-group-${subRow}-${column}`}
                     showHintAndError={false}
                     data={affectedGroups}
                     idSelector={CrossSector.nodeIdSelector}
@@ -112,7 +112,7 @@ export default class CrossSector extends React.PureComponent {
         } else if (row === 2) {
             return (
                 <SelectInput
-                    inputName={`specific-need-group-${subRow}-${column}`}
+                    faramElementName={`specific-need-group-${subRow}-${column}`}
                     showHintAndError={false}
                     options={specificNeedGroups}
                     labelSelector={CrossSector.nodeLabelSelector}
@@ -144,7 +144,7 @@ export default class CrossSector extends React.PureComponent {
         const className = this.getClassName();
 
         return (
-            <InputGroup inputName="crossSector">
+            <FaramGroup faramElementName="crossSector">
                 <TabularInputs
                     rowFieldTitles={this.rowFieldTitles}
                     columnFieldTitles={this.columnFieldTitles}
@@ -161,7 +161,7 @@ export default class CrossSector extends React.PureComponent {
                     }}
                     inputModifier={this.renderInput}
                 />
-            </InputGroup>
+            </FaramGroup>
         );
     }
 }

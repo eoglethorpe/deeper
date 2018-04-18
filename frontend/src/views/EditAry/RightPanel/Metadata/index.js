@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    aryTemplateMetadataSelector,
-    leadIdFromRouteSelector,
-} from '../../../../redux';
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
+
+import { aryTemplateMetadataSelector } from '../../../../redux';
 import Baksa from '../../../../components/Baksa';
 
 import { renderWidget } from '../widgetUtils';
@@ -62,8 +60,8 @@ export default class Metadata extends React.PureComponent {
 
         return (
             <div className={styles.metadata}>
+                {this.props.pending && <LoadingAnimation large />}
                 <FaramGroup faramElementName="metadata">
-                    {this.props.pending && <LoadingAnimation large />}
                     <header className={styles.header}>
                         <NonFieldErrors
                             className={styles.nonFieldErrors}

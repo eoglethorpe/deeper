@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import InputGroup from '../../../../../vendor/react-store/components/Input/InputGroup';
+import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
 
@@ -76,7 +76,7 @@ export default class HumanitarianAccess extends React.PureComponent {
         if (row === 0) {
             return (
                 <OrganigramSelectInput
-                    inputName={`priority-issue-${subRow}-${column}`}
+                    faramElementName={`priority-issue-${subRow}-${column}`}
                     showHintAndError={false}
                     data={priorityIssues}
                     idSelector={HumanitarianAccess.nodeIdSelector}
@@ -87,7 +87,7 @@ export default class HumanitarianAccess extends React.PureComponent {
         } else if (row === 1) {
             return (
                 <SelectInput
-                    inputName={`affected-location-${subRow}-${column}`}
+                    faramElementName={`affected-location-${subRow}-${column}`}
                     showHintAndError={false}
                     options={affectedLocations}
                     labelSelector={HumanitarianAccess.nodeLabelSelector}
@@ -103,7 +103,7 @@ export default class HumanitarianAccess extends React.PureComponent {
         const className = this.getClassName();
 
         return (
-            <InputGroup inputName="humanitarianAccess">
+            <FaramGroup faramElementName="humanitarianAccess">
                 <TabularInputs
                     rowFieldTitles={this.rowFieldTitles}
                     columnFieldTitles={this.columnFieldTitles}
@@ -120,7 +120,7 @@ export default class HumanitarianAccess extends React.PureComponent {
                     }}
                     inputModifier={this.renderInput}
                 />
-            </InputGroup>
+            </FaramGroup>
         );
     }
 }

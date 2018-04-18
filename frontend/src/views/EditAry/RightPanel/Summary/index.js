@@ -2,18 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import VerticalTabs from '../../../../vendor/react-store/components/View/VerticalTabs/';
 import styles from './styles.scss';
 import { listToMap } from '../../../../vendor/react-store/utils/common';
 
-import Form from '../../../../vendor/react-store/components/Input/Form';
-import InputGroup from '../../../../vendor/react-store/components/Input/InputGroup';
+import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 
 import {
-    leadIdFromRouteSelector,
     editArySelectedSectorsSelector,
     assessmentSectorsSelector,
-    changeArySummaryForEditAryAction,
 } from '../../../../redux';
 
 import CrossSector from './CrossSector';
@@ -22,42 +20,25 @@ import Sector from './Sector';
 
 const propTypes = {
     className: PropTypes.string,
-
     // eslint-disable-next-line react/forbid-prop-types
     selectedSectors: PropTypes.array.isRequired,
-    //
     // eslint-disable-next-line react/forbid-prop-types
     sectors: PropTypes.array.isRequired,
-
-    activeLeadId: PropTypes.number.isRequired,
-    formValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    fieldErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    formErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    schema: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    changeArySummary: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
     className: '',
-    formValues: {},
-    fieldErrors: {},
-    formErrors: {},
 };
 
 const mapStateToProps = state => ({
     selectedSectors: editArySelectedSectorsSelector(state),
     sectors: assessmentSectorsSelector(state),
-    activeLeadId: leadIdFromRouteSelector(state),
-});
-
-const mapDispatchToProps = dispatch => ({
-    changeArySummary: params => dispatch(changeArySummaryForEditAryAction(params)),
 });
 
 const sectorIdentifier = 'sector';
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 export default class Summary extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -66,7 +47,6 @@ export default class Summary extends React.PureComponent {
         super(props);
         this.state = {
             activeTab: 'crossSector',
-            summary: undefined,
         };
     }
 
@@ -81,23 +61,8 @@ export default class Summary extends React.PureComponent {
         return classNames.join(' ');
     }
 
-    changeCallback = (values, formFieldErrors, formErrors) => {
-        this.props.changeArySummary({
-            lead: this.props.activeLeadId,
-            formValues: values,
-            fieldErrors: formFieldErrors,
-            formErrors,
-        });
-    }
-
     handleTabClick = (key) => {
-        this.setState({
-            activeTab: key,
-        });
-    }
-
-    handleSummaryChange = (v) => {
-        this.setState({ summary: v });
+        this.setState({ activeTab: key });
     }
 
     renderTabs = () => {
@@ -108,9 +73,16 @@ export default class Summary extends React.PureComponent {
 
         const { activeTab } = this.state;
 
-        const s = [...sectors].filter(d => selectedSectorsList.indexOf(String(d.id)) !== -1);
-        const selectedSectors = listToMap(s, d => `${sectorIdentifier}-${d.id}`, d => d.title);
+        const s = sectors.filter(
+            d => selectedSectorsList.indexOf(String(d.id)) !== -1,
+        );
+        const selectedSectors = listToMap(
+            s,
+            d => `${sectorIdentifier}-${d.id}`,
+            d => d.title,
+        );
 
+        // FIXME: use strings
         const tabs = {
             crossSector: 'Cross sector',
             humanitarianAccess: 'Humanitarian access',
@@ -133,15 +105,11 @@ export default class Summary extends React.PureComponent {
         switch (activeTab) {
             case 'crossSector':
                 return (
-                    <CrossSector
-                        className={styles.view}
-                    />
+                    <CrossSector className={styles.view} />
                 );
             case 'humanitarianAccess':
                 return (
-                    <HumanitarianAccess
-                        className={styles.view}
-                    />
+                    <HumanitarianAccess className={styles.view} />
                 );
             default:
                 if (activeTab.includes('sector')) {
@@ -165,20 +133,13 @@ export default class Summary extends React.PureComponent {
         const View = this.renderView;
 
         return (
-            <Form
-                className={className}
-                schema={this.props.schema}
-                changeCallback={this.changeCallback}
-                value={this.props.formValues}
-                fieldErrors={this.props.fieldErrors}
-                formErrors={this.props.formErrors}
-                disabled={this.props.pending}
-            >
-                <InputGroup formname="summaryTable">
+            <div className={className}>
+                {this.props.pending && <LoadingAnimation />}
+                <FaramGroup faramElementName="summary">
                     <View />
-                </InputGroup>
+                </FaramGroup>
                 <Tabs />
-            </Form>
+            </div>
         );
     }
 }

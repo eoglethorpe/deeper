@@ -21,8 +21,6 @@ export default class TabularInputs extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    dummy = () => {}
-
     render() {
         const {
             rowFieldTitles,
