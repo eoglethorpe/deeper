@@ -80,11 +80,25 @@
                     }
 
                     .title {
-                        width: 30%;
+                        width: 40%;
                     }
 
                     .actions {
                         width: 180px;
+                    }
+
+                    .created_at {
+                        width: 150px;
+                    }
+
+                    .confidentiality,
+                    .status,
+                    .published_on {
+                        width: 100px;
+                    }
+
+                    .no_of_entries {
+                        width: 80px;
                     }
 
                     .created_at,
@@ -95,17 +109,6 @@
                         text-align: right;
                     }
 
-                    .headers {
-                        .created_at,
-                        .published_on,
-                        .no_of_entries {
-                            display: flex;
-                            align-items: right;
-                            justify-content: flex-end;
-                            text-align: right;
-                            color: red;
-                        }
-                    }
                 }
             }
         }
