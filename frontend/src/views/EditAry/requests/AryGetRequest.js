@@ -1,5 +1,5 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import { isFalsy } from '../../../vendor/react-store/utils/common';
+import { checkVersion } from '../../../vendor/react-store/utils/common';
 import {
     createUrlForLeadAry,
     commonParamsForGET,
@@ -29,30 +29,29 @@ export default class AryGetRequest {
                 try {
                     schema.validate(response, 'aryGetResponse');
                     const oldVersionId = this.getAryVersionId();
-                    if (isFalsy(oldVersionId)) {
+
+                    const {
+                        shouldSetValue,
+                        isValueOverriden,
+                    } = checkVersion(oldVersionId, response.versionId);
+
+                    if (shouldSetValue) {
+                        this.setAry({
+                            serverId: response.id,
+                            lead: response.lead,
+                            versionId: response.versionId,
+                            metadata: response.metadata,
+                            methodology: response.methodology,
+                            summary: response.summary,
+                        });
+                    }
+                    if (isValueOverriden) {
                         // FIXME: use strings
                         notify.send({
                             type: notify.type.WARNING,
                             title: 'Assessment',
                             message: 'Your copy was overridden by server\'s copy.',
                             duration: notify.duration.SLOW,
-                        });
-                        this.setAry({
-                            serverId: response.id,
-                            lead: response.lead,
-                            versionId: response.versionId,
-                            metadata: response.metadata,
-                            methodology: response.methodology,
-                            summary: response.summary,
-                        });
-                    } else if (oldVersionId < response.versionId) {
-                        this.setAry({
-                            serverId: response.id,
-                            lead: response.lead,
-                            versionId: response.versionId,
-                            metadata: response.metadata,
-                            methodology: response.methodology,
-                            summary: response.summary,
                         });
                     }
                 } catch (err) {

@@ -26,6 +26,8 @@ export default class RegionGetRequest {
 
         try {
             schema.validate(response, 'region');
+
+            // FIXME: use utils.checkVersion method, don't compare version yourself
             if (response.versionId === regionDetail.versionId && !discard) {
                 return;
             }

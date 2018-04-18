@@ -10,7 +10,7 @@ import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
 import {
     isTruthy,
-    isFalsy,
+    checkVersion,
     randomString,
     trimWhitespace,
     splitInWhitespace,
@@ -198,20 +198,23 @@ export default class CategoryEditor extends React.PureComponent {
                 try {
                     schema.validate(response, 'categoryEditor');
 
-                    const {
-                        categoryEditorViewVersionId,
-                    } = this.props;
+                    const { categoryEditorViewVersionId } = this.props;
 
-                    if (isFalsy(categoryEditorViewVersionId)) {
+                    const {
+                        shouldSetValue,
+                        isValueOverriden,
+                    } = checkVersion(categoryEditorViewVersionId, response.versionId);
+
+                    if (shouldSetValue) {
                         this.props.setCategoryEditor({ categoryEditor: response });
-                    } else if (categoryEditorViewVersionId < response.versionId) {
+                    }
+                    if (isValueOverriden) {
                         notify.send({
                             type: notify.type.WARNING,
                             title: this.props.notificationStrings('ceUpdate'),
                             message: this.props.notificationStrings('ceUpdateOverridden'),
                             duration: notify.duration.SLOW,
                         });
-                        this.props.setCategoryEditor({ categoryEditor: response });
                     }
                 } catch (er) {
                     console.error(er);
