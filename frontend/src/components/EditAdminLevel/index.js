@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
 import { BgRestBuilder } from '../../vendor/react-store/utils/rest';
@@ -12,15 +12,15 @@ import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldEr
 import HiddenInput from '../../vendor/react-store/components/Input/HiddenInput';
 import FileInput from '../../vendor/react-store/components/Input/FileInput';
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
-import Form, {
+import Faram, {
     greaterThanOrEqualToCondition,
     requiredCondition,
     integerCondition,
-} from '../../vendor/react-store/components/Input/Form';
+} from '../../vendor/react-store/components/Input/Faram';
 
 import { InternalGallery } from '../../components/DeepGallery';
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForAdminLevelsForRegionPOST,
     createParamsForAdminLevelsForRegionPATCH,
     createParamsForFileUpload,
@@ -40,7 +40,7 @@ import notify from '../../notify';
 import styles from './styles.scss';
 
 const propTypes = {
-    countryId: PropTypes.number.isRequired,
+    countryId: PropTypes.number,
     adminLevelsOfRegion: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
     adminLevelDetail: PropTypes.shape({
         id: PropTypes.number,
@@ -62,6 +62,7 @@ const propTypes = {
 
 const defaultProps = {
     adminLevelDetail: {},
+    countryId: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -82,9 +83,8 @@ export default class EditAdminLevel extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: this.props.adminLevelDetail,
+            faramErrors: {},
+            faramValues: this.props.adminLevelDetail,
             pending: false,
             pristine: false,
             adminLevelsOfRegion: this.calculateOtherAdminLevels(props.adminLevelsOfRegion),
@@ -159,22 +159,18 @@ export default class EditAdminLevel extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                // FIXME: no need to notify with farams
                 notify.send({
                     title: this.props.notificationStrings('adminLevelEdit'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('adminLevelEditFailure'),
                     duration: notify.duration.SLOW,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
+                // FIXME: no need to notify with farams
                 notify.send({
                     title: this.props.notificationStrings('adminLevelEdit'),
                     type: notify.type.ERROR,
@@ -182,7 +178,8 @@ export default class EditAdminLevel extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save admin level.'] },
+                    // FIXME: use strings
+                    faramErrors: { $internal: ['Error while trying to save admin level.'] },
                 });
             })
             .build();
@@ -218,22 +215,18 @@ export default class EditAdminLevel extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                // FIXME: no need to notify with farams
                 notify.send({
                     title: this.props.notificationStrings('adminLevelCreate'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('adminLevelCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
+                // FIXME: no need to notify with farams
                 notify.send({
                     title: this.props.notificationStrings('adminLevelCreate'),
                     type: notify.type.ERROR,
@@ -241,7 +234,8 @@ export default class EditAdminLevel extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to create admin level.'] },
+                    // FIXME: use strings
+                    faramErrors: { $internal: ['Error while trying to create admin level.'] },
                 });
             })
             .build();
@@ -249,20 +243,16 @@ export default class EditAdminLevel extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    changeCallback = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    failureCallback = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
     successCallback = (values) => {
@@ -276,11 +266,14 @@ export default class EditAdminLevel extends React.PureComponent {
         if (adminLevelId) {
             // UPDATE
             this.requestForAlForRegion = this.createAlForRegionUpdateRequest(
-                { ...values, region: countryId }, adminLevelId);
+                { ...values, region: countryId },
+                adminLevelId,
+            );
         } else {
             // CREATE
             this.requestForAlForRegion = this.createAlForRegionCreateRequest(
-                { ...values, region: countryId });
+                { ...values, region: countryId },
+            );
         }
         this.requestForAlForRegion.start();
     };
@@ -316,7 +309,7 @@ export default class EditAdminLevel extends React.PureComponent {
             })
             .success((response) => {
                 this.setState({
-                    formValues: { ...this.state.formValues, geoShapeFile: response.id },
+                    faramValues: { ...this.state.faramValues, geoShapeFile: response.id },
                     pristine: true,
                 });
             })
@@ -331,9 +324,8 @@ export default class EditAdminLevel extends React.PureComponent {
     render() {
         const { onClose } = this.props;
         const {
-            formFieldErrors,
-            formErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             pristine,
             adminLevelsOfRegion,
@@ -341,24 +333,25 @@ export default class EditAdminLevel extends React.PureComponent {
 
         return (
             <div className={styles.formContainer}>
-                <Form
+                <Faram
                     className={styles.editAdminLevelForm}
+
                     changeCallback={this.changeCallback}
                     failureCallback={this.failureCallback}
                     successCallback={this.successCallback}
+
                     schema={this.schema}
-                    value={formValues}
-                    fieldErrors={formFieldErrors}
-                    formErrors={formErrors}
+                    value={faramValues}
+                    error={faramErrors}
                     disabled={pending}
                 >
                     {
                         pending && <LoadingAnimation />
                     }
-                    <NonFieldErrors formerror="" />
+                    <NonFieldErrors faramElementName="" />
                     <div className={styles.adminLevelDetails} >
                         <TextInput
-                            formname="level"
+                            faramElementName="level"
                             label={this.props.countriesStrings('adminLevelLabel')}
                             placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
                             className={styles.textInput}
@@ -367,31 +360,31 @@ export default class EditAdminLevel extends React.PureComponent {
                             autoFocus
                         />
                         <TextInput
-                            formname="title"
+                            faramElementName="title"
                             label={this.props.countriesStrings('adminLevelNameLabel')}
                             placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
-                            formname="nameProp"
+                            faramElementName="nameProp"
                             label={this.props.countriesStrings('namePropertyLabel')}
                             placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
-                            formname="codeProp"
+                            faramElementName="codeProp"
                             label={this.props.countriesStrings('pcodePropertyLabel')}
                             placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
-                            formname="parentNameProp"
+                            faramElementName="parentNameProp"
                             label={this.props.countriesStrings('parentNamePropLabel')}
                             placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
-                            formname="parentCodeProp"
+                            faramElementName="parentCodeProp"
                             label={this.props.countriesStrings('parentCodePropLabel')}
                             placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
                             className={styles.textInput}
@@ -402,7 +395,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             options={adminLevelsOfRegion}
                             optionsIdentifier="select-input-inside-modal"
                             showHintAndError={false}
-                            formname="parent"
+                            faramElementName="parent"
                             label={this.props.countriesStrings('parentAdminLevelLabel')}
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             className={styles.selectInput}
@@ -410,47 +403,26 @@ export default class EditAdminLevel extends React.PureComponent {
                         <FileInput
                             className={styles.geoFile}
                             onChange={this.handleGeoFileInputChange}
-                            error={formFieldErrors.geoShapeFile}
+                            error={faramErrors.geoShapeFile}
                             accept=".zip, .json, .geojson"
                         >
-                            {
-                                formValues.geoShapeFile ? (
-                                    <div>
-                                        <Fragment>
-                                            <span
-                                                className={styles.show}
-                                                title={this.props.countriesStrings('updateGeoFile')}
-                                            >
-                                                <i className={iconNames.uploadFa} />
-                                                {this.props.countriesStrings('geoShapeFile')}
-                                            </span>
-                                        </Fragment>
-                                        <InternalGallery
-                                            onlyFileName
-                                            galleryId={formValues.geoShapeFile}
-                                        />
-                                        <i className={iconNames.download} />
-                                        <span
-                                            className={iconNames.help}
-                                            title={this.props.countriesStrings('geoshapeTooltip')}
-                                        />
-                                    </div>
-
-                                ) : (
-                                    <div>
-                                        <span className={styles.load}>
-                                            <i className={iconNames.uploadFa} />
-                                            {this.props.countriesStrings('loadGeoShapeFile')}
-                                        </span>
-                                        <span
-                                            className={iconNames.help}
-                                            title={this.props.countriesStrings('geoshapeTooltip')}
-                                        />
-                                    </div>
-                                )
-                            }
+                            <span className={styles.load}>
+                                <i className={iconNames.uploadFa} />
+                                {this.props.countriesStrings('loadGeoShapeFile')}
+                            </span>
                         </FileInput>
-                        <HiddenInput formname="geoShapeFile" />
+                        {
+                            faramValues.geoShapeFile &&
+                            <InternalGallery
+                                onlyFileName
+                                galleryId={faramValues.geoShapeFile}
+                            />
+                        }
+                        <span
+                            className={iconNames.help}
+                            title={this.props.countriesStrings('geoshapeTooltip')}
+                        />
+                        <HiddenInput faramElementName="geoShapeFile" />
                     </div>
                     <div className={styles.actionButtons}>
                         <DangerButton onClick={onClose}>
@@ -464,7 +436,7 @@ export default class EditAdminLevel extends React.PureComponent {
                             {this.props.countriesStrings('saveChangesButtonLabel')}
                         </PrimaryButton>
                     </div>
-                </Form>
+                </Faram>
             </div>
         );
     }

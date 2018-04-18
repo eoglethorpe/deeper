@@ -273,7 +273,7 @@ export default class Login extends React.PureComponent {
                         onValidationSuccess={this.handleFaramValidationSuccess}
                         schema={this.state.schema}
                         value={faramValues}
-                        errors={faramErrors}
+                        error={faramErrors}
                         disabled={pending}
                     >
                         <NonFieldErrors faramElementName="anyName" />

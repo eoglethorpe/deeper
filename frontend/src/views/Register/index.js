@@ -175,7 +175,7 @@ export default class Register extends React.PureComponent {
                 onValidationSuccess={this.handleFaramValidationSuccess}
                 schema={this.schema}
                 value={faramValues}
-                errors={faramErrors}
+                error={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
