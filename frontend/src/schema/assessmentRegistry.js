@@ -65,22 +65,6 @@ const assessmentRegistrySchema = [];
             priorityIssues: { type: 'array', required: true },
             specificNeedGroups: { type: 'array', required: true },
             affectedLocations: { type: 'array', required: true },
-
-            // Tooltips
-            sectorModeratePinTooltip: { type: 'string' },
-            sectorSeverePinTooltip: { type: 'string' },
-            sectorPinTooltip: { type: 'string' },
-
-            sectorPriorityTooltip: { type: 'string' },
-            sectorAffectedTooltip: { type: 'string' },
-            sectorSpecificNeedTooltip: { type: 'string' },
-
-            humanitarianLimitedTooltip: { type: 'string' },
-            humanitarianRestrictedTooltip: { type: 'string' },
-            humanitarianAccessConstraintsTooltip: { type: 'string' },
-
-            humanitarianPriorityIssueTooltip: { type: 'string' },
-            humanitarianAffectedLocationTooltip: { type: 'string' },
         },
     };
     assessmentRegistrySchema.push({ name, schema });
