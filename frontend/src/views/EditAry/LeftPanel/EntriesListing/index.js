@@ -1,29 +1,42 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+import { reverseRoute } from '../../../../vendor/react-store/utils/common';
+import { pathNames } from '../../../../constants';
 
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
+    leadIdFromRouteSelector,
     entryStringsSelector,
     editAryEntriesSelector,
     setEntriesForEditAryAction,
+    projectIdFromRouteSelector,
+    aryStringsSelector,
 } from '../../../../redux';
 
 import EntriesRequest from './requests/EntriesRequest';
 import styles from './styles.scss';
 
 const propTypes = {
+    activeLeadId: PropTypes.number.isRequired,
     leadId: PropTypes.number.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     entryStrings: PropTypes.func.isRequired,
     setEntries: PropTypes.func.isRequired,
+    activeProjectId: PropTypes.number.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
+    activeLeadId: leadIdFromRouteSelector(state),
     entryStrings: entryStringsSelector(state),
     entries: editAryEntriesSelector(state),
+    aryStrings: aryStringsSelector(state),
+    activeProjectId: projectIdFromRouteSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -104,9 +117,20 @@ export default class EntriesListing extends React.PureComponent {
     )
 
     render() {
+        const linkToEditEntries = reverseRoute(
+            pathNames.editEntries,
+            {
+                projectId: this.props.activeProjectId,
+                leadId: this.props.activeLeadId,
+            },
+        );
+
         return (
             <div className={styles.entriesList}>
                 { this.state.pendingEntries && <LoadingAnimation />}
+                <Link to={linkToEditEntries}>
+                    {this.props.aryStrings('editEntriesText')}
+                </Link>
                 <ListView
                     className={styles.scrollWrapper}
                     modifier={this.renderEntryItem}

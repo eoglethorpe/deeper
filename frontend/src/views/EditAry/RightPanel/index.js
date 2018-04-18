@@ -1,17 +1,13 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
-import { reverseRoute } from '../../../vendor/react-store/utils/common';
-import { pathNames } from '../../../constants';
 import {
-    leadIdFromRouteSelector,
-    projectIdFromRouteSelector,
     aryStringsSelector,
+    leadIdFromRouteSelector,
     aryTemplateMetadataSelector,
     aryTemplateMethodologySelector,
 
@@ -42,8 +38,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
-    activeProjectId: PropTypes.number.isRequired,
-    aryStrings: PropTypes.func.isRequired,
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     editAryFaramValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -53,6 +47,7 @@ const propTypes = {
     setErrorAry: PropTypes.func.isRequired,
     setAry: PropTypes.func.isRequired,
     changeAry: PropTypes.func.isRequired,
+    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -63,11 +58,10 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    aryStrings: aryStringsSelector(state),
     activeLeadId: leadIdFromRouteSelector(state),
-    activeProjectId: projectIdFromRouteSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
+    aryStrings: aryStringsSelector(state),
 
     editAryFaramValues: editAryFaramValuesSelector(state),
     editAryFaramErrors: editAryFaramErrorsSelector(state),
@@ -189,30 +183,6 @@ export default class RightPanel extends React.PureComponent {
             ),
         };
 
-        this.setTabAndViews(props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (
-            this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata ||
-            this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology
-        ) {
-            this.setState({
-                schema: RightPanel.createSchema(
-                    nextProps.aryTemplateMetadata,
-                    nextProps.aryTemplateMethodology,
-                ),
-            });
-        }
-    }
-
-    componentWillUnmount() {
-        if (this.aryPutRequest) {
-            this.aryPutRequest.stop();
-        }
-    }
-
-    setTabAndViews = (props) => {
         this.tabs = {
             metadata: props.aryStrings('metadataTabLabel'),
             // methodology: props.aryStrings('methodologyTabLabel'),
@@ -244,6 +214,26 @@ export default class RightPanel extends React.PureComponent {
                 ),
             },
         };
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (
+            this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata ||
+            this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology
+        ) {
+            this.setState({
+                schema: RightPanel.createSchema(
+                    nextProps.aryTemplateMetadata,
+                    nextProps.aryTemplateMethodology,
+                ),
+            });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.aryPutRequest) {
+            this.aryPutRequest.stop();
+        }
     }
 
     handleFaramChange = (faramValues, faramErrors) => {
@@ -281,13 +271,6 @@ export default class RightPanel extends React.PureComponent {
 
     render() {
         const { currentTabKey } = this.state;
-        const linkToEditEntries = reverseRoute(
-            pathNames.editEntries,
-            {
-                projectId: this.props.activeProjectId,
-                leadId: this.props.activeLeadId,
-            },
-        );
 
         return (
             <Faram
@@ -306,12 +289,6 @@ export default class RightPanel extends React.PureComponent {
                     tabs={this.tabs}
                     onClick={this.handleTabClick}
                 >
-                    <Link
-                        className={styles.entriesLink}
-                        to={linkToEditEntries}
-                    >
-                        {this.props.aryStrings('entriesTabLabel')}
-                    </Link>
                     <SuccessButton
                         className={styles.saveButton}
                         type="submit"

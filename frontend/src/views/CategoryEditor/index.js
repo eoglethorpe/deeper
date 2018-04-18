@@ -201,6 +201,7 @@ export default class CategoryEditor extends React.PureComponent {
                     const {
                         categoryEditorViewVersionId,
                     } = this.props;
+
                     if (isFalsy(categoryEditorViewVersionId)) {
                         this.props.setCategoryEditor({ categoryEditor: response });
                     } else if (categoryEditorViewVersionId < response.versionId) {

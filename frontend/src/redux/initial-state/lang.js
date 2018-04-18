@@ -568,6 +568,7 @@ const initialLangState = {
                 1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
                 250: 'Update GEO File',
                 251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
+                1005: 'Edit entries',
             },
             views: {
                 af: {
@@ -657,6 +658,7 @@ const initialLangState = {
                     summaryTabLabel: 7003,
                     scoreTabLabel: 7004,
                     noAryTemplateForProject: 144,
+                    editEntriesText: 1005,
                 },
                 ce: {
                     saveCeButtonLabel: 25,

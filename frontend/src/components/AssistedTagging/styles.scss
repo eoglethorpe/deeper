@@ -1,8 +1,6 @@
 @import '../../stylesheets/base';
 
 .assisted-tagging {
-    @include transition-medium;
-
     &.assistant-shown {
         filter: brightness(70%);
         pointer-events: none;
