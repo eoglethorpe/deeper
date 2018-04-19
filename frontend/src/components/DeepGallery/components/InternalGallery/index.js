@@ -125,6 +125,8 @@ export default class InternalGallery extends React.PureComponent {
     renderPending = () => {
         const { className, pendingLabel, onlyFileName } = this.props;
 
+        // FIXME: use LoadingAnimation small here
+        // XXX: what does onlyFileName do?
         return (
             <div className={`${styles.pendingContainer} ${onlyFileName ? styles.fileName : ''} ${className}`}>
                 {

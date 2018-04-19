@@ -286,6 +286,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
                     pending ? (
                         <LoadingAnimation
                             message={this.props.commonStrings('simplifyingLead')}
+                            small
                         />
                     ) : (
                         <Content />

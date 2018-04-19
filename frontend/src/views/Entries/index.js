@@ -117,7 +117,7 @@ export default class Entries extends React.PureComponent {
         super(props);
 
         this.state = {
-            pendingEntries: false,
+            pendingEntries: true,
             pendingAf: true,
         };
     }
@@ -156,7 +156,7 @@ export default class Entries extends React.PureComponent {
             }
 
             this.setState({
-                pendingEntries: false,
+                pendingEntries: true,
                 pendingAf: true,
             });
 
@@ -315,6 +315,7 @@ export default class Entries extends React.PureComponent {
             .failure((response) => {
                 this.setState({
                     pendingAf: false,
+                    pendingEntries: false,
                 });
                 const message = transformResponseErrorToFormError(response.errors)
                     .formErrors
@@ -330,6 +331,7 @@ export default class Entries extends React.PureComponent {
             .fatal(() => {
                 this.setState({
                     pendingAf: false,
+                    pendingEntries: false,
                 });
                 notify.send({
                     title: 'Project', // FIXME: strings
@@ -353,9 +355,6 @@ export default class Entries extends React.PureComponent {
             .preLoad(() => {
                 this.setState({ pendingAf: true });
             })
-            .postLoad(() => {
-                this.setState({ pendingAf: false });
-            })
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -368,9 +367,7 @@ export default class Entries extends React.PureComponent {
                     );
                     this.entriesRequest.start();
 
-                    this.setState({
-                        pendingEntries: true,
-                    });
+                    this.setState({ pendingAf: false });
                 } catch (er) {
                     console.error(er);
                 }
@@ -387,6 +384,10 @@ export default class Entries extends React.PureComponent {
                     message,
                     duration: notify.duration.MEDIUM,
                 });
+                this.setState({
+                    pendingAf: false,
+                    pendingEntries: false,
+                });
             })
             .fatal(() => {
                 notify.send({
@@ -394,6 +395,10 @@ export default class Entries extends React.PureComponent {
                     type: notify.type.ERROR,
                     message: 'Couldn\'t load analysis framework', // FIXME: strings
                     duration: notify.duration.MEDIUM,
+                });
+                this.setState({
+                    pendingAf: false,
+                    pendingEntries: false,
                 });
             })
             .build();

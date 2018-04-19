@@ -16,14 +16,6 @@
         .heading {
             flex-grow: 1;
         }
-
-        .action-buttons {
-            flex-shrink: 0;
-
-            button {
-                margin-left: $spacing-small;
-            }
-        }
     }
 
     .non-field-errors {
