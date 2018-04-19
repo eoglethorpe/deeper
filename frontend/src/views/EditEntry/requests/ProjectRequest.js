@@ -11,11 +11,13 @@ export default class ProjectRequest {
             api,
             setProject,
             startAfRequest,
+            startGeoOptionsRequest,
             setState,
         } = params;
         this.setProject = setProject;
         this.api = api;
         this.startAfRequest = startAfRequest;
+        this.startGeoOptionsRequest = startGeoOptionsRequest;
         this.setState = setState;
     }
 
@@ -35,6 +37,9 @@ export default class ProjectRequest {
                     // Load analysisFramework
                     const { analysisFramework } = response;
                     this.startAfRequest(analysisFramework, leadId);
+
+                    // Load geo options
+                    this.startGeoOptionsRequest(projectId);
                 } catch (er) {
                     console.error(er);
                 }

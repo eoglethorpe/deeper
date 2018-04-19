@@ -23,6 +23,7 @@ import {
     setAnalysisFrameworkAction,
     setEditEntryLeadAction,
     setProjectAction,
+    setGeoOptionsAction,
 
     saveEntryAction,
     changeEntryAction,
@@ -35,6 +36,7 @@ import {
     removeAllEntriesAction,
 
     routeUrlSelector,
+    entryStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
 } from '../../redux';
@@ -51,6 +53,7 @@ import AfRequest from './requests/AfRequest';
 import EntriesRequest from './requests/EntriesRequest';
 import SaveEntryRequest from './requests/SaveEntryRequest';
 import DeleteEntryRequest from './requests/DeleteEntryRequest';
+import GeoOptionsRequest from './requests/GeoOptionsRequest';
 
 import API from './API';
 import Overview from './Overview';
@@ -67,6 +70,7 @@ const propTypes = {
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
     setProject: PropTypes.func.isRequired,
+    setGeoOptions: PropTypes.func.isRequired,
 
     addEntry: PropTypes.func.isRequired,
     saveEntry: PropTypes.func.isRequired,
@@ -81,6 +85,7 @@ const propTypes = {
 
     notificationStrings: PropTypes.func.isRequired,
     commonStrings: PropTypes.func.isRequired,
+    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -98,6 +103,7 @@ const mapStateToProps = (state, props) => ({
 
     notificationStrings: notificationStringsSelector(state),
     commonStrings: commonStringsSelector(state),
+    entryStrings: entryStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -107,6 +113,7 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryLeadAction(params)),
     setProject: params => dispatch(setProjectAction(params)),
+    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
 
     diffEntries: params => dispatch(diffEntriesAction(params)),
     addEntry: params => dispatch(addEntryAction(params)),
@@ -139,6 +146,7 @@ export default class EditEntry extends React.PureComponent {
 
             pendingEntries: true,
             pendingAf: true,
+            pendingGeo: true,
 
             pendingSaveAll: false,
         };
@@ -201,6 +209,10 @@ export default class EditEntry extends React.PureComponent {
             this.entriesRequest.stop();
         }
 
+        if (this.geoOptionsRequest) {
+            this.geoOptionsRequest.stop();
+        }
+
         this.saveRequestCoordinator.stop();
     }
 
@@ -209,10 +221,21 @@ export default class EditEntry extends React.PureComponent {
             api: this.api,
             setProject: this.props.setProject,
             startAfRequest: this.startAfRequest,
+            startGeoOptionsRequest: this.startGeoOptionsRequest,
             setState: params => this.setState(params),
         });
         this.projectRequest = request.create(project, leadId);
         this.projectRequest.start();
+    }
+
+    startGeoOptionsRequest = (projectId) => {
+        const request = new GeoOptionsRequest({
+            setState: params => this.setState(params),
+            setGeoOptions: this.props.setGeoOptions,
+            entryStrings: this.props.entryStrings,
+        });
+        this.geoOptionsRequest = request.create(projectId);
+        this.geoOptionsRequest.start();
     }
 
     startAfRequest = (analysisFramework, leadId) => {
@@ -403,11 +426,13 @@ export default class EditEntry extends React.PureComponent {
         } = this.props;
         const {
             pendingSaveAll,
+
             pendingEntries,
             pendingAf,
+            pendingGeo,
         } = this.state;
 
-        if (pendingEntries || pendingAf) {
+        if (pendingEntries || pendingAf || pendingGeo) {
             return (
                 <div className={styles.editEntry} >
                     <LoadingAnimation large />

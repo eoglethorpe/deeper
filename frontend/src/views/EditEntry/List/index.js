@@ -11,38 +11,24 @@ import AccentButton from '../../../vendor/react-store/components/Action/Button/A
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 
-import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-
-import {
-    createUrlForGeoOptions,
-    createParamsForGeoOptionsGET,
-
-    transformResponseErrorToFormError,
-} from '../../../rest';
 import {
     editEntryCurrentLeadSelector,
-    projectIdFromRouteSelector,
     markForDeleteEntryAction,
 
     setActiveEntryAction,
-    setGeoOptionsAction,
     entryStringsSelector,
     afStringsSelector,
 } from '../../../redux';
 import { iconNames } from '../../../constants';
 import { entryAccessor } from '../../../entities/entry';
-import schema from '../../../schema';
-import notify from '../../../notify';
 
 import widgetStore from '../../../widgets';
 import styles from './styles.scss';
 
 const propTypes = {
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    projectId: PropTypes.number,
     entryStrings: PropTypes.func.isRequired,
     afStrings: PropTypes.func.isRequired,
-    setGeoOptions: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
     markForDeleteEntry: PropTypes.func.isRequired,
 
@@ -56,18 +42,15 @@ const propTypes = {
 };
 
 const defaultProps = {
-    projectId: undefined,
 };
 
 const mapStateToProps = (state, props) => ({
     leadDetails: editEntryCurrentLeadSelector(state, props),
-    projectId: projectIdFromRouteSelector(state, props),
     entryStrings: entryStringsSelector(state),
     afStrings: afStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
     setActiveEntry: params => dispatch(setActiveEntryAction(params)),
     markForDeleteEntry: params => dispatch(markForDeleteEntryAction(params)),
 });
@@ -90,8 +73,6 @@ export default class List extends React.PureComponent {
             applyMode: undefined, // all or below
             applyItemId: undefined,
             applyEntryId: undefined,
-
-            pendingGeo: true,
         };
 
         this.items = [];
@@ -102,11 +83,13 @@ export default class List extends React.PureComponent {
         this.updateGridItems(props.entries);
     }
 
+    /*
     componentWillMount() {
         const { projectId } = this.props;
         this.geoOptionsRequest = this.createGeoOptionsRequest(projectId);
         this.geoOptionsRequest.start();
     }
+    */
 
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
@@ -116,11 +99,13 @@ export default class List extends React.PureComponent {
         }
     }
 
+    /*
     componentWillUnmount() {
         if (this.geoOptionsRequest) {
             this.geoOptionsRequest.stop();
         }
     }
+    */
 
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
@@ -185,48 +170,6 @@ export default class List extends React.PureComponent {
             applyEntryId: undefined,
         });
     }
-
-    // REST
-    createGeoOptionsRequest = (projectId) => {
-        const geoOptionsRequest = new FgRestBuilder()
-            .url(createUrlForGeoOptions(projectId))
-            .params(() => createParamsForGeoOptionsGET())
-            .preLoad(() => this.setState({ pendingGeo: true }))
-            .success((response) => {
-                try {
-                    schema.validate(response, 'geoOptions');
-                    this.props.setGeoOptions({
-                        projectId,
-                        locations: response,
-                    });
-                    this.setState({ pendingGeo: false });
-                } catch (er) {
-                    console.error(er);
-                }
-            })
-            .failure((response) => {
-                const message = transformResponseErrorToFormError(response.errors)
-                    .formErrors
-                    .errors
-                    .join(' ');
-                notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
-                    type: notify.type.ERROR,
-                    message,
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .fatal(() => {
-                notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
-                    type: notify.type.ERROR,
-                    message: this.props.entryStrings('geoOptionsFatalMessage'),
-                    duration: notify.duration.MEDIUM,
-                });
-            })
-            .build();
-        return geoOptionsRequest;
-    };
 
     updateAnalysisFramework(analysisFramework) {
         this.widgets = widgetStore
@@ -445,13 +388,7 @@ export default class List extends React.PureComponent {
                         </div>
                     ) : (
                         <div className={styles.entryList}>
-                            {
-                                this.state.pendingGeo ? (
-                                    <LoadingAnimation large />
-                                ) : (
-                                    entries.map(this.renderEntry)
-                                )
-                            }
+                            {entries.map(this.renderEntry)}
                         </div>
                     )
                 }
