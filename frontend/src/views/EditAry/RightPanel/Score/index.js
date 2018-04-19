@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import iconNames from '../../../../constants/iconNames';
 import List from '../../../../vendor/react-store/components/View/List';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
@@ -48,41 +49,37 @@ export default class Score extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static calculateScaleValues = (assessmentScoreScales = {}) => (
+        assessmentScoreScales.reduce(
+            (acc, row) => {
+                acc[row.value] = {
+                    title: row.title,
+                    color: row.color,
+                };
+
+                return acc;
+            },
+            {},
+        )
+    )
+
     constructor(props) {
         super(props);
 
         this.state = {
-            scaleValues: this.getScaleValues({}, props),
+            scaleValues: Score.calculateScaleValues(props.assessmentScoreScales),
         };
     }
 
     componentWillReceiveProps(nextProps) {
-        const scaleValues = this.getScaleValues(this.props, nextProps);
-        this.setState({ scaleValues });
-    }
-
-    getScaleValues = (props, nextProps) => {
         const { assessmentScoreScales: newAssessmentScoreScales } = nextProps;
-        const { assessmentScoreScales: oldAssessmentScoreScales } = props;
+        const { assessmentScoreScales: oldAssessmentScoreScales } = this.props;
 
         if (newAssessmentScoreScales !== oldAssessmentScoreScales) {
-            const scaleValues = newAssessmentScoreScales.reduce(
-                (acc, row) => {
-                    acc[row.value] = {
-                        title: row.title,
-                        color: row.color,
-                    };
-
-                    return acc;
-                },
-                {},
-            );
-
-            return scaleValues;
+            const scaleValues = Score.calculateScaleValues(newAssessmentScoreScales);
+            this.setState({ scaleValues });
         }
-
-        return undefined;
-    };
+    }
 
     getClassName = () => {
         const { className } = this.props;
@@ -131,6 +128,7 @@ export default class Score extends React.PureComponent {
                 </td>
                 <td className={styles.cell}>
                     <ScaleInput
+                        faramElementName={String(id)}
                         options={scaleValues}
                     />
                 </td>
@@ -146,7 +144,7 @@ export default class Score extends React.PureComponent {
         } = data;
 
         return (
-            <React.Fragment key={id}>
+            <FaramGroup key={id} faramElementName={String(id)}>
                 <tr className={styles.headerRow}>
                     <td
                         className={styles.pillarTitle}
@@ -159,7 +157,7 @@ export default class Score extends React.PureComponent {
                     data={questions}
                     modifier={this.renderQuestions}
                 />
-            </React.Fragment>
+            </FaramGroup>
         );
     }
 
@@ -187,6 +185,7 @@ export default class Score extends React.PureComponent {
                     { currentSector.title }
                 </div>
                 <ScaleMatrixInput
+                    faramElementName={String(sectorId)}
                     rows={pillarData.rows}
                     columns={pillarData.columns}
                     scaleValues={scaleValues}
@@ -198,7 +197,6 @@ export default class Score extends React.PureComponent {
 
     renderMatrixPillar = (kp, pillarData) => {
         const { selectedSectors } = this.props;
-
         return (
             <div
                 key={pillarData.id}
@@ -228,32 +226,36 @@ export default class Score extends React.PureComponent {
 
         return (
             <div className={className}>
-                <div className={styles.summary}>
-                    <List
-                        data={assessmentPillars}
-                        modifier={this.renderSummaryItem}
-                    />
-                </div>
-                <div className={styles.content}>
-                    <div className={styles.left}>
-                        <table className={styles.table}>
-                            <tbody className={styles.body}>
-                                {
-                                    <List
-                                        data={assessmentPillars}
-                                        modifier={this.renderPillars}
-                                    />
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                    <div className={styles.right}>
+                <FaramGroup faramElementName="sector">
+                    <div className={styles.summary}>
                         <List
-                            data={assessmentMatrixPillars}
-                            modifier={this.renderMatrixPillar}
+                            data={assessmentPillars}
+                            modifier={this.renderSummaryItem}
                         />
                     </div>
-                </div>
+                    <div className={styles.content}>
+                        <div className={styles.left}>
+                            <table className={styles.table}>
+                                <tbody className={styles.body}>
+                                    <FaramGroup faramElementName="pillars">
+                                        <List
+                                            data={assessmentPillars}
+                                            modifier={this.renderPillars}
+                                        />
+                                    </FaramGroup>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className={styles.right}>
+                            <FaramGroup faramElementName="matrixPillars">
+                                <List
+                                    data={assessmentMatrixPillars}
+                                    modifier={this.renderMatrixPillar}
+                                />
+                            </FaramGroup>
+                        </div>
+                    </div>
+                </FaramGroup>
             </div>
         );
     }

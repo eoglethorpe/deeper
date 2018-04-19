@@ -86,8 +86,13 @@ export default class RightPanel extends React.PureComponent {
             additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
             // methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
             summary: [],
+            sector: {
+                fields: {
+                    pillars: [],
+                    matrixPillars: [],
+                },
+            },
         } };
-        console.warn(schema);
         return schema;
     }
 

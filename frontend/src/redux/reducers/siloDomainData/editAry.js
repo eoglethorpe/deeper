@@ -18,6 +18,7 @@ export const setAryForEditAryAction = ({
     metadata,
     methodology,
     summary,
+    score,
 }) => ({
     type: EDIT_ARY__SET_ARY,
     lead,
@@ -26,6 +27,7 @@ export const setAryForEditAryAction = ({
     metadata,
     methodology,
     summary,
+    score,
 });
 
 export const saveAryForEditAryAction = ({ lead }) => ({
@@ -68,6 +70,7 @@ const setAry = (state, action) => {
         metadata,
         methodology,
         summary,
+        score,
     } = action;
 
     const settings = {
@@ -82,6 +85,7 @@ const setAry = (state, action) => {
                     metadata,
                     methodology,
                     summary,
+                    score,
                 } },
             } },
         },

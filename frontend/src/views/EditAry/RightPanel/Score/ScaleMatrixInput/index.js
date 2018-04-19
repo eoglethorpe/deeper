@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import List from '../../../../../vendor/react-store/components/View/List';
+import FaramElement from '../../../../../vendor/react-store/components/Input/Faram/FaramElement';
 import { getColorOnBgColor } from '../../../../../vendor/react-store/utils/common.js';
 
 import styles from './styles.scss';
@@ -25,10 +26,11 @@ const defaultProps = {
     columns: [],
     scales: {},
     scaleValues: {},
-    value: '',
+    value: undefined,
     onChange: () => {},
 };
 
+@FaramElement('input')
 export default class ScaleMatrixInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

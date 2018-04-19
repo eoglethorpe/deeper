@@ -32,6 +32,7 @@ export default class AryPutRequest {
                         metadata: response.metadata,
                         methodology: response.methodology,
                         summary: response.summary,
+                        score: response.score,
                     });
 
                     // FIXME: use strings
