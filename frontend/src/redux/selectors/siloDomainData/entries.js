@@ -44,10 +44,12 @@ export const analysisFrameworkForProjectSelector = createSelector(
     projectIdFromRoute,
     projectsSelector,
     analysisFrameworksSelector,
-    (projectId, projects, analysisFrameworks) => (
-        (projects[projectId].analysisFramework
-            && analysisFrameworks[projects[projectId].analysisFramework]) || emptyObject
-    ),
+    (projectId, projects, analysisFrameworks) => {
+        if (!projects[projectId] || !projects[projectId].analysisFramework) {
+            return emptyObject;
+        }
+        return analysisFrameworks[projects[projectId].analysisFramework] || emptyObject;
+    },
 );
 
 // Test
