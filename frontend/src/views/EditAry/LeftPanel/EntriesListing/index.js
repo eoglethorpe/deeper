@@ -13,6 +13,7 @@ import {
     leadIdFromRouteSelector,
     entryStringsSelector,
     editAryEntriesSelector,
+    editAryLeadSelector,
     setEntriesForEditAryAction,
     projectIdFromRouteSelector,
     aryStringsSelector,
@@ -25,6 +26,7 @@ const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
     leadId: PropTypes.number.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     entryStrings: PropTypes.func.isRequired,
     setEntries: PropTypes.func.isRequired,
     activeProjectId: PropTypes.number.isRequired,
@@ -35,6 +37,7 @@ const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     entryStrings: entryStringsSelector(state),
     entries: editAryEntriesSelector(state),
+    lead: editAryLeadSelector(state),
     aryStrings: aryStringsSelector(state),
     activeProjectId: projectIdFromRouteSelector(state),
 });
@@ -126,17 +129,25 @@ export default class EntriesListing extends React.PureComponent {
         );
 
         return (
-            <div className={styles.entriesList}>
+            <div className={styles.entriesListing}>
                 { this.state.pendingEntries && <LoadingAnimation />}
-                <Link to={linkToEditEntries}>
-                    {this.props.aryStrings('editEntriesText')}
-                </Link>
                 <ListView
-                    className={styles.scrollWrapper}
+                    className={styles.entriesList}
                     modifier={this.renderEntryItem}
                     data={this.props.entries}
                     keyExtractor={EntriesListing.calcEntryKey}
                 />
+                <div className={styles.leadDetail}>
+                    <div className={styles.title}>
+                        { this.props.lead.title }
+                    </div>
+                    <Link
+                        to={linkToEditEntries}
+                        className={styles.editEntriesLink}
+                    >
+                        {this.props.aryStrings('editEntriesText')}
+                    </Link>
+                </div>
             </div>
         );
     }

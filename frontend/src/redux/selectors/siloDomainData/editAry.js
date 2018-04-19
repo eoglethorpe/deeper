@@ -51,6 +51,11 @@ export const editAryEntriesSelector = createSelector(
     ary => ary.entries || emptyList,
 );
 
+export const editAryLeadSelector = createSelector(
+    editAryFromRouteSelector,
+    ary => ary.lead || emptyObject,
+);
+
 export const editArySelectedSectorsSelector = createSelector(
     editAryFaramValuesSelector,
     (faramValues) => {

@@ -26,7 +26,11 @@ export default class EntriesRequest {
             .success((response) => {
                 try {
                     schema.validate(response, 'entriesGetResponse');
-                    this.setEntries({ entries: response.results.entries, lead: leadId });
+                    this.setEntries({
+                        entries: response.results.entries,
+                        leadId,
+                        lead: response.results.leads[0],
+                    });
                     this.setState({ pendingEntries: false });
                 } catch (er) {
                     console.error(er);

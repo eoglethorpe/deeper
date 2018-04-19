@@ -53,8 +53,9 @@ export const setErrorAryForEditAryAction = ({
 });
 
 
-export const setEntriesForEditAryAction = ({ lead, entries }) => ({
+export const setEntriesForEditAryAction = ({ leadId, lead, entries }) => ({
     type: EDIT_ARY__SET_ENTRIES,
+    leadId,
     lead,
     entries,
 });
@@ -151,10 +152,11 @@ const saveAry = (state, action) => {
 };
 
 const setEntries = (state, action) => {
-    const { lead, entries } = action;
+    const { leadId, entries, lead } = action;
     const settings = {
         editAry: {
-            [lead]: { $auto: {
+            [leadId]: { $auto: {
+                lead: { $set: lead },
                 entries: { $set: entries },
             } },
         },
