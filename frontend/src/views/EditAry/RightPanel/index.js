@@ -30,9 +30,7 @@ import AryPutRequest from '../requests/AryPutRequest';
 import Metadata from './Metadata';
 import Summary from './Summary';
 import Score from './Score';
-/*
 import Methodology from './Methodology';
-*/
 
 import styles from './styles.scss';
 
@@ -80,11 +78,11 @@ export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static createSchema = (aryTemplateMetadata /* , aryTemplateMethodology */) => {
+    static createSchema = (aryTemplateMetadata, aryTemplateMethodology) => {
         const schema = { fields: {
             metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
             additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
-            // methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
+            methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
             summary: [],
             sector: {
                 fields: {
@@ -135,7 +133,6 @@ export default class RightPanel extends React.PureComponent {
         return schema;
     }
 
-    /*
     static createMethodologySchema = (aryTemplateMethodology = {}) => {
         const schema = { fields: {
             attributes: {
@@ -174,7 +171,6 @@ export default class RightPanel extends React.PureComponent {
 
         return schema;
     }
-    */
 
     constructor(props) {
         super(props);
@@ -190,7 +186,7 @@ export default class RightPanel extends React.PureComponent {
 
         this.tabs = {
             metadata: props.aryStrings('metadataTabLabel'),
-            // methodology: props.aryStrings('methodologyTabLabel'),
+            methodology: props.aryStrings('methodologyTabLabel'),
             summary: props.aryStrings('summaryTabLabel'),
             score: props.aryStrings('scoreTabLabel'),
         };
@@ -212,13 +208,11 @@ export default class RightPanel extends React.PureComponent {
                     />
                 ),
             },
-            /*
             methodology: {
                 component: () => (
                     <Methodology pending={this.state.pending} />
                 ),
             },
-            */
             score: {
                 component: () => (
                     <Score

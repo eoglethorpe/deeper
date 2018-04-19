@@ -65,7 +65,7 @@ export default class Metadata extends React.PureComponent {
                     <header className={styles.header}>
                         <NonFieldErrors
                             className={styles.nonFieldErrors}
-                            faramElementName="anyName"
+                            faramElement
                         />
                     </header>
                     <div className={styles.top}>

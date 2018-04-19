@@ -276,7 +276,7 @@ export default class Login extends React.PureComponent {
                         error={faramErrors}
                         disabled={pending}
                     >
-                        <NonFieldErrors faramElementName="anyName" />
+                        <NonFieldErrors faramElement />
                         <TextInput
                             faramElementName="email"
                             label={this.props.loginStrings('emailLabel')}
