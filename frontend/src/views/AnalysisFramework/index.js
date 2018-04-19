@@ -9,6 +9,7 @@ import {
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import { checkVersion } from '../../vendor/react-store/utils/common';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
@@ -85,25 +86,26 @@ export default class AnalysisFramework extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
-                    const { analysisFramework } = this.props;
+                    const { analysisFramework = {} } = this.props;
 
-                    // no analysis framework, set
-                    // if analysis framework, set only if versionId is greater
-                    if (!analysisFramework) {
+                    const {
+                        shouldSetValue,
+                        isValueOverriden,
+                    } = checkVersion(analysisFramework.versionId, response.versionId);
+
+                    if (shouldSetValue) {
                         this.props.setAnalysisFramework({
                             analysisFramework: response,
                         });
-                    } else if (analysisFramework.versionId < response.versionId) {
+                    }
+                    if (isValueOverriden) {
                         notify.send({
                             type: notify.type.WARNING,
                             title: this.props.notificationStrings('afUpdate'),
                             message: this.props.notificationStrings('afUpdateOverridden'),
                             duration: notify.duration.SLOW,
                         });
-                        this.props.setAnalysisFramework({
-                            analysisFramework: response,
-                        });
-                    } // else skip
+                    }
                 } catch (er) {
                     console.error(er);
                 }

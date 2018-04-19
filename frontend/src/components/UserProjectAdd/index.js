@@ -7,7 +7,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import Form, { requiredCondition } from '../../vendor/react-store/components/Input/Form';
+import Faram, {
+    requiredCondition,
+} from '../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
@@ -15,7 +17,7 @@ import DangerButton from '../../vendor/react-store/components/Action/Button/Dang
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForProjectCreate,
     urlForProjectCreate,
 } from '../../rest';
@@ -66,9 +68,8 @@ export default class UserProjectAdd extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
         };
@@ -120,30 +121,27 @@ export default class UserProjectAdd extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                // FIXME: no need to use notify here
                 notify.send({
                     title: this.props.notificationStrings('userProjectCreate'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('userProjectCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
+                // FIXME: no need to use notify here
                 notify.send({
                     title: this.props.notificationStrings('userProjectCreate'),
                     type: notify.type.ERROR,
                     message: this.props.notificationStrings('userProjectCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
+                // FIXME: use strings
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save project.'] },
+                    faramErrors: { $internal: ['Error while trying to save project.'] },
                 });
             })
             .build();
@@ -152,20 +150,16 @@ export default class UserProjectAdd extends React.PureComponent {
 
     // FORM RELATED
 
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    changeCallback = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    failureCallback = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
     successCallback = (values) => {
@@ -178,41 +172,39 @@ export default class UserProjectAdd extends React.PureComponent {
     };
 
     // BUTTONS
-    handleFormClose = () => {
+    handleModalClose = () => {
         this.props.handleModalClose();
     }
 
     render() {
         const {
-            formValues,
-            formErrors,
-            formFieldErrors,
+            faramValues,
+            faramErrors,
             pending,
             pristine,
         } = this.state;
 
         return (
-            <Form
+            <Faram
                 className={styles.userProjectAddForm}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+                onChange={this.changeCallback}
+                onValidationFailure={this.failureCallback}
+                onValidationSuccess={this.successCallback}
                 schema={this.schema}
-                value={formValues}
+                value={faramValues}
+                error={faramErrors}
                 disabled={pending}
-                fieldErrors={formFieldErrors}
-                formErrors={formErrors}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElementName="anyName" />
                 <TextInput
+                    faramElementName="title"
                     label={this.props.userStrings('addProjectModalLabel')}
-                    formname="title"
                     placeholder={this.props.userStrings('addProjectModalPlaceholder')}
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleFormClose}>
+                    <DangerButton onClick={this.handleModalClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton
@@ -222,7 +214,7 @@ export default class UserProjectAdd extends React.PureComponent {
                         {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

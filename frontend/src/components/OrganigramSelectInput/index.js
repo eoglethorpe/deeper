@@ -10,18 +10,20 @@ import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../vendor/react-store/components/View/Modal/Footer';
 import HintAndError from '../../vendor/react-store/components/Input/HintAndError';
+import FaramElement from '../../vendor/react-store/components/Input/Faram/FaramElement';
 
 import { iconNames } from '../../constants';
 import styles from './styles.scss';
 
+const emptyObject = {};
 
 const propTypes = {
     className: PropTypes.string,
     label: PropTypes.string,
     showLabel: PropTypes.bool,
-    data: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
     onChange: PropTypes.func,
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([PropTypes.number, PropTypes.string, PropTypes.object]),
 
     childrenSelector: PropTypes.func,
     labelSelector: PropTypes.func.isRequired,
@@ -50,6 +52,7 @@ const defaultProps = {
     showHintAndError: true,
 };
 
+@FaramElement('input')
 export default class OrganigramSelectInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -61,11 +64,17 @@ export default class OrganigramSelectInput extends React.PureComponent {
             value: props.value,
             showOrgModal: false,
         };
+
+        this.processData(props);
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.value !== this.props.value) {
             this.setState({ value: nextProps.value });
+        }
+
+        if (nextProps.data !== this.props.data) {
+            this.processData(nextProps);
         }
     }
 
@@ -88,6 +97,21 @@ export default class OrganigramSelectInput extends React.PureComponent {
         }
 
         return classNames.join(' ');
+    }
+
+    processData = ({ data, idSelector, labelSelector, childrenSelector }) => {
+        this.idLabels = {};
+        this.processNode(data[0], idSelector, labelSelector, childrenSelector);
+    }
+
+    processNode = (node, idSelector, labelSelector, childrenSelector) => {
+        if (!node) {
+            return;
+        }
+
+        this.idLabels[idSelector(node)] = labelSelector(node);
+        const children = childrenSelector(node);
+        children.forEach(c => this.processNode(c, idSelector, labelSelector, childrenSelector));
     }
 
     handleCancelClick = () => {
@@ -139,7 +163,7 @@ export default class OrganigramSelectInput extends React.PureComponent {
                         labelAccessor={labelSelector}
                         onSelection={this.handleOrgSelection}
                         value={value}
-                        data={data}
+                        data={data[0] || emptyObject}
                     />
                 </ModalBody>
                 <ModalFooter>
@@ -155,7 +179,8 @@ export default class OrganigramSelectInput extends React.PureComponent {
     }
 
     renderValue = () => {
-        const { value } = this.props;
+        const { value, labelSelector } = this.props;
+        const { idLabels } = this;
 
         if (value === undefined) {
             return (
@@ -167,7 +192,7 @@ export default class OrganigramSelectInput extends React.PureComponent {
 
         return (
             <div className={styles.value}>
-                { value }
+                { idLabels[value] }
             </div>
         );
     }

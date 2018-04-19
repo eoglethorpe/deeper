@@ -10,6 +10,7 @@ import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../vendor/react-store/components/View/Modal/Footer';
 import ListInput from '../../vendor/react-store/components/Input/ListInput';
+import FaramElement from '../../vendor/react-store/components/Input/Faram/FaramElement';
 
 import { iconNames } from '../../constants';
 import styles from './styles.scss';
@@ -32,6 +33,7 @@ const defaultProps = {
 
 const emptyObject = {};
 
+@FaramElement('input')
 export default class OrganigramWithList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;

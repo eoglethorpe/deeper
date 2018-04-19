@@ -1,31 +1,23 @@
 import {
-    analyzeFieldErrors,
-    analyzeFormErrors,
-} from '../../../vendor/react-store/components/Input/Form/validator';
+    analyzeErrors,
+} from '../../../vendor/react-store/components/Input/Faram/validator';
 import update from '../../../vendor/react-store/utils/immutable-update';
 
 // TYPE
 
 export const EDIT_ARY__SET_ARY = 'siloDomainData/EDIT_ARY__SET_ARY';
-export const EDIT_ARY__CHANGE_METHODOLOGY_ARY = 'siloDomainData/EDIT_ARY__CHANGE_METHODOLOGY_ARY';
-export const EDIT_ARY__CHANGE_METADATA_ARY = 'siloDomainData/EDIT_ARY__CHANGE_METADATA_ARY';
 export const EDIT_ARY__SAVE_ARY = 'siloDomainData/EDIT_ARY__SAVE_ARY';
+export const EDIT_ARY__CHANGE_ARY = 'siloDomainData/EDIT_ARY__CHANGE_ARY';
 export const EDIT_ARY__SET_ERROR_ARY = 'siloDomainData/EDIT_ARY__SET_ERROR_ARY';
 export const EDIT_ARY__SET_ENTRIES = 'siloDomainData/EDIT_ARY__SET_ENTRIES';
 
 // ACTION-CREATOR
 
-export const setErrorAryForEditAryAction = ({
-    lead, formErrors, fieldErrors,
-}) => ({
-    type: EDIT_ARY__SET_ERROR_ARY,
-    lead,
-    formErrors,
-    fieldErrors,
-});
-
 export const setAryForEditAryAction = ({
-    lead, serverId, versionId, metadata, methodology,
+    lead, serverId, versionId,
+    metadata,
+    methodology,
+    summary,
 }) => ({
     type: EDIT_ARY__SET_ARY,
     lead,
@@ -33,6 +25,7 @@ export const setAryForEditAryAction = ({
     versionId,
     metadata,
     methodology,
+    summary,
 });
 
 export const saveAryForEditAryAction = ({ lead }) => ({
@@ -40,23 +33,23 @@ export const saveAryForEditAryAction = ({ lead }) => ({
     lead,
 });
 
-const changeAryAction = type => ({
-    formValues, formErrors, fieldErrors, lead,
+export const changeAryForEditAryAction = ({
+    lead, faramValues, faramErrors,
 }) => ({
-    type,
+    type: EDIT_ARY__CHANGE_ARY,
     lead,
-    formValues,
-    formErrors,
-    fieldErrors,
+    faramValues,
+    faramErrors,
 });
 
-export const changeAryMetadataForEditAryAction = changeAryAction(
-    EDIT_ARY__CHANGE_METADATA_ARY,
-);
+export const setErrorAryForEditAryAction = ({
+    lead, faramErrors,
+}) => ({
+    type: EDIT_ARY__SET_ERROR_ARY,
+    lead,
+    faramErrors,
+});
 
-export const changeAryMethodologyForEditAryAction = changeAryAction(
-    EDIT_ARY__CHANGE_METHODOLOGY_ARY,
-);
 
 export const setEntriesForEditAryAction = ({ lead, entries }) => ({
     type: EDIT_ARY__SET_ENTRIES,
@@ -74,7 +67,9 @@ const setAry = (state, action) => {
         versionId,
         metadata,
         methodology,
+        summary,
     } = action;
+
     const settings = {
         editAry: {
             [lead]: { $auto: {
@@ -82,11 +77,11 @@ const setAry = (state, action) => {
                 versionId: { $set: versionId },
                 hasErrors: { $set: false },
                 isPristine: { $set: true },
-                formErrors: { $set: { } },
-                fieldErrors: { $set: { } },
-                formValues: { $set: {
+                faramErrors: { $set: { } },
+                faramValues: { $set: {
                     metadata,
                     methodology,
+                    summary,
                 } },
             } },
         },
@@ -94,66 +89,41 @@ const setAry = (state, action) => {
     return update(state, settings);
 };
 
-const changeAry = groupName => (state, action) => {
+const changeAry = (state, action) => {
     const {
         lead,
-
-        // NOTE: these are for individual groups
-        // TODO: add serverError later
-
-        formValues,
-        formErrors,
-        fieldErrors,
+        faramValues,
+        faramErrors,
     } = action;
+
+    const hasErrors = analyzeErrors(faramErrors);
 
     const settings = {
         editAry: {
             [lead]: { $auto: {
                 isPristine: { $set: false },
-                formValues: { $auto: {
-                    [groupName]: { $set: formValues },
-                } },
-                fieldErrors: { $auto: {
-                    [groupName]: { $set: fieldErrors },
-                } },
-                formErrors: { $auto: {
-                    fields: { $auto: {
-                        [groupName]: { $set: formErrors },
-                    } },
-                } },
-            } },
-        },
-    };
-    const newState = update(state, settings);
-
-    const hasErrors = analyzeFieldErrors(newState.editAry[lead].fieldErrors) ||
-        analyzeFormErrors(newState.editAry[lead].formErrors);
-    const errorSettings = {
-        editAry: {
-            [lead]: { $auto: {
+                faramValues: { $set: faramValues },
+                faramErrors: { $set: faramErrors },
                 hasErrors: { $set: hasErrors },
             } },
         },
     };
-    return update(newState, errorSettings);
+    return update(state, settings);
 };
 
 const setErrorAry = (state, action) => {
     const {
         lead,
-
-        formErrors,
-        fieldErrors,
+        faramErrors,
     } = action;
 
-    const hasErrors = analyzeFieldErrors(fieldErrors) || analyzeFormErrors(formErrors);
+    const hasErrors = analyzeErrors(faramErrors);
     const settings = {
         editAry: {
             [lead]: { $auto: {
                 hasErrors: { $set: hasErrors },
                 isPristine: { $set: false },
-                formErrors: { $set: formErrors },
-                fieldErrors: { $set: fieldErrors },
+                faramErrors: { $set: faramErrors },
             } },
         },
     };
@@ -169,11 +139,7 @@ const saveAry = (state, action) => {
             [lead]: { $auto: {
                 hasErrors: { $set: false },
                 isPristine: { $set: true },
-                fieldErrors: { $set: {} },
-                formErrors: { $set: {} },
-                /*
-                formValues: { $set: formValues },
-                */
+                faramErrors: { $set: {} },
             } },
         },
     };
@@ -196,11 +162,11 @@ const setEntries = (state, action) => {
 
 const reducers = {
     [EDIT_ARY__SET_ARY]: setAry,
-    [EDIT_ARY__CHANGE_METADATA_ARY]: changeAry('metadata'),
-    [EDIT_ARY__CHANGE_METHODOLOGY_ARY]: changeAry('methodology'),
-    [EDIT_ARY__SAVE_ARY]: saveAry,
-    [EDIT_ARY__SET_ERROR_ARY]: setErrorAry,
     [EDIT_ARY__SET_ENTRIES]: setEntries,
+
+    [EDIT_ARY__CHANGE_ARY]: changeAry,
+    [EDIT_ARY__SET_ERROR_ARY]: setErrorAry,
+    [EDIT_ARY__SAVE_ARY]: saveAry,
 };
 
 export default reducers;

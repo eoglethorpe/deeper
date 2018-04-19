@@ -17,20 +17,13 @@
             }
 
             .geo-file {
-                margin: auto;
-                width: auto;
-
                 :global {
                     label {
-                        @extend %button-like-link;
+                        @include button-like-link($color-accent);
                     }
                 }
 
                 .load {
-                    padding: $spacing-small;
-                }
-
-                .show {
                     padding: $spacing-small;
                 }
 

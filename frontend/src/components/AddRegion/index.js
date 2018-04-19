@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
-import Form, { requiredCondition } from '../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -16,7 +16,7 @@ import { reverseRoute } from '../../vendor/react-store/utils/common';
 import { pathNames } from '../../constants';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForRegionCreate,
     urlForRegionCreate,
 } from '../../rest';
@@ -66,9 +66,8 @@ export default class AddRegion extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
 
@@ -156,14 +155,8 @@ export default class AddRegion extends React.PureComponent {
                     message: this.props.notificationStrings('countryCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -173,7 +166,7 @@ export default class AddRegion extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save region.'] },
+                    faramErrors: { $internal: ['Error while trying to save region.'] },
                 });
             })
             .build();
@@ -181,23 +174,19 @@ export default class AddRegion extends React.PureComponent {
     }
 
     // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (data) => {
+    handleFaramValidationSuccess = (data) => {
         // Stop old post request
         if (this.regionCreateRequest) {
             this.regionCreateRequest.stop();
@@ -210,9 +199,8 @@ export default class AddRegion extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             pristine,
         } = this.state;
@@ -231,29 +219,29 @@ export default class AddRegion extends React.PureComponent {
         }
 
         return (
-            <Form
+            <Faram
                 className={`${className} ${styles.addRegionForm}`}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+
                 schema={this.schema}
-                onSubmit={this.handleSubmit}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                error={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElementName="anyName" />
                 <TextInput
                     label={this.props.projectStrings('addRegionTitleLabel')}
-                    formname="title"
+                    faramElementName="title"
                     placeholder={this.props.projectStrings('addRegionTitlePlaceholder')}
                     autoFocus
                 />
                 <TextInput
                     label={this.props.projectStrings('addRegionCodeLabel')}
-                    formname="code"
+                    faramElementName="code"
                     placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
                 />
                 <div className={styles.actionButtons}>
@@ -267,7 +255,7 @@ export default class AddRegion extends React.PureComponent {
                         {this.props.countriesStrings('addRegionButtonLabel')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

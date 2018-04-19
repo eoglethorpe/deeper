@@ -3,8 +3,6 @@ import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import { shallow } from 'enzyme';
 import UserEdit from '../index';
-import Form from '../../../../vendor/react-store/components/Input/Form';
-import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 
 const initialState = {
 };
@@ -13,27 +11,11 @@ const initialState = {
 describe('<UserEdit />', () => {
     const mockStore = configureStore();
     const store = mockStore(initialState);
-    const changeCallback = () => {
-    };
-    const failureCallback = () => {
-    };
-    const successCallback = () => {
-    };
-    const schema = {};
     const wrapper = shallow(
         <Provider
             store={store}
         >
-            <UserEdit>
-                <Form
-                    changeCallback={changeCallback}
-                    failureCallback={failureCallback}
-                    successCallback={successCallback}
-                    schema={schema}
-                >
-                    <TextInput />
-                </Form>
-            </UserEdit>
+            <UserEdit />
         </Provider>,
     );
 

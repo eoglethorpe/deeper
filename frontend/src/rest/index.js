@@ -38,3 +38,24 @@ export const transformAndCombineResponseErrors = (errors) => {
         ...Object.values(transformedErrors.formFieldErrors),
     ];
 };
+
+
+// XXX: Uses Faram API
+export const alterResponseErrorToFaramError = (errors) => {
+    const { nonFieldErrors = [], ...formFieldErrorList } = errors;
+
+    return Object.keys(formFieldErrorList).reduce(
+        (acc, key) => {
+            acc[key] = formFieldErrorList[key].join(' ');
+            return acc;
+        },
+        {
+            $internal: nonFieldErrors,
+        },
+    );
+};
+
+// XXX: Uses Faram API
+export const alterAndCombineResponseError = errors => (
+    Object.values(alterResponseErrorToFaramError(errors))
+);

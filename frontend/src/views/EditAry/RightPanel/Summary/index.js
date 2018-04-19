@@ -2,9 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import VerticalTabs from '../../../../vendor/react-store/components/View/VerticalTabs/';
 import styles from './styles.scss';
 import { listToMap } from '../../../../vendor/react-store/utils/common';
+
+import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 
 import {
     editArySelectedSectorsSelector,
@@ -17,12 +20,11 @@ import Sector from './Sector';
 
 const propTypes = {
     className: PropTypes.string,
-
     // eslint-disable-next-line react/forbid-prop-types
     selectedSectors: PropTypes.array.isRequired,
-    //
     // eslint-disable-next-line react/forbid-prop-types
     sectors: PropTypes.array.isRequired,
+    pending: PropTypes.bool.isRequired,
 };
 
 const defaultProps = {
@@ -34,12 +36,9 @@ const mapStateToProps = state => ({
     sectors: assessmentSectorsSelector(state),
 });
 
-const mapDispatchToProps = (/* dispatch */) => ({
-});
-
 const sectorIdentifier = 'sector';
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(mapStateToProps)
 export default class Summary extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -63,9 +62,7 @@ export default class Summary extends React.PureComponent {
     }
 
     handleTabClick = (key) => {
-        this.setState({
-            activeTab: key,
-        });
+        this.setState({ activeTab: key });
     }
 
     renderTabs = () => {
@@ -76,9 +73,16 @@ export default class Summary extends React.PureComponent {
 
         const { activeTab } = this.state;
 
-        const s = [...sectors].filter(d => selectedSectorsList.indexOf(String(d.id)) !== -1);
-        const selectedSectors = listToMap(s, d => `${sectorIdentifier}-${d.id}`, d => d.title);
+        const s = sectors.filter(
+            d => selectedSectorsList.indexOf(String(d.id)) !== -1,
+        );
+        const selectedSectors = listToMap(
+            s,
+            d => `${sectorIdentifier}-${d.id}`,
+            d => d.title,
+        );
 
+        // FIXME: use strings
         const tabs = {
             crossSector: 'Cross sector',
             humanitarianAccess: 'Humanitarian access',
@@ -101,15 +105,11 @@ export default class Summary extends React.PureComponent {
         switch (activeTab) {
             case 'crossSector':
                 return (
-                    <CrossSector
-                        className={styles.view}
-                    />
+                    <CrossSector className={styles.view} />
                 );
             case 'humanitarianAccess':
                 return (
-                    <HumanitarianAccess
-                        className={styles.view}
-                    />
+                    <HumanitarianAccess className={styles.view} />
                 );
             default:
                 if (activeTab.includes('sector')) {
@@ -134,7 +134,10 @@ export default class Summary extends React.PureComponent {
 
         return (
             <div className={className}>
-                <View />
+                {this.props.pending && <LoadingAnimation />}
+                <FaramGroup faramElementName="summary">
+                    <View />
+                </FaramGroup>
                 <Tabs />
             </div>
         );
