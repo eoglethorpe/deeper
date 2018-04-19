@@ -2,11 +2,34 @@
 
 $height-tabs: 32px;
 
-.tabs {
-    flex-shrink: 0;
-    height: $height-tabs;
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .tabs {
+        flex-shrink: 0;
+        height: $height-tabs;
+    }
+
+    %tab-content {
+        height: calc(100% - #{$height-tabs});
+    }
+
+    .metadata {
+        @extend %tab-content;
+    }
+
+    .summary {
+        @extend %tab-content;
+    }
+
+    .score {
+        @extend %tab-content;
+    }
+
+    .save-button {
+        margin: 0 $spacing-small;
+    }
 }
 
-.save-button {
-    margin: 0 $spacing-small;
-}

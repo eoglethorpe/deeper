@@ -13,7 +13,9 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     columns: PropTypes.array,
     // eslint-disable-next-line react/forbid-prop-types
-    options: PropTypes.object,
+    scales: PropTypes.object,
+    // eslint-disable-next-line react/forbid-prop-types
+    scaleValues: PropTypes.object,
     value: PropTypes.number,
     onChange: PropTypes.func,
 };
@@ -21,7 +23,8 @@ const defaultProps = {
     className: '',
     rows: [],
     columns: [],
-    options: {},
+    scales: {},
+    scaleValues: {},
     value: '',
     onChange: () => {},
 };
@@ -92,35 +95,40 @@ export default class ScaleMatrixInput extends React.PureComponent {
     }
 
     renderCell = (rowKey, columnKey) => {
-        const { options } = this.props;
+        const {
+            scales,
+            scaleValues,
+        } = this.props;
 
         const {
             rowTitles,
             columnTitles,
         } = this.state;
 
-        const data = options[rowKey][columnKey];
+        const scale = scales[rowKey][columnKey];
+        const scaleValue = scaleValues[scale.value];
+
         const title = `${rowTitles[rowKey]}\n\n${columnTitles[columnKey]}`;
         const style = {
-            backgroundColor: data.color,
-            color: getColorOnBgColor(data.color),
+            backgroundColor: scaleValue.color,
+            color: getColorOnBgColor(scaleValue.color),
         };
 
-        const className = this.getCellClassName(data.id);
+        const className = this.getCellClassName(scale.id);
 
         return (
             <td
                 className={className}
                 title={title}
                 style={style}
-                key={data.id}
+                key={scale.id}
             >
                 <button
                     className={styles.button}
-                    onClick={() => { this.handleCellClick(data.id); }}
+                    onClick={() => { this.handleCellClick(scale.id); }}
                     type="button"
                 >
-                    { data.score }
+                    { scale.value }
                 </button>
             </td>
         );
@@ -140,9 +148,7 @@ export default class ScaleMatrixInput extends React.PureComponent {
     }
 
     render() {
-        const {
-            rows,
-        } = this.props;
+        const { rows } = this.props;
 
         const className = this.getClassName();
 

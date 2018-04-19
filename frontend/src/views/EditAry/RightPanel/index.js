@@ -175,7 +175,7 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabKey: 'metadata',
+            currentTabKey: 'score',
             pending: false,
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
@@ -193,12 +193,18 @@ export default class RightPanel extends React.PureComponent {
         this.views = {
             metadata: {
                 component: () => (
-                    <Metadata pending={this.state.pending} />
+                    <Metadata
+                        className={styles.metadata}
+                        pending={this.state.pending}
+                    />
                 ),
             },
             summary: {
                 component: () => (
-                    <Summary pending={this.state.pending} />
+                    <Summary
+                        className={styles.summary}
+                        pending={this.state.pending}
+                    />
                 ),
             },
             /*
@@ -210,7 +216,10 @@ export default class RightPanel extends React.PureComponent {
             */
             score: {
                 component: () => (
-                    <Score pending={this.state.pending} />
+                    <Score
+                        className={styles.score}
+                        pending={this.state.pending}
+                    />
                 ),
             },
         };
@@ -277,6 +286,7 @@ export default class RightPanel extends React.PureComponent {
                 schema={this.state.schema}
                 value={this.props.editAryFaramValues}
                 error={this.props.editAryFaramErrors}
+                className={styles.rightPanel}
 
                 onChange={this.handleFaramChange}
                 onValidationSuccess={this.handleFaramValidationSuccess}

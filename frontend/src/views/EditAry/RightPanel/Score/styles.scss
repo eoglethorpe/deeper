@@ -9,7 +9,6 @@ $width-table: 320px;
 .score {
     display: flex;
     flex-direction: column;
-    height: 100%;
 
     .summary {
         @include background-color($color-background-header);
@@ -24,9 +23,36 @@ $width-table: 320px;
         }
     }
 
-    .content {
+    >.content {
         display: flex;
         flex-grow: 1;
+
+        .right {
+            overflow-y: auto;
+
+            .matrix-pillar {
+                flex-wrap: wrap;
+
+                >.title {
+                    padding: $spacing-small;
+                    color: $color-accent;
+                    font-weight: $font-weight-bold;
+                }
+
+                .content {
+                    display: flex;
+
+                    .matrix-question {
+                        padding: $spacing-small;
+
+                        .title {
+                            color: $color-text;
+                        }
+                    }
+                }
+
+            }
+        }
 
         .left {
             flex-basis: $width-table;
@@ -36,14 +62,6 @@ $width-table: 320px;
             .table {
                 width: 100%;
                 border-collapse: collapse;
-
-                .head {
-                    .row {
-                        .heading {
-                            @extend %cell;
-                        }
-                    }
-                }
 
                 .body {
                     .header-row {
@@ -95,11 +113,6 @@ $width-table: 320px;
                 }
             }
         }
-
-        .right {
-            padding: $spacing-large;
-        }
-
     }
 
 }
