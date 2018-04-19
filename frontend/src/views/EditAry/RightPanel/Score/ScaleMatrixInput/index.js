@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import List from '../../../../../vendor/react-store/components/View/List';
+import FaramElement from '../../../../../vendor/react-store/components/Input/Faram/FaramElement';
 import { getColorOnBgColor } from '../../../../../vendor/react-store/utils/common.js';
 
 import styles from './styles.scss';
@@ -13,7 +14,9 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     columns: PropTypes.array,
     // eslint-disable-next-line react/forbid-prop-types
-    options: PropTypes.object,
+    scales: PropTypes.object,
+    // eslint-disable-next-line react/forbid-prop-types
+    scaleValues: PropTypes.object,
     value: PropTypes.number,
     onChange: PropTypes.func,
 };
@@ -21,11 +24,13 @@ const defaultProps = {
     className: '',
     rows: [],
     columns: [],
-    options: {},
-    value: '',
+    scales: {},
+    scaleValues: {},
+    value: undefined,
     onChange: () => {},
 };
 
+@FaramElement('input')
 export default class ScaleMatrixInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -92,35 +97,40 @@ export default class ScaleMatrixInput extends React.PureComponent {
     }
 
     renderCell = (rowKey, columnKey) => {
-        const { options } = this.props;
+        const {
+            scales,
+            scaleValues,
+        } = this.props;
 
         const {
             rowTitles,
             columnTitles,
         } = this.state;
 
-        const data = options[rowKey][columnKey];
+        const scale = scales[rowKey][columnKey];
+        const scaleValue = scaleValues[scale.value];
+
         const title = `${rowTitles[rowKey]}\n\n${columnTitles[columnKey]}`;
         const style = {
-            backgroundColor: data.color,
-            color: getColorOnBgColor(data.color),
+            backgroundColor: scaleValue.color,
+            color: getColorOnBgColor(scaleValue.color),
         };
 
-        const className = this.getCellClassName(data.id);
+        const className = this.getCellClassName(scale.id);
 
         return (
             <td
                 className={className}
                 title={title}
                 style={style}
-                key={data.id}
+                key={scale.id}
             >
                 <button
                     className={styles.button}
-                    onClick={() => { this.handleCellClick(data.id); }}
+                    onClick={() => { this.handleCellClick(scale.id); }}
                     type="button"
                 >
-                    { data.score }
+                    { scale.value }
                 </button>
             </td>
         );
@@ -140,9 +150,7 @@ export default class ScaleMatrixInput extends React.PureComponent {
     }
 
     render() {
-        const {
-            rows,
-        } = this.props;
+        const { rows } = this.props;
 
         const className = this.getClassName();
 

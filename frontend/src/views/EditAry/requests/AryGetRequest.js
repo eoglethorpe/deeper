@@ -43,6 +43,7 @@ export default class AryGetRequest {
                             metadata: response.metadata,
                             methodology: response.methodology,
                             summary: response.summary,
+                            score: response.score,
                         });
                     }
                     if (isValueOverriden) {

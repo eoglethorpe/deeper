@@ -298,6 +298,27 @@ export const affectedLocationsSelector = createSelector(
     ),
 );
 
+export const assessmentPillarsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.scorePillars || emptyList
+    ),
+);
+
+export const assessmentMatrixPillarsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.scoreMatrixPillars || emptyList
+    ),
+);
+
+export const assessmentScoreScalesSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.scoreScales || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,

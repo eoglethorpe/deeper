@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import FaramElement from '../../../../../vendor/react-store/components/Input/Faram/FaramElement';
 import List from '../../../../../vendor/react-store/components/View/List';
 
 import styles from './styles.scss';
@@ -19,6 +20,7 @@ const defaultProps = {
     onChange: () => {},
 };
 
+@FaramElement('input')
 export default class ScaleInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
