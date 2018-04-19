@@ -1,0 +1,19 @@
+@import '../../../../../stylesheets/base';
+
+.scale-matrix-input {
+    .cell {
+        padding: 0 $spacing-small;
+
+        .button {
+            outline: 0;
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
+            color: inherit;
+        }
+
+        &.active {
+            filter: saturate(0);
+        }
+    }
+}

@@ -6,6 +6,7 @@ import iconNames from '../../../../constants/iconNames';
 import List from '../../../../vendor/react-store/components/View/List';
 
 import ScaleInput from './ScaleInput';
+import ScaleMatrixInput from './ScaleMatrixInput';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -47,7 +48,7 @@ export default class Score extends React.PureComponent {
                 },
             },
             trustworthiness: {
-                title: 'Analytical density',
+                title: 'Trustworthiness',
                 fields: {
                     sourceReliability: {
                         title: 'Source reliability',
@@ -64,23 +65,6 @@ export default class Score extends React.PureComponent {
                     inclusiveness: {
                         title: 'Inclusiveness',
                         detail: 'Opinions from population and assessment teams were captured and contrasted',
-                    },
-                },
-            },
-            analyticalDensity: {
-                title: 'Analytical density',
-                fields: {
-                    sector1: {
-                        title: 'Sector #1',
-                        detail: '',
-                    },
-                    sector2: {
-                        title: 'Sector #2',
-                        detail: '',
-                    },
-                    sector3: {
-                        title: 'Sector #3',
-                        detail: '',
                     },
                 },
             },
@@ -146,6 +130,56 @@ export default class Score extends React.PureComponent {
                 color: 'rgba(0, 0, 255, .9)',
             },
         };
+
+        this.matrixRows = [
+            { id: 1, title: 'Whoa' },
+            { id: 2, title: 'lol' },
+            { id: 3, title: 'xD' },
+        ];
+
+        this.matrixColumns = [
+            { id: 1, title: 'Nice' },
+            { id: 2, title: 'No idea' },
+        ];
+
+        this.matrixOptions = {
+            1: {
+                1: {
+                    id: 1,
+                    score: 1,
+                    color: 'rgba(0, 0, 255, .9)',
+                },
+                2: {
+                    id: 2,
+                    score: 1,
+                    color: 'rgba(0, 0, 255, .9)',
+                },
+            },
+            2: {
+                1: {
+                    id: 3,
+                    score: 1,
+                    color: 'rgba(0, 0, 255, .9)',
+                },
+                2: {
+                    id: 4,
+                    score: 2,
+                    color: 'rgba(128, 0, 255, .6)',
+                },
+            },
+            3: {
+                1: {
+                    id: 5,
+                    score: 2,
+                    color: 'rgba(128, 0, 255, .6)',
+                },
+                2: {
+                    id: 6,
+                    score: 3,
+                    color: 'rgba(255, 0, 255, .9)',
+                },
+            },
+        };
     }
 
     getClassName = () => {
@@ -180,7 +214,9 @@ export default class Score extends React.PureComponent {
             >
                 <td className={styles.cell}>
                     <div className={styles.content}>
-                        { title }
+                        <div className={styles.title}>
+                            { title }
+                        </div>
                         {
                             detail && (
                                 <span
@@ -211,7 +247,7 @@ export default class Score extends React.PureComponent {
 
         return (
             <React.Fragment key={rowKey}>
-                <tr className={styles.row}>
+                <tr className={styles.headerRow}>
                     <td
                         className={styles.pillarTitle}
                         colSpan="2"
@@ -228,31 +264,50 @@ export default class Score extends React.PureComponent {
         );
     }
 
+    renderSummaryItem = (k, key) => (
+        <div
+            className={styles.item}
+            key={key}
+        >
+            { this.scores[key].title }
+        </div>
+    )
+
     render() {
         const className = this.getClassName();
-        const columns = ['', 'Score'];
+        // const columns = ['', 'Score'];
         const scoreList = Object.keys(this.scores);
 
         return (
             <div className={className}>
-                <table className={styles.table}>
-                    <thead className={styles.head}>
-                        <tr className={styles.row}>
-                            <List
-                                data={columns}
-                                modifier={this.renderHeader}
-                            />
-                        </tr>
-                    </thead>
-                    <tbody className={styles.body}>
-                        {
-                            <List
-                                data={scoreList}
-                                modifier={this.renderRow}
-                            />
-                        }
-                    </tbody>
-                </table>
+                <div className={styles.summary}>
+                    <List
+                        data={scoreList}
+                        modifier={this.renderSummaryItem}
+                    />
+                </div>
+                <div className={styles.content}>
+                    <div className={styles.left}>
+                        <table className={styles.table}>
+                            <tbody className={styles.body}>
+                                {
+                                    <List
+                                        data={scoreList}
+                                        modifier={this.renderRow}
+                                    />
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div className={styles.right}>
+                        <ScaleMatrixInput
+                            rows={this.matrixRows}
+                            columns={this.matrixColumns}
+                            options={this.matrixOptions}
+                            value={3}
+                        />
+                    </div>
+                </div>
             </div>
         );
     }

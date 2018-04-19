@@ -1,67 +1,105 @@
 @import '../../../../stylesheets/base';
 
-$height-table-max: 540px;
+$width-table: 320px;
+
+%cell {
+    padding: $spacing-small;
+}
 
 .score {
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 
-    %cell {
-        border: $width-separator-thin solid $color-separator;
-        padding: $spacing-small;
+    .summary {
+        @include background-color($color-background-header);
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-around;
+        padding: $spacing-medium;
+
+        .item {
+            border: $width-separator-thin solid $color-accent;
+            padding: $spacing-small $spacing-medium;
+        }
     }
 
-    .table {
-        width: 100%;
-        max-width: $height-table-max;
-        border-collapse: collapse;
+    .content {
+        display: flex;
+        flex-grow: 1;
 
-        .head {
-            .row {
-                .heading {
-                    @extend %cell;
-                }
-            }
-        }
+        .left {
+            flex-basis: $width-table;
+            border-right: $width-separator-thin solid $color-separator;
+            overflow-y: auto;
 
-        .body {
-            .row {
-                @extend %background-alternating-row;
+            .table {
+                width: 100%;
+                border-collapse: collapse;
 
-                .cell {
-                    @extend %cell;
-
-                    .content {
-                        display: flex;
-                        align-items: flex-start;
-                        justify-content: space-between;
-
-                        .info-icon {
-                            transition: $duration-medium opacity ease-in-out;
-                            opacity: 0;
-                            color: $color-text-label;
-                            font-size: $font-size-extra-large;
+                .head {
+                    .row {
+                        .heading {
+                            @extend %cell;
                         }
                     }
                 }
 
-                .pillar-title {
-                    @extend %cell;
-                    color: $color-accent;
-                    font-weight: $font-weight-bold;
-                }
+                .body {
+                    .header-row {
+                        &:not(:first-child) {
+                            border-top: $width-separator-thin solid $color-separator-alt;
+                        }
 
-                &:hover {
-                    .cell {
-                        .content {
-                            .info-icon {
-                                opacity: 1;
+                        .pillar-title {
+                            @extend %cell;
+                            color: $color-accent;
+                            font-weight: $font-weight-bold;
+                        }
+                    }
+                    .row {
+                        @extend %background-alternating-row;
+
+                        .cell {
+                            @extend %cell;
+
+                            .content {
+                                display: flex;
+                                align-items: flex-start;
+                                justify-content: space-between;
+
+                                .title {
+                                    align-self: center;
+                                }
+
+                                .info-icon {
+                                    transition: $duration-medium opacity ease-in-out;
+                                    opacity: 0;
+                                    color: $color-text-label;
+                                    font-size: $font-size-extra-large;
+                                }
                             }
                         }
+
+                        &:hover {
+                            .cell {
+                                .content {
+                                    .info-icon {
+                                        opacity: 1;
+                                    }
+                                }
+                            }
+                        }
+
                     }
                 }
-
             }
         }
+
+        .right {
+            padding: $spacing-large;
+        }
+
     }
 
 }
