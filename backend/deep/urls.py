@@ -105,7 +105,7 @@ from django.conf.urls import (
     # handler403, handler400, handler500
 )
 
-handler404 = Api_404View # noqa
+handler404 = Api_404View  # noqa
 
 router = routers.DefaultRouter()
 
@@ -326,5 +326,6 @@ urlpatterns = [
 
 urlpatterns += [
     url(r'^$', FrontendView.as_view()),
-    url(get_api_path(''), Api_404View.as_view()),
 ]
+
+handler404 = Api_404View.as_view()
