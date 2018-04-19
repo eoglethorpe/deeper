@@ -224,8 +224,6 @@ export default class Score extends React.PureComponent {
             assessmentMatrixPillars,
         } = this.props;
 
-        console.warn(assessmentMatrixPillars);
-
         const className = this.getClassName();
 
         return (
