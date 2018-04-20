@@ -155,11 +155,8 @@ export default class NavMenu extends React.PureComponent {
 
         return (
             <Cloak
+                {...item}
                 key={key}
-                requireLogin={item.requireLogin}
-                requireProject={item.requireProject}
-                requireAdminRights={item.requireAdminRights}
-                requireDevMode={item.requireDevMode}
                 render={
                     () => (
                         <NavLink

@@ -56,6 +56,7 @@ const projectSchema = [];
             id: { type: 'uint', required: true },
             title: { type: 'string', required: true },
             role: { type: 'string', required: true },
+            assessmentTemplate: { type: 'uint', required: false },
             versionId: { type: 'uint', required: true },
         },
     };

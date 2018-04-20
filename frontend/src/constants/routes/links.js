@@ -22,12 +22,14 @@ const prepareSettings = (semantics) => {
         a: { name: 'requireAdminRights', value: true },
         p: { name: 'requireProject', value: true },
         d: { name: 'requireDevMode', value: true },
+        A: { name: 'requireAssessmentTemplate', value: true },
         D: { name: 'disable', value: true },
     };
     const settings = {
         requireDevMode: false,
         requireLogin: false,
         requireAdminRights: false,
+        requireAssessmentTemplate: false,
         disable: false,
     };
     semantics.split(',').forEach((character) => {
@@ -43,7 +45,7 @@ const prepareSettings = (semantics) => {
 const commonLinks = {
     leads: 'l,p',
     entries: 'l,p',
-    arys: 'l,p,d',
+    arys: 'l,p,d,A',
     projects: 'l',
     countries: 'l',
     export: 'l,p',
@@ -67,7 +69,7 @@ export const allLinks = mapObjectToObject(
 export const allLinksWithProjectDisabled = mapObjectToObject(
     {
         ...commonLinks,
-        projectSelect: 'lD',
+        projectSelect: 'l,D',
     },
     prepareSettings,
 );

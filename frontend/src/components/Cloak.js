@@ -5,11 +5,13 @@ import { connect } from 'react-redux';
 import {
     activeUserSelector,
     currentUserProjectsSelector,
+    currentUserActiveProjectSelector,
 } from '../redux';
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
     userProjects: currentUserProjectsSelector(state),
+    currentUserActiveProject: currentUserActiveProjectSelector(state),
 });
 
 const propTypes = {
@@ -22,10 +24,13 @@ const propTypes = {
             name: PropTypes.string,
         }),
     ),
+    // eslint-disable-next-line react/forbid-prop-types
+    currentUserActiveProject: PropTypes.object.isRequired,
     requireAdminRights: PropTypes.bool,
     requireProject: PropTypes.bool,
     requireLogin: PropTypes.bool,
     requireDevMode: PropTypes.bool,
+    requireAssessmentTemplate: PropTypes.bool,
     render: PropTypes.func.isRequired,
 };
 
@@ -36,6 +41,7 @@ const defaultProps = {
     requireProject: false,
     requireLogin: false,
     requireDevMode: false,
+    requireAssessmentTemplate: false,
 };
 
 @connect(mapStateToProps, undefined)
@@ -47,11 +53,13 @@ export default class Navbar extends React.PureComponent {
         const {
             activeUser,
             userProjects,
+            currentUserActiveProject,
 
             requireAdminRights,
             requireProject,
             requireLogin,
             requireDevMode,
+            requireAssessmentTemplate,
             render,
         } = this.props;
 
@@ -63,6 +71,8 @@ export default class Navbar extends React.PureComponent {
         } else if (requireLogin && !activeUser.userId) {
             return null;
         } else if (requireAdminRights && !activeUser.isSuperuser) {
+            return null;
+        } else if (requireAssessmentTemplate && !currentUserActiveProject.assessmentTemplate) {
             return null;
         }
         return render();
