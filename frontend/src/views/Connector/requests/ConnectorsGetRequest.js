@@ -4,14 +4,35 @@ import {
     urlForConnectors,
 } from '../../../rest';
 
+import schema from '../../../schema';
+import notify from '../../../notify';
+
+const emptyList = [];
+
 export default class ConnectorsGetRequest {
     constructor(props) {
         this.props = props;
     }
 
     success = (response) => {
+        const {
+            setUserConnectors,
+        } = this.props;
         try {
-            console.warn(response);
+            schema.validate(response, 'connectors');
+            const connectors = response.results || emptyList;
+            const formattedConnectors = {};
+            connectors.forEach((c) => {
+                formattedConnectors[c.id] = {
+                    id: c.id,
+                    versionId: c.versionId,
+                    formValues: { ...c },
+                    formErrors: {},
+                    formFieldErrors: {},
+                    prisitne: false,
+                };
+            });
+            setUserConnectors({ connectors: formattedConnectors });
         } catch (er) {
             console.error(er);
         }

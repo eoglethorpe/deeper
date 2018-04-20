@@ -6,6 +6,7 @@ import leadsViz from './leadsViz';
 import entries from './entries';
 import projects from './projects';
 import regions from './regions';
+import connectors from './connectors';
 import userExports from './userExports';
 import token from './token';
 import userGroups from './userGroups';
@@ -80,6 +81,7 @@ const userDefinedSchemas = [];
     ...entries,
     ...projects,
     ...regions,
+    ...connectors,
     ...userExports,
     ...token,
     ...userGroups,

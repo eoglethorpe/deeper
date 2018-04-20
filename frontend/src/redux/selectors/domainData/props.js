@@ -17,3 +17,4 @@ export const groupIdFromRoute = getFromProps('userGroupId');
 export const leadIdFromRoute = getFromProps('leadId');
 export const projectIdFromRoute = getFromProps('projectId');
 export const userIdFromRoute = getFromProps('userId');
+export const connectorIdFromRoute = getFromProps('connectorId');
