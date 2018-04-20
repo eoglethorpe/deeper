@@ -1,11 +1,13 @@
 @import '../../../../stylesheets/base';
 
-.entries-list {
+.entries-listing {
+    display: flex;
     position: relative;
+    flex-direction: column;
     height: 100%;
 
-    .scroll-wrapper {
-        height: 100%;
+    .entries-list {
+        flex-grow: 1;
         overflow: auto;
 
         .entries-list-item {
@@ -38,6 +40,23 @@
                     object-fit: contain;
                 }
             }
+        }
+    }
+
+    .lead-detail {
+        display: flex;
+        flex-shrink: 0;
+        border-top: $width-separator-thin solid $color-accent;
+
+        .title {
+            flex-grow: 1;
+            padding: $spacing-medium;
+        }
+
+        .edit-entries-link {
+            flex-shrink: 0;
+            padding: $spacing-medium;
+            color: $color-accent;
         }
     }
 }
