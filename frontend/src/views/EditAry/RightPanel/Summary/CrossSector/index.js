@@ -14,6 +14,7 @@ import {
     affectedGroupsSelector,
     prioritySectorsSelector,
     specificNeedGroupsSelector,
+    assessmentSummaryStringsSelector,
 } from '../../../../../redux';
 
 const propTypes = {
@@ -23,6 +24,7 @@ const propTypes = {
     affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     prioritySectors: PropTypes.arrayOf(PropTypes.object).isRequired,
     specificNeedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    assessmentSummaryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -34,6 +36,7 @@ const mapStateToProps = state => ({
     affectedGroups: affectedGroupsSelector(state),
     prioritySectors: prioritySectorsSelector(state),
     specificNeedGroups: specificNeedGroupsSelector(state),
+    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -48,20 +51,25 @@ export default class CrossSector extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { assessmentSummaryStrings } = props;
         this.rowFieldTitles = [
-            'Priority sector',
-            'Affected group',
-            'Specific need group',
+            assessmentSummaryStrings('prioritySector'),
+            assessmentSummaryStrings('affectedGroup'),
+            assessmentSummaryStrings('specificNeedGroup'),
         ];
 
         this.columnFieldTitles = [
             ' ',
-            'Population in moderate need of assistance (not life threatening) (do not know)',
-            'Population in severe need of assistance (life threatening) (do not know)',
-            'Population in need of assistance (do not know)',
+            assessmentSummaryStrings('moderateAssistancePopulationUnknown'),
+            assessmentSummaryStrings('severeAssistancePopulationUnknown'),
+            assessmentSummaryStrings('assistancePopulationUnknown'),
         ];
 
-        this.rowSubFieldTitles = ['1', '2', '3'];
+        this.rowSubFieldTitles = [
+            assessmentSummaryStrings('rank1Title'),
+            assessmentSummaryStrings('rank2Title'),
+            assessmentSummaryStrings('rank3Title'),
+        ];
     }
 
     getClassName = (empty = false) => {
@@ -127,12 +135,13 @@ export default class CrossSector extends React.PureComponent {
     render() {
         const {
             selectedSectors,
+            assessmentSummaryStrings,
         } = this.props;
 
 
         if (selectedSectors.length < 3) {
             const className = this.getClassName(true);
-            const emptyText = 'Select at least 3 sectors in Methodology';
+            const emptyText = assessmentSummaryStrings('crossSectorEmptyText');
 
             return (
                 <div className={className}>

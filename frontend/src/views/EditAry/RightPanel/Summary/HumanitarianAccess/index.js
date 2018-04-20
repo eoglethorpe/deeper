@@ -12,12 +12,14 @@ import styles from './styles.scss';
 import {
     priorityIssuesSelector,
     affectedLocationsSelector,
+    assessmentSummaryStringsSelector,
 } from '../../../../../redux';
 
 const propTypes = {
     className: PropTypes.string,
     priorityIssues: PropTypes.arrayOf(PropTypes.object).isRequired,
     affectedLocations: PropTypes.arrayOf(PropTypes.object).isRequired,
+    assessmentSummaryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -27,6 +29,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     priorityIssues: priorityIssuesSelector(state),
     affectedLocations: affectedLocationsSelector(state),
+    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -41,19 +44,24 @@ export default class HumanitarianAccess extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { assessmentSummaryStrings } = props;
         this.rowFieldTitles = [
-            'Priority issue',
-            'Affected location',
+            assessmentSummaryStrings('priorityIssue'),
+            assessmentSummaryStrings('affectedLocation'),
         ];
 
         this.columnFieldTitles = [
-            ' ',
-            'Population with limited access',
-            'Population with restricted access',
-            'Population with humanitarian access constraints',
+            '',
+            assessmentSummaryStrings('limitedAccessPopulation'),
+            assessmentSummaryStrings('restrictedAccessPopulation'),
+            assessmentSummaryStrings('humanitarianAccessPopulation'),
         ];
 
-        this.rowSubFieldTitles = ['1', '2', '3'];
+        this.rowSubFieldTitles = [
+            assessmentSummaryStrings('rank1Title'),
+            assessmentSummaryStrings('rank2Title'),
+            assessmentSummaryStrings('rank3Title'),
+        ];
     }
 
     getClassName = () => {
