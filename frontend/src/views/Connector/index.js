@@ -12,17 +12,19 @@ import {
 } from '../../redux';
 import ConnectorsGetRequest from './requests/ConnectorsGetRequest';
 
+import List from '../../../src/vendor/react-store/components/View/List';
+
 import styles from './styles.scss';
 
 const propTypes = {
     connectorStrings: PropTypes.func.isRequired,
     setUserConnectors: PropTypes.func.isRequired,
-    connectorsList: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    connectors: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
-    connectorsList: connectorsSelector(state),
+    connectors: connectorsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -56,13 +58,28 @@ export default class Connector extends React.PureComponent {
         this.requestForConnectors.start();
     }
 
+    renderConnectorListItem = (k, data) => (
+        <div key={data.id}>
+            { (data.formValues || {}).title }
+        </div>
+    )
+
     render() {
-        const { connectorsList } = this.props;
-        console.warn(connectorsList);
+        const {
+            connectors,
+            connectorStrings,
+        } = this.props;
+
+        const connectorsList = Object.values(connectors);
+
         return (
             <div className={styles.connectors}>
                 <div className={styles.sidebar}>
-                    {this.props.connectorStrings('headerConnectors')}
+                    {connectorStrings('headerConnectors')}
+                    <List
+                        data={connectorsList}
+                        modifier={this.renderConnectorListItem}
+                    />
                 </div>
             </div>
         );
