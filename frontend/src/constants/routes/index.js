@@ -72,6 +72,14 @@ export const routes = {
         links: allLinks,
     }, // pageTitleStrings('dashboard');
 
+    connectors: {
+        order: 22,
+        type: ROUTE.private,
+        path: '/connectors/:connectorId?/',
+        loader: () => import('../../views/Connector'),
+        links: allLinks,
+    }, // pageTitleStrings('connectors');
+
     leads: {
         order: 30,
         type: ROUTE.private,

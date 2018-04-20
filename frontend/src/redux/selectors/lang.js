@@ -58,6 +58,7 @@ export const arysStringsSelector = createSelectorForView('arys');
 export const loginStringsSelector = createSelectorForView('login');
 export const notificationStringsSelector = createSelectorForView('notification');
 export const projectStringsSelector = createSelectorForView('project');
+export const connectorStringsSelector = createSelectorForView('connector');
 export const userStringsSelector = createSelectorForView('user');
 export const pageTitleStringsSelector = createSelectorForView('pageTitle');
 
