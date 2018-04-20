@@ -259,10 +259,7 @@ export default class Navbar extends React.PureComponent {
                 </Link>
 
                 <Cloak
-                    requireLogin={projectSelectInputLink.requireLogin}
-                    requireAdminRights={projectSelectInputLink.requireAdminRights}
-                    requireProject={projectSelectInputLink.requireProject}
-                    requireDevMode={projectSelectInputLink.requireDevMode}
+                    {...projectSelectInputLink}
                     render={
                         () => (
                             <SelectInput

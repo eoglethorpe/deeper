@@ -114,11 +114,8 @@ export default class Navdrop extends React.PureComponent {
 
         return (
             <Cloak
+                {...item}
                 key={key}
-                requireLogin={item.requireLogin}
-                requireAdminRights={item.requireAdminRights}
-                requireProject={item.requireProject}
-                requireDevMode={item.requireDevMode}
                 render={() => (
                     <Link
                         to={reverseRoute(pathNames[key], params)}
@@ -162,10 +159,7 @@ export default class Navdrop extends React.PureComponent {
                         modifier={this.renderDropItem}
                     />
                     <Cloak
-                        requireLogin={adminPanelLink.requireLogin}
-                        requireAdminRights={adminPanelLink.requireAdminRights}
-                        requireProject={adminPanelLink.requireProject}
-                        requireDevMode={adminPanelLink.requireDevMode}
+                        {...adminPanelLink}
                         render={
                             () => (
                                 <a
