@@ -55,6 +55,7 @@ export default class Score extends React.PureComponent {
                 acc[row.value] = {
                     title: row.title,
                     color: row.color,
+                    default: row.default,
                 };
 
                 return acc;
@@ -174,7 +175,7 @@ export default class Score extends React.PureComponent {
         const { sectors } = this.props;
         const { scaleValues } = this.state;
 
-        const currentSector = sectors.find(d => d.id === sectorId);
+        const currentSector = sectors.find(d => String(d.id) === String(sectorId));
 
         return (
             <div

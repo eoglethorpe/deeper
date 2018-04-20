@@ -16,7 +16,7 @@ const propTypes = {
 const defaultProps = {
     className: '',
     options: {},
-    value: '',
+    value: undefined,
     onChange: () => {},
 };
 
@@ -24,6 +24,17 @@ const defaultProps = {
 export default class ScaleInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+        this.checkAndSetDefaultValue(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.options !== this.props.options) {
+            this.checkAndSetDefaultValue(nextProps);
+        }
+    }
 
     getClassName = () => {
         const { className } = this.props;
@@ -51,6 +62,13 @@ export default class ScaleInput extends React.PureComponent {
         }
 
         return classNames.join(' ');
+    }
+
+    checkAndSetDefaultValue = ({ options, value, onChange }) => {
+        const defaultValue = Object.entries(options).find(o => o[1].default);
+        if (!value && defaultValue) {
+            onChange(defaultValue[0]);
+        }
     }
 
     handleOptionClick = (key) => {
