@@ -35,7 +35,21 @@ export default class ScaleMatrixInput extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static checkAndSetDefaultValue = ({ scales, value, onChange }) => {
+        const defaultValue = Object.values(scales)
+            .reduce(
+                (acc, cols) => Object.values(cols).find(c => c.default) || acc,
+                undefined,
+            );
+
+        if (!value && defaultValue) {
+            onChange(defaultValue.id);
+        }
+    }
+
     static getDerivedStateFromProps = (nextProps) => {
+        ScaleMatrixInput.checkAndSetDefaultValue(nextProps);
+
         const {
             rows,
             columns,
@@ -54,10 +68,15 @@ export default class ScaleMatrixInput extends React.PureComponent {
         return { rowTitles, columnTitles };
     }
 
-    state = {
-        rowTitles: {},
-        columnTitles: {},
-    };
+    constructor(props) {
+        super(props);
+        ScaleMatrixInput.checkAndSetDefaultValue(props);
+
+        this.state = {
+            rowTitles: {},
+            columnTitles: {},
+        };
+    }
 
     getClassName = () => {
         const { className } = this.props;

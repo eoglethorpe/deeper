@@ -82,6 +82,7 @@ const assessmentRegistrySchema = [];
             metadata: { type: 'object' },
             methodology: { type: 'object' },
             summary: { type: 'object' },
+            score: { type: 'object' },
             lead: { type: 'uint', required: true },
             leadTitle: { type: 'string' },
         },
