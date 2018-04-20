@@ -229,7 +229,7 @@ export default class Score extends React.PureComponent {
 
         return (
             <div className={className}>
-                <FaramGroup faramElementName="sector">
+                <FaramGroup faramElementName="score">
                     <div className={styles.summary}>
                         <List
                             data={assessmentPillars}
