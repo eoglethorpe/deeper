@@ -6,6 +6,7 @@ export * from './leads';
 export * from './entries';
 export * from './external';
 export * from './projects';
+export * from './connectors';
 export * from './regions';
 export * from './token';
 export * from './userGroups';

@@ -7,6 +7,7 @@ import AppError from '../../components/AppError';
 import {
     connectorStringsSelector,
 } from '../../redux';
+import ConnectorsGetRequest from './requests/ConnectorsGetRequest';
 
 import styles from './styles.scss';
 
@@ -22,6 +23,27 @@ const mapStateToProps = state => ({
 @connect(mapStateToProps, undefined)
 export default class Connector extends React.PureComponent {
     static propTypes = propTypes;
+
+    componentWillMount() {
+        this.startConnectorsRequest();
+    }
+
+    componentWillUnmount() {
+        if (this.requestForConnectors) {
+            this.requestForConnectors.stop();
+        }
+    }
+
+    startConnectorsRequest = () => {
+        if (this.requestForConnectors) {
+            this.requestForConnectors.stop();
+        }
+        const requestForConnectors = new ConnectorsGetRequest({
+            setState: v => this.setState(v),
+        });
+        this.requestForConnectors = requestForConnectors.create();
+        this.requestForConnectors.start();
+    }
 
     render() {
         return (
