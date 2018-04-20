@@ -196,7 +196,7 @@ export default class UserProjectAdd extends React.PureComponent {
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors faramElementName="anyName" />
+                <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
                     label={this.props.userStrings('addProjectModalLabel')}

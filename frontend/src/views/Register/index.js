@@ -179,7 +179,7 @@ export default class Register extends React.PureComponent {
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors faramElementName="anyName" />
+                <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="firstname"
                     label={this.props.loginStrings('firstNameLabel')}

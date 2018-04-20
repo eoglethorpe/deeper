@@ -232,7 +232,7 @@ export default class AddRegion extends React.PureComponent {
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors faramElementName="anyName" />
+                <NonFieldErrors faramElement />
                 <TextInput
                     label={this.props.projectStrings('addRegionTitleLabel')}
                     faramElementName="title"

@@ -181,9 +181,11 @@ export default class Score extends React.PureComponent {
                 className={styles.matrixQuestion}
                 key={sectorId}
             >
-                <div className={styles.title}>
-                    { currentSector.title }
-                </div>
+                { currentSector &&
+                    <div className={styles.title}>
+                        { currentSector.title }
+                    </div>
+                }
                 <ScaleMatrixInput
                     faramElementName={String(sectorId)}
                     rows={pillarData.rows}
