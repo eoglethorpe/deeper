@@ -8,7 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
-import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -34,8 +34,8 @@ export default class NewSubcategoryModal extends React.PureComponent {
 
     static schema = {
         fields: {
-            titleValue: [requiredCondition],
-            descriptionValue: [],
+            title: [requiredCondition],
+            description: [],
         },
     };
 
@@ -44,30 +44,28 @@ export default class NewSubcategoryModal extends React.PureComponent {
 
         this.state = {
             schema: NewSubcategoryModal.schema,
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
-            pristine: false,
+            faramErrors: {},
+            faramValues: {},
+            pristine: true,
         };
     }
 
-    changeCallback = (values, fieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formErrors,
-            formFieldErrors: fieldErrors,
-            pristine: true,
+            faramValues,
+            faramErrors,
+            pristine: false,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({ formFieldErrors, formErrors });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = ({ titleValue, descriptionValue }) => {
+    handleFaramValidationSuccess = ({ title, description }) => {
         this.props.onSubmit({
-            title: titleValue,
-            description: descriptionValue,
+            title,
+            description,
         });
     }
 
@@ -77,22 +75,20 @@ export default class NewSubcategoryModal extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             schema,
             pristine,
         } = this.state;
 
         return (
-            <Form
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+            <Faram
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
                 schema={schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                error={faramErrors}
             >
                 <ModalHeader
                     key="header"
@@ -100,13 +96,13 @@ export default class NewSubcategoryModal extends React.PureComponent {
                 />
                 <ModalBody key="body">
                     <TextInput
-                        formname="titleValue"
+                        faramElementName="title"
                         label={this.props.ceStrings('addSubCategoryTitleLabel')}
                         placeholder={this.props.ceStrings('addSubCategoryTitlePlaceholder')}
                         autoFocus
                     />
                     <TextInput
-                        formname="descriptionValue"
+                        faramElementName="description"
                         label={this.props.ceStrings('addSubCategoryDescriptionLabel')}
                         placeholder={this.props.ceStrings('addSubCategoryDescriptionPlaceholder')}
                     />
@@ -117,13 +113,13 @@ export default class NewSubcategoryModal extends React.PureComponent {
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
-                        disabled={!pristine}
+                        disabled={pristine}
                         type="submit"
                     >
                         {this.props.ceStrings('modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
-            </Form>
+            </Faram>
         );
     }
 }

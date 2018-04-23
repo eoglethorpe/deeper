@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Form, { requiredCondition } from '../../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -54,9 +54,8 @@ export default class UserGroupAdd extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
         };
@@ -88,25 +87,19 @@ export default class UserGroupAdd extends React.PureComponent {
         this.userGroupCreateRequest.start();
     }
 
-    // FORM RELATED
-
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleFaramValidationSuccess = (values) => {
         const { userId } = this.props.activeUser;
         this.startRequestForUserGroupCreate(values, userId);
     };
@@ -118,30 +111,30 @@ export default class UserGroupAdd extends React.PureComponent {
 
     render() {
         const {
-            formValues,
-            formErrors,
-            formFieldErrors,
+            faramValues,
+            faramErrors,
             pending,
             pristine,
         } = this.state;
 
         return (
-            <Form
+            <Faram
                 className={styles.userGroupAddForm}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+
                 schema={this.schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                errors={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElement />
                 <TextInput
                     label={this.props.userStrings('addUserGroupModalLabel')}
-                    formname="title"
+                    faramElementName="title"
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     autoFocus
                 />
@@ -156,7 +149,7 @@ export default class UserGroupAdd extends React.PureComponent {
                         {this.props.userStrings('modalCreate')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

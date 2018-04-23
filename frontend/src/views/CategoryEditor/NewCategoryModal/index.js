@@ -8,7 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
-import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -38,38 +38,36 @@ export default class NewCategoryModal extends React.PureComponent {
 
     static schema = {
         fields: {
-            titleValue: [requiredCondition],
+            title: [requiredCondition],
         },
     };
 
     constructor(props) {
         super(props);
 
-        const { title: titleValue = '' } = props.initialValue || {};
+        const { title = '' } = props.initialValue || {};
         this.state = {
             schema: NewCategoryModal.schema,
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: { titleValue },
-            pristine: false,
+            faramErrors: {},
+            faramValues: { title },
+            pristine: true,
         };
     }
 
-    changeCallback = (values, fieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formErrors,
-            formFieldErrors: fieldErrors,
-            pristine: true,
+            faramValues,
+            faramErrors,
+            pristine: false,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({ formFieldErrors, formErrors });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = ({ titleValue }) => {
-        this.props.onSubmit(titleValue);
+    handleFaramValidationSuccess = ({ title }) => {
+        this.props.onSubmit(title);
     }
 
     handleModalClose = () => {
@@ -79,9 +77,8 @@ export default class NewCategoryModal extends React.PureComponent {
     render() {
         const { editMode } = this.props;
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             schema,
             pristine,
         } = this.state;
@@ -91,14 +88,13 @@ export default class NewCategoryModal extends React.PureComponent {
             : this.props.ceStrings('addCategoryTooltip');
 
         return (
-            <Form
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+            <Faram
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
                 schema={schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                error={faramErrors}
             >
                 <ModalHeader
                     key="header"
@@ -106,7 +102,7 @@ export default class NewCategoryModal extends React.PureComponent {
                 />
                 <ModalBody key="body">
                     <TextInput
-                        formname="titleValue"
+                        faramElementName="title"
                         label={this.props.ceStrings('addCategoryTitleLabel')}
                         placeholder={this.props.ceStrings('addCategoryTitlePlaceholder')}
                         autoFocus
@@ -118,13 +114,13 @@ export default class NewCategoryModal extends React.PureComponent {
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
-                        disabled={!pristine}
+                        disabled={pristine}
                         type="submit"
                     >
                         {this.props.ceStrings('modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
-            </Form>
+            </Faram>
         );
     }
 }

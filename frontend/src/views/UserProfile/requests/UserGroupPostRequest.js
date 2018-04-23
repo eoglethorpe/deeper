@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     urlForUserGroups,
     createParamsForUserGroupsCreate,
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
@@ -47,14 +47,8 @@ export default class UserGroupPostRequest {
                     message: this.props.notificationStrings('userGroupCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.props.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.props.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -65,7 +59,7 @@ export default class UserGroupPostRequest {
                 });
                 this.props.setState({
                     // FIXME: use strings
-                    formErrors: { errors: ['Error while trying to save user group.'] },
+                    faramErrors: { $internal: ['Error while trying to save user group.'] },
                 });
             })
             .build();
