@@ -87,8 +87,8 @@ export default class Summary extends React.PureComponent {
 
         const { assessmentSummaryStrings } = this.props;
         const tabs = {
-            crossSector: assessmentSummaryStrings('crossSector'),
-            humanitarianAccess: assessmentSummaryStrings('humanitarianAccess'),
+            crossSector: assessmentSummaryStrings('crossSectorTitle'),
+            humanitarianAccess: assessmentSummaryStrings('humanitarianAccessTitle'),
             ...selectedSectors,
         };
 
