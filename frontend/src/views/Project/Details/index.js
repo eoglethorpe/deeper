@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
@@ -30,7 +29,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     project: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
@@ -220,26 +218,6 @@ export default class ProjectDetails extends React.PureComponent {
             .build();
         return projectOptionsRequest;
     };
-
-    renderRoute = (key, routeId) => {
-        const Component = this.views[routeId];
-        const { projectId } = this.props;
-
-        return (
-            <Route
-                key={key}
-                path={this.pathNames[routeId]}
-                exact
-                render={() => (
-                    <Component
-                        mainHistory={this.props.mainHistory}
-                        className={styles.content}
-                        projectId={projectId}
-                    />
-                )}
-            />
-        );
-    }
 
     renderDetail = () => {
         const { project } = this.props;
