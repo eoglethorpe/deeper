@@ -3,4 +3,11 @@
 
 .cross-sector {
     @extend %tabular-input-base;
+
+    &.empty {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: $color-text-disabled;
+    }
 }

@@ -61,6 +61,7 @@ export const projectStringsSelector = createSelectorForView('project');
 export const connectorStringsSelector = createSelectorForView('connector');
 export const userStringsSelector = createSelectorForView('user');
 export const pageTitleStringsSelector = createSelectorForView('pageTitle');
+export const assessmentSummaryStringsSelector = createSelectorForView('assessmentSummary');
 
 const getStringRefsInCode = (usageMap, viewName, stringName) => (
     (usageMap[viewName] && usageMap[viewName][stringName])

@@ -13,6 +13,7 @@ import styles from './styles.scss';
 import {
     affectedGroupsSelector,
     specificNeedGroupsSelector,
+    assessmentSummaryStringsSelector,
 } from '../../../../../redux';
 
 const propTypes = {
@@ -20,6 +21,7 @@ const propTypes = {
     sectorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     specificNeedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+    assessmentSummaryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -29,6 +31,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     affectedGroups: affectedGroupsSelector(state),
     specificNeedGroups: specificNeedGroupsSelector(state),
+    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -43,20 +46,25 @@ export default class Sector extends React.PureComponent {
     constructor(props) {
         super(props);
 
+        const { assessmentSummaryStrings } = props;
         this.rowFieldTitles = [
-            'Priority issue',
-            'Affected group',
-            'Specific need group',
+            assessmentSummaryStrings('prioritySector'),
+            assessmentSummaryStrings('affectedGroup'),
+            assessmentSummaryStrings('specificNeedGroup'),
         ];
 
         this.columnFieldTitles = [
             ' ',
-            'Population in moderate need of assistance (not life threatening)',
-            'Population in severe need of assistance (life threatening)',
-            'Population in need of assistance',
+            assessmentSummaryStrings('moderateAssistancePopulation'),
+            assessmentSummaryStrings('severeAssistancePopulation'),
+            assessmentSummaryStrings('assistancePopulation'),
         ];
 
-        this.rowSubFieldTitles = ['1', '2', '3'];
+        this.rowSubFieldTitles = [
+            assessmentSummaryStrings('rank1Title'),
+            assessmentSummaryStrings('rank2Title'),
+            assessmentSummaryStrings('rank3Title'),
+        ];
     }
 
     getClassName = () => {
