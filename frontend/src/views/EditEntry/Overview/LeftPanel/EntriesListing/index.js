@@ -32,7 +32,7 @@ const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
 });
 
-@connect(mapStateToProps, undefined)
+@connect(mapStateToProps)
 export default class EntriesListing extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -88,6 +88,7 @@ export default class EntriesListing extends React.PureComponent {
         );
 
         const isMarkedForDelete = entryAccessor.isMarkedForDelete(selectedEntry);
+
         return (
             <div
                 className={`${styles.entriesListItem} ${isActive ? styles.active : ''}`}

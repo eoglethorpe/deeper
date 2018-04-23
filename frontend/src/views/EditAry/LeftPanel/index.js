@@ -18,14 +18,14 @@ import ImagesGrid from '../../../components/ImagesGrid';
 import {
     entryStringsSelector,
     leadIdFromRouteSelector,
-    currentUserActiveProjectSelector,
+    projectIdFromRouteSelector,
 } from '../../../redux';
 
 import EntriesListing from './EntriesListing';
 import styles from './styles.scss';
 
 const propTypes = {
-    project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.number.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     leadId: PropTypes.oneOfType([
         PropTypes.number,
@@ -40,10 +40,10 @@ const defaultProps = {
     widgetDisabled: false,
 };
 
-const mapStateToProps = (state, props) => ({
+const mapStateToProps = state => ({
     entryStrings: entryStringsSelector(state),
-    leadId: leadIdFromRouteSelector(state, props),
-    project: currentUserActiveProjectSelector(state, props),
+    leadId: leadIdFromRouteSelector(state),
+    projectId: projectIdFromRouteSelector(state),
 });
 
 @connect(mapStateToProps, undefined)
@@ -109,7 +109,7 @@ export default class LeftPanel extends React.PureComponent {
                     onEntryAdd={() => { /* FIXME: add real function */ }}
                     className={styles.assistedTagging}
                     leadId={this.props.leadId}
-                    project={this.props.project}
+                    projectId={this.props.projectId}
                 />
             ),
             mount: true,
