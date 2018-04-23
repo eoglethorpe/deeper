@@ -86,7 +86,9 @@ printf "\n\n::::: DOCKER TASK :::::\n"
 
                 echo "      >> Creating environmentvariables [validation environmentvariables]"
                 set -e;
-                    eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" | jq -r '.' > ./.ebextensions/environmentvariables.config
+                    envsubst < $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample | \
+                    # eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" | \
+                        jq -r '.' > ./.ebextensions/environmentvariables.config # validate json and export
                 set +e;
 
                 if [ ${TYPE} == 'web' ]; then

@@ -27,7 +27,8 @@ DEPLOYMENT_ENV_NAME=$DEPLOYMENT_ENV_NAME_WORKER
 TYPE=worker
 
 set -e;
-eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" | \
+envsubst < $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample | \
+# eval "echo \"$(cat $SAMPLE_DIR/.ebextensions/environmentvariables.config-sample)\"" | \
     jq -r \
         '.option_settings[]|.option_name as $option_name|.value as $value| [$option_name, $value]|join("=")' \
         > $ROOT_DIR/.env-cern
