@@ -34,7 +34,7 @@ import styles from './styles.scss';
 
 const propTypes = {
     leadId: PropTypes.number.isRequired,
-    project: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    projectId: PropTypes.number.isRequired,
     onEntryAdd: PropTypes.func.isRequired,
     className: PropTypes.string,
     entryStrings: PropTypes.func.isRequired,
@@ -94,6 +94,8 @@ export default class AssistedTagging extends React.PureComponent {
             },
         ];
     }
+
+    // FIXME: cancel requests and call anew if projectId has changed
 
     componentDidMount() {
         if (this.primaryContainer) {
@@ -268,7 +270,7 @@ export default class AssistedTagging extends React.PureComponent {
 
     createCeClassifyRequest = (previewId) => {
         const request = new FgRestBuilder()
-            .url(createUrlForCeClassify(this.props.project.id))
+            .url(createUrlForCeClassify(this.props.projectId))
             .preLoad(() => this.setState({ pendingCeClassify: true }))
             .postLoad(() => this.setState({ pendingCeClassify: false }))
             .params(() => createParamsForCeClassify({
