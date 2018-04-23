@@ -10,3 +10,4 @@ export * from './visualization';
 export * from './editAry';
 export * from './leads';
 export * from './regions';
+export * from './connectors';

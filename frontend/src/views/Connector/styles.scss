@@ -1,0 +1,59 @@
+@import '../../stylesheets/base';
+
+$width-sidebar: 240px;
+
+.connectors {
+    display: flex;
+    height: 100%;
+
+    .sidebar {
+        @include background-color($color-foreground-alt);
+        display: flex;
+        position: relative;
+        flex-basis: $width-sidebar;
+        flex-direction: column;
+        flex-shrink: 0;
+        margin: -$spacing-small $spacing-small (-$spacing-small) (-$spacing-small);
+        border-right: $width-separator-thin solid $color-separator-alt;
+
+        .header {
+            @include background-color($color-background-header);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small;
+
+            .heading {
+                flex-grow: 1;
+            }
+
+            .search-input {
+                flex-basis: 100%;
+                padding: 0;
+            }
+        }
+
+        .connectors-list {
+            flex-grow: 1;
+            overflow-y: auto;
+
+            .connectors-list-item {
+                border-bottom: 0;
+                border-left: 0;
+                padding: 0;
+            }
+
+            .active {
+                border-left-color: $color-accent;
+                background-color: $color-background-selected;
+            }
+
+            :hover {
+                background-color: $color-background-hover;
+            }
+        }
+    }
+}

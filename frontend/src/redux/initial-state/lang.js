@@ -541,12 +541,13 @@ const initialLangState = {
                 5563: 'Edit Assessment',
                 5564: 'Edit Entries',
                 5566: 'User Profile',
-                5567: 'Country Panel',
-                5568: 'Project Panel',
+                5567: 'Countries',
+                5568: 'Projects',
                 5569: 'Weekly Snapshot',
                 5570: 'Api Docs',
                 5571: '404',
                 5572: 'String Management',
+                5573: 'Connectors',
                 6000: 'Do you want to remove this widget?',
                 7001: 'Metadata',
                 7002: 'Methodology',
@@ -569,6 +570,7 @@ const initialLangState = {
                 250: 'Update GEO File',
                 251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
                 1005: 'Edit entries',
+                1100: 'Connectors',
             },
             views: {
                 af: {
@@ -1185,6 +1187,7 @@ const initialLangState = {
                     adminPanel: 1220,
                     countries: 5567,
                     projects: 5568,
+                    connectors: 5573,
 
                     analysisFramework: 379,
 
@@ -1281,6 +1284,9 @@ const initialLangState = {
                     categoryEditorLabel: 380,
                     regionLabel: 336,
                     saveButtonLabel: 25,
+                },
+                connector: {
+                    headerConnectors: 1100,
                 },
                 user: {
                     firstNameLabel: 150,

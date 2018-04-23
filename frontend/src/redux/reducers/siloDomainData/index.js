@@ -12,6 +12,7 @@ import galleryFilesReducers from './galleryFiles';
 import visualizationReducers from './visualization';
 import editAryReducers from './editAry';
 import regionsReducers from './regions';
+import connectorsReducers from './connectors';
 
 import initialSiloDomainData from '../../initial-state/siloDomainData';
 
@@ -28,6 +29,7 @@ const reducers = {
     ...visualizationReducers,
     ...editAryReducers,
     ...regionsReducers,
+    ...connectorsReducers,
 };
 
 const reducer = createReducerWithMap(reducers, initialSiloDomainData);
