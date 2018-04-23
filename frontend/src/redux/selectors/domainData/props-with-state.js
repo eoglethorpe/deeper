@@ -5,6 +5,7 @@ import {
     groupIdFromRoute,
     countryIdFromRoute,
     projectIdFromRoute,
+    connectorIdFromRoute,
 
     afIdFromRoute,
     ceIdFromRoute,

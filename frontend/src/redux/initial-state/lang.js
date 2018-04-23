@@ -577,6 +577,8 @@ const initialLangState = {
                 9017: 'Select at least 3 sectors in Methodology',
                 9018: 'Cross sector',
                 9019: 'Humanitarian access',
+                1101: 'Search Connectors',
+                1102: 'Add Connector',
             },
             views: {
                 af: {
@@ -1304,6 +1306,9 @@ const initialLangState = {
                 },
                 connector: {
                     headerConnectors: 1100,
+                    addConnectorButtonLabel: 301,
+                    searchConnectorPlaceholder: 1101,
+                    addConnectorModalTitle: 1102,
                 },
                 user: {
                     firstNameLabel: 150,

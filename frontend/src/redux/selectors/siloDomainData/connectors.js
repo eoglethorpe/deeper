@@ -7,6 +7,11 @@ export const connectorsSelector = ({ siloDomainData }) => (
     siloDomainData.connectors || emptyObject
 );
 
+export const connectorsListSelector = createSelector(
+    connectorsSelector,
+    c => Object.values(c),
+);
+
 export const connectorSelector = createSelector(
     connectorIdFromRoute,
     connectorsSelector,

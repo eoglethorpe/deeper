@@ -24,6 +24,7 @@ export const clearRouteStateAction = () => ({
 
 const urlValues = [
     'projectId',
+    'connectorId',
     'leadId',
     'analysisFrameworkId',
     'categoryEditorId',

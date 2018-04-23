@@ -40,6 +40,10 @@ export const projectIdFromRouteSelector = createSelector(
     routeParamsSelector,
     routeParams => routeParams.projectId,
 );
+export const connectorIdFromRouteSelector = createSelector(
+    routeParamsSelector,
+    routeParams => routeParams.connectorId,
+);
 export const userIdFromRouteSelector = createSelector(
     routeParamsSelector,
     routeParams => routeParams.userId,
