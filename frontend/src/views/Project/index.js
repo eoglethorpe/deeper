@@ -29,7 +29,7 @@ import {
     pathNames,
 } from '../../constants';
 
-import ProjectDetails from './ProjectDetails';
+import Details from './Details';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -210,7 +210,7 @@ export default class ProjectPanel extends React.PureComponent {
                 </div>
                 {
                     projectId ? (
-                        <ProjectDetails
+                        <Details
                             key={projectId}
                             className={styles.projectDetails}
                             projectId={projectId}

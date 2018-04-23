@@ -1,10 +1,10 @@
 @import '../../../../../stylesheets/base';
 @import '../../../../../stylesheets/modal';
 
-$af-detail-form-width: 240px;
+$ce-detail-form-width: 240px;
 $height-header: 39px;
 
-.analysis-framework-detail {
+.category-editor-detail {
     height: 100%;
 
     .header {
@@ -21,15 +21,19 @@ $height-header: 39px;
             button {
                 margin-left: $spacing-small;
             }
+
+            .edit-category-editor-link {
+                @include button-like-link($color-warning);
+            }
         }
     }
 
     .content {
         height: calc(100% - #{$height-header});
 
-        .af-detail-form {
+        .ce-detail-form {
             display: block;
-            width: $af-detail-form-width;
+            width: $ce-detail-form-width;
         }
     }
 }

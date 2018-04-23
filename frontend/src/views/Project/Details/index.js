@@ -1,15 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import {
-    Redirect,
-    Route,
-    HashRouter,
-    NavLink,
-} from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import List from '../../../vendor/react-store/components/View/List';
+import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
+import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
@@ -26,10 +22,10 @@ import {
 } from '../../../redux';
 import schema from '../../../schema';
 
-import ProjectGeneral from './ProjectGeneral';
-import ProjectRegions from './ProjectRegions';
-import ProjectAnalysisFramework from './ProjectAnalysisFramework';
-import ProjectCategoryEditor from './ProjectCategoryEditor';
+import General from './General';
+import Regions from './Regions';
+import Frameworks from './Frameworks';
+import CategoryEditors from './CategoryEditors';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -47,7 +43,6 @@ const defaultProps = {
     project: undefined,
     projectId: undefined,
 };
-
 
 const mapStateToProps = (state, props) => ({
     project: projectDetailsSelector(state, props),
@@ -73,34 +68,55 @@ export default class ProjectDetails extends React.PureComponent {
             pending: false,
         };
 
-        this.routes = [
-            'generalDetails',
-            'regions',
-            'analysisFramework',
-            'categoryEditor',
-        ];
-
-        this.defaultRoute = 'generalDetails';
-
-        this.pathNames = {
-            generalDetails: '/general-details',
-            regions: '/regions',
-            analysisFramework: '/analysis-framework',
-            categoryEditor: '/category-editor',
+        this.routes = {
+            general: 'General',
+            regions: 'Regions',
+            frameworks: 'Framework',
+            categoryEditors: 'Category Editor',
         };
 
+        this.defaultHash = 'general';
+
         this.views = {
-            generalDetails: ProjectGeneral,
-            regions: ProjectRegions,
-            analysisFramework: ProjectAnalysisFramework,
-            categoryEditor: ProjectCategoryEditor,
+            general: {
+                component: () => (
+                    <General
+                        className={styles.content}
+                        projectId={this.props.projectId}
+                    />
+                ),
+            },
+            regions: {
+                component: () => (
+                    <Regions
+                        className={styles.content}
+                        projectId={this.props.projectId}
+                    />
+                ),
+            },
+            frameworks: {
+                component: () => (
+                    <Frameworks
+                        className={styles.content}
+                        projectId={this.props.projectId}
+                    />
+                ),
+            },
+            categoryEditors: {
+                component: () => (
+                    <CategoryEditors
+                        className={styles.content}
+                        projectId={this.props.projectId}
+                    />
+                ),
+            },
         };
 
         this.titles = {
-            generalDetails: this.props.projectStrings('generalDetailsLabel'),
+            general: this.props.projectStrings('generalDetailsLabel'),
             regions: this.props.projectStrings('regionsLabel'),
-            analysisFramework: this.props.projectStrings('analysisFrameworkLabel'),
-            categoryEditor: this.props.projectStrings('categoryEditorLabel'),
+            frameworks: this.props.projectStrings('analysisFrameworkLabel'),
+            categoryEditors: this.props.projectStrings('categoryEditorLabel'),
         };
 
         const { projectId } = props;
@@ -155,6 +171,14 @@ export default class ProjectDetails extends React.PureComponent {
         }
     }
 
+    getClassName = () => {
+        const { className } = this.props;
+        return `
+            ${className}
+            ${styles.details}
+        `;
+    }
+
     createProjectRequest = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
@@ -197,19 +221,6 @@ export default class ProjectDetails extends React.PureComponent {
         return projectOptionsRequest;
     };
 
-    renderLink = (key, routeId) => (
-        <NavLink
-            key={key}
-            to={this.pathNames[routeId]}
-            activeClassName={styles.active}
-            className={styles.tab}
-            replace
-            exact
-        >
-            { this.titles[routeId] }
-        </NavLink>
-    )
-
     renderRoute = (key, routeId) => {
         const Component = this.views[routeId];
         const { projectId } = this.props;
@@ -230,57 +241,49 @@ export default class ProjectDetails extends React.PureComponent {
         );
     }
 
-    render() {
-        const {
-            project,
-            className,
-        } = this.props;
-
-        const { pending } = this.state;
+    renderDetail = () => {
+        const { project } = this.props;
 
         return (
-            <HashRouter>
-                <div className={`${className} ${styles.projectDetails}`}>
-                    <Route
-                        exact
-                        path="/"
-                        component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
+            project.role === 'admin' ? (
+                <React.Fragment>
+                    <header className={styles.header}>
+                        <FixedTabs
+                            defaultHash={this.defaultHash}
+                            replaceHistory
+                            useHash
+                            tabs={this.routes}
+                        />
+                    </header>
+                    <MultiViewContainer
+                        useHash
+                        views={this.views}
                     />
-                    { pending && <LoadingAnimation large /> }
-                    {
-                        project.role === 'admin' ? ([
-                            <header
-                                key="header"
-                                className={styles.header}
-                            >
-                                {/*
-                                <h2 className={styles.heading}>
-                                    { project.title }
-                                </h2>
-                                */}
-                                <div className={styles.tabs}>
-                                    <List
-                                        data={this.routes}
-                                        modifier={this.renderLink}
-                                        keyExtractor={ProjectDetails.keyExtractor}
-                                    />
-                                    <div className={styles.emptySpace} />
-                                </div>
-                            </header>,
-                            <List
-                                key="list"
-                                data={this.routes}
-                                modifier={this.renderRoute}
-                                keyExtractor={ProjectDetails.keyExtractor}
-                            />,
-                        ]) : (
-                            <p className={styles.forbiddenText}>
-                                {this.props.projectStrings('forbiddenText')}
-                            </p>
-                        )
-                    }
-                </div>
-            </HashRouter>
+                </React.Fragment>
+            ) : (
+                <p className={styles.forbiddenText}>
+                    {this.props.projectStrings('forbiddenText')}
+                </p>
+            )
+        );
+    }
+
+    render() {
+        const { pending } = this.state;
+
+        const className = this.getClassName();
+        const Detail = this.renderDetail;
+
+        return (
+            <div className={className}>
+                {
+                    pending ? (
+                        <LoadingAnimation large />
+                    ) : (
+                        <Detail />
+                    )
+                }
+            </div>
         );
     }
 }

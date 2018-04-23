@@ -27,13 +27,12 @@ import {
 import schema from '../../../../schema';
 import { iconNames } from '../../../../constants';
 
-import ProjectCeDetail from './ProjectCeDetail';
+import Details from './Details';
 import AddCategoryEditor from './AddCategoryEditor';
 import styles from './styles.scss';
 
 const propTypes = {
     categoryEditorList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setCategoryEditors: PropTypes.func.isRequired,
@@ -264,13 +263,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             );
         }
 
-        return (
-            <ProjectCeDetail
-                mainHistory={this.props.mainHistory}
-                key={selectedCe}
-                categoryEditorId={selectedCe}
-            />
-        );
+        return <Details categoryEditorId={selectedCe} />;
     }
 
     renderAddCeModal = () => {
