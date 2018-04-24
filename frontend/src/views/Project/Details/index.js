@@ -63,7 +63,7 @@ export default class ProjectDetails extends React.PureComponent {
         super(props);
 
         this.state = {
-            pending: false,
+            pending: true,
         };
 
         this.routes = {

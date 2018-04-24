@@ -130,12 +130,20 @@ class RouteSynchronizer extends React.PureComponent {
         const { history, match: { path } } = nextProps;
         const { location } = this.props;
         const newPath = reverseRoute(path, newUrlParams);
+
         if (newPath === this.props.match.url) {
             console.warn('No need to sync url');
             return;
         }
-        console.warn('Syncing url');
-        history.push({
+
+        if (location.hash === nextProps.location.hash) {
+            history.push({
+                ...location,
+                pathname: newPath,
+            });
+        }
+
+        history.replace({
             ...location,
             pathname: newPath,
         });
