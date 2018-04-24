@@ -1,14 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import {
-    Redirect,
-    Route,
-    HashRouter,
-} from 'react-router-dom';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import MultiViewContainer from '../../vendor/react-store/components/View/MultiViewContainer';
 import { checkVersion } from '../../vendor/react-store/utils/common';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
@@ -36,7 +32,6 @@ const propTypes = {
     analysisFramework: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     analysisFrameworkId: PropTypes.number.isRequired,
     setAnalysisFramework: PropTypes.func.isRequired,
-    history: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     notificationStrings: PropTypes.func.isRequired,
 };
 
@@ -59,6 +54,34 @@ const mapDispatchToProps = dispatch => ({
 export default class AnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+
+    constructor(props) {
+        super(props);
+
+        this.views = {
+            overview: {
+                component: () => (
+                    <Overview
+                        analysisFramework={this.props.analysisFramework}
+                        onSave={this.handleSave}
+                    />
+                ),
+            },
+            list: {
+                component: () => (
+                    <List
+                        analysisFramework={this.props.analysisFramework}
+                        onSave={this.handleSave}
+                    />
+                ),
+            },
+        };
+
+        const defaultHash = 'overview';
+        if (!window.location.hash) {
+            window.location.hash = `#/${defaultHash}`;
+        }
+    }
 
     componentWillMount() {
         this.analysisFrameworkRequest = this.createRequestForAnalysisFramework(
@@ -153,10 +176,7 @@ export default class AnalysisFramework extends React.PureComponent {
     }
 
     render() {
-        const {
-            analysisFramework,
-            history,
-        } = this.props;
+        const { analysisFramework } = this.props;
 
         if (!analysisFramework) {
             return (
@@ -166,42 +186,14 @@ export default class AnalysisFramework extends React.PureComponent {
             );
         }
 
+
         return (
-            <HashRouter>
-                <div className={styles.analysisFramework}>
-                    <Route
-                        exact
-                        path="/"
-                        component={
-                            () => (
-                                <Redirect to="/overview" />
-                            )
-                        }
-                    />
-                    <Route
-                        path="/overview"
-                        render={props => (
-                            <Overview
-                                {...props}
-                                analysisFramework={analysisFramework}
-                                onSave={this.handleSave}
-                                mainHistory={history}
-                            />
-                        )}
-                    />
-                    <Route
-                        path="/list"
-                        render={props => (
-                            <List
-                                {...props}
-                                analysisFramework={analysisFramework}
-                                onSave={this.handleSave}
-                                mainHistory={history}
-                            />
-                        )}
-                    />
-                </div>
-            </HashRouter>
+            <div className={styles.analysisFramework}>
+                <MultiViewContainer
+                    views={this.views}
+                    useHash
+                />
+            </div>
         );
     }
 }

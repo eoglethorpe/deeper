@@ -39,7 +39,6 @@ const propTypes = {
     updateWidget: PropTypes.func.isRequired,
     removeWidget: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     afStrings: PropTypes.func.isRequired,
 };
 
@@ -245,42 +244,59 @@ export default class Overview extends React.PureComponent {
         this.gridItems = this.getGridItems();
     }
 
-    handleExitButtonClick = () => {
+    renderHeader = () => {
         const {
             projectId,
-            mainHistory,
+            analysisFramework,
         } = this.props;
-        const url = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
-        mainHistory.push(url);
+
+        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
+        const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
+
+        return (
+            <header className={styles.header}>
+                <h2 className={styles.heading}>
+                    <span className={styles.title}>
+                        { frameworkTitle }
+                    </span>
+                    <span className={styles.separator}>
+                        /
+                    </span>
+                    <span className={styles.pageType}>
+                        {this.props.afStrings('headerOverview')}
+                    </span>
+                </h2>
+                <div className={styles.actions}>
+                    <Link
+                        className={styles.exitLink}
+                        to={exitUrl}
+                    >
+                        {this.props.afStrings('exitButtonLabel')}
+                    </Link>
+                    <Link
+                        className={styles.gotoListLink}
+                        to="#/list"
+                        replace
+                    >
+                        {this.props.afStrings('gotoListButtonLabel')}
+                    </Link>
+                    <SuccessButton
+                        className={styles.saveButton}
+                        onClick={this.props.onSave}
+                    >
+                        {this.props.afStrings('saveButtonLabel')}
+                    </SuccessButton>
+                </div>
+            </header>
+        );
     }
 
     render() {
+        const Header = this.renderHeader;
+
         return (
             <div className={styles.overview}>
-                <header className={styles.header}>
-                    <h2>
-                        {this.props.afStrings('analysisFramework')}
-                        /
-                        <small>
-                            {this.props.afStrings('headerOverview')}
-                        </small>
-                    </h2>
-                    <div className={styles.actions}>
-                        <Link
-                            className={styles.linkToList}
-                            to="/list"
-                            replace
-                        >
-                            {this.props.afStrings('gotoListButtonLabel')}
-                        </Link>
-                        <SuccessButton onClick={this.props.onSave} >
-                            {this.props.afStrings('saveButtonLabel')}
-                        </SuccessButton>
-                        <PrimaryButton onClick={() => this.handleExitButtonClick()}>
-                            {this.props.afStrings('exitButtonLabel')}
-                        </PrimaryButton>
-                    </div>
-                </header>
+                <Header />
                 <div className={styles.content}>
                     <div className={styles.widgetList}>
                         {

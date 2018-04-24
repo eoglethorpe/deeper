@@ -39,7 +39,6 @@ const propTypes = {
     removeWidget: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     afStrings: PropTypes.func.isRequired,
 };
 
@@ -278,15 +277,6 @@ export default class List extends React.PureComponent {
         this.gridItems = this.getGridItems(this.items);
     }
 
-    handleExitButtonClick = () => {
-        const {
-            projectId,
-            mainHistory,
-        } = this.props;
-        const url = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
-        mainHistory.push(url);
-    }
-
     renderWidgetList = () => (
         <div className={styles.widgetList}>
             {
@@ -316,36 +306,60 @@ export default class List extends React.PureComponent {
         </div>
     )
 
+    renderHeader = () => {
+        const {
+            projectId,
+            analysisFramework,
+        } = this.props;
+
+        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
+        const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
+
+        return (
+            <header className={styles.header}>
+                <h2 className={styles.heading}>
+                    <span className={styles.title}>
+                        { frameworkTitle }
+                    </span>
+                    <span className={styles.separator}>
+                        /
+                    </span>
+                    <span className={styles.pageType}>
+                        {this.props.afStrings('headerList')}
+                    </span>
+                </h2>
+                <div className={styles.actions}>
+                    <Link
+                        className={styles.exitLink}
+                        to={exitUrl}
+                    >
+                        {this.props.afStrings('exitButtonLabel')}
+                    </Link>
+                    <Link
+                        className={styles.gotoOverviewLink}
+                        to="#/overview"
+                        replace
+                    >
+                        {this.props.afStrings('gotoOverviewButtonLabel')}
+                    </Link>
+                    <SuccessButton
+                        className={styles.saveButton}
+                        onClick={this.props.onSave}
+                    >
+                        {this.props.afStrings('saveButtonLabel')}
+                    </SuccessButton>
+                </div>
+            </header>
+        );
+    }
+
     render() {
+        const Header = this.renderHeader;
         const WidgetList = this.renderWidgetList;
 
         return (
             <div className={styles.list}>
-                <header className={styles.header}>
-                    <h2>
-                        {this.props.afStrings('analysisFramework')}
-                        /
-                        <small>
-                            {this.props.afStrings('headerList')}
-                        </small>
-                    </h2>
-                    <div className={styles.actions}>
-                        <Link
-                            className={styles.linkToOverview}
-                            to="/overview"
-                            replace
-                        >
-                            {this.props.afStrings('gotoOverviewButtonLabel')}
-                        </Link>
-                        <SuccessButton onClick={this.props.onSave}>
-                            {this.props.afStrings('saveButtonLabel')}
-                        </SuccessButton>
-                        <PrimaryButton onClick={() => this.handleExitButtonClick()}>
-                            {this.props.afStrings('exitButtonLabel')}
-                        </PrimaryButton>
-                    </div>
-                </header>
-
+                <Header />
                 <div className={styles.content}>
                     <div className={styles.gridLayoutWrapper}>
                         <GridLayout
