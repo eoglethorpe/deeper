@@ -1,17 +1,12 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import {
-    Redirect,
-    Route,
-    HashRouter,
-    Prompt,
-    Switch,
-} from 'react-router-dom';
+import { Prompt } from 'react-router-dom';
 
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
 import { randomString } from '../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
+import MultiViewContainer from '../../vendor/react-store/components/View/MultiViewContainer';
 
 import {
     leadIdFromRoute,
@@ -181,6 +176,11 @@ export default class EditEntry extends React.PureComponent {
             this.handleSelectEntry,
             this.handleChangeEntryValues,
         );
+
+        const defaultHash = 'overview';
+        if (!window.location.hash) {
+            window.location.hash = `#/${defaultHash}`;
+        }
     }
 
     componentWillMount() {
@@ -424,9 +424,9 @@ export default class EditEntry extends React.PureComponent {
             filteredEntries,
             selectedEntryId,
         } = this.props;
+
         const {
             pendingSaveAll,
-
             pendingEntries,
             pendingAf,
             pendingGeo,
@@ -447,77 +447,74 @@ export default class EditEntry extends React.PureComponent {
         this.choices = this.calcChoices();
 
         const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
-
         const someSaveEnabled = Object.keys(this.choices).some(
             key => !(this.choices[key].isSaveDisabled),
         );
         const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
 
+        const views = {
+            overview: {
+                component: () => (
+                    <Overview
+                        analysisFramework={analysisFramework}
+                        entries={entries}
+                        filteredEntries={filteredEntries}
+                        leadId={leadId}
+                        onEntryAdd={this.handleAddEntry}
+                        onEntryDelete={this.handleEntryDelete}
+                        selectedEntryId={selectedEntryId}
+
+                        api={this.api}
+                        choices={this.choices}
+                        onSaveAll={this.handleSaveAll}
+                        saveAllDisabled={isSaveAllDisabled}
+                        saveAllPending={pendingSaveAll}
+                        widgetDisabled={isWidgetDisabled}
+                    />
+                ),
+            },
+
+            list: {
+                component: () => (
+                    <List
+                        analysisFramework={analysisFramework}
+                        entries={filteredEntries}
+                        leadId={leadId}
+
+                        api={this.api}
+                        choices={this.choices}
+                        onSaveAll={this.handleSaveAll}
+                        saveAllDisabled={isSaveAllDisabled}
+                    />
+                ),
+            },
+        };
+
         return (
             <Fragment>
                 <Prompt
-                    when={!isSaveAllDisabled}
                     message={
-                        location => (
-                            location.pathname === this.props.routeUrl ? (
-                                true
-                            ) : (
-                                this.props.commonStrings('youHaveUnsavedChanges')
-                            )
-                        )
+                        (location) => {
+                            const { routeUrl } = this.props;
+
+                            if (location.pathname === routeUrl) {
+                                return true;
+                            }
+
+                            if (isSaveAllDisabled) {
+                                return true;
+                            }
+
+                            return this.props.commonStrings('youHaveUnsavedChanges');
+                        }
                     }
                 />
-                <HashRouter>
-                    <div className={styles.editEntry}>
-                        <Switch>
-                            <Route
-                                path="/overview"
-                                render={props => (
-                                    <Overview
-                                        {...props}
-
-                                        analysisFramework={analysisFramework}
-                                        entries={entries}
-                                        filteredEntries={filteredEntries}
-                                        leadId={leadId}
-                                        onEntryAdd={this.handleAddEntry}
-                                        onEntryDelete={this.handleEntryDelete}
-                                        selectedEntryId={selectedEntryId}
-
-                                        api={this.api}
-                                        choices={this.choices}
-                                        onSaveAll={this.handleSaveAll}
-                                        saveAllDisabled={isSaveAllDisabled}
-                                        saveAllPending={pendingSaveAll}
-                                        widgetDisabled={isWidgetDisabled}
-                                    />
-                                )}
-                            />
-                            <Route
-                                path="/list"
-                                render={props => (
-                                    <List
-                                        {...props}
-
-                                        analysisFramework={analysisFramework}
-                                        entries={filteredEntries}
-                                        leadId={leadId}
-
-                                        api={this.api}
-                                        choices={this.choices}
-                                        onSaveAll={this.handleSaveAll}
-                                        saveAllDisabled={isSaveAllDisabled}
-                                    />
-                                )}
-                            />
-                            <Route
-                                path={undefined}
-                                render={() => <Redirect to="/overview" />}
-                                exact
-                            />
-                        </Switch>
-                    </div>
-                </HashRouter>
+                <div className={styles.editEntry}>
+                    <MultiViewContainer
+                        views={views}
+                        useHash
+                    />
+                </div>
             </Fragment>
         );
     }

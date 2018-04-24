@@ -280,7 +280,7 @@ export default class List extends React.PureComponent {
                 <div className={styles.actionButtons}>
                     <Link
                         className={styles.primaryLinkButton}
-                        to="/overview"
+                        to="#/overview"
                         replace
                     >
                         {this.props.entryStrings('gotoOverviewButtonLabel')}

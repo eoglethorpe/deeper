@@ -254,7 +254,7 @@ export default class Overview extends React.PureComponent {
                         <div className={styles.actionButtons}>
                             <Link
                                 className={styles.gotoLink}
-                                to="/list"
+                                to="#/list"
                                 replace
                             >
                                 {entryStrings('gotoListButtonLabel')}
