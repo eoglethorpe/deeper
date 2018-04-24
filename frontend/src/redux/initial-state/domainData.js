@@ -215,14 +215,14 @@ const initialDomainDataState = {
 
     connectorSources: {
         // index is connector source
-        1: {
-            key: 'rss-feed',
-            title: 'RSS Feed',
-        },
-        2: {
-            key: 'abc-def',
-            title: 'Abc def',
-        },
+        // 1: {
+        //     key: 'rss-feed',
+        //     title: 'RSS Feed',
+        // },
+        // 2: {
+        //     key: 'abc-def',
+        //     title: 'Abc def',
+        // },
     },
 };
 export default initialDomainDataState;

@@ -18,6 +18,7 @@ import {
     connectorSourcesListSelector,
 
     setConnectorSourcesAction,
+    addUserConnectorAction,
 } from '../../../redux';
 
 import ConnectorCreateRequest from '../requests/ConnectorCreateRequest';
@@ -29,6 +30,7 @@ const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     connectorStrings: PropTypes.func.isRequired,
     setConnectorSources: PropTypes.func.isRequired,
+    addUserConnector: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
@@ -46,6 +48,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setConnectorSources: params => dispatch(setConnectorSourcesAction(params)),
+    addUserConnector: params => dispatch(addUserConnectorAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -122,6 +125,7 @@ export default class ConnectorAddForm extends React.PureComponent {
             setState: v => this.setState(v),
             notificationStrings: this.props.notificationStrings,
             handleModalClose: this.handleModalClose,
+            addUserConnector: this.props.addUserConnector,
         });
         this.requestForConnectorCreate = requestForConnectorCreate.create(newConnector);
         this.requestForConnectorCreate.start();

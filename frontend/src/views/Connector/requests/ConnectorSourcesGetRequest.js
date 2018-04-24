@@ -13,7 +13,6 @@ export default class ConnectorsGetRequest {
     }
 
     success = (response) => {
-        console.warn(response);
         try {
             schema.validate(response, 'connectorSources');
             this.props.setConnectorSources({ connectorSources: response.results });

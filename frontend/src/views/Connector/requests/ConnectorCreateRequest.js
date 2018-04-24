@@ -16,6 +16,17 @@ export default class ConnectorCreateRequest {
     success = (response) => {
         try {
             schema.validate(response, 'connector');
+            const connector = {
+                id: response.id,
+                versionId: response.versionId,
+                formValues: { ...response },
+                formErrors: {},
+                formFieldErrors: {},
+                prisitne: false,
+            };
+
+            this.props.addUserConnector({ connector });
+
             notify.send({
                 title: this.props.notificationStrings('connectorCreateTitle'),
                 type: notify.type.SUCCESS,
