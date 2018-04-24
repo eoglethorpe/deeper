@@ -9,7 +9,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { InternalGallery } from '../../../components/DeepGallery';
 
-import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../../vendor/react-store/components/Input/NonFieldErrors';
 import ImageInput from '../../../vendor/react-store/components/Input/FileInput/ImageInput';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
@@ -63,9 +63,8 @@ export default class UserEdit extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: this.props.userInformation,
+            faramErrors: {},
+            faramValues: this.props.userInformation,
             pending: false,
             pristine: false,
             showGalleryImage: true,
@@ -117,31 +116,25 @@ export default class UserEdit extends React.PureComponent {
         this.userImageUploader.start();
     }
 
-    // FORM RELATED
-
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleFaramValidationSuccess = (values) => {
         const userId = this.props.userId;
         this.startRequestForUserPatch(userId, values);
     };
 
     // BUTTONS
-    handleFormClose = () => {
+    handleFaramClose = () => {
         this.props.handleModalClose();
     }
 
@@ -167,7 +160,7 @@ export default class UserEdit extends React.PureComponent {
 
     handleImageUploadSuccess = (displayPicture) => {
         this.setState({
-            formValues: { ...this.state.formValues, displayPicture },
+            faramValues: { ...this.state.faramValues, displayPicture },
             pristine: true,
             pending: false,
         });
@@ -175,34 +168,32 @@ export default class UserEdit extends React.PureComponent {
 
     render() {
         const {
-            formValues,
-            formErrors,
-            formFieldErrors,
+            faramValues,
+            faramErrors,
             pending,
             pristine,
             showGalleryImage,
         } = this.state;
 
         return (
-            <Form
+            <Faram
                 className={styles.userProfileEditForm}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+                onChange={this.handleFaramChange}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                onValidationFailure={this.handleFaramValidationFailure}
                 schema={this.schema}
-                value={formValues}
-                fieldErrors={formFieldErrors}
-                formErrors={formErrors}
+                value={faramValues}
+                error={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
-                <HiddenInput formname="displayPicture" />
+                <NonFieldErrors faramElement />
+                <HiddenInput faramElementName="displayPicture" />
                 {
-                    showGalleryImage && formValues.displayPicture && (
+                    showGalleryImage && faramValues.displayPicture && (
                         <InternalGallery
                             className={styles.galleryImage}
-                            galleryId={formValues.displayPicture}
+                            galleryId={faramValues.displayPicture}
                         />
                     )
                 }
@@ -215,22 +206,22 @@ export default class UserEdit extends React.PureComponent {
                 />
                 <TextInput
                     label={this.props.userStrings('firstNameLabel')}
-                    formname="firstName"
+                    faramElementName="firstName"
                     placeholder={this.props.userStrings('firstNamePlaceholder')}
                     autoFocus
                 />
                 <TextInput
                     label={this.props.userStrings('lastNameLabel')}
-                    formname="lastName"
+                    faramElementName="lastName"
                     placeholder={this.props.userStrings('lastNamePlaceholder')}
                 />
                 <TextInput
                     label={this.props.userStrings('organizationLabel')}
-                    formname="organization"
+                    faramElementName="organization"
                     placeholder={this.props.userStrings('organizationPlaceholder')}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleFormClose}>
+                    <DangerButton onClick={this.handleFaramClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton
@@ -240,7 +231,7 @@ export default class UserEdit extends React.PureComponent {
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

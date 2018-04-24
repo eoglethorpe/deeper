@@ -199,7 +199,7 @@ export default class LeadAdd extends React.PureComponent {
         const {
             title: leadTitle = '',
             source: leadSource = '',
-        } = leadAccessor.getValues(lead);
+        } = leadAccessor.getFaramValues(lead);
 
         const leadStatus = globalUiState[id].leadState;
 
@@ -279,14 +279,14 @@ export default class LeadAdd extends React.PureComponent {
         this.props.addLeadViewRemoveSavedLeads();
 
         const { routeState } = this.props;
-        const { serverId, values } = routeState;
+        const { serverId, faramValues } = routeState;
         if (isTruthy(serverId)) {
             const uid = randomString();
             const newLeadId = `lead-${uid}`;
             const newLead = {
                 id: newLeadId,
                 serverId,
-                values,
+                faramValues,
                 pristine: true,
             };
             this.props.addLeads([newLead]);
@@ -691,7 +691,7 @@ export default class LeadAdd extends React.PureComponent {
         } = this.props;
         const { pendingSubmitAll } = this.state;
 
-        const { project } = leadAccessor.getValues(lead);
+        const { project } = leadAccessor.getFaramValues(lead);
         const leadOptions = leadFilterOptions[project];
         return (
             <LeadFormItem

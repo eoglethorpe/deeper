@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUserPatch,
     createParamsForUserPatch,
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
@@ -52,14 +52,8 @@ export default class UserPatchRequest {
                     message: this.props.notificationStrings('userEditFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.props.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.props.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -69,7 +63,8 @@ export default class UserPatchRequest {
                     duration: notify.duration.MEDIUM,
                 });
                 this.props.setState({
-                    formErrors: { errors: ['Error while trying to save user.'] },
+                    // FIXME: use strings
+                    faramErrors: { $internal: ['Error while trying to save user.'] },
                 });
             })
             .build();

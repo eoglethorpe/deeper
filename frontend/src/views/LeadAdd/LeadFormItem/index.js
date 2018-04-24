@@ -79,7 +79,7 @@ export default class LeadFormItem extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const lead = leadAccessor.getValues(this.props.lead);
+        const lead = leadAccessor.getFaramValues(this.props.lead);
         const isUrlValid = LeadFormItem.isUrlValid(lead.url);
         this.state = {
             isUrlValid,
@@ -92,8 +92,8 @@ export default class LeadFormItem extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const oldLead = leadAccessor.getValues(this.props.lead);
-        const newLead = leadAccessor.getValues(nextProps.lead);
+        const oldLead = leadAccessor.getFaramValues(this.props.lead);
+        const newLead = leadAccessor.getFaramValues(nextProps.lead);
         if (newLead.url !== oldLead.url) {
             const isUrlValid = LeadFormItem.isUrlValid(newLead.url);
             this.setState({ isUrlValid });
@@ -123,7 +123,7 @@ export default class LeadFormItem extends React.PureComponent {
                 // FIXME: use ravl
                 const webInfo = response;
 
-                const leadValues = leadAccessor.getValues(this.props.lead);
+                const leadValues = leadAccessor.getFaramValues(this.props.lead);
                 const leadFieldErrors = leadAccessor.getFieldErrors(this.props.lead);
 
                 const values = { ...leadValues };
@@ -156,9 +156,8 @@ export default class LeadFormItem extends React.PureComponent {
 
                 this.props.addLeadViewLeadChange({
                     leadId: this.props.leadKey,
-                    values,
-                    formErrors: {},
-                    formFieldErrors,
+                    faramValues: values,
+                    faramErrors: {},
                     uiState: { pristine: false, serverError: false },
                 });
             })
@@ -170,7 +169,7 @@ export default class LeadFormItem extends React.PureComponent {
         if (this.webInfoExtractRequest) {
             this.webInfoExtractRequest.stop();
         }
-        const lead = leadAccessor.getValues(this.props.lead);
+        const lead = leadAccessor.getFaramValues(this.props.lead);
         this.webInfoExtractRequest = this.createWebInfoExtractRequest(lead.url);
         this.webInfoExtractRequest.start();
     }
@@ -187,7 +186,7 @@ export default class LeadFormItem extends React.PureComponent {
         this.leadSaveRequest.start();
     }
 
-    handleFormChange = (values, formFieldErrors, formErrors) => {
+    handleFormChange = (faramValues, faramErrors) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,
@@ -195,14 +194,13 @@ export default class LeadFormItem extends React.PureComponent {
 
         addLeadViewLeadChange({
             leadId,
-            values,
-            formErrors,
-            formFieldErrors,
+            faramValues,
+            faramErrors,
             uiState: { pristine: false, serverError: false },
         });
     }
 
-    handleFormFailure = (formFieldErrors, formErrors) => {
+    handleFormFailure = (faramErrors) => {
         const {
             leadKey: leadId,
             addLeadViewLeadChange,
@@ -211,8 +209,7 @@ export default class LeadFormItem extends React.PureComponent {
 
         addLeadViewLeadChange({
             leadId,
-            formErrors,
-            formFieldErrors,
+            faramErrors,
             uiState: { pristine: true, serverError: false },
         });
 
@@ -288,7 +285,7 @@ export default class LeadFormItem extends React.PureComponent {
 
     renderLeadPreview = ({ lead }) => {
         const type = leadAccessor.getType(lead);
-        const values = leadAccessor.getValues(lead);
+        const values = leadAccessor.getFaramValues(lead);
 
         switch (type) {
             case LEAD_TYPE.text:

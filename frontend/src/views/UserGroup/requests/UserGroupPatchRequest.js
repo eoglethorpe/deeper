@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUserGroup,
     createParamsForUserGroupsPatch,
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
@@ -34,21 +34,13 @@ export default class UserGroupPatchRequest {
     }
 
     failure = (response) => {
-        const {
-            formFieldErrors,
-            formErrors,
-        } = transformResponseErrorToFormError(response.errors);
-        this.props.setState({
-            formFieldErrors,
-            formErrors,
-        });
+        const faramErrors = alterResponseErrorToFaramError(response.errors);
+        this.props.setState({ faramErrors });
     }
 
     fatal = () => {
         this.props.setState({
-            formErrors: { errors: [
-                this.props.userStrings('userGroupPatchFatal'),
-            ] },
+            faramErrors: { $internal: [this.props.userStrings('userGroupPatchFatal')] },
         });
     }
 

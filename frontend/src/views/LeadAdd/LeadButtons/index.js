@@ -100,7 +100,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                values: {
+                faramValues: {
                     title: doc.name,
                     project: activeProject,
                     sourceType: LEAD_TYPE.drive,
@@ -137,7 +137,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                values: {
+                faramValues: {
                     title: doc.name,
                     project: activeProject,
                     sourceType: LEAD_TYPE.dropbox,
@@ -184,7 +184,7 @@ export default class LeadButtons extends React.PureComponent {
 
             newLeads.unshift({
                 id: newLeadId,
-                values: {
+                faramValues: {
                     title: file.name,
                     project: activeProject,
                     sourceType: LEAD_TYPE.file,
@@ -212,7 +212,7 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            values: {
+            faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
                 project: activeProject,
                 sourceType: LEAD_TYPE.website,
@@ -233,7 +233,7 @@ export default class LeadButtons extends React.PureComponent {
 
         newLeads.unshift({
             id: newLeadId,
-            values: {
+            faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
                 project: activeProject,
                 sourceType: LEAD_TYPE.text,

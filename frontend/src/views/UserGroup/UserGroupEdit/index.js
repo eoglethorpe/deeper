@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../../vendor/react-store/components/Input/NonFieldErrors';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -56,9 +56,8 @@ export default class UserGroupEdit extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {
+            faramErrors: {},
+            faramValues: {
                 title: props.userGroup.title,
                 description: props.userGroup.description,
             },
@@ -97,25 +96,19 @@ export default class UserGroupEdit extends React.PureComponent {
         this.userGroupCreateRequest.start();
     }
 
-    // FORM RELATED
-
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleFaramValidationSuccess = (values) => {
         this.startRequestForUserGroupPatch(
             this.props.userGroup.id,
             values,
@@ -123,48 +116,46 @@ export default class UserGroupEdit extends React.PureComponent {
     };
 
     // BUTTONS
-    handleFormClose = () => {
+    handleFaramClose = () => {
         this.props.handleModalClose();
     }
 
     render() {
         const {
-            formValues,
-            formErrors,
-            formFieldErrors,
+            faramValues,
+            faramErrors,
             pending,
             pristine,
         } = this.state;
 
         return (
-            <Form
+            <Faram
                 className={styles.userGroupEditForm}
                 schema={this.schema}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                value={faramValues}
+                error={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElementName />
                 <TextInput
                     label={this.props.userStrings('addUserGroupModalLabel')}
-                    formname="title"
+                    faramElementName="title"
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     autoFocus
                 />
                 <TextArea
                     label={this.props.userStrings('userGroupModalDescriptionLabel')}
-                    formname="description"
+                    faramElementName="description"
                     className={styles.description}
                     placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
                     rows={3}
                 />
                 <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleFormClose}>
+                    <DangerButton onClick={this.handleFaramClose}>
                         {this.props.userStrings('modalCancel')}
                     </DangerButton>
                     <PrimaryButton
@@ -174,7 +165,7 @@ export default class UserGroupEdit extends React.PureComponent {
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

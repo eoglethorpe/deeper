@@ -3,10 +3,7 @@ import {
     getElementAround,
     getNumbers,
 } from '../../../vendor/react-store/utils/common';
-import {
-    analyzeFieldErrors,
-    analyzeFormErrors,
-} from '../../../vendor/react-store/components/Input/Form/validator';
+import { analyzeErrors } from '../../../vendor/react-store/components/Input/Faram/validator';
 import update from '../../../vendor/react-store/utils/immutable-update';
 
 import {
@@ -20,16 +17,23 @@ import {
 
 export const LA__SET_FILTERS = 'siloDomainData/LA__SET_FILTERS ';
 export const LA__UNSET_FILTERS = 'siloDomainData/LA__UNSET_FILTERS ';
+
 export const LA__SET_ACTIVE_LEAD_ID = 'siloDomainData/LA__SET_ACTIVE_LEAD_ID';
+
 export const LA__ADD_LEADS = 'siloDomainData/LA__ADD_LEADS';
-export const LA__LEAD_CHANGE = 'siloDomainData/LA__LEAD_CHANGE';
-export const LA__LEAD_SAVE = 'siloDomainData/LA__LEAD_SAVE';
-export const LA__LEAD_REMOVE = 'siloDomainData/LA__LEAD_REMOVE';
+
 export const LA__LEAD_NEXT = 'siloDomainData/LA__LEAD_NEXT';
 export const LA__LEAD_PREV = 'siloDomainData/LA__LEAD_PREV';
+
 export const LA__COPY_ALL_BELOW = 'siloDomainData/LA__COPY_ALL_BELOW';
 export const LA__COPY_ALL = 'siloDomainData/LA__COPY_ALL';
+
+export const LA__LEAD_CHANGE = 'siloDomainData/LA__LEAD_CHANGE';
+export const LA__LEAD_SAVE = 'siloDomainData/LA__LEAD_SAVE';
+
+export const LA__LEAD_REMOVE = 'siloDomainData/LA__LEAD_REMOVE';
 export const LA__LEAD_REMOVE_SAVED = 'siloDomainData/LA__LEAD_REMOVE_SAVED';
+
 
 // ACTION-CREATOR
 
@@ -52,14 +56,14 @@ export const addLeadViewAddLeadsAction = leads => ({
     leads,
 });
 
+// FIXME: changed this
 export const addLeadViewLeadChangeAction = ({
-    leadId, values, formErrors, formFieldErrors, upload, uiState,
+    leadId, faramValues, faramErrors, upload, uiState,
 }) => ({
     type: LA__LEAD_CHANGE,
     leadId,
-    values,
-    formErrors,
-    formFieldErrors,
+    faramValues,
+    faramErrors,
     upload,
     uiState,
 });
@@ -112,9 +116,8 @@ const setErrorForLeads = (state, leadIndices) => {
     const leadSettings = newLeadIndices.reduce(
         (acc, leadIndex) => {
             const lead = leads[leadIndex];
-            const errors = leadAccessor.getErrors(lead);
-            const fieldErrors = leadAccessor.getFieldErrors(lead);
-            const hasError = analyzeFieldErrors(fieldErrors) || analyzeFormErrors(errors);
+            const faramErrors = leadAccessor.getFaramErrors(lead);
+            const hasError = analyzeErrors(faramErrors);
             const serverError = leadAccessor.hasServerError(lead);
             acc[leadIndex] = {
                 uiState: {
@@ -136,7 +139,6 @@ const setErrorForLeads = (state, leadIndices) => {
 
 const addLeadViewSetFilters = (state, action) => {
     const { filters } = action;
-    // set new filters
     const settings = {
         addLeadView: {
             filters: { $auto: {
@@ -147,9 +149,7 @@ const addLeadViewSetFilters = (state, action) => {
     return update(state, settings);
 };
 
-// FIXME: Should probably be addLeadViewResetFilters
-const removeLeadViewSetFilters = (state) => {
-    // remove filters
+const addLeadViewUnsetFilters = (state) => {
     const settings = {
         addLeadView: {
             filters: { $set: {} },
@@ -263,9 +263,13 @@ const addLeadViewRemoveSavedLeads = (state) => {
 
 const addLeadViewAddNewLeads = (state, action) => {
     const { leads: leadsFromAction } = action;
-    // Adding new leads
+
+    // New leads
     const newLeads = leadsFromAction.map(data => createLead(data));
-    const newActiveLeadId = leadAccessor.getKey(newLeads[0]);
+
+    // New active lead
+    const newActiveLead = newLeads[0];
+    const newActiveLeadId = leadAccessor.getKey(newActiveLead);
 
     // For filtering old leads with duplicate serverId
     const serverIdMap = listToMap(
@@ -283,9 +287,7 @@ const addLeadViewAddNewLeads = (state, action) => {
 
     const settings = {
         addLeadView: {
-            // set first leads a new active lead
             activeLeadId: { $set: newActiveLeadId },
-            // add new leads to start
             leads: {
                 $bulk: [
                     { $filter: filterFn },
@@ -306,14 +308,14 @@ const addLeadViewAddNewLeads = (state, action) => {
     return update(state, settings);
 };
 
+// Complex reducers below this point
+
 const addLeadViewChangeLead = (state, action) => {
     const { addLeadView: { leads } } = state;
     const {
         leadId,
-        values,
-        formFieldErrors,
-
-        formErrors,
+        faramValues,
+        faramErrors,
         uiState,
     } = action;
 
@@ -325,25 +327,17 @@ const addLeadViewChangeLead = (state, action) => {
         addLeadView: {
             leads: {
                 [leadIndex]: {
-                    form: {
-                        values: {
-                            $if: [
-                                !!values,
-                                { $set: values },
-                            ],
-                        },
-                        fieldErrors: {
-                            $if: [
-                                !!formFieldErrors,
-                                { $set: formFieldErrors },
-                            ],
-                        },
-                        errors: {
-                            $if: [
-                                !!formErrors,
-                                { $set: formErrors },
-                            ],
-                        },
+                    faramValues: {
+                        $if: [
+                            !!faramValues,
+                            { $set: faramValues },
+                        ],
+                    },
+                    faramErrors: {
+                        $if: [
+                            !!faramErrors,
+                            { $set: faramErrors },
+                        ],
                     },
                     uiState: {
                         $if: [
@@ -358,6 +352,53 @@ const addLeadViewChangeLead = (state, action) => {
     const newState = update(state, settings);
 
     return setErrorForLeads(newState, [leadIndex]);
+};
+
+const addLeadViewCopyAll = behavior => (state, action) => {
+    const { addLeadView: { leads } } = state;
+    const {
+        leadId,
+        attrName,
+    } = action;
+
+
+    const leadIndex = leads.findIndex(
+        lead => leadAccessor.getKey(lead) === leadId,
+    );
+    const leadValues = leadAccessor.getFaramValues(leads[leadIndex]);
+    const leadProjectId = leadValues.project;
+    const valueToCopy = leadValues[attrName];
+
+    const leadSettings = {};
+    const start = (behavior === 'below') ? (leadIndex + 1) : 0;
+    for (let i = start; i < leads.length; i += 1) {
+        const currValues = leadAccessor.getFaramValues(leads[i]);
+        const currProjectId = currValues.project;
+        // assignee should only be applied to leads within same project
+        if (attrName === 'assignee' && currProjectId !== leadProjectId) {
+            continue; // eslint-disable-line no-continue
+        }
+
+        // Don't set value which hasn't changed
+        if (currValues[attrName] === valueToCopy) {
+            continue; // eslint-disable-line no-continue
+        }
+
+        leadSettings[i] = {
+            faramValues: { [attrName]: { $set: valueToCopy } },
+            faramErrors: {
+                $internal: { $set: undefined },
+                [attrName]: { $set: undefined },
+            },
+            uiState: { pristine: { $set: false } },
+        };
+    }
+
+    const settings = {
+        addLeadView: { leads: leadSettings },
+    };
+    const newState = update(state, settings);
+    return setErrorForLeads(newState);
 };
 
 const addLeadViewSaveLead = (state, action) => {
@@ -375,9 +416,7 @@ const addLeadViewSaveLead = (state, action) => {
         addLeadView: {
             leads: {
                 [leadIndex]: {
-                    data: { $auto: {
-                        serverId: { $set: serverId },
-                    } },
+                    serverId: { $set: serverId },
                     uiState: {
                         $merge: { pristine: true },
                     },
@@ -388,59 +427,12 @@ const addLeadViewSaveLead = (state, action) => {
     return update(state, settings);
 };
 
-const addLeadViewCopyAll = behavior => (state, action) => {
-    const { addLeadView: { leads } } = state;
-    const {
-        leadId,
-        attrName,
-    } = action;
-
-
-    const leadIndex = leads.findIndex(
-        lead => leadAccessor.getKey(lead) === leadId,
-    );
-    const leadValues = leadAccessor.getValues(leads[leadIndex]);
-    const leadProjectId = leadValues.project;
-    const valueToCopy = leadValues[attrName];
-
-    const leadSettings = {};
-    const start = (behavior === 'below') ? (leadIndex + 1) : 0;
-    for (let i = start; i < leads.length; i += 1) {
-        const currValues = leadAccessor.getValues(leads[i]);
-        const currProjectId = currValues.project;
-        // assignee should only be applied to leads within same project
-        if (attrName === 'assignee' && currProjectId !== leadProjectId) {
-            continue; // eslint-disable-line no-continue
-        }
-
-        // Don't set value which hasn't changed
-        if (currValues[attrName] === valueToCopy) {
-            continue; // eslint-disable-line no-continue
-        }
-
-        leadSettings[i] = {
-            form: {
-                values: { [attrName]: { $set: valueToCopy } },
-                fieldErrors: { [attrName]: { $set: undefined } },
-                errors: { $set: {} },
-            },
-            uiState: { pristine: { $set: false } },
-        };
-    }
-
-    const settings = {
-        addLeadView: { leads: leadSettings },
-    };
-    const newState = update(state, settings);
-    return setErrorForLeads(newState);
-};
-
 // REDUCER MAP
 
 const reducers = {
     [LA__ADD_LEADS]: addLeadViewAddNewLeads,
     [LA__SET_FILTERS]: addLeadViewSetFilters,
-    [LA__UNSET_FILTERS]: removeLeadViewSetFilters,
+    [LA__UNSET_FILTERS]: addLeadViewUnsetFilters,
     [LA__LEAD_CHANGE]: addLeadViewChangeLead,
     [LA__LEAD_SAVE]: addLeadViewSaveLead,
     [LA__LEAD_REMOVE]: addLeadViewRemoveLead,

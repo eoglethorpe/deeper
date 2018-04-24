@@ -3,7 +3,7 @@ import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
 
     urlForLead,
     createUrlForLeadEdit,
@@ -96,15 +96,10 @@ export default class FormSaveRequest {
     }
 
     handleLeadSaveFailure = leadId => (response) => {
-        const {
-            formFieldErrors,
-            formErrors,
-        } = transformResponseErrorToFormError(response.errors);
-
+        const faramErrors = alterResponseErrorToFaramError(response.errors);
         this.addLeadViewLeadChange({
             leadId,
-            formErrors,
-            formFieldErrors,
+            faramErrors,
             uiState: { pristine: true, serverError: true },
         });
         this.formCoordinator.notifyComplete(leadId, true);
@@ -114,7 +109,7 @@ export default class FormSaveRequest {
         this.addLeadViewLeadChange({
             leadId,
             // FIXME: use strings
-            formErrors: { errors: ['Error while trying to save lead.'] },
+            faramErrors: { $internal: ['Error while trying to save lead.'] },
             uiState: { pristine: true, serverError: true },
         });
         this.formCoordinator.notifyComplete(leadId, true);

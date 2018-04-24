@@ -120,46 +120,36 @@ export const leadTypeIconMap = {
 };
 
 export const leadAccessor = {
-    getKey: lead => lead.data && lead.data.id,
-    getServerId: lead => lead.data && lead.data.serverId,
-    getType: lead => lead.form && lead.form.values && lead.form.values.sourceType,
+    getKey: lead => lead.id,
+    getServerId: lead => lead.serverId,
+    getType: lead => lead.faramValues && lead.faramValues.sourceType,
 
-    getValues: lead => lead.form && lead.form.values,
-    getErrors: lead => lead.form && lead.form.errors,
-    getFieldErrors: lead => lead.form && lead.form.fieldErrors,
+    getFaramValues: lead => lead.faramValues,
+    getFaramErrors: lead => lead.faramErrors,
 
     getUiState: lead => lead.uiState,
     hasServerError: lead => !!lead.uiState && lead.uiState.serverError,
 };
 
 const leadReference = {
-    data: {
-        id: 'lead-0',
-        serverId: undefined,
+    id: 'lead-0',
+    serverId: undefined,
+    faramValues: {
+        title: 'Lead #0',
+        project: 0,
     },
-    form: {
-        values: {
-            title: 'Lead #0',
-            project: 0,
-        },
-        errors: {},
-        fieldErrors: {},
-    },
+    faramErrors: {},
     uiState: {
         error: false,
         pristine: false,
     },
 };
 
-export const createLead = ({ id, serverId, values = {}, pristine = false }) => {
+export const createLead = ({ id, serverId, faramValues = {}, pristine = false }) => {
     const settings = {
-        data: {
-            id: { $set: id },
-            serverId: { $set: serverId },
-        },
-        form: {
-            values: { $set: values },
-        },
+        id: { $set: id },
+        serverId: { $set: serverId },
+        faramValues: { $set: faramValues },
         uiState: {
             pristine: { $set: pristine },
         },
@@ -170,13 +160,14 @@ export const createLead = ({ id, serverId, values = {}, pristine = false }) => {
 export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     const type = leadAccessor.getType(lead);
     const serverId = leadAccessor.getServerId(lead);
-    const values = leadAccessor.getValues(lead);
+
+    const faramValues = leadAccessor.getFaramValues(lead);
     const { pristine, error, serverError } = leadAccessor.getUiState(lead);
 
     const isFileUploading = () => upload && upload.progress <= 100;
     const isDriveUploading = () => drive && drive.pending;
     const isDropboxUploading = () => dropbox && dropbox.pending;
-    const noAttachment = () => values && !values.attachment;
+    const noAttachment = () => faramValues && !faramValues.attachment;
 
     if (
         (type === LEAD_TYPE.file && isFileUploading()) ||

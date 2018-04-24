@@ -57,10 +57,10 @@ export default class FileUploadRequest {
     handleLeadUploadSuccess = leadId => (response) => {
         // FOR DATA CHANGE
         const lead = this.getLeadFromId(leadId);
-        const leadValues = leadAccessor.getValues(lead);
+        const leadValues = leadAccessor.getFaramValues(lead);
         this.addLeadViewLeadChange({
             leadId,
-            values: {
+            faramValues: {
                 ...leadValues,
                 attachment: { id: response.id },
             },
@@ -88,15 +88,15 @@ export default class FileUploadRequest {
     handleLeadUploadFailure = leadId => (response) => {
         // FOR DATA CHANGE
         const lead = this.getLeadFromId(leadId);
-        const leadValues = leadAccessor.getValues(lead);
+        const leadValues = leadAccessor.getFaramValues(lead);
         this.addLeadViewLeadChange({
             leadId,
-            values: {
+            faramValues: {
                 ...leadValues,
                 attachment: undefined,
             },
-            formErrors: {
-                errors: [
+            faramErrors: {
+                $internal: [
                     `${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`,
                 ],
             },
