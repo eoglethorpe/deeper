@@ -143,7 +143,6 @@ export default class Login extends React.PureComponent {
         }
     }
 
-    // FORM RELATED
     handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
             faramValues,
@@ -306,9 +305,7 @@ export default class Login extends React.PureComponent {
                             >
                                 {this.props.loginStrings('forgotPasswordText')}
                             </Link>
-                            <PrimaryButton
-                                type="submit"
-                            >
+                            <PrimaryButton type="submit">
                                 {this.props.loginStrings('loginLabel')}
                             </PrimaryButton>
                         </div>

@@ -9,7 +9,7 @@ import {
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import Button from '../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
-import Form from '../../vendor/react-store/components/Input/Form';
+import Faram from '../../vendor/react-store/components/Input/Faram';
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
@@ -83,7 +83,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         // eslint-disable-next-line no-unused-vars
         const { similar, ...values } = this.props.filters;
         this.state = {
-            formValues: values,
+            faramValues: values,
             pristine: true,
         };
 
@@ -110,7 +110,7 @@ export default class FilterLeadsForm extends React.PureComponent {
             // eslint-disable-next-line no-unused-vars
             const { similar, ...values } = filters;
             this.setState({
-                formValues: values,
+                faramValues: values,
                 pristine: true,
             });
         }
@@ -168,21 +168,21 @@ export default class FilterLeadsForm extends React.PureComponent {
 
     // UI
 
-    handleChange = (values) => {
+    handleFaramChange = (values) => {
         this.setState(
             {
-                formValues: values,
+                faramValues: values,
                 pristine: false,
             },
             () => {
                 if (this.props.applyOnChange) {
-                    this.formComponent.submit();
+                    this.faramComponent.submit();
                 }
             },
         );
     }
 
-    handleSubmit = (values) => {
+    handleFaramValidationSuccess = (values) => {
         const { similar } = this.props.filters;
         this.props.setLeadPageFilter({
             filters: {
@@ -206,7 +206,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         if (isObjectEmpty(this.props.filters)) {
             // NOTE: Only clear component state,
             // as the filters in global state is already empty
-            this.setState({ formValues: {}, pristine: true });
+            this.setState({ faramValues: {}, pristine: true });
         } else {
             this.props.unsetLeadPageFilter();
         }
@@ -226,7 +226,7 @@ export default class FilterLeadsForm extends React.PureComponent {
         } = this.props;
 
         const {
-            formValues,
+            faramValues,
             pristine,
         } = this.state;
 
@@ -236,16 +236,16 @@ export default class FilterLeadsForm extends React.PureComponent {
         const isClearDisabled = isFilterEmpty && pristine;
 
         return (
-            <Form
-                ref={(elem) => { this.formComponent = elem; }}
+            <Faram
+                ref={(elem) => { this.faramComponent = elem; }}
                 className={`leads-filters ${className}`}
-                successCallback={this.handleSubmit}
-                changeCallback={this.handleChange}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                onChange={this.handleFaramChange}
                 schema={this.schema}
-                value={formValues}
+                value={faramValues}
             >
                 <MultiSelectInput
-                    formname="assignee"
+                    faramElementName="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsStrings('assigneeLabel')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
@@ -256,7 +256,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                 />
                 <DateFilter
-                    formname="created_at"
+                    faramElementName="created_at"
                     label={leadsStrings('filterDateCreated')}
                     placeholder={leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
@@ -264,7 +264,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                 />
                 <DateFilter
-                    formname="published_on"
+                    faramElementName="published_on"
                     label={leadsStrings('filterDatePublished')}
                     placeholder={leadsStrings('placeholderAnytime')}
                     showHintAndError={false}
@@ -272,7 +272,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                 />
                 <MultiSelectInput
-                    formname="confidentiality"
+                    faramElementName="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsStrings('filterConfidentiality')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
@@ -283,7 +283,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                 />
                 <MultiSelectInput
-                    formname="status"
+                    faramElementName="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
                     label={leadsStrings('filterStatus')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
@@ -294,7 +294,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     className="leads-filter"
                 />
                 <SearchInput
-                    formname="search"
+                    faramElementName="search"
                     label={leadsStrings('placeholderSearch')}
                     placeholder={leadsStrings('placeholderSearch')}
                     showHintAndError={false}
@@ -327,7 +327,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                         </DangerButton>
                     )
                 }
-            </Form>
+            </Faram>
         );
     }
 }

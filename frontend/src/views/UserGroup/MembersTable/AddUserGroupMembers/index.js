@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { compareString } from '../../../../vendor/react-store/utils/common';
-import Form, { requiredCondition } from '../../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../../vendor/react-store/components/Input/Faram';
 import update from '../../../../vendor/react-store/utils/immutable-update';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -83,9 +83,8 @@ export default class AddUserGroupMembers extends React.PureComponent {
         const membersBlackList = (userGroupDetails.memberships || emptyList).map(d => d.member);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
 
             pending: false,
             pristine: false,
@@ -195,8 +194,8 @@ export default class AddUserGroupMembers extends React.PureComponent {
     }
 
     handleRoleChangeForNewMember = (member) => {
-        const { formValues } = this.state;
-        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
+        const { faramValues } = this.state;
+        const index = (faramValues.memberships || emptyList).findIndex(m => m.id === member.id);
         if (index !== -1) {
             const settings = {
                 memberships: {
@@ -208,32 +207,27 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 },
             };
 
-            const newFormValues = update(formValues, settings);
+            const newFaramValues = update(faramValues, settings);
             this.setState({
-                formValues: newFormValues,
+                faramValues: newFaramValues,
                 pristine: true,
             });
         }
     }
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleFaramValidationSuccess = (values) => {
         const { userGroupId } = this.props;
 
         const newMembersList = values.memberships.map(member => ({
@@ -247,9 +241,8 @@ export default class AddUserGroupMembers extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             pristine,
             usersWithRole,
@@ -261,24 +254,23 @@ export default class AddUserGroupMembers extends React.PureComponent {
         } = this.props;
 
         return (
-            <Form
+            <Faram
                 className={`${className} ${styles.addMemberForm}`}
                 schema={this.schema}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
+                value={faramValues}
+                errors={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors
                     className={styles.nonFieldErrors}
-                    formerror=""
+                    faramElement
                 />
                 <TabularSelectInput
-                    formname="memberships"
+                    faramElementName="memberships"
                     className={styles.tabularSelect}
                     blackList={membersBlackList}
                     options={usersWithRole}
@@ -286,7 +278,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     labelSelector={AddUserGroupMembers.optionLabelSelector}
                     keySelector={AddUserGroupMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
-                    error={formFieldErrors.memberships}
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.props.onModalClose}>
@@ -299,7 +290,7 @@ export default class AddUserGroupMembers extends React.PureComponent {
                         {this.props.userStrings('modalSave')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

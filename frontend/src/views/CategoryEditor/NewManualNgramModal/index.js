@@ -8,7 +8,7 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import Button from '../../../vendor/react-store/components/Action/Button';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
-import Form, { requiredCondition } from '../../../vendor/react-store/components/Input/Form';
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
 import { ceStringsSelector } from '../../../redux';
 
@@ -33,7 +33,7 @@ export default class NewManualNgramModal extends React.PureComponent {
 
     static schema = {
         fields: {
-            wordValue: [requiredCondition],
+            word: [requiredCondition],
         },
     };
 
@@ -41,28 +41,26 @@ export default class NewManualNgramModal extends React.PureComponent {
         super(props);
         this.state = {
             schema: NewManualNgramModal.schema,
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
-            pristine: false,
+            faramErrors: {},
+            faramValues: {},
+            pristine: true,
         };
     }
 
-    changeCallback = (values, fieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formErrors,
-            formFieldErrors: fieldErrors,
-            pristine: true,
+            faramValues,
+            faramErrors,
+            pristine: false,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({ formFieldErrors, formErrors });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = ({ wordValue }) => {
-        this.props.onSubmit(wordValue);
+    handleFaramValidationSuccess = ({ word }) => {
+        this.props.onSubmit(word);
     }
 
     handleModalClose = () => {
@@ -71,22 +69,20 @@ export default class NewManualNgramModal extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             schema,
             pristine,
         } = this.state;
 
         return (
-            <Form
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+            <Faram
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleFaramValidationFailure}
+                onValidationSuccess={this.handleFaramValidationSuccess}
                 schema={schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                error={faramErrors}
             >
                 <ModalHeader
                     key="header"
@@ -94,7 +90,7 @@ export default class NewManualNgramModal extends React.PureComponent {
                 />
                 <ModalBody key="body">
                     <TextInput
-                        formname="wordValue"
+                        faramElementName="word"
                         label={this.props.ceStrings('addNewWordLabel')}
                         placeholder={this.props.ceStrings('addNewWordPlaceholder')}
                         autoFocus
@@ -106,13 +102,13 @@ export default class NewManualNgramModal extends React.PureComponent {
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
-                        disabled={!pristine}
+                        disabled={pristine}
                         type="submit"
                     >
                         {this.props.ceStrings('modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
-            </Form>
+            </Faram>
         );
     }
 }

@@ -14,13 +14,13 @@ import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldEr
 import ReCaptcha from '../../vendor/react-store/components/Input/ReCaptcha';
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
-import Form, {
+import Faram, {
     requiredCondition,
     emailCondition,
-} from '../../vendor/react-store/components/Input/Form';
+} from '../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForUserPasswordReset,
     urlForUserPasswordReset,
 } from '../../rest';
@@ -49,11 +49,9 @@ export default class PasswordReset extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
-            pristine: false,
             resetSuccess: false,
         };
 
@@ -70,25 +68,18 @@ export default class PasswordReset extends React.PureComponent {
         };
     }
 
-    // FORM RELATED
-
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
-            pristine: true,
+            faramValues,
+            faramErrors,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleFaramValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = ({ email, recaptchaResponse }) => {
+    handleFaramValidationSuccess = ({ email, recaptchaResponse }) => {
         const url = urlForUserPasswordReset;
         const params = createParamsForUserPasswordReset({ email, recaptchaResponse });
         this.passwordReset({ url, params });
@@ -113,7 +104,7 @@ export default class PasswordReset extends React.PureComponent {
             .url(url)
             .params(params)
             .preLoad(() => {
-                this.setState({ pending: true, pristine: false });
+                this.setState({ pending: true });
             })
             .postLoad(() => {
                 if (this.reCaptcha) {
@@ -131,19 +122,14 @@ export default class PasswordReset extends React.PureComponent {
             })
             .failure((response) => {
                 console.info('FAILURE:', response);
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal((response) => {
                 console.info('FATAL:', response);
+                // FIXME: use strings
                 this.setState({
-                    formErrors: { errors: ['Error while trying to reset password.'] },
+                    faramErrors: { $internal: ['Error while trying to reset password.'] },
                 });
             })
             .build();
@@ -152,9 +138,8 @@ export default class PasswordReset extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             resetSuccess,
         } = this.state;
@@ -166,41 +151,40 @@ export default class PasswordReset extends React.PureComponent {
                         resetSuccess ? (
                             <div className={styles.info}>
                                 <p>
-                                    {this.props.loginStrings('checkInboxText', { email: formValues.email })}
+                                    {
+                                        this.props.loginStrings('checkInboxText', { email: faramValues.email })
+                                    }
                                 </p>
                             </div>
                         ) : (
-                            <Form
+                            <Faram
                                 className={styles.resetPasswordForm}
-                                changeCallback={this.changeCallback}
-                                failureCallback={this.failureCallback}
-                                successCallback={this.successCallback}
+                                onChange={this.handleFaramChange}
+                                onValidationFailure={this.handleFaramValidationFailure}
+                                onValidationSuccess={this.handleFaramValidationSuccess}
                                 schema={this.schema}
-                                value={formValues}
-                                formErrors={formErrors}
-                                fieldErrors={formFieldErrors}
+                                value={faramValues}
+                                error={faramErrors}
                                 disabled={pending}
                             >
                                 { pending && <LoadingAnimation /> }
-                                <NonFieldErrors formerror="" />
+                                <NonFieldErrors faramElement />
                                 <TextInput
-                                    formname="email"
+                                    faramElementName="email"
                                     label={this.props.loginStrings('emailLabel')}
                                     placeholder={this.props.loginStrings('emailPlaceholder')}
                                 />
                                 <ReCaptcha
                                     ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
-                                    formname="recaptchaResponse"
+                                    faramElementName="recaptchaResponse"
                                     siteKey={reCaptchaSiteKey}
                                 />
                                 <div className={styles.actionButtons}>
-                                    <PrimaryButton
-                                        type="submit"
-                                    >
+                                    <PrimaryButton type="submit">
                                         { this.props.loginStrings('submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
-                            </Form>
+                            </Faram>
                         )
                     }
                     <div className={styles.goBackContainer}>
