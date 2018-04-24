@@ -15,16 +15,22 @@ import PrimaryButton from '../../../vendor/react-store/components/Action/Button/
 import {
     connectorStringsSelector,
     notificationStringsSelector,
+    connectorSourcesListSelector,
+
+    setConnectorSourcesAction,
 } from '../../../redux';
 
 import ConnectorCreateRequest from '../requests/ConnectorCreateRequest';
+import ConnectorSourcesGetRequest from '../requests/ConnectorSourcesGetRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     connectorStrings: PropTypes.func.isRequired,
+    setConnectorSources: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
+    connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -35,12 +41,19 @@ const defaultProps = {
 const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
+    connectorSourcesList: connectorSourcesListSelector(state),
 });
 
-@connect(mapStateToProps, null)
+const mapDispatchToProps = dispatch => ({
+    setConnectorSources: params => dispatch(setConnectorSourcesAction(params)),
+});
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorAddForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static keySelector = s => s.key;
+    static labelSelector = s => s.title;
 
     constructor(props) {
         super(props);
@@ -49,19 +62,28 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors: {},
             faramValues: {},
             pending: false,
+            dataLoading: false,
             pristine: false,
         };
 
         this.schema = {
             fields: {
                 title: [requiredCondition],
+                source: [requiredCondition],
             },
         };
+    }
+
+    componentWillMount() {
+        this.startConnectorSourcesGetRequest();
     }
 
     componentWillUnmount() {
         if (this.requestForConnectorCreate) {
             this.requestForConnectorCreate.stop();
+        }
+        if (this.requestForConnectorSources) {
+            this.requestForConnectorSources.stop();
         }
     }
 
@@ -79,6 +101,19 @@ export default class ConnectorAddForm extends React.PureComponent {
         this.setState({ faramErrors });
     };
 
+    startConnectorSourcesGetRequest = () => {
+        if (this.requestForConnectorSources) {
+            this.requestForConnectorSources.stop();
+        }
+        const requestForConnectorSources = new ConnectorSourcesGetRequest({
+            setState: v => this.setState(v),
+            notificationStrings: this.props.notificationStrings,
+            setConnectorSources: this.props.setConnectorSources,
+        });
+        this.requestForConnectorSources = requestForConnectorSources.create();
+        this.requestForConnectorSources.start();
+    }
+
     startConnectorCreateRequest = (newConnector) => {
         if (this.requestForConnectorCreate) {
             this.requestForConnectorCreate.stop();
@@ -93,10 +128,7 @@ export default class ConnectorAddForm extends React.PureComponent {
     }
 
     handleValidationSuccess = (values) => {
-        this.startConnectorCreateRequest({
-            ...values,
-            source: 'rss-feed',
-        });
+        this.startConnectorCreateRequest(values);
     };
 
     // BUTTONS
@@ -110,9 +142,15 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors,
             pending,
             pristine,
+            dataLoading,
         } = this.state;
 
-        const { connectorStrings } = this.props;
+        const {
+            connectorStrings,
+            connectorSourcesList = [],
+        } = this.props;
+
+        const loading = pending || dataLoading;
 
         return (
             <Faram
@@ -125,7 +163,7 @@ export default class ConnectorAddForm extends React.PureComponent {
                 error={faramErrors}
                 disabled={pending}
             >
-                { pending && <LoadingAnimation /> }
+                { loading && <LoadingAnimation /> }
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
@@ -136,6 +174,9 @@ export default class ConnectorAddForm extends React.PureComponent {
                 <SelectInput
                     faramElementName="source"
                     label={connectorStrings('addConnectorModalSourceLabel')}
+                    options={connectorSourcesList}
+                    keySelector={ConnectorAddForm.keySelector}
+                    labelSelector={ConnectorAddForm.labelSelector}
                     placeholder={connectorStrings('addConnectorModalSourcePlaceholder')}
                 />
                 <div className={styles.actionButtons}>
@@ -144,7 +185,7 @@ export default class ConnectorAddForm extends React.PureComponent {
                     </DangerButton>
                     <PrimaryButton
                         type="submit"
-                        disabled={pending || !pristine}
+                        disabled={loading || !pristine}
                     >
                         {connectorStrings('modalCreate')}
                     </PrimaryButton>

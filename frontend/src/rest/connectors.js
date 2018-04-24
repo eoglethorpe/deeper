@@ -4,8 +4,8 @@ import {
     commonHeaderForPost,
 } from '../config/rest';
 
-// eslint-disable-next-line import/prefer-default-export
 export const urlForConnectors = `${wsEndpoint}/connectors/`;
+export const urlForConnectorSources = `${wsEndpoint}/connector-sources/`;
 
 export const createParamsForConnectorCreate = data => ({
     method: POST,

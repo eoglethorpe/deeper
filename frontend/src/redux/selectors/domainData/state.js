@@ -100,3 +100,12 @@ export const categoryEditorListSelector = createSelector(
         )) || emptyList
     ),
 );
+
+export const connectorSourcesSelector = ({ domainData }) => (
+    domainData.connectorSources || emptyObject
+);
+
+export const connectorSourcesListSelector = createSelector(
+    connectorSourcesSelector,
+    c => Object.values(c),
+);

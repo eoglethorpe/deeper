@@ -585,6 +585,8 @@ const initialLangState = {
                 1106: 'Connector Create',
                 1107: 'Connector was successfully created.',
                 1108: 'It seems there was a problem while creating the connector',
+                1109: 'Connector Sources',
+                1110: 'It seems there was a problem while fetching connector sources',
             },
             views: {
                 af: {
@@ -1091,6 +1093,8 @@ const initialLangState = {
                     connectorCreateTitle: 1106,
                     connectorCreateSuccess: 1107,
                     connectorCreateFailure: 1108,
+                    connectorSourcesTitle: 1109,
+                    connectorSourcesGetFailure: 1110,
                     userProfileEdit: 900,
                     userEditSuccess: 901,
                     userEditFailure: 902,

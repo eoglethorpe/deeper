@@ -10,6 +10,7 @@ import regionsReducers from './regions';
 import userGroupsReducers from './userGroups';
 import usersReducers from './users';
 import userExportsReducers from './userExports';
+import connectorReducers from './connectors';
 import commonReducers from './common';
 
 import initialDomainData from '../../initial-state/domainData';
@@ -26,6 +27,7 @@ const reducers = {
     ...usersReducers,
     ...userExportsReducers,
     ...commonReducers,
+    ...connectorReducers,
 };
 
 const reducer = createReducerWithMap(reducers, initialDomainData);
