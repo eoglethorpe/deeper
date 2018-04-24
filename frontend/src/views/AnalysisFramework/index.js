@@ -77,9 +77,9 @@ export default class AnalysisFramework extends React.PureComponent {
             },
         };
 
-        const defaultHash = 'overview';
+        this.defaultHash = 'overview';
         if (!window.location.hash) {
-            window.location.hash = `#/${defaultHash}`;
+            window.location.replace(`#/${this.defaultHash}`);
         }
     }
 
@@ -88,6 +88,12 @@ export default class AnalysisFramework extends React.PureComponent {
             this.props.analysisFrameworkId,
         );
         this.analysisFrameworkRequest.start();
+    }
+
+    componentWillReceiveProps() {
+        if (!window.location.hash) {
+            window.location.replace(`#/${this.defaultHash}`);
+        }
     }
 
     componentWillUnmount() {

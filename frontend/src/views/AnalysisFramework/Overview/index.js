@@ -250,7 +250,7 @@ export default class Overview extends React.PureComponent {
             analysisFramework,
         } = this.props;
 
-        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/analysis-framework`;
+        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
         const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
 
         return (

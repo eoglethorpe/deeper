@@ -177,9 +177,9 @@ export default class EditEntry extends React.PureComponent {
             this.handleChangeEntryValues,
         );
 
-        const defaultHash = 'overview';
+        this.defaultHash = 'overview';
         if (!window.location.hash) {
-            window.location.hash = `#/${defaultHash}`;
+            window.location.replace(`#/${this.defaultHash}`);
         }
     }
 
@@ -192,6 +192,12 @@ export default class EditEntry extends React.PureComponent {
         });
         this.leadRequest = request.create(this.props.leadId);
         this.leadRequest.start();
+    }
+
+    componentWillReceiveProps() {
+        if (!window.location.hash) {
+            window.location.replace(`#/${this.defaultHash}`);
+        }
     }
 
     componentWillUnmount() {
