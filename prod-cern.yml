@@ -11,10 +11,28 @@ services:
         ports:
             - '8000:80'
 
-    celery:
+    celery: # Celery Workers
         build: .
         env_file:
             - .env-cern
         environment:
           - WORKER_TYPE=celery
         command: ['/code/deploy/scripts/eb_exec.sh']
+
+    nginx: # NGINX Server
+        build: ./deploy/nginx
+        env_file:
+            - .env-nginx
+        depends_on:
+            - channel
+        volumes:
+          - certs:/etc/letsencrypt
+          - certs-data:/data/letsencrypt
+          - ./deploy/nginx/config/:/etc/nginx/conf.d/
+        ports:
+            - '80:80'
+            - '443:443'
+
+volumes:
+  certs:
+  certs-data:

@@ -142,3 +142,4 @@ typings/
 
 # Sensitive Deploy Files
 deploy/eb/
+deploy/nginx/config/
