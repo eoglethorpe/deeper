@@ -13,7 +13,7 @@ import Button from '../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     entriesViewFilterSelector,
     setEntriesViewFilterAction,
     unsetEntriesViewFilterAction,
@@ -40,7 +40,7 @@ import notify from '../../notify';
 import GeoSelection from '../../components/GeoSelection';
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     entriesFilters: entriesViewFilterSelector(state, props),
     filters: filtersForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),

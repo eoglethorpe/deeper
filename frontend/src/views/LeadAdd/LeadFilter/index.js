@@ -15,7 +15,7 @@ import SearchInput from '../../../vendor/react-store/components/Input/SearchInpu
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     addLeadViewSetFiltersAction,
     addLeadViewUnsetFiltersAction,
     addLeadViewFiltersSelector,
@@ -62,7 +62,7 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     filters: addLeadViewFiltersSelector(state),
     isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
     leadsStrings: leadsStringsSelector(state),

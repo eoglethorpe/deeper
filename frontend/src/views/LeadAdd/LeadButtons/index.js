@@ -13,7 +13,7 @@ import FileInput from '../../../vendor/react-store/components/Input/FileInput';
 
 import {
     addLeadViewAddLeadsAction,
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     leadsStringsSelector,
     notificationStringsSelector,
 } from '../../../redux';
@@ -61,7 +61,7 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     leadsStrings: leadsStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
 });

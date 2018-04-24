@@ -17,8 +17,8 @@ import { stopSiloBackgroundTasksAction } from '../../../redux/middlewares/siloBa
 import { adminEndpoint } from '../../../config/rest';
 import {
     logoutAction,
-    activeCountrySelector,
-    activeProjectSelector,
+    activeCountryIdFromStateSelector,
+    activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserInformationSelector,
 
@@ -35,8 +35,8 @@ import Cloak from '../../Cloak';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    activeCountry: activeCountrySelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
+    activeCountry: activeCountryIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     userInformation: currentUserInformationSelector(state),
     commonStrings: commonStringsSelector(state),

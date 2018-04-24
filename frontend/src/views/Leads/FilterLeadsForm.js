@@ -19,7 +19,7 @@ import {
     createUrlForLeadFilterOptions,
 } from '../../rest';
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     leadFilterOptionsForProjectSelector,
 
     setLeadPageFilterAction,
@@ -58,7 +58,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     filters: leadPageFilterSelector(state),
     leadFilterOptions: leadFilterOptionsForProjectSelector(state, props),
     leadsStrings: leadsStringsSelector(state),

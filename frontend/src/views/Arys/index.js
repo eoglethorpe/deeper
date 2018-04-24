@@ -18,7 +18,7 @@ import AppError from '../../components/AppError';
 import ActionButtons from './ActionButtons';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
 
     arysForProjectSelector,
     totalArysCountForProjectSelector,
@@ -61,7 +61,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
 
     arys: arysForProjectSelector(state, props),
     totalArysCount: totalArysCountForProjectSelector(state, props),

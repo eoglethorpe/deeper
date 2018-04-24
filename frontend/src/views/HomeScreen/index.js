@@ -13,7 +13,7 @@ import {
     pathNames,
 } from '../../constants';
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserProjectsSelector,
     homescreenStringsSelector,
@@ -23,7 +23,7 @@ import styles from './styles.scss';
 
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
     homescreenStrings: homescreenStringsSelector(state),

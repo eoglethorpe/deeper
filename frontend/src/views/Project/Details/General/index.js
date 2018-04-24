@@ -117,7 +117,7 @@ export default class ProjectGeneral extends React.PureComponent {
             userGroupsOptions: projectOptions.userGroups || emptyList,
 
             pristine: false,
-            pending: false,
+            pending: true,
             actionPending: false,
         };
 

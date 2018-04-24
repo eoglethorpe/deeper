@@ -71,7 +71,6 @@ export default class ProjectPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            pending: false,
             showAddProjectModal: false,
             displayUserProjects: this.props.userProjects,
             isSidebarVisible: false,
@@ -147,7 +146,6 @@ export default class ProjectPanel extends React.PureComponent {
     render() {
         const {
             displayUserProjects,
-            pending,
             showAddProjectModal,
         } = this.state;
 
@@ -157,7 +155,6 @@ export default class ProjectPanel extends React.PureComponent {
         return (
             <div className={styles.projectPanel}>
                 <div className={styles.sidebar}>
-                    {pending && <LoadingAnimation large />}
                     <header className={styles.header}>
                         <h3 className={styles.heading}>
                             {this.props.projectStrings('headerProjects')}

@@ -25,7 +25,7 @@ import {
     removeAfViewWidgetAction,
     updateAfViewWidgetAction,
 
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     afStringsSelector,
 } from '../../../redux';
 
@@ -49,7 +49,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const mapStateToProps = (state, props) => ({
-    projectId: activeProjectSelector(state, props),
+    projectId: activeProjectIdFromStateSelector(state, props),
     afStrings: afStringsSelector(state),
 });
 

@@ -13,7 +13,7 @@ import Form, {
 } from '../../../../../vendor/react-store/components/Input/Form';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     regionDetailSelector,
     projectDetailsSelector,
     setRegionDetailsAction,
@@ -68,7 +68,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     regionDetail: regionDetailSelector(state, props),
     notificationStrings: notificationStringsSelector(state),

@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { activeProjectSelector } from '../siloDomainData';
+import { activeProjectIdFromStateSelector } from '../siloDomainData';
 
 const emptyObject = {};
 const emptyhierarchialData = {
@@ -18,7 +18,7 @@ export const visualizationsSelector = ({ siloDomainData }) => (
 
 export const visualizationSelector = createSelector(
     visualizationsSelector,
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     (viz, projectId) => viz[projectId] || emptyObject,
 );
 
