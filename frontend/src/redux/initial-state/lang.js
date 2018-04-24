@@ -579,6 +579,12 @@ const initialLangState = {
                 9019: 'Humanitarian access',
                 1101: 'Search Connectors',
                 1102: 'Add Connector',
+                1103: 'Relief Web',
+                1104: 'Source Type',
+                1105: 'RSS Feed',
+                1106: 'Connector Create',
+                1107: 'Connector was successfully created.',
+                1108: 'It seems there was a problem while creating the connector',
             },
             views: {
                 af: {
@@ -1082,6 +1088,9 @@ const initialLangState = {
                     submitForgetPassword: 826,
                 },
                 notification: {
+                    connectorCreateTitle: 1106,
+                    connectorCreateSuccess: 1107,
+                    connectorCreateFailure: 1108,
                     userProfileEdit: 900,
                     userEditSuccess: 901,
                     userEditFailure: 902,
@@ -1309,6 +1318,12 @@ const initialLangState = {
                     addConnectorButtonLabel: 301,
                     searchConnectorPlaceholder: 1101,
                     addConnectorModalTitle: 1102,
+                    addConnectorModalTitleLabel: 13,
+                    addConnectorModalTitlePlaceholder: 1103,
+                    addConnectorModalSourceLabel: 1104,
+                    addConnectorModalSourcePlaceholder: 1105,
+                    modalCancel: 61,
+                    modalCreate: 179,
                 },
                 user: {
                     firstNameLabel: 150,

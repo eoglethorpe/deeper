@@ -23,6 +23,7 @@ import {
     setUserConnectorsAction,
 } from '../../redux';
 import ConnectorsGetRequest from './requests/ConnectorsGetRequest';
+import AddConnectorForm from './AddForm';
 
 import {
     iconNames,
@@ -94,7 +95,6 @@ export default class Connector extends React.PureComponent {
 
     getStyleName = (connectorId) => {
         const { connectorId: connectorIdFromUrl } = this.props;
-        console.warn(connectorId, connectorIdFromUrl);
 
         const styleNames = [];
         styleNames.push(styles.listItem);
@@ -189,10 +189,7 @@ export default class Connector extends React.PureComponent {
         }
 
         return (
-            <Modal
-                closeOnEscape
-                onClose={this.handleAddConnectorModalClose}
-            >
+            <Modal>
                 <ModalHeader
                     title={connectorStrings('addConnectorModalTitle')}
                     rightComponent={
@@ -205,7 +202,9 @@ export default class Connector extends React.PureComponent {
                     }
                 />
                 <ModalBody>
-                    asdasdasd
+                    <AddConnectorForm
+                        onModalClose={this.handleAddConnectorModalClose}
+                    />
                 </ModalBody>
             </Modal>
         );
