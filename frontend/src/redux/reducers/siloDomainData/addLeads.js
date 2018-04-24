@@ -340,7 +340,7 @@ const addLeadViewChangeLead = (state, action) => {
                         },
                         errors: {
                             $if: [
-                                !!values,
+                                !!formErrors,
                                 { $set: formErrors },
                             ],
                         },
@@ -356,6 +356,7 @@ const addLeadViewChangeLead = (state, action) => {
         },
     };
     const newState = update(state, settings);
+
     return setErrorForLeads(newState, [leadIndex]);
 };
 

@@ -216,9 +216,26 @@ export default class Leads extends React.PureComponent {
                 ),
             },
             {
+                key: 'assignee',
+                label: 'Assignee', // FIXME: use strings
+                order: 6,
+                sortable: false,
+                modifier: row => (
+                    (row.assignee || []).map(person => (
+                        <Link
+                            key={person}
+                            className={styles.link}
+                            to={reverseRoute(pathNames.userProfile, { userId: person })}
+                        >
+                            {person}
+                        </Link>
+                    ))
+                ),
+            },
+            {
                 key: 'created_at',
                 label: this.props.leadsStrings('tableHeaderDateCreated'),
-                order: 6,
+                order: 7,
                 sortable: true,
                 modifier: row => (
                     <FormattedDate
@@ -231,7 +248,7 @@ export default class Leads extends React.PureComponent {
                 key: 'confidentiality',
                 label: this.props.leadsStrings('tableHeaderConfidentiality'),
                 sortable: true,
-                order: 7,
+                order: 8,
                 modifier: row => (
                     <div className={styles.confidentiality}>
                         {row.confidentiality}
@@ -242,7 +259,7 @@ export default class Leads extends React.PureComponent {
                 key: 'status',
                 label: this.props.leadsStrings('tableHeaderStatus'),
                 sortable: true,
-                order: 8,
+                order: 9,
                 modifier: row => (
                     <div className={styles.status}>
                         {row.status}
@@ -252,14 +269,14 @@ export default class Leads extends React.PureComponent {
             {
                 key: 'no_of_entries',
                 label: this.props.leadsStrings('tableHeaderNoOfEntries'),
-                order: 9,
+                order: 10,
                 sortable: true,
                 modifier: row => row.noOfEntries,
             },
             {
                 key: 'actions',
                 label: this.props.leadsStrings('tableHeaderActions'),
-                order: 10,
+                order: 11,
                 sortable: false,
                 modifier: row => (
                     <ActionButtons
