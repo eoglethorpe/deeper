@@ -22,6 +22,7 @@ import {
     projectDetailsSelector,
 
     setCategoryEditorsAction,
+    routeStateSelector,
 } from '../../../../redux';
 import _ts from '../../../../ts';
 import schema from '../../../../schema';
@@ -36,6 +37,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setCategoryEditors: PropTypes.func.isRequired,
+    routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -44,6 +46,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     categoryEditorList: categoryEditorListSelector(state),
+    routeState: routeStateSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -60,12 +63,15 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         const {
             categoryEditorList,
             projectDetails,
+            routeState,
         } = props;
 
         const displayCeList = [...categoryEditorList];
 
         let selectedCe;
-        if (projectDetails.categoryEditor) {
+        if (routeState.selectedCategoryEditor) {
+            selectedCe = routeState.selectedCategoryEditor;
+        } else if (projectDetails.categoryEditor) {
             // if there is categoryEditor in current project
             selectedCe = projectDetails.categoryEditor;
         } else {
@@ -95,6 +101,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             const {
                 categoryEditorList,
                 projectDetails,
+                routeState,
             } = nextProps;
 
             // why filter again?
@@ -104,7 +111,9 @@ export default class ProjectCategoryEditor extends React.PureComponent {
             );
 
             let selectedCe;
-            if (projectDetails.categoryEditor) {
+            if (routeState.selectedCategoryEditor) {
+                selectedCe = routeState.selectedCategoryEditor;
+            } else if (projectDetails.categoryEditor) {
                 // if there is category editor in current project
                 selectedCe = projectDetails.categoryEditor;
             } else {
