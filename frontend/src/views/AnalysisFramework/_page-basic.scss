@@ -5,21 +5,48 @@
     height: 100%;
 
     .header {
+        @include background-color($color-background-header);
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        justify-content: space-between;
         border-bottom: $width-separator-thin solid $color-separator;
-        background-color: $color-foreground;
         padding: $spacing-small $spacing-medium-alt;
 
-        .actions {
-            >* {
-                margin-left: $spacing-medium;
+        .heading {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: flex-start;
+
+            .title {
+                font-size: font-size-large;
             }
 
-            .link-to-overview,
-            .link-to-list {
+            .separator {
+                padding: 0 $spacing-small;
+            }
+
+            .page-type {
+                font-size: smaller;
+                font-weight: $font-weight-bold;
+            }
+        }
+
+        .actions {
+            flex-shrink: 0;
+
+            .save-button {
+                margin-left: $spacing-small;
+            }
+
+            .goto-list-link,
+            .goto-overview-link {
+                @include button-like-link($color-primary);
+                margin-left: $spacing-large;
+            }
+
+            .exit-link {
+                @include button-like-link($color-warning);
                 @extend %button-like-link;
             }
         }

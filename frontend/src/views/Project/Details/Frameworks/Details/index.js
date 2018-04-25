@@ -1,18 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { reverseRoute } from '../../../../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
-import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
 
 import {
     createParamsForProjectPatch,
     createUrlForProject,
-
     createUrlForAfClone,
     createParamsForAfClone,
     createParamsForAnalysisFrameworkEdit,
@@ -21,7 +20,6 @@ import {
 import {
     analysisFrameworkDetailSelector,
     projectDetailsSelector,
-
     setProjectAfAction,
     setAfDetailAction,
     addNewAfAction,
@@ -39,13 +37,12 @@ import ProjectAfForm from './ProjectAfForm';
 import styles from './styles.scss';
 
 const propTypes = {
-    afDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    frameworkDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     analysisFrameworkId: PropTypes.number.isRequired,
     addNewAf: PropTypes.func.isRequired,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    setProjectAf: PropTypes.func.isRequired,
-    setAfDetail: PropTypes.func.isRequired,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    setProjectFramework: PropTypes.func.isRequired,
+    setFrameworkDetails: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     projectStrings: PropTypes.func.isRequired,
 };
@@ -54,7 +51,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    afDetails: analysisFrameworkDetailSelector(state, props),
+    frameworkDetails: analysisFrameworkDetailSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     notificationStrings: notificationStringsSelector(state),
     projectStrings: projectStringsSelector(state),
@@ -62,9 +59,8 @@ const mapStateToProps = (state, props) => ({
 
 const mapDispatchToProps = dispatch => ({
     addNewAf: params => dispatch(addNewAfAction(params)),
-    setProjectAf: params => dispatch(setProjectAfAction(params)),
-    setAfDetail: params => dispatch(setAfDetailAction(params)),
-    dispatch,
+    setProjectFramework: params => dispatch(setProjectAfAction(params)),
+    setFrameworkDetails: params => dispatch(setAfDetailAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -75,13 +71,13 @@ export default class ProjectAfDetail extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { afDetails } = props;
+        const { frameworkDetails } = props;
 
         this.state = {
             cloneConfirmModalShow: false,
             useConfirmModalShow: false,
 
-            formValues: { ...afDetails },
+            formValues: { ...frameworkDetails },
             formErrors: {},
             formFieldErrors: {},
             pristine: false,
@@ -110,7 +106,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
-                    this.props.setProjectAf({
+                    this.props.setProjectFramework({
                         projectId,
                         afId,
                     });
@@ -153,7 +149,7 @@ export default class ProjectAfDetail extends React.PureComponent {
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
-                    this.props.setAfDetail({
+                    this.props.setFrameworkDetails({
                         afId,
                         afDetail: response,
                     });
@@ -220,10 +216,10 @@ export default class ProjectAfDetail extends React.PureComponent {
     }
 
     handleFormCancel = () => {
-        const { afDetails } = this.props;
+        const { frameworkDetails } = this.props;
 
         this.setState({
-            formValues: { ...afDetails },
+            formValues: { ...frameworkDetails },
             formErrors: {},
             formFieldErrors: {},
 
@@ -260,20 +256,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({ pristine: false });
     };
 
-    handleAfEditClick = () => {
-        const {
-            analysisFrameworkId,
-            mainHistory,
-        } = this.props;
-
-        const params = {
-            analysisFrameworkId,
-        };
-
-        mainHistory.push(reverseRoute(pathNames.analysisFramework, params));
-    }
-
-    renderUseAFButton = () => {
+    renderUseFrameworkButton = () => {
         const {
             analysisFrameworkId,
             projectDetails,
@@ -285,7 +268,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         }
 
         const { pending } = this.state;
-        const useAFButtonLabel = projectStrings('useAfButtonLabel');
+        const useFrameworkButtonLabel = projectStrings('useAfButtonLabel');
 
         return (
             <AccentButton
@@ -293,60 +276,65 @@ export default class ProjectAfDetail extends React.PureComponent {
                 onClick={this.handleAfUseClick}
                 disabled={pending}
             >
-                { useAFButtonLabel }
+                { useFrameworkButtonLabel }
             </AccentButton>
         );
     }
 
-    renderEditAFButton = () => {
+    renderEditFrameworkButton = () => {
         const {
-            afDetails,
+            analysisFrameworkId,
+            frameworkDetails,
             projectStrings,
         } = this.props;
 
-        if (!afDetails.isAdmin) {
+        if (!frameworkDetails.isAdmin) {
             return null;
         }
 
         const { pending } = this.state;
-        const editAFButtonLabel = projectStrings('editAfButtonLabel');
+        const editFrameworkButtonLabel = projectStrings('editAfButtonLabel');
+
+        const params = {
+            analysisFrameworkId,
+        };
 
         return (
-            <WarningButton
-                iconName={iconNames.edit}
-                onClick={this.handleAfEditClick}
+            <Link
+                className={styles.editFrameworkLink}
+                to={reverseRoute(pathNames.analysisFramework, params)}
                 disabled={pending}
             >
-                { editAFButtonLabel }
-            </WarningButton>
+                { editFrameworkButtonLabel }
+            </Link>
         );
     }
 
     renderHeader = () => {
         const {
-            afDetails,
+            frameworkDetails,
             projectStrings,
         } = this.props;
         const { pending } = this.state;
 
-        const UseAFButton = this.renderUseAFButton;
-        const EditAFButton = this.renderEditAFButton;
+        const UseFrameworkButton = this.renderUseFrameworkButton;
+        const EditFrameworkButton = this.renderEditFrameworkButton;
 
-        const cloneAndEditAFButtonLabel = projectStrings('cloneEditAfButtonLabel');
+        const cloneAndEditFrameworkButtonLabel = projectStrings('cloneEditAfButtonLabel');
 
         return (
             <header className={styles.header}>
                 <h2>
-                    {afDetails.title}
+                    {frameworkDetails.title}
                 </h2>
                 <div className={styles.actionButtons}>
-                    <UseAFButton />
-                    <EditAFButton />
+                    <UseFrameworkButton />
+                    <EditFrameworkButton />
                     <AccentButton
                         onClick={this.handleAfCloneClick}
                         disabled={pending}
                     >
-                        { cloneAndEditAFButtonLabel }
+                        { cloneAndEditFrameworkButtonLabel }
                     </AccentButton>
                 </div>
             </header>
@@ -355,7 +343,7 @@ export default class ProjectAfDetail extends React.PureComponent {
 
     render() {
         const {
-            afDetails,
+            frameworkDetails,
             analysisFrameworkId,
             projectDetails,
             projectStrings,
@@ -389,7 +377,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                         className={styles.afDetailForm}
                         pristine={pristine}
                         pending={pending}
-                        readOnly={!afDetails.isAdmin}
+                        readOnly={!frameworkDetails.isAdmin}
                     />
                 </div>
                 <Confirm
@@ -399,7 +387,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        { projectStrings('confirmUseAf', { title: afDetails.title }) }
+                        { projectStrings('confirmUseAf', { title: frameworkDetails.title }) }
                     </p>
                     <p>
                         { projectStrings('confirmUseAfText') }
@@ -412,7 +400,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        { projectStrings('confirmCloneAf', { title: afDetails.title }) }
+                        { projectStrings('confirmCloneAf', { title: frameworkDetails.title }) }
                     </p>
                 </Confirm>
             </div>

@@ -29,7 +29,7 @@ import {
     pathNames,
 } from '../../constants';
 
-import ProjectDetails from './ProjectDetails';
+import Details from './Details';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -176,30 +176,6 @@ export default class ProjectPanel extends React.PureComponent {
                             showLabel={false}
                             showHintAndError={false}
                         />
-                        { showAddProjectModal &&
-                            <Modal
-                                closeOnEscape
-                                onClose={this.handleAddProjectModalClose}
-                            >
-                                <ModalHeader
-                                    title={this.props.projectStrings('addProjectModalTitle')}
-                                    rightComponent={
-                                        <PrimaryButton
-                                            onClick={this.handleAddProjectModalClose}
-                                            transparent
-                                        >
-                                            <span className={iconNames.close} />
-                                        </PrimaryButton>
-                                    }
-                                />
-                                <ModalBody>
-                                    <UserProjectAdd
-                                        onProjectAdded={this.handleProjectAdded}
-                                        handleModalClose={this.handleAddProjectModalClose}
-                                    />
-                                </ModalBody>
-                            </Modal>
-                        }
                     </header>
                     <ListView
                         className={styles.projectList}
@@ -210,7 +186,7 @@ export default class ProjectPanel extends React.PureComponent {
                 </div>
                 {
                     projectId ? (
-                        <ProjectDetails
+                        <Details
                             key={projectId}
                             className={styles.projectDetails}
                             projectId={projectId}
@@ -220,6 +196,32 @@ export default class ProjectPanel extends React.PureComponent {
                         <p className={styles.noProjectText}>
                             {this.props.projectStrings('noProjectText')}
                         </p>
+                    )
+                }
+                {
+                    showAddProjectModal && (
+                        <Modal
+                            closeOnEscape
+                            onClose={this.handleAddProjectModalClose}
+                        >
+                            <ModalHeader
+                                title={this.props.projectStrings('addProjectModalTitle')}
+                                rightComponent={
+                                    <PrimaryButton
+                                        onClick={this.handleAddProjectModalClose}
+                                        transparent
+                                    >
+                                        <span className={iconNames.close} />
+                                    </PrimaryButton>
+                                }
+                            />
+                            <ModalBody>
+                                <UserProjectAdd
+                                    onProjectAdded={this.handleProjectAdded}
+                                    handleModalClose={this.handleAddProjectModalClose}
+                                />
+                            </ModalBody>
+                        </Modal>
                     )
                 }
             </div>

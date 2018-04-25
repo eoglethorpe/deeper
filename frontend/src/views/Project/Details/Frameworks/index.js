@@ -28,14 +28,13 @@ import {
 import schema from '../../../../schema';
 import { iconNames } from '../../../../constants';
 
-import ProjectAfDetail from './ProjectAfDetail';
-import AddAnalysisFramework from './AddAnalysisFramework';
+import Details from './Details';
+import AddFramework from './AddFramework';
 import styles from './styles.scss';
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     analysisFrameworkList: PropTypes.array.isRequired,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setAnalysisFrameworks: PropTypes.func.isRequired,
@@ -226,8 +225,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         }
 
         return (
-            <ProjectAfDetail
-                mainHistory={this.props.mainHistory}
+            <Details
                 key={selectedAf}
                 analysisFrameworkId={selectedAf}
             />
@@ -299,7 +297,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <Modal>
                 <ModalHeader title={addAFModalTitle} />
                 <ModalBody>
-                    <AddAnalysisFramework
+                    <AddFramework
                         projectId={projectId}
                         onModalClose={this.handleModalClose}
                     />

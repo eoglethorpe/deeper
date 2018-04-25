@@ -42,7 +42,7 @@ import {
     iconNames,
 } from '../../../../constants';
 
-import ProjectGeneralForm from './ProjectGeneralForm';
+import ProjectGeneralForm from './Form';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -173,16 +173,6 @@ export default class ProjectGeneral extends React.PureComponent {
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
                                 transparent
                             />
-                            {/*
-                            <PrimaryButton
-                                smallVerticalPadding
-                                key="goto-link"
-                                title={this.props.projectStrings('viewMemberLinkTitle')}
-                                onClick={() => this.handleGotoUserClick(row.member)}
-                                iconName={iconNames.openLink}
-                                transparent
-                            />
-                            */}
                             <DangerButton
                                 smallVerticalPadding
                                 key="delete-member"

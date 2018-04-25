@@ -176,7 +176,6 @@ export default class RightPanel extends React.PureComponent {
         super(props);
 
         this.state = {
-            currentTabKey: 'score',
             pending: false,
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
@@ -190,6 +189,8 @@ export default class RightPanel extends React.PureComponent {
             summary: props.aryStrings('summaryTabLabel'),
             score: props.aryStrings('scoreTabLabel'),
         };
+
+        this.defaultHash = 'metadata';
 
         this.views = {
             metadata: {
@@ -271,15 +272,7 @@ export default class RightPanel extends React.PureComponent {
         });
     };
 
-    handleTabClick = (key) => {
-        if (key !== this.state.currentTabKey) {
-            this.setState({ currentTabKey: key });
-        }
-    }
-
     render() {
-        const { currentTabKey } = this.state;
-
         return (
             <Faram
                 schema={this.state.schema}
@@ -294,9 +287,10 @@ export default class RightPanel extends React.PureComponent {
             >
                 <FixedTabs
                     className={styles.tabs}
-                    active={currentTabKey}
+                    useHash
+                    defaultHash={this.defaultHash}
+                    replaceHistory
                     tabs={this.tabs}
-                    onClick={this.handleTabClick}
                 >
                     <SuccessButton
                         className={styles.saveButton}
@@ -312,7 +306,7 @@ export default class RightPanel extends React.PureComponent {
                     </SuccessButton>
                 </FixedTabs>
                 <MultiViewContainer
-                    active={currentTabKey}
+                    useHash
                     views={this.views}
                 />
             </Faram>

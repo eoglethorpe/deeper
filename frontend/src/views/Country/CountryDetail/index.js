@@ -1,16 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
-import {
-    Redirect,
-    Route,
-    HashRouter,
-    NavLink,
-    Prompt,
-} from 'react-router-dom';
+import { Prompt } from 'react-router-dom';
 
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
-import List from '../../../vendor/react-store/components/View/List';
+import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
+import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
@@ -110,30 +105,57 @@ export default class CountryDetail extends React.PureComponent {
             dataLoading: true,
         };
 
-        this.routes = [
-            'general',
-            'keyFigures',
-            'mediaSources',
-            'populationData',
-            'seasonalCalendar',
-        ];
-
-        this.defaultRoute = 'general';
-
-        this.pathNames = {
-            general: '/general',
-            keyFigures: '/key-figures',
-            mediaSources: '/media-sources',
-            populationData: '/population-data',
-            seasonalCalendar: '/seasonal-calendar',
+        this.routes = {
+            general: 'General',
+            keyFigures: 'Key figures',
+            mediaSources: 'Media sources',
+            populationData: 'Population data',
+            seasonalCalendar: 'Seasonal calendar',
         };
 
+        this.defaultHash = 'general';
+
         this.views = {
-            general: CountryGeneral,
-            keyFigures: CountryKeyFigures,
-            mediaSources: CountryMediaSources,
-            populationData: CountryPopulationData,
-            seasonalCalendar: CountrySeasonalCalendar,
+            general: {
+                component: () => (
+                    <CountryGeneral
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
+                ),
+            },
+            keyFigures: {
+                component: () => (
+                    <CountryKeyFigures
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
+                ),
+            },
+            mediaSources: {
+                component: () => (
+                    <CountryMediaSources
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
+                ),
+            },
+            populationData: {
+                component: () => (
+                    <CountryPopulationData
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
+                ),
+            },
+            seasonalCalendar: {
+                component: () => (
+                    <CountrySeasonalCalendar
+                        dataLoading={this.state.dataLoading}
+                        countryId={this.props.countryId}
+                    />
+                ),
+            },
         };
 
         this.titles = {
@@ -273,37 +295,6 @@ export default class CountryDetail extends React.PureComponent {
         this.setState({ deleteCountry: false });
     }
 
-    renderLink = (key, routeId) => (
-        <NavLink
-            key={key}
-            to={this.pathNames[routeId]}
-            activeClassName={styles.active}
-            className={styles.tab}
-            replace
-            exact
-        >
-            { this.titles[routeId] }
-        </NavLink>
-    )
-
-    renderRoute = (key, routeId) => {
-        const Component = this.views[routeId];
-
-        return (
-            <Route
-                key={key}
-                path={this.pathNames[routeId]}
-                exact
-                render={() => (
-                    <Component
-                        dataLoading={this.state.dataLoading}
-                        countryId={this.props.countryId}
-                    />
-                )}
-            />
-        );
-    }
-
     renderHeader = () => {
         const { deleteCountry } = this.state;
 
@@ -368,14 +359,12 @@ export default class CountryDetail extends React.PureComponent {
                         </Confirm>
                     </div>
                 </div>
-                <div className={styles.tabs}>
-                    <List
-                        data={this.routes}
-                        modifier={this.renderLink}
-                        keyExtractor={CountryDetail.keyExtractor}
-                    />
-                    <div className={styles.rightContainer} />
-                </div>
+                <FixedTabs
+                    useHash
+                    replaceHistory
+                    tabs={this.routes}
+                    defaultHash={this.defaultHash}
+                />
             </header>
         );
     }
@@ -415,37 +404,28 @@ export default class CountryDetail extends React.PureComponent {
                         }
                     }
                 />
-                <HashRouter>
-                    <div className={`${className} ${styles.countryDetail}`}>
-                        { deletePending && <LoadingAnimation large /> }
-                        <Route
-                            exact
-                            path="/"
-                            component={() => <Redirect to={this.pathNames[this.defaultRoute]} />}
-                        />
-                        { !activeUser.isSuperuser ? (
-                            <div className={styles.detailsNoEdit}>
-                                <RegionDetailView
-                                    className={styles.regionDetailBox}
-                                    countryId={countryId}
-                                />
-                                <div className={styles.mapContainer}>
-                                    <RegionMap regionId={countryId} />
-                                </div>
+                <div className={`${className} ${styles.countryDetail}`}>
+                    { deletePending && <LoadingAnimation large /> }
+                    { !activeUser.isSuperuser ? (
+                        <div className={styles.detailsNoEdit}>
+                            <RegionDetailView
+                                className={styles.regionDetailBox}
+                                countryId={countryId}
+                            />
+                            <div className={styles.mapContainer}>
+                                <RegionMap regionId={countryId} />
                             </div>
-                        ) : (
-                            <Fragment>
-                                <HeaderWithTabs key="header" />
-                                <List
-                                    key="list"
-                                    data={this.routes}
-                                    modifier={this.renderRoute}
-                                    keyExtractor={CountryDetail.keyExtractor}
-                                />
-                            </Fragment>
-                        )}
-                    </div>
-                </HashRouter>
+                        </div>
+                    ) : (
+                        <Fragment>
+                            <HeaderWithTabs />
+                            <MultiViewContainer
+                                useHash
+                                views={this.views}
+                            />
+                        </Fragment>
+                    )}
+                </div>
             </Fragment>
         );
     }

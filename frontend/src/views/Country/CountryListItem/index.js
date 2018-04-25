@@ -25,7 +25,6 @@ export default class CountryListItem extends React.PureComponent {
                 activeClassName={styles.active}
                 className={styles.countryLink}
                 to={route}
-                replace
             >
                 {title}
             </NavLink>

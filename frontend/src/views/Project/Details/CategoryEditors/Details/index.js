@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
@@ -33,7 +34,7 @@ import {
     pathNames,
 } from '../../../../../constants';
 
-import ProjectCeForm from './ProjectCeForm';
+import Form from './Form';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -43,7 +44,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectCe: PropTypes.func.isRequired,
     setCeDetail: PropTypes.func.isRequired,
-    mainHistory: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectStrings: PropTypes.func.isRequired,
 };
 
@@ -272,23 +272,27 @@ export default class ProjectCeDetail extends React.PureComponent {
         const {
             ceDetails,
             projectStrings,
+            categoryEditorId,
         } = this.props;
 
         if (!ceDetails.isAdmin) {
             return null;
         }
+        const params = {
+            categoryEditorId,
+        };
 
         const { pending } = this.state;
         const editCeButtonLabel = projectStrings('editCeButtonLabel');
 
         return (
-            <WarningButton
-                iconName={iconNames.edit}
-                onClick={this.handleCeEditClick}
+            <Link
+                className={styles.editCategoryEditorLink}
+                to={reverseRoute(pathNames.categoryEditor, params)}
                 disabled={pending}
             >
                 { editCeButtonLabel }
-            </WarningButton>
+            </Link>
         );
     }
 
@@ -347,7 +351,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <Header />
                 <div className={styles.content}>
-                    <ProjectCeForm
+                    <Form
                         formValues={formValues}
                         formErrors={formErrors}
                         formFieldErrors={formFieldErrors}
