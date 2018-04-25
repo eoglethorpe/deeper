@@ -453,12 +453,11 @@ const initialSiloDomainData = {
         // index is connector id
         1: {
             id: 1,
-            formValues: {
+            faramValues: {
                 title: 'IRS reserve',
                 source: 'rss-feed',
             },
-            formErrors: {},
-            formFieldErrors: {},
+            faramErrors: {},
             pristine: false,
         },
     },

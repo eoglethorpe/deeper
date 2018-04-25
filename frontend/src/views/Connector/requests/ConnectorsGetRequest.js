@@ -26,9 +26,8 @@ export default class ConnectorsGetRequest {
                 formattedConnectors[c.id] = {
                     id: c.id,
                     versionId: c.versionId,
-                    formValues: { ...c },
-                    formErrors: {},
-                    formFieldErrors: {},
+                    faramValues: { ...c },
+                    faramErrors: {},
                     prisitne: false,
                 };
             });

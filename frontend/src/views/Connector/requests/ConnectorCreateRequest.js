@@ -19,9 +19,8 @@ export default class ConnectorCreateRequest {
             const connector = {
                 id: response.id,
                 versionId: response.versionId,
-                formValues: { ...response },
-                formErrors: {},
-                formFieldErrors: {},
+                faramValues: { ...response },
+                faramErrors: {},
                 prisitne: false,
             };
 

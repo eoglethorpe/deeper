@@ -90,8 +90,6 @@ export default class ConnectorAddForm extends React.PureComponent {
         }
     }
 
-    // FORM RELATED
-
     handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
             faramValues,

@@ -81,7 +81,10 @@ export default class Connector extends React.PureComponent {
 
         if (this.props.connectorsList !== connectorsList) {
             const displayConnectorsList = connectorsList.filter(
-                c => caseInsensitiveSubmatch((c.formValues || emptyObject).title, searchInputValue),
+                c => caseInsensitiveSubmatch(
+                    (c.faramValues || emptyObject).title,
+                    searchInputValue,
+                ),
             );
             this.setState({ displayConnectorsList });
         }
@@ -118,7 +121,10 @@ export default class Connector extends React.PureComponent {
 
     handleSearchInputChange = (searchInputValue) => {
         const displayConnectorsList = this.props.connectorsList.filter(
-            c => caseInsensitiveSubmatch((c.formValues || emptyObject).title, searchInputValue),
+            c => caseInsensitiveSubmatch(
+                (c.faramValues || emptyObject).title,
+                searchInputValue,
+            ),
         );
 
         this.setState({
@@ -135,20 +141,23 @@ export default class Connector extends React.PureComponent {
         this.setState({ showAddConnectorModal: false });
     }
 
-    renderConnectorListItem = (key, data) => (
-        <div
-            key={key}
-            className={this.getStyleName(data.id)}
-        >
-            <Link
-                to={reverseRoute(pathNames.connectors, { connectorId: data.id })}
-                className={styles.link}
-                onClick={() => this.onChangeConnector(data.id)}
+    renderConnectorListItem = (key, data = {}) => {
+        const { faramValues = {} } = data;
+        return (
+            <div
+                key={key}
+                className={this.getStyleName(data.id)}
             >
-                {data.formValues.title}
-            </Link>
-        </div>
-    )
+                <Link
+                    to={reverseRoute(pathNames.connectors, { connectorId: data.id })}
+                    className={styles.link}
+                    onClick={() => this.onChangeConnector(data.id)}
+                >
+                    {faramValues.title}
+                </Link>
+            </div>
+        );
+    }
 
     renderHeader = () => {
         const { connectorStrings } = this.props;
