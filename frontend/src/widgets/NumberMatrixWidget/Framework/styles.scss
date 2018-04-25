@@ -29,6 +29,36 @@
     }
 }
 
+.sortable-unit {
+    display: flex;
+    border-top: $width-separator-thin solid $color-separator;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-foreground;
+    padding: $spacing-small 0;
+
+    .drag-handle {
+        display: flex;
+        align-items: center;
+        align-self: stretch;
+        flex-grow: 0;
+        flex-shrink: 0;
+        cursor: move;
+        padding: 0 $spacing-medium;
+    }
+
+    .row-col-element {
+        display: flex;
+        flex-grow: 1;
+        flex-shrink: 0;
+        padding: $spacing-extra-small 0;
+
+        .title-input {
+            flex-grow: 1;
+            margin-left: $spacing-small;
+        }
+    }
+}
+
 .edit-modal {
     .body {
         display: flex;
@@ -80,34 +110,4 @@
 
 .draggable-item {
     z-index: 11111;
-}
-
-.sortable-unit {
-    display: flex;
-    border-top: $width-separator-thin solid $color-separator;
-    border-bottom: $width-separator-thin solid $color-separator;
-    background-color: $color-foreground;
-    padding: $spacing-small 0;
-
-    .drag-handle {
-        display: flex;
-        align-items: center;
-        align-self: stretch;
-        flex-grow: 0;
-        flex-shrink: 0;
-        cursor: move;
-        padding: 0 $spacing-medium;
-    }
-
-    .row-col-element {
-        display: flex;
-        flex-grow: 1;
-        flex-shrink: 0;
-        padding: $spacing-extra-small 0;
-
-        .title-input {
-            flex-grow: 1;
-            margin-left: $spacing-small;
-        }
-    }
 }
