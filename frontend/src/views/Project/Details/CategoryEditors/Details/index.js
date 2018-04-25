@@ -258,13 +258,13 @@ export default class ProjectCeDetail extends React.PureComponent {
         }
 
         return (
-            <WarningButton
+            <AccentButton
                 iconName={iconNames.check}
                 onClick={this.handleCeUseClick}
                 disabled={pending}
             >
                 {projectStrings('useCeButtonLabel')}
-            </WarningButton>
+            </AccentButton>
         );
     }
 
