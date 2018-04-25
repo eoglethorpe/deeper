@@ -247,8 +247,8 @@ export default class Overview extends React.PureComponent {
             analysisFramework,
         } = this.props;
 
-        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
         const frameworkTitle = analysisFramework.title || _ts('af', 'analysisFramework');
+        const exitUrl = reverseRoute(pathNames.projects, { projectId });
 
         return (
             <header className={styles.header}>
@@ -266,7 +266,11 @@ export default class Overview extends React.PureComponent {
                 <div className={styles.actions}>
                     <Link
                         className={styles.exitLink}
-                        to={exitUrl}
+                        to={{
+                            pathname: exitUrl,
+                            hash: '#/frameworks',
+                            state: { selectedFramework: analysisFramework.id },
+                        }}
                     >
                         {_ts('af', 'exitButtonLabel')}
                     </Link>

@@ -309,7 +309,7 @@ export default class List extends React.PureComponent {
             analysisFramework,
         } = this.props;
 
-        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
+        const exitUrl = reverseRoute(pathNames.projects, { projectId });
         const frameworkTitle = analysisFramework.title || _ts('af', 'analysisFramework');
 
         return (
@@ -328,7 +328,11 @@ export default class List extends React.PureComponent {
                 <div className={styles.actions}>
                     <Link
                         className={styles.exitLink}
-                        to={exitUrl}
+                        to={{
+                            pathname: exitUrl,
+                            hash: '#/frameworks',
+                            state: { selectedFramework: analysisFramework.id },
+                        }}
                     >
                         {_ts('af', 'exitButtonLabel')}
                     </Link>
