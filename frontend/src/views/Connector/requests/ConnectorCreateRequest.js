@@ -46,8 +46,11 @@ export default class ConnectorCreateRequest {
         });
     }
 
-    fatal = (response) => {
-        console.warn('fatal:', response);
+    fatal = () => {
+        // FIXME: use strings
+        this.props.setState({
+            faramErrors: { $internal: ['Could not save connector.'] },
+        });
     }
 
     create = (newConnector) => {
