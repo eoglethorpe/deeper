@@ -302,10 +302,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         return (
             <Link
                 className={styles.editFrameworkLink}
-                to={{
-                    pathname: reverseRoute(pathNames.analysisFramework, params),
-                    state: { fromFramework: analysisFrameworkId },
-                }}
+                to={reverseRoute(pathNames.analysisFramework, params)}
                 disabled={pending}
             >
                 { editFrameworkButtonLabel }

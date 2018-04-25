@@ -519,8 +519,10 @@ export default class CategoryEditor extends React.PureComponent {
             activeCategoryId,
             categoryEditorViewPristine,
             categoryEditorViewTitle,
+            categoryEditorId,
             projectId,
         } = this.props;
+
         const {
             pending,
             confirmText,
@@ -558,7 +560,11 @@ export default class CategoryEditor extends React.PureComponent {
                             <Link
                                 disabled={categoryEditorViewPristine || pending}
                                 className={styles.linkToPp}
-                                to={`${reverseRoute(pathNames.projects, { projectId })}#/category-editor`}
+                                to={{
+                                    pathname: reverseRoute(pathNames.projects, { projectId }),
+                                    hash: '#/categoryEditors',
+                                    state: { selectedCategoryEditor: categoryEditorId },
+                                }}
                                 replace
                             >
                                 {this.props.ceStrings('exitButtonLabel')}
