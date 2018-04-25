@@ -7,11 +7,12 @@
 
     .table-header {
         @include background-color($color-foreground);
-        padding: $spacing-small $spacing-medium;
+        padding: $spacing-small;
     }
 
     .table-header-row {
-        padding: $spacing-small $spacing-medium;
+        @include background-color($color-foreground);
+        padding: $spacing-small;
 
         &.not-similar {
             @include background-color($color-danger);
@@ -28,12 +29,7 @@
 
     .table-cell {
         @include background-color($color-foreground);
-        padding: $spacing-small;
-
-        .number-input {
-            background-color: transparent;
-            color: $color-text;
-        }
+        padding: $spacing-extra-small $spacing-small;
     }
 }
 

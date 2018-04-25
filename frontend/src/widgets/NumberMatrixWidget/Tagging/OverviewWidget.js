@@ -63,9 +63,9 @@ export default class NumberMatrixOverview extends React.PureComponent {
         const isSame = new Set(values).size === 1;
         const colHeaderLength = (data.columnHeaders || emptyList).length;
 
-        if (values.length === 0 || (isSame && values.length === colHeaderLength)) {
+        if (isSame && values.length === colHeaderLength) {
             indicatorStyle.push(styles.similar);
-        } else if (!isSame) {
+        } else if (!isSame && values.length === colHeaderLength) {
             indicatorStyle.push(styles.notSimilar);
         } else {
             indicatorStyle.push(styles.partialSimilar);

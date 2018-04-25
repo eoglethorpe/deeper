@@ -78,12 +78,8 @@ export default class NumberMatrixList extends React.PureComponent {
             className={styles.col}
             key={key}
         >
-            <span className={styles.colTitle}>
-                {data.title}
-            </span>
-            <span className={styles.colValue}>
-                {data.value}
-            </span>
+            <span>{ data.title }</span>
+            <span>{ data.value }</span>
         </div>
     )
 
