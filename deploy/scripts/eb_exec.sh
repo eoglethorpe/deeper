@@ -8,13 +8,14 @@ instid=`curl -s -o - http://169.254.169.254/latest/meta-data/instance-id`
 
 if [ -z "$IN_CERN" ]; then
     export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}
+    crontab $ROOT_DIR/deploy/cronjobs
 else # In cern
     export EBS_HOSTNAME=${DEPLOYMENT_ENV_NAME}_${instid}_CERN
+    crontab $ROOT_DIR/deploy/cern/cronjobs
 fi
 
-### Aws scripts
+### ENV FOR CRON JOBS
 printenv | sed 's/^\([a-zA-Z0-9_]*\)=\(.*\)$/export \1="\2"/g' > /aws-script/env_var.sh
-crontab $ROOT_DIR/deploy/cronjobs
 cron
 
 ### PAPERTRAIL CONFIGS

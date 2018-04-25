@@ -22,13 +22,13 @@ services:
     nginx: # NGINX Server
         build: ./deploy/nginx
         env_file:
-            - .env-nginx
+            - .env-cern
         depends_on:
             - channel
         volumes:
           - certs:/etc/letsencrypt
           - certs-data:/data/letsencrypt
-          - ./deploy/nginx/config/:/etc/nginx/conf.d/
+          - ./deploy/nginx/config/:/etc/nginx/conf.d/:z
         ports:
             - '80:80'
             - '443:443'
