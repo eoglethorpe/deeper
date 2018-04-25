@@ -48,10 +48,6 @@ export default class GoogleDriveUploadRequest {
                     ...leadValues,
                     attachment: { id: response.id },
                 },
-                upload: {
-                    title: response.title,
-                    url: response.file,
-                },
                 uiState: { pristine: false, serverError: false },
             });
 

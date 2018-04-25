@@ -142,6 +142,7 @@ const leadReference = {
     uiState: {
         error: false,
         pristine: false,
+        serverError: false,
     },
 };
 

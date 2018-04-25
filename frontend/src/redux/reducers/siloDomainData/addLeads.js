@@ -58,13 +58,12 @@ export const addLeadViewAddLeadsAction = leads => ({
 
 // FIXME: changed this
 export const addLeadViewLeadChangeAction = ({
-    leadId, faramValues, faramErrors, upload, uiState,
+    leadId, faramValues, faramErrors, uiState,
 }) => ({
     type: LA__LEAD_CHANGE,
     leadId,
     faramValues,
     faramErrors,
-    upload,
     uiState,
 });
 

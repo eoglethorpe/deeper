@@ -64,10 +64,6 @@ export default class FileUploadRequest {
                 ...leadValues,
                 attachment: { id: response.id },
             },
-            upload: {
-                title: response.title,
-                url: response.file,
-            },
             uiState: { serverError: false },
         });
 
