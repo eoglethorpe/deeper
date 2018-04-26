@@ -19,9 +19,12 @@ $height-header: 48px;
         height: $height-header;
 
         .action-buttons {
+            display: flex;
+            align-items: center;
+
             .primary-link-button {
-                @extend %button-like-link;
-                @include background-color($color-primary);
+                @include button-like-link($color-primary);
+                margin-left: $spacing-medium;
             }
 
             .save-button {

@@ -10,6 +10,7 @@ import DangerButton from '../../../vendor/react-store/components/Action/Button/D
 import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import Pager from '../../../vendor/react-store/components/View/Pager';
 
 import {
     editEntryCurrentLeadSelector,
@@ -41,9 +42,6 @@ const propTypes = {
     choices: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-const defaultProps = {
-};
-
 const mapStateToProps = (state, props) => ({
     leadDetails: editEntryCurrentLeadSelector(state, props),
     entryStrings: entryStringsSelector(state),
@@ -60,10 +58,11 @@ const APPLY_MODE = {
     allBelow: 'allBelow',
 };
 
+const ENTRIES_PER_PAGE = 30;
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class List extends React.PureComponent {
     static propTypes = propTypes;
-    static defaultProps = defaultProps;
 
     constructor(props) {
         super(props);
@@ -73,6 +72,8 @@ export default class List extends React.PureComponent {
             applyMode: undefined, // all or below
             applyItemId: undefined,
             applyEntryId: undefined,
+
+            activePage: 1,
         };
 
         this.items = [];
@@ -83,14 +84,6 @@ export default class List extends React.PureComponent {
         this.updateGridItems(props.entries);
     }
 
-    /*
-    componentWillMount() {
-        const { projectId } = this.props;
-        this.geoOptionsRequest = this.createGeoOptionsRequest(projectId);
-        this.geoOptionsRequest.start();
-    }
-    */
-
     componentWillReceiveProps(nextProps) {
         if (this.props.analysisFramework !== nextProps.analysisFramework) {
             this.updateAnalysisFramework(nextProps.analysisFramework);
@@ -98,14 +91,6 @@ export default class List extends React.PureComponent {
             this.updateGridItems(nextProps.entries);
         }
     }
-
-    /*
-    componentWillUnmount() {
-        if (this.geoOptionsRequest) {
-            this.geoOptionsRequest.stop();
-        }
-    }
-    */
 
     getMaxHeight = () => this.items.reduce(
         (acc, item) => {
@@ -169,6 +154,10 @@ export default class List extends React.PureComponent {
             applyItemId: undefined,
             applyEntryId: undefined,
         });
+    }
+
+    handlePageClick = (page) => {
+        this.setState({ activePage: page });
     }
 
     updateAnalysisFramework(analysisFramework) {
@@ -278,6 +267,14 @@ export default class List extends React.PureComponent {
                     {leadDetails.title}
                 </h3>
                 <div className={styles.actionButtons}>
+                    { this.props.entries && this.props.entries.length > ENTRIES_PER_PAGE &&
+                        <Pager
+                            itemsCount={this.props.entries.length}
+                            maxItemsPerPage={ENTRIES_PER_PAGE}
+                            activePage={this.state.activePage}
+                            onPageClick={this.handlePageClick}
+                        />
+                    }
                     <Link
                         className={styles.primaryLinkButton}
                         to="#/overview"
@@ -297,7 +294,12 @@ export default class List extends React.PureComponent {
         );
     }
 
-    renderEntry = (entry) => {
+    renderEntry = (entry, i) => {
+        const { activePage } = this.state;
+        if (i >= activePage * ENTRIES_PER_PAGE || i < (activePage - 1) * ENTRIES_PER_PAGE) {
+            return null;
+        }
+
         const {
             markForDeleteEntry,
             setActiveEntry,
