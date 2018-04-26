@@ -19,11 +19,15 @@ import {
     connectorStringsSelector,
     connectorsListSelector,
     connectorIdFromRouteSelector,
+    notificationStringsSelector,
 
+    setConnectorSourcesAction,
     setUserConnectorsAction,
 } from '../../redux';
 import ConnectorsGetRequest from './requests/ConnectorsGetRequest';
+import ConnectorSourcesGetRequest from './requests/ConnectorSourcesGetRequest';
 import AddConnectorForm from './AddForm';
+import ConnectorDetails from './Details';
 
 import {
     iconNames,
@@ -36,7 +40,9 @@ const propTypes = {
     connectorStrings: PropTypes.func.isRequired,
     connectorId: PropTypes.number,
     setUserConnectors: PropTypes.func.isRequired,
+    setConnectorSources: PropTypes.func.isRequired,
     connectorsList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,12 +51,14 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
+    notificationStrings: notificationStringsSelector(state),
     connectorsList: connectorsListSelector(state),
     connectorId: connectorIdFromRouteSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     setUserConnectors: params => dispatch(setUserConnectorsAction(params)),
+    setConnectorSources: params => dispatch(setConnectorSourcesAction(params)),
 });
 
 const emptyObject = {};
@@ -73,6 +81,7 @@ export default class Connector extends React.PureComponent {
 
     componentWillMount() {
         this.startConnectorsRequest();
+        this.startConnectorSourcesGetRequest();
     }
 
     componentWillReceiveProps(nextProps) {
@@ -93,6 +102,9 @@ export default class Connector extends React.PureComponent {
     componentWillUnmount() {
         if (this.requestForConnectors) {
             this.requestForConnectors.stop();
+        }
+        if (this.requestForConnectorSources) {
+            this.requestForConnectorSources.stop();
         }
     }
 
@@ -117,6 +129,19 @@ export default class Connector extends React.PureComponent {
         });
         this.requestForConnectors = requestForConnectors.create();
         this.requestForConnectors.start();
+    }
+
+    startConnectorSourcesGetRequest = () => {
+        if (this.requestForConnectorSources) {
+            this.requestForConnectorSources.stop();
+        }
+        const requestForConnectorSources = new ConnectorSourcesGetRequest({
+            setState: v => this.setState(v),
+            notificationStrings: this.props.notificationStrings,
+            setConnectorSources: this.props.setConnectorSources,
+        });
+        this.requestForConnectorSources = requestForConnectorSources.create();
+        this.requestForConnectorSources.start();
     }
 
     handleSearchInputChange = (searchInputValue) => {
@@ -151,7 +176,6 @@ export default class Connector extends React.PureComponent {
                 <Link
                     to={reverseRoute(pathNames.connectors, { connectorId: data.id })}
                     className={styles.link}
-                    onClick={() => this.onChangeConnector(data.id)}
                 >
                     {faramValues.title}
                 </Link>
@@ -219,10 +243,32 @@ export default class Connector extends React.PureComponent {
         );
     }
 
+    renderDetails = () => {
+        const {
+            connectorId,
+            connectorStrings,
+        } = this.props;
+
+        if (!connectorId) {
+            return (
+                <p className={styles.noConnector}>
+                    {connectorStrings('noConnectorSelectedTitle')}
+                </p>
+            );
+        }
+        return (
+            <ConnectorDetails
+                className={styles.connectorDetails}
+                connectorId={connectorId}
+            />
+        );
+    }
+
     render() {
         const { displayConnectorsList } = this.state;
 
         const Header = this.renderHeader;
+        const Details = this.renderDetails;
 
         return (
             <div className={styles.connectors}>
@@ -235,6 +281,7 @@ export default class Connector extends React.PureComponent {
                         modifier={this.renderConnectorListItem}
                     />
                 </div>
+                <Details />
             </div>
         );
     }

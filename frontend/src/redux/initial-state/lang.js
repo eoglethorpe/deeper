@@ -612,6 +612,7 @@ const initialLangState = {
                 1108: 'It seems there was a problem while creating the connector',
                 1109: 'Connector Sources',
                 1110: 'It seems there was a problem while fetching connector sources',
+                1111: 'Select a connector to view its detail.',
             },
             views: {
                 af: {
@@ -1375,6 +1376,7 @@ const initialLangState = {
                     addConnectorModalTitlePlaceholder: 1103,
                     addConnectorModalSourceLabel: 1104,
                     addConnectorModalSourcePlaceholder: 1105,
+                    noConnectorSelectedTitle: 1111,
                     modalCancel: 61,
                     modalCreate: 179,
                 },

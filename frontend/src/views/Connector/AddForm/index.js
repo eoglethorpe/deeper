@@ -17,19 +17,16 @@ import {
     notificationStringsSelector,
     connectorSourcesListSelector,
 
-    setConnectorSourcesAction,
     addUserConnectorAction,
 } from '../../../redux';
 
 import ConnectorCreateRequest from '../requests/ConnectorCreateRequest';
-import ConnectorSourcesGetRequest from '../requests/ConnectorSourcesGetRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     connectorStrings: PropTypes.func.isRequired,
-    setConnectorSources: PropTypes.func.isRequired,
     addUserConnector: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -47,7 +44,6 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setConnectorSources: params => dispatch(setConnectorSourcesAction(params)),
     addUserConnector: params => dispatch(addUserConnectorAction(params)),
 });
 
@@ -77,16 +73,9 @@ export default class ConnectorAddForm extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        this.startConnectorSourcesGetRequest();
-    }
-
     componentWillUnmount() {
         if (this.requestForConnectorCreate) {
             this.requestForConnectorCreate.stop();
-        }
-        if (this.requestForConnectorSources) {
-            this.requestForConnectorSources.stop();
         }
     }
 
@@ -101,19 +90,6 @@ export default class ConnectorAddForm extends React.PureComponent {
     handleValidationFailure = (faramErrors) => {
         this.setState({ faramErrors });
     };
-
-    startConnectorSourcesGetRequest = () => {
-        if (this.requestForConnectorSources) {
-            this.requestForConnectorSources.stop();
-        }
-        const requestForConnectorSources = new ConnectorSourcesGetRequest({
-            setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
-            setConnectorSources: this.props.setConnectorSources,
-        });
-        this.requestForConnectorSources = requestForConnectorSources.create();
-        this.requestForConnectorSources.start();
-    }
 
     startConnectorCreateRequest = (newConnector) => {
         if (this.requestForConnectorCreate) {
