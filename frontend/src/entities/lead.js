@@ -171,7 +171,7 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
     const type = leadAccessor.getType(lead);
     const serverId = leadAccessor.getServerId(lead);
     const values = leadAccessor.getValues(lead);
-    const { pristine, error } = leadAccessor.getUiState(lead);
+    const { pristine, error, serverError } = leadAccessor.getUiState(lead);
 
     const isFileUploading = () => upload && upload.progress <= 100;
     const isDriveUploading = () => drive && drive.pending;
@@ -194,7 +194,7 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
         return LEAD_STATUS.warning; // invalid
     } else if (rest && rest.pending) {
         return LEAD_STATUS.requesting;
-    } else if (error) {
+    } else if (error || serverError) {
         return LEAD_STATUS.invalid;
     } else if (!pristine) {
         return LEAD_STATUS.nonPristine;

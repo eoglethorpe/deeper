@@ -198,7 +198,7 @@ export default class EditEntry extends React.PureComponent {
                     notify.send({
                         type: notify.type.ERROR,
                         title: this.props.notificationStrings('entrySave'),
-                        message: this.props.notificationStrings('entrySaveFailure'),
+                        message: this.props.notificationStrings('entrySaveFailure', { errorCount: totalErrors }),
                         duration: notify.duration.SLOW,
                     });
                 } else {
