@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+    channel: # Django Channel
+        build: .
+        env_file:
+            - .env-cern
+        environment:
+          - WORKER_TYPE=channel
+        command: ['/code/deploy/scripts/eb_exec.sh']
+        ports:
+            - '8000:80'
+
+    celery: # Celery Workers
+        build: .
+        env_file:
+            - .env-cern
+        environment:
+          - WORKER_TYPE=celery
+        command: ['/code/deploy/scripts/eb_exec.sh']
+
+    nginx: # NGINX Server
+        build: ./deploy/nginx
+        env_file:
+            - .env-cern
+        depends_on:
+            - channel
+        volumes:
+          - certs:/etc/letsencrypt
+          - certs-data:/data/letsencrypt
+          - ./deploy/nginx/config/:/etc/nginx/conf.d/:z
+        ports:
+            - '80:80'
+            - '443:443'
+
+volumes:
+  certs:
+  certs-data:

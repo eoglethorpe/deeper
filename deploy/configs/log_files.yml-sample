@@ -7,6 +7,8 @@ files:
     tag: celery
   - path: /var/log/daphne/access.log
     tag: django-channel
+  - path: /var/log/deep.log
+    tag: deep-info
 
 hostname: <hostname>
 destination:
