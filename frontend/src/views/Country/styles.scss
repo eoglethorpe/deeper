@@ -46,11 +46,6 @@ $width-sidebar: 240px;
                 padding: 0;
             }
 
-            .active {
-                border-left-color: $color-accent;
-                background-color: $color-background-selected;
-            }
-
             :hover {
                 background-color: $color-background-hover;
             }

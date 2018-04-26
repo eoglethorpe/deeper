@@ -33,4 +33,33 @@ const connectorsSchema = [];
     };
     connectorsSchema.push({ name, schema });
 }
+{
+    const name = 'connectorSource';
+    const schema = {
+        doc: {
+            name: 'Connector Source',
+            description: 'Different sources for connectors',
+        },
+        fields: {
+            title: { type: 'string', required: true },
+            key: { type: 'string', required: true },
+            options: { type: 'array', required: true },
+        },
+    };
+    connectorsSchema.push({ name, schema });
+}
+{
+    const name = 'connectorSources';
+    const schema = {
+        doc: {
+            name: 'Connector Sources Get Response',
+            description: 'Response for GET /connector-sources/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            results: { type: 'array.connectorSource', required: true },
+        },
+    };
+    connectorsSchema.push({ name, schema });
+}
 export default connectorsSchema;

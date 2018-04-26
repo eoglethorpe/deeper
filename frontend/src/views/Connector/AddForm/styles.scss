@@ -1,0 +1,18 @@
+@import '../../../stylesheets/base';
+
+.connector-add-form {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+
+    .action-buttons {
+        display: flex;
+        justify-content: flex-end;
+
+        button {
+            margin-left: $spacing-medium;
+        }
+    }
+}
+

@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { compareString } from '../../../vendor/react-store/utils/common';
 
 const emptyList = [];
 const emptyObject = {};
@@ -98,5 +99,16 @@ export const categoryEditorListSelector = createSelector(
         (categoryEditors && Object.values(categoryEditors).filter(
             categoryEditor => categoryEditor,
         )) || emptyList
+    ),
+);
+
+export const connectorSourcesSelector = ({ domainData }) => (
+    domainData.connectorSources || emptyObject
+);
+
+export const connectorSourcesListSelector = createSelector(
+    connectorSourcesSelector,
+    c => Object.values(c).sort(
+        (a = {}, b = {}) => compareString(a.title, b.title),
     ),
 );
