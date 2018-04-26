@@ -67,7 +67,7 @@ export default class ActionButtons extends React.PureComponent {
             ),
             state: {
                 serverId: row.id,
-                values: {
+                faramValues: {
                     title: row.title,
                     sourceType: row.sourceType,
                     project: row.project,

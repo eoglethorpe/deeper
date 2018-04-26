@@ -248,6 +248,7 @@ export default class CategoryEditor extends React.PureComponent {
                 }
             })
             .failure((response) => {
+                // FIXME: transformResponse to alterResponse
                 const message = transformResponseErrorToFormError(response.errors)
                     .formErrors
                     .errors

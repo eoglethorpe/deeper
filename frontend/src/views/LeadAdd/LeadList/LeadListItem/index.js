@@ -133,7 +133,7 @@ export default class LeadListItem extends React.PureComponent {
         } = this.props;
 
         const type = leadAccessor.getType(lead);
-        const { title } = leadAccessor.getValues(lead);
+        const { title } = leadAccessor.getFaramValues(lead);
 
         const LeadListIcon = this.renderIcon;
         const UploadProgress = this.renderUploadProgress;

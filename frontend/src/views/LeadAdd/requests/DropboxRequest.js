@@ -38,17 +38,13 @@ export default class DropboxRequest {
             schema.validate(response, 'galleryFile');
 
             const lead = this.getLeadFromId(leadId);
-            const leadValues = leadAccessor.getValues(lead);
+            const leadValues = leadAccessor.getFaramValues(lead);
 
             this.addLeadViewLeadChange({
                 leadId,
-                values: {
+                faramValues: {
                     ...leadValues,
                     attachment: { id: response.id },
-                },
-                upload: {
-                    title: response.title,
-                    url: response.file,
                 },
                 uiState: { pristine: false, serverError: false },
             });
