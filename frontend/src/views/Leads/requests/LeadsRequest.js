@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
-import Leads from '../../Leads';
+import { getFiltersForRequest } from '../../../entities/lead';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -19,7 +19,7 @@ export default class LeadsRequest {
     create = ({
         activeProject, activePage, activeSort, filters, leadsPerPage,
     }) => {
-        const sanitizedFilters = Leads.getFiltersForRequest(filters);
+        const sanitizedFilters = getFiltersForRequest(filters);
         const leadRequestOffset = (activePage - 1) * leadsPerPage;
         const leadRequestLimit = leadsPerPage;
 

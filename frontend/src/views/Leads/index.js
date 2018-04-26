@@ -127,40 +127,6 @@ export default class Leads extends React.PureComponent {
 
     static leadKeyExtractor = lead => String(lead.id)
 
-    // TODO: IMP move this somewhere
-    static getFiltersForRequest = (filters) => {
-        const requestFilters = {};
-        Object.keys(filters).forEach((key) => {
-            const filter = filters[key];
-            switch (key) {
-                case 'created_at':
-                    if (filter) {
-                        requestFilters.created_at__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.created_at__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                case 'published_on':
-                    if (filter) {
-                        requestFilters.published_on__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.published_on__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                default:
-                    requestFilters[key] = filter;
-                    break;
-            }
-        });
-        return requestFilters;
-    }
-
     constructor(props) {
         super(props);
 

@@ -8,6 +8,7 @@ import {
     compareString,
     compareDate,
 } from '../../vendor/react-store/utils/common';
+import { getFiltersForRequest } from '../../entities/lead';
 import update from '../../vendor/react-store/utils/immutable-update';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
@@ -82,40 +83,6 @@ export default class Export extends React.PureComponent {
 
     static exportButtonKeyExtractor = d => d.key;
     static leadKeyExtractor = d => d.id
-
-    // TODO: IMP move this somewhere
-    static getFiltersForRequest = (filters) => {
-        const requestFilters = {};
-        Object.keys(filters).forEach((key) => {
-            const filter = filters[key];
-            switch (key) {
-                case 'created_at':
-                    if (filter) {
-                        requestFilters.created_at__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.created_at__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                case 'published_on':
-                    if (filter) {
-                        requestFilters.published_on__gt = FormattedDate.format(
-                            new Date(filter.startDate), 'yyyy-MM-dd',
-                        );
-                        requestFilters.published_on__lt = FormattedDate.format(
-                            new Date(filter.endDate), 'yyyy-MM-dd',
-                        );
-                    }
-                    break;
-                default:
-                    requestFilters[key] = filter;
-                    break;
-            }
-        });
-        return requestFilters;
-    }
 
     constructor(props) {
         super(props);
@@ -362,7 +329,7 @@ export default class Export extends React.PureComponent {
     }
 
     createRequestForProjectLeads = ({ activeProject, filters }) => {
-        const sanitizedFilters = Export.getFiltersForRequest(filters);
+        const sanitizedFilters = getFiltersForRequest(filters);
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject,
             fields: ['id', 'title', 'created_at'],
