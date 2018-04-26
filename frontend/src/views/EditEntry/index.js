@@ -124,6 +124,48 @@ export default class EditEntry extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static isPageLoading = (state) => {
+        const {
+            pendingEntries,
+            pendingAf,
+            pendingGeo,
+        } = state;
+        return pendingEntries || pendingAf || pendingGeo;
+    }
+
+    static calcChoices = (props, state) => {
+        const { entries } = props;
+        const {
+            entryRests,
+            entryDeleteRests,
+        } = state;
+
+        return entries.reduce(
+            (acc, entry) => {
+                const entryId = entryAccessor.getKey(entry);
+                const choice = calcEntryState({
+                    entry,
+                    rest: entryRests[entryId],
+                    deleteRest: entryDeleteRests[entryId],
+                });
+                // NOTE: let user try again in invalid state as well
+                const isSaveDisabled = !(
+                    choice === ENTRY_STATUS.nonPristine ||
+                    choice === ENTRY_STATUS.invalid
+                );
+                const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
+                acc[entryId] = {
+                    choice,
+                    isSaveDisabled,
+                    isWidgetDisabled,
+                };
+                return acc;
+            },
+            {},
+        );
+    }
+
+
     constructor(props) {
         super(props);
 
@@ -181,6 +223,44 @@ export default class EditEntry extends React.PureComponent {
         if (!window.location.hash) {
             window.location.replace(`#/${this.defaultHash}`);
         }
+
+        this.views = {
+            overview: {
+                component: () => (
+                    <Overview
+                        analysisFramework={this.props.analysisFramework}
+                        entries={this.props.entries}
+                        filteredEntries={this.props.filteredEntries}
+                        leadId={this.props.leadId}
+                        onEntryAdd={this.handleAddEntry}
+                        onEntryDelete={this.handleEntryDelete}
+                        selectedEntryId={this.props.selectedEntryId}
+
+                        api={this.api}
+                        choices={this.choices}
+                        onSaveAll={this.handleSaveAll}
+                        saveAllDisabled={this.isSaveAllDisabled}
+                        saveAllPending={this.state.pendingSaveAll}
+                        widgetDisabled={this.isWidgetDisabled}
+                    />
+                ),
+            },
+
+            list: {
+                component: () => (
+                    <List
+                        analysisFramework={this.props.analysisFramework}
+                        entries={this.props.filteredEntries}
+                        leadId={this.props.leadId}
+
+                        api={this.api}
+                        choices={this.choices}
+                        onSaveAll={this.handleSaveAll}
+                        saveAllDisabled={this.isSaveAllDisabled}
+                    />
+                ),
+            },
+        };
     }
 
     componentWillMount() {
@@ -198,6 +278,32 @@ export default class EditEntry extends React.PureComponent {
         if (!window.location.hash) {
             window.location.replace(`#/${this.defaultHash}`);
         }
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (EditEntry.isPageLoading(nextState)) {
+            return;
+        }
+
+        const {
+            entries,
+            selectedEntryId,
+        } = nextProps;
+
+        const { pendingSaveAll } = nextState;
+
+        this.api.setEntries(entries);
+        this.api.setSelectedId(selectedEntryId);
+
+        this.choices = EditEntry.calcChoices(nextProps, nextState);
+
+        const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
+        const someSaveEnabled = Object.keys(this.choices).some(
+            key => !(this.choices[key].isSaveDisabled),
+        );
+
+        this.isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
+        this.isWidgetDisabled = isWidgetDisabled;
     }
 
     componentWillUnmount() {
@@ -390,55 +496,8 @@ export default class EditEntry extends React.PureComponent {
         this.saveRequestCoordinator.start();
     }
 
-    calcChoices = () => {
-        const { entries } = this.props;
-        const {
-            entryRests,
-            entryDeleteRests,
-        } = this.state;
-
-        return entries.reduce(
-            (acc, entry) => {
-                const entryId = entryAccessor.getKey(entry);
-                const choice = calcEntryState({
-                    entry,
-                    rest: entryRests[entryId],
-                    deleteRest: entryDeleteRests[entryId],
-                });
-                // NOTE: let user try again in invalid state as well
-                const isSaveDisabled = !(
-                    choice === ENTRY_STATUS.nonPristine ||
-                    choice === ENTRY_STATUS.invalid
-                );
-                const isWidgetDisabled = (choice === ENTRY_STATUS.requesting);
-                acc[entryId] = {
-                    choice,
-                    isSaveDisabled,
-                    isWidgetDisabled,
-                };
-                return acc;
-            },
-            {},
-        );
-    }
-
     render() {
-        const {
-            analysisFramework,
-            leadId,
-            entries,
-            filteredEntries,
-            selectedEntryId,
-        } = this.props;
-
-        const {
-            pendingSaveAll,
-            pendingEntries,
-            pendingAf,
-            pendingGeo,
-        } = this.state;
-
-        if (pendingEntries || pendingAf || pendingGeo) {
+        if (EditEntry.isPageLoading(this.state)) {
             return (
                 <div className={styles.editEntry} >
                     <LoadingAnimation large />
@@ -446,78 +505,24 @@ export default class EditEntry extends React.PureComponent {
             );
         }
 
-        this.api.setEntries(entries);
-        this.api.setSelectedId(selectedEntryId);
-
-        // FIXME: move this calcChoices to component will update
-        this.choices = this.calcChoices();
-
-        const { isWidgetDisabled } = this.choices[selectedEntryId] || {};
-        const someSaveEnabled = Object.keys(this.choices).some(
-            key => !(this.choices[key].isSaveDisabled),
-        );
-        const isSaveAllDisabled = pendingSaveAll || !someSaveEnabled;
-
-        const views = {
-            overview: {
-                component: () => (
-                    <Overview
-                        analysisFramework={analysisFramework}
-                        entries={entries}
-                        filteredEntries={filteredEntries}
-                        leadId={leadId}
-                        onEntryAdd={this.handleAddEntry}
-                        onEntryDelete={this.handleEntryDelete}
-                        selectedEntryId={selectedEntryId}
-
-                        api={this.api}
-                        choices={this.choices}
-                        onSaveAll={this.handleSaveAll}
-                        saveAllDisabled={isSaveAllDisabled}
-                        saveAllPending={pendingSaveAll}
-                        widgetDisabled={isWidgetDisabled}
-                    />
-                ),
-            },
-
-            list: {
-                component: () => (
-                    <List
-                        analysisFramework={analysisFramework}
-                        entries={filteredEntries}
-                        leadId={leadId}
-
-                        api={this.api}
-                        choices={this.choices}
-                        onSaveAll={this.handleSaveAll}
-                        saveAllDisabled={isSaveAllDisabled}
-                    />
-                ),
-            },
-        };
-
         return (
             <Fragment>
                 <Prompt
                     message={
                         (location) => {
                             const { routeUrl } = this.props;
-
                             if (location.pathname === routeUrl) {
                                 return true;
-                            }
-
-                            if (isSaveAllDisabled) {
+                            } else if (this.isSaveAllDisabled) {
                                 return true;
                             }
-
                             return this.props.commonStrings('youHaveUnsavedChanges');
                         }
                     }
                 />
                 <div className={styles.editEntry}>
                     <MultiViewContainer
-                        views={views}
+                        views={this.views}
                         useHash
                     />
                 </div>
