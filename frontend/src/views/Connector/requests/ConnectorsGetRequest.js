@@ -26,7 +26,13 @@ export default class ConnectorsGetRequest {
                 formattedConnectors[c.id] = {
                     id: c.id,
                     versionId: c.versionId,
-                    faramValues: { ...c },
+                    source: c.source,
+                    faramValues: {
+                        title: c.title,
+                        params: c.params,
+                        users: c.users,
+                        projects: c.projects,
+                    },
                     faramErrors: {},
                     prisitne: false,
                 };

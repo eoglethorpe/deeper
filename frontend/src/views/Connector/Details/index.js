@@ -1,11 +1,13 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import {
     connectorStringsSelector,
     connectorsListSelector,
     connectorIdFromRouteSelector,
+    connectorDetailsSelector,
+    connectorSourceSelector,
     notificationStringsSelector,
 
     setUserConnectorDetailsAction,
@@ -13,22 +15,28 @@ import {
 
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import ConnectorDetailsGetRequest from '../requests/ConnectorDetailsGetRequest';
+import DetailsForm from './Form';
 
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
     connectorId: PropTypes.number,
+    connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     setUserConnectorDetails: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
+    connectorDetails: {},
+    connectorSource: {},
     connectorId: undefined,
 };
 
 const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
+    connectorDetails: connectorDetailsSelector(state),
+    connectorSource: connectorSourceSelector(state),
     notificationStrings: notificationStringsSelector(state),
     connectorsList: connectorsListSelector(state),
     connectorId: connectorIdFromRouteSelector(state),
@@ -48,9 +56,7 @@ export default class ConnectorDetails extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = {
-            dataLoading: false,
-        };
+        this.state = { dataLoading: false };
     }
 
     componentDidMount() {
@@ -100,6 +106,7 @@ export default class ConnectorDetails extends React.PureComponent {
 
     render() {
         const { dataLoading } = this.state;
+        const { faramValues: connectorDetails = {} } = this.props.connectorDetails;
         const { connectorId } = this.props;
 
         const className = this.getClassName();
@@ -110,7 +117,10 @@ export default class ConnectorDetails extends React.PureComponent {
                     dataLoading ? (
                         <LoadingAnimation large />
                     ) : (
-                        <p>{connectorId}</p>
+                        <Fragment>
+                            <h3>{connectorDetails.title}</h3>
+                            <DetailsForm connectorId={connectorId} />
+                        </Fragment>
                     )
                 }
             </div>

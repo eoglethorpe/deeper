@@ -6,4 +6,9 @@
     position: relative;
     flex-direction: column;
     height: 100%;
+
+    h3 {
+        padding: $spacing-large;
+        padding-bottom: 0;
+    }
 }

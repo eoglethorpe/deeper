@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { connectorIdFromRoute } from '../domainData';
+import { connectorIdFromRoute, connectorSourcesSelector } from '../domainData';
 import { compareString } from '../../../vendor/react-store/utils/common';
 
 const emptyObject = {};
@@ -18,7 +18,7 @@ export const connectorsListSelector = createSelector(
     ),
 );
 
-export const connectorSelector = createSelector(
+export const connectorDetailsSelector = createSelector(
     connectorIdFromRoute,
     connectorsSelector,
     (id, connectors) => (
@@ -26,3 +26,8 @@ export const connectorSelector = createSelector(
     ),
 );
 
+export const connectorSourceSelector = createSelector(
+    connectorSourcesSelector,
+    connectorDetailsSelector,
+    (sources, connector) => sources[connector.source],
+);

@@ -21,11 +21,20 @@ export default class ConnectorDetailsGetRequest {
             const formattedConnector = {
                 id: response.id,
                 versionId: response.versionId,
-                faramValues: { ...response },
+                source: response.source,
+                faramValues: {
+                    title: response.title,
+                    params: response.params,
+                    users: response.users,
+                    projects: response.projects,
+                },
                 faramErrors: {},
                 prisitne: false,
             };
-            setUserConnectorDetails({ connector: formattedConnector });
+            setUserConnectorDetails({
+                connectorDetails: formattedConnector,
+                connectorId: formattedConnector.id,
+            });
         } catch (er) {
             console.error(er);
         }
