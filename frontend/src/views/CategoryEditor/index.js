@@ -44,7 +44,7 @@ import {
     setCategoryEditorAction,
 
     ceIdFromRouteSelector,
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
 
     ceStringsSelector,
     notificationStringsSelector,
@@ -89,7 +89,7 @@ const mapStateToProps = (state, props) => ({
     activeCategoryId: activeCategoryIdSelector(state, props),
 
     categoryEditorId: ceIdFromRouteSelector(state, props),
-    projectId: activeProjectSelector(state, props),
+    projectId: activeProjectIdFromStateSelector(state, props),
 
     ceStrings: ceStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),

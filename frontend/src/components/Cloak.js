@@ -5,13 +5,13 @@ import { connect } from 'react-redux';
 import {
     activeUserSelector,
     currentUserProjectsSelector,
-    currentUserActiveProjectSelector,
+    activeProjectFromStateSelector,
 } from '../redux';
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
     userProjects: currentUserProjectsSelector(state),
-    currentUserActiveProject: currentUserActiveProjectSelector(state),
+    currentUserActiveProject: activeProjectFromStateSelector(state),
 });
 
 const propTypes = {

@@ -11,7 +11,7 @@ import DateFilter from '../../../vendor/react-store/components/Input/DateFilter'
 import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
 
     setAryPageFilterAction,
     aryPageFilterSelector,
@@ -49,7 +49,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
     filters: aryPageFilterSelector(state),
     aryFilterOptions: aryFilterOptionsForProjectSelector(state, props),
     arysStrings: arysStringsSelector(state),

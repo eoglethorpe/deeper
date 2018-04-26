@@ -22,7 +22,7 @@ import AppError from '../../components/AppError';
 import ActionButtons from './ActionButtons';
 
 import {
-    activeProjectSelector,
+    activeProjectIdFromStateSelector,
     leadsForProjectSelector,
     totalLeadsCountForProjectSelector,
 
@@ -84,7 +84,7 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    activeProject: activeProjectSelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
 
     leads: leadsForProjectSelector(state, props),
     totalLeadsCount: totalLeadsCountForProjectSelector(state, props),

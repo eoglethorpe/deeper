@@ -23,8 +23,8 @@ import {
 import {
     setActiveProjectAction,
 
-    activeCountrySelector,
-    activeProjectSelector,
+    activeCountryIdFromStateSelector,
+    activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserProjectsSelector,
 
@@ -44,8 +44,8 @@ import NavDrop from './NavDrop';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
-    activeProject: activeProjectSelector(state),
-    activeCountry: activeCountrySelector(state),
+    activeProject: activeProjectIdFromStateSelector(state),
+    activeCountry: activeCountryIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     userProjects: currentUserProjectsSelector(state),
     commonStrings: commonStringsSelector(state),

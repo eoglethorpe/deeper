@@ -11,8 +11,8 @@ import {
 } from '../vendor/react-store/utils/common';
 
 import {
-    activeProjectSelector,
-    activeCountrySelector,
+    activeProjectIdFromStateSelector,
+    activeCountryIdFromStateSelector,
     setActiveProjectAction,
     setActiveCountryAction,
     setRouteParamsAction,
@@ -50,8 +50,8 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    activeProjectId: activeProjectSelector(state),
-    activeCountryId: activeCountrySelector(state),
+    activeProjectId: activeProjectIdFromStateSelector(state),
+    activeCountryId: activeCountryIdFromStateSelector(state),
     pageTitleStrings: pageTitleStringsSelector(state),
 });
 
