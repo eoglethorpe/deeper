@@ -1,3 +1,4 @@
+import FormattedDate from '../vendor/react-store/components/View/FormattedDate';
 import update from '../vendor/react-store/utils/immutable-update';
 import iconNames from '../constants/iconNames';
 
@@ -194,4 +195,37 @@ export const calcLeadState = ({ lead, upload, rest, drive, dropbox }) => {
         return LEAD_STATUS.complete;
     }
     return LEAD_STATUS.pristine;
+};
+
+export const getFiltersForRequest = (filters) => {
+    const requestFilters = {};
+    Object.keys(filters).forEach((key) => {
+        const filter = filters[key];
+        switch (key) {
+            case 'created_at':
+                if (filter) {
+                    requestFilters.created_at__gt = FormattedDate.format(
+                        new Date(filter.startDate), 'yyyy-MM-dd',
+                    );
+                    requestFilters.created_at__lt = FormattedDate.format(
+                        new Date(filter.endDate), 'yyyy-MM-dd',
+                    );
+                }
+                break;
+            case 'published_on':
+                if (filter) {
+                    requestFilters.published_on__gt = FormattedDate.format(
+                        new Date(filter.startDate), 'yyyy-MM-dd',
+                    );
+                    requestFilters.published_on__lt = FormattedDate.format(
+                        new Date(filter.endDate), 'yyyy-MM-dd',
+                    );
+                }
+                break;
+            default:
+                requestFilters[key] = filter;
+                break;
+        }
+    });
+    return requestFilters;
 };

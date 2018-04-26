@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
-import Leads from '../../Leads';
+import { getFiltersForRequest } from '../../../entities/lead';
 import {
     createUrlForArysOfProject,
     commonParamsForGET,
@@ -21,7 +21,7 @@ export default class ArysGetRequest {
     create = ({
         activeProject, activePage, activeSort, filters, MAX_ARYS_PER_REQUEST,
     }) => {
-        const sanitizedFilters = Leads.getFiltersForRequest(filters);
+        const sanitizedFilters = getFiltersForRequest(filters);
         const aryRequestOffset = (activePage - 1) * MAX_ARYS_PER_REQUEST;
         const aryRequestLimit = MAX_ARYS_PER_REQUEST;
 

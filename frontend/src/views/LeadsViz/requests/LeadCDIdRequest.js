@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
-import LeadsViz from '../../LeadsViz';
+import { getFiltersForRequest } from '../../../entities/lead';
 import {
     createParamsForUser,
     createUrlForLeadsOfProject,
@@ -21,7 +21,7 @@ export default class LeadCDIdRequest {
     }
 
     create = ({ activeProject, filters }) => {
-        const sanitizedFilters = LeadsViz.getFiltersForRequest(filters);
+        const sanitizedFilters = getFiltersForRequest(filters);
 
         const urlForProjectLeads = createUrlForLeadsOfProject({
             project: activeProject.id,
