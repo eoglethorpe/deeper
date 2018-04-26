@@ -19,7 +19,13 @@ export default class ConnectorCreateRequest {
             const connector = {
                 id: response.id,
                 versionId: response.versionId,
-                faramValues: { ...response },
+                source: response.source,
+                faramValues: {
+                    title: response.title,
+                    params: response.params,
+                    users: response.users,
+                    projects: response.projects,
+                },
                 faramErrors: {},
                 prisitne: false,
             };

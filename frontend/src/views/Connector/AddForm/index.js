@@ -32,11 +32,6 @@ const propTypes = {
     connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
-const defaultProps = {
-    userGroups: [],
-    onProjectAdded: undefined,
-};
-
 const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
@@ -50,7 +45,6 @@ const mapDispatchToProps = dispatch => ({
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorAddForm extends React.PureComponent {
     static propTypes = propTypes;
-    static defaultProps = defaultProps;
     static keySelector = s => s.key;
     static labelSelector = s => s.title;
 

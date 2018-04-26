@@ -26,8 +26,8 @@ const connectorsSchema = [];
         fields: {
             title: { type: 'string', required: true },
             source: { type: 'string', required: true },
-            projects: { type: 'array', required: true },
-            users: { type: 'array', required: true },
+            projects: { type: 'array' },
+            users: { type: 'array' },
         },
     };
     connectorsSchema.push({ name, schema });
