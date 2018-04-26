@@ -10,10 +10,14 @@ export const setConnectorSourcesAction = ({ connectorSources }) => ({
 
 const setConnectorSources = (state, action) => {
     const { connectorSources } = action;
+    const connectorSourcesObject = {};
+    connectorSources.forEach((c) => {
+        connectorSourcesObject[c.key] = c;
+    });
 
     const settings = {
         connectorSources: {
-            $set: connectorSources,
+            $set: connectorSourcesObject,
         },
     };
     return update(state, settings);

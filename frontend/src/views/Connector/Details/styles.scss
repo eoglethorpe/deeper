@@ -1,0 +1,9 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+.details {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+}
