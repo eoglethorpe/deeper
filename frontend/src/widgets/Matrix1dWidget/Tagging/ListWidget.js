@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
-import { updateAttribute } from './utils';
+// import { updateAttribute } from './utils';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import WidgetError from '../../../components/WidgetError';
 import styles from './styles.scss';
@@ -34,7 +34,7 @@ export default class Matrix1dList extends React.PureComponent {
             attribute,
         } = props;
         this.selectedRows = this.getSelectedRowsTitles(data, attribute);
-        updateAttribute(props);
+        // updateAttribute(props);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -45,10 +45,10 @@ export default class Matrix1dList extends React.PureComponent {
 
         this.selectedRows = this.getSelectedRowsTitles(newData, newAttribute);
 
-        const { attribute: oldAttribute } = this.props;
-        if (oldAttribute !== newAttribute) {
-            updateAttribute(nextProps);
-        }
+        // const { attribute: oldAttribute } = this.props;
+        // if (oldAttribute !== newAttribute) {
+        //     updateAttribute(nextProps);
+        // }
     }
 
     getSelectedRowsTitles = (data, attribute) => {

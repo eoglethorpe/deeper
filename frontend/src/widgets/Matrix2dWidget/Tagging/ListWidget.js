@@ -10,7 +10,7 @@ import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import WidgetError from '../../../components/WidgetError';
 
-import { updateAttribute } from './utils';
+// import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -42,16 +42,16 @@ export default class Matrix2dList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        updateAttribute(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    //     updateAttribute(props);
+    // }
 
-    componentWillReceiveProps(nextProps) {
-        if (this.props.attribute !== nextProps.attribute) {
-            updateAttribute(nextProps);
-        }
-    }
+    // componentWillReceiveProps(nextProps) {
+    //     if (this.props.attribute !== nextProps.attribute) {
+    //         updateAttribute(nextProps);
+    //     }
+    // }
 
     getSelectedSectors = (data, attribute) => {
         const selectedSectors = [];
