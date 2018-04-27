@@ -1155,6 +1155,7 @@ const initialLangState = {
                     connectorSourcesTitle: 1109,
                     connectorPatchSuccess: 1117,
                     connectorSourcesGetFailure: 1110,
+                    connectorUpdateOverriden: 982,
                     userProfileEdit: 900,
                     userEditSuccess: 901,
                     userEditFailure: 902,

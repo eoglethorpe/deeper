@@ -1,13 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
+import { Prompt } from 'react-router-dom';
 
 import {
-    connectorStringsSelector,
     connectorsListSelector,
     connectorIdFromRouteSelector,
     connectorDetailsSelector,
     connectorSourceSelector,
+
+    connectorStringsSelector,
+    commonStringsSelector,
     notificationStringsSelector,
 
     setUserConnectorDetailsAction,
@@ -23,6 +26,7 @@ const propTypes = {
     className: PropTypes.string,
     connectorId: PropTypes.number,
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    commonStrings: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     connectorStrings: PropTypes.func.isRequired,
     setUserConnectorDetails: PropTypes.func.isRequired,
@@ -39,6 +43,7 @@ const mapStateToProps = state => ({
     connectorStrings: connectorStringsSelector(state),
     connectorDetails: connectorDetailsSelector(state),
     connectorSource: connectorSourceSelector(state),
+    commonStrings: commonStringsSelector(state),
     notificationStrings: notificationStringsSelector(state),
     connectorsList: connectorsListSelector(state),
     connectorId: connectorIdFromRouteSelector(state),
@@ -104,6 +109,8 @@ export default class ConnectorDetails extends React.PureComponent {
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
             notificationStrings: this.props.notificationStrings,
+            connectorDetails: this.props.connectorDetails,
+            isBeingCancelled: false,
         });
         this.requestForConnectorDetails = requestForConnectorDetails.create(connectorId);
         this.requestForConnectorDetails.start();
@@ -139,12 +146,17 @@ export default class ConnectorDetails extends React.PureComponent {
 
     render() {
         const { dataLoading } = this.state;
+        const { connectorDetails } = this.props;
 
         const className = this.getClassName();
         const Details = this.renderDetails;
 
         return (
             <div className={className}>
+                <Prompt
+                    when={connectorDetails.pristine}
+                    message={this.props.commonStrings('youHaveUnsavedChanges')}
+                />
                 {
                     dataLoading ? (
                         <LoadingAnimation large />

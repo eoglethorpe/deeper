@@ -15,9 +15,7 @@ export default class ConnectorPatchRequest {
     }
 
     success = (response) => {
-        const {
-            setUserConnectorDetails,
-        } = this.props;
+        const { setUserConnectorDetails } = this.props;
         try {
             schema.validate(response, 'connector');
             const formattedConnector = {

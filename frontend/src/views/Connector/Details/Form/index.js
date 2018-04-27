@@ -15,6 +15,7 @@ import DangerButton from '../../../../vendor/react-store/components/Action/Butto
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
 import ConnectorPatchRequest from '../../requests/ConnectorPatchRequest';
+import ConnectorDetailsGetRequest from '../../requests/ConnectorDetailsGetRequest';
 
 import {
     connectorDetailsSelector,
@@ -137,6 +138,21 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         this.requestForConnectorPatch.start();
     }
 
+    startConnectorDetailsRequest = (connectorId) => {
+        if (this.requestForConnectorDetails) {
+            this.requestForConnectorDetails.stop();
+        }
+        const requestForConnectorDetails = new ConnectorDetailsGetRequest({
+            setState: v => this.setState(v),
+            setUserConnectorDetails: this.props.setUserConnectorDetails,
+            notificationStrings: this.props.notificationStrings,
+            connectorDetails: this.props.connectorDetails,
+            isBeingCancelled: true,
+        });
+        this.requestForConnectorDetails = requestForConnectorDetails.create(connectorId);
+        this.requestForConnectorDetails.start();
+    }
+
     handleFaramChange = (faramValues, faramErrors) => {
         this.props.changeUserConnectorDetails({
             faramValues,
@@ -154,6 +170,10 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     handleValidationSuccess = (connectorDetails) => {
         this.startConnectorPatchRequest(this.props.connectorId, connectorDetails);
+    };
+
+    handleFormCancel = () => {
+        this.startConnectorDetailsRequest(this.props.connectorId);
     };
 
     renderParamInput = (key, data) => {
@@ -215,7 +235,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                     />
                 </FaramGroup>
                 <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleModalClose}>
+                    <DangerButton onClick={this.handleFormCancel}>
                         {connectorStrings('connectorDetailCancelLabel')}
                     </DangerButton>
                     <SuccessButton
