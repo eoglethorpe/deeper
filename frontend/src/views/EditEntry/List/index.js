@@ -93,8 +93,6 @@ export default class List extends React.PureComponent {
                 this.state.activePage,
                 Math.ceil(nextProps.entries.length / ENTRIES_PER_PAGE),
             );
-            console.warn(newActivePage, this.state.activePage, nextProps.entries.length);
-
             this.setState({ activePage: newActivePage });
         }
     }

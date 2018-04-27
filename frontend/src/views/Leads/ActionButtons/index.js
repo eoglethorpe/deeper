@@ -153,17 +153,14 @@ export default class ActionButtons extends React.PureComponent {
                 >
                     <i className={iconNames.edit} />
                 </Link>
-                {
-                    process.env.NODE_ENV === 'development' &&
-                    <Link
-                        className={styles.addAssessmentLink}
-                        tabIndex="-1"
-                        title={leadsStrings('addAssessmentFromLeadButtonTitle')}
-                        to={links.addAssessment}
-                    >
-                        <i className={iconNames.forward} />
-                    </Link>
-                }
+                <Link
+                    className={styles.addAssessmentLink}
+                    tabIndex="-1"
+                    title={leadsStrings('addAssessmentFromLeadButtonTitle')}
+                    to={links.addAssessment}
+                >
+                    <i className={iconNames.forward} />
+                </Link>
                 <Link
                     className={styles.addEntryLink}
                     tabIndex="-1"

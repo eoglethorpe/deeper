@@ -45,7 +45,7 @@ const prepareSettings = (semantics) => {
 const commonLinks = {
     leads: 'l,p',
     entries: 'l,p',
-    arys: 'l,p,d,A',
+    arys: 'l,p,A',
     projects: 'l',
     connectors: 'l',
     countries: 'l',
