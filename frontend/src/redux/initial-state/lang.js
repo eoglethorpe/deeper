@@ -991,7 +991,7 @@ const initialLangState = {
                     additionalDocumentsTitle: 9021,
                     executiveSummaryTitle: 9022,
                     assessmentDatabaseTitle: 9023,
-                    questionareTitle: 9024,
+                    questionnaireTitle: 9024,
                 },
                 assessmentMethodology: {
                     focusesTitle: 9025,

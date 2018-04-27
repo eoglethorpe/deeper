@@ -119,6 +119,7 @@ export default class ScaleMatrixInput extends React.PureComponent {
         const {
             scales,
             scaleValues,
+            value,
         } = this.props;
 
         const {
@@ -130,10 +131,17 @@ export default class ScaleMatrixInput extends React.PureComponent {
         const scaleValue = scaleValues[scale.value];
 
         const title = `${rowTitles[rowKey]}\n\n${columnTitles[columnKey]}`;
-        const style = {
-            backgroundColor: scaleValue.color,
-            color: getColorOnBgColor(scaleValue.color),
-        };
+
+        let style;
+
+        if (scale.id === value) {
+            style = {};
+        } else {
+            style = {
+                backgroundColor: scaleValue.color,
+                color: getColorOnBgColor(scaleValue.color),
+            };
+        }
 
         const className = this.getCellClassName(scale.id);
 
@@ -175,7 +183,7 @@ export default class ScaleMatrixInput extends React.PureComponent {
 
         return (
             <div className={className}>
-                <table>
+                <table className={styles.table}>
                     <tbody>
                         <List
                             data={rows}
