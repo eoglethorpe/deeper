@@ -10,6 +10,7 @@ import { aryTemplateMetadataSelector } from '../../../../redux';
 import Baksa from '../../../../components/Baksa';
 
 import { renderWidget } from '../widgetUtils';
+import Header from '../Header';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -56,30 +57,34 @@ export default class Metadata extends React.PureComponent {
         const { aryTemplateMetadata: metadataGroups } = this.props;
 
         // FIXME: use strings
+        const topHeader = 'Basic Information';
         const bottomHeader = 'Additional Documents';
+
+        const {
+            pending,
+        } = this.props;
 
         return (
             <div className={styles.metadata}>
-                {this.props.pending && <LoadingAnimation large />}
+                {pending && <LoadingAnimation large />}
                 <FaramGroup faramElementName="metadata">
-                    <header className={styles.header}>
-                        <NonFieldErrors
-                            className={styles.nonFieldErrors}
-                            faramElement
+                    <div className={styles.basicInformation}>
+                        <Header
+                            title={topHeader}
+                            className={styles.header}
                         />
-                    </header>
-                    <div className={styles.top}>
-                        {Object.values(metadataGroups).map(this.renderMetadata)}
+                        <div className={styles.content}>
+                            {Object.values(metadataGroups).map(this.renderMetadata)}
+                        </div>
                     </div>
                 </FaramGroup>
                 <FaramGroup faramElementName="additionalDocuments">
-                    <div className={styles.bottom}>
-                        <header className={styles.header}>
-                            <h3 className={styles.heading}>
-                                { bottomHeader }
-                            </h3>
-                        </header>
-                        <div className={styles.documents}>
+                    <div className={styles.additionalDocuments}>
+                        <Header
+                            title={bottomHeader}
+                            className={styles.header}
+                        />
+                        <div className={styles.content}>
                             <Baksa
                                 // FIXME: use strings
                                 label="Executive Summary"

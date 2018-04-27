@@ -9,59 +9,51 @@ $height-bottom: 256px;
     flex-grow: 1;
     background-color: $color-foreground-alt;
 
-    > .header {
-        @include background-color($color-background-header);
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        border-bottom: $width-separator-thin solid $color-separator;
-
-        .non-field-errors {
-            flex-grow: 1;
-        }
-    }
-
-    .top {
-        display: flex;
-        flex-grow: 1;
-
-        .widget-group {
-            @extend %background-alternating-row;
-            flex-grow: 1;
-
-            .heading {
-                padding: $spacing-medium;
-                color: $color-accent;
-            }
-
-            .content {
-                padding: $spacing-medium;
-            }
-        }
-    }
-
-    .bottom {
+    %section-basic {
         display: flex;
         flex-direction: column;
-        flex-shrink: 1;
+
+        >.header {
+            flex-shrink: 0;
+        }
+
+        >.content {
+            display: flex;
+            flex-grow: 1;
+        }
+    }
+
+    .basic-information {
+        @extend %section-basic;
+        flex-grow: 1;
+
+        .content {
+            .widget-group {
+                @extend %background-alternating-row;
+                flex-grow: 1;
+
+                .heading {
+                    padding: $spacing-medium;
+                    color: $color-accent;
+                }
+
+                .content {
+                    padding: $spacing-medium;
+                }
+            }
+        }
+    }
+
+    .additional-documents {
+        @extend %section-basic;
+        flex-shrink: 0;
         height: $height-bottom;
 
         .header {
-            @include background-color($color-background-header);
-            display: flex;
-            align-items: center;
             flex-shrink: 0;
-            justify-content: space-between;
-            border-top: $width-separator-thin solid $color-separator;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-small $spacing-medium;
         }
 
-        .documents {
-            display: flex;
-            flex-grow: 1;
-            padding: 20px;
-
+        .content {
             .baksa {
                 margin-right: 5%;
                 width: 20%;

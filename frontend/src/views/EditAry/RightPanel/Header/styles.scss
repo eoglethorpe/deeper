@@ -1,0 +1,19 @@
+@import '../../../../stylesheets/base';
+
+.header {
+    @include background-color($color-background-header);
+    display: flex;
+    align-items: center;
+    border-bottom: $width-separator-thin solid $color-separator;
+
+    .heading {
+        flex-shrink: 0;
+        padding: 0 $spacing-medium;
+    }
+
+    .non-field-errors {
+        flex-grow: 1;
+        padding: 0 $spacing-medium;
+        text-align: center;
+    }
+}
