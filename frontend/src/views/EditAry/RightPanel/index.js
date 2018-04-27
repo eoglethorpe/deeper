@@ -10,6 +10,9 @@ import {
     leadIdFromRouteSelector,
     aryTemplateMetadataSelector,
     aryTemplateMethodologySelector,
+    assessmentPillarsSelector,
+    assessmentMatrixPillarsSelector,
+    assessmentScoreScalesSelector,
 
     setErrorAryForEditAryAction,
     setAryForEditAryAction,
@@ -27,6 +30,9 @@ import Faram, {
 import Baksa from '../../../components/Baksa';
 import AryPutRequest from '../requests/AryPutRequest';
 
+import { getObjectChildren } from '../../../vendor/react-store/utils/common';
+import { median, sum, bucket } from '../../../vendor/react-store/utils/stats';
+
 import Metadata from './Metadata';
 import Summary from './Summary';
 import Score from './Score';
@@ -34,10 +40,28 @@ import Methodology from './Methodology';
 
 import styles from './styles.scss';
 
+const emptyObject = {};
+
+const FINAL_SCORE_BUCKETS = [
+    [5, 5, 1],
+    [5, 7.5, 2],
+    [7.5, 10, 3],
+    [10, 12.5, 4],
+    [12.5, 15, 5],
+    [15, 17.5, 6],
+    [17.5, 20, 7],
+    [20, 22.5, 8],
+    [22.5, 25, 9],
+    [25, 25, 10],
+];
+
 const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     aryTemplateMethodology: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    scorePillars: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    scoreMatrixPillars: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    scoreScales: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     editAryFaramValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editAryFaramErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editAryHasErrors: PropTypes.bool.isRequired,
@@ -51,6 +75,9 @@ const propTypes = {
 const defaultProps = {
     aryTemplateMetadata: [],
     aryTemplateMethodology: [],
+    scorePillars: [],
+    scoreMatrixPillars: [],
+    scoreScales: [],
     editAryFaramErrors: {},
     editAryFaramValues: {},
 };
@@ -59,6 +86,9 @@ const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
     aryTemplateMethodology: aryTemplateMethodologySelector(state),
+    scorePillars: assessmentPillarsSelector(state),
+    scoreMatrixPillars: assessmentMatrixPillarsSelector(state),
+    scoreScales: assessmentScoreScalesSelector(state),
     aryStrings: aryStringsSelector(state),
 
     editAryFaramValues: editAryFaramValuesSelector(state),
@@ -92,6 +122,54 @@ export default class RightPanel extends React.PureComponent {
             },
         } };
         return schema;
+    }
+
+    static createComputeSchema = (scorePillars, scoreMatrixPillars, scoreScales) => {
+        if (scoreScales.length === 0) {
+            return {};
+        }
+
+        const scoreSchema = {};
+
+        const getScaleVal = v => scoreScales.find(s => String(s.id) === String(v)).value;
+
+        scorePillars.forEach((pillar) => {
+            scoreSchema[`${pillar.id}-score`] = (data, score) => {
+                const pillarObj = getObjectChildren(score, ['pillars', pillar.id], emptyObject);
+                const pillarValues = Object.values(pillarObj).map(v => getScaleVal(v));
+                return sum(pillarValues);
+            };
+        });
+
+        scoreMatrixPillars.forEach((pillar) => {
+            const scales = Object.values(pillar.scales).reduce(
+                (acc, b) => [...acc, ...Object.values(b)],
+                [],
+            );
+            const getMatrixScaleVal = v => scales.find(s => String(s.id) === String(v)).value;
+
+            scoreSchema[`${pillar.id}-matrix-score`] = (data, score) => {
+                const pillarObj = getObjectChildren(score, ['matrixPillars', pillar.id], emptyObject);
+                const pillarValues = Object.values(pillarObj).map(v => getMatrixScaleVal(v));
+                return median(pillarValues) * 5;
+            };
+        });
+
+        scoreSchema.finalScore = (data, score) => {
+            const pillarScores = scorePillars.map(
+                p => getObjectChildren(score, [`${p.id}-score`], 0) * p.weight,
+            );
+            const matrixPillarScores = scoreMatrixPillars.map(
+                p => getObjectChildren(score, [`${p.id}-matrix-score`], 0) * p.weight,
+            );
+
+            const average = sum([...pillarScores, ...matrixPillarScores]);
+            return bucket(average, FINAL_SCORE_BUCKETS);
+        };
+
+        return { fields: {
+            score: { fields: scoreSchema },
+        } };
     }
 
     static createAdditionalDocumentsSchema = () => {
@@ -181,6 +259,11 @@ export default class RightPanel extends React.PureComponent {
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
             ),
+            computeSchema: RightPanel.createComputeSchema(
+                props.scorePillars,
+                props.scoreMatrixPillars,
+                props.scoreScales,
+            ),
         };
 
         this.tabs = {
@@ -237,6 +320,16 @@ export default class RightPanel extends React.PureComponent {
                 ),
             });
         }
+
+        if (this.props.scorePillars !== nextProps.scorePillars) {
+            this.setState({
+                computeSchema: RightPanel.createComputeSchema(
+                    nextProps.scorePillars,
+                    nextProps.scoreMatrixPillars,
+                    nextProps.scoreScales,
+                ),
+            });
+        }
     }
 
     componentWillUnmount() {
@@ -276,6 +369,7 @@ export default class RightPanel extends React.PureComponent {
         return (
             <Faram
                 schema={this.state.schema}
+                computeSchema={this.state.computeSchema}
                 value={this.props.editAryFaramValues}
                 error={this.props.editAryFaramErrors}
                 className={styles.rightPanel}

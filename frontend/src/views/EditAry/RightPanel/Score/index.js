@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import iconNames from '../../../../constants/iconNames';
+import Numeral from '../../../../vendor/react-store/components/View/Numeral';
 import List from '../../../../vendor/react-store/components/View/List';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
@@ -168,6 +169,17 @@ export default class Score extends React.PureComponent {
             key={data.id}
         >
             { data.title }
+            <Numeral faramElementName={`${data.id}-score`} />
+        </div>
+    )
+
+    renderMatrixSummaryItem = (k, data) => (
+        <div
+            className={styles.item}
+            key={data.id}
+        >
+            { data.title }
+            <Numeral faramElementName={`${data.id}-matrix-score`} />
         </div>
     )
 
@@ -205,16 +217,18 @@ export default class Score extends React.PureComponent {
                 key={pillarData.id}
                 className={styles.matrixPillar}
             >
-                <div className={styles.title}>
-                    { pillarData.title }
-                </div>
-                <ListView
-                    className={styles.content}
-                    data={selectedSectors}
-                    modifier={(km, sectorData) => (
-                        this.renderMatrixQuestion(pillarData, sectorData)
-                    )}
-                />
+                <FaramGroup faramElementName={String(pillarData.id)}>
+                    <div className={styles.title}>
+                        { pillarData.title }
+                    </div>
+                    <ListView
+                        className={styles.content}
+                        data={selectedSectors}
+                        modifier={(km, sectorData) => (
+                            this.renderMatrixQuestion(pillarData, sectorData)
+                        )}
+                    />
+                </FaramGroup>
             </div>
         );
     }
@@ -235,6 +249,14 @@ export default class Score extends React.PureComponent {
                             data={assessmentPillars}
                             modifier={this.renderSummaryItem}
                         />
+                        <List
+                            data={assessmentMatrixPillars}
+                            modifier={this.renderMatrixSummaryItem}
+                        />
+                        <div className={styles.item}>
+                            Final Score
+                            <Numeral faramElementName="finalScore" />
+                        </div>
                     </div>
                     <div className={styles.content}>
                         <div className={styles.left}>
