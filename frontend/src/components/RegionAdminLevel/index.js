@@ -102,7 +102,7 @@ export default class RegionAdminLevel extends React.PureComponent {
             },
             {
                 key: 'parentNameProp',
-                label: countriesStrings('parentNamePropPlaceholder'),
+                label: countriesStrings('parentNamePropLabel'),
                 order: 5,
             },
             {
