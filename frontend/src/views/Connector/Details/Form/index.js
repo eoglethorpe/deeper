@@ -235,7 +235,10 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                     />
                 </FaramGroup>
                 <div className={styles.actionButtons}>
-                    <DangerButton onClick={this.handleFormCancel}>
+                    <DangerButton
+                        onClick={this.handleFormCancel}
+                        disabled={loading || !pristine}
+                    >
                         {connectorStrings('connectorDetailCancelLabel')}
                     </DangerButton>
                     <SuccessButton

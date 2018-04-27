@@ -20,12 +20,20 @@ export default class ConnectorDetailsGetRequest {
             notificationStrings,
             isBeingCancelled,
         } = this.props;
+
         try {
             schema.validate(response, 'connector');
-            const isVersionSame = checkVersion(response.versionId, connectorDetails.versionId);
-            if (isVersionSame && !isBeingCancelled) {
+            this.props.setState({ requestFailure: false });
+
+            const {
+                shouldSetValue,
+                isValueOverriden,
+            } = checkVersion(connectorDetails.versionId, response.versionId);
+
+            if (!shouldSetValue && !isBeingCancelled) {
                 return;
             }
+
             const formattedConnector = {
                 id: response.id,
                 versionId: response.versionId,
@@ -43,7 +51,9 @@ export default class ConnectorDetailsGetRequest {
                 connectorDetails: formattedConnector,
                 connectorId: formattedConnector.id,
             });
-            if (connectorDetails.pristine && !isBeingCancelled) {
+
+
+            if (isValueOverriden && !isBeingCancelled) {
                 notify.send({
                     type: notify.type.WARNING,
                     title: notificationStrings('connectorTitle'),
@@ -51,9 +61,6 @@ export default class ConnectorDetailsGetRequest {
                     duration: notify.duration.SLOW,
                 });
             }
-            this.props.setState({
-                requestFailure: false,
-            });
         } catch (er) {
             console.error(er);
         }
@@ -67,9 +74,7 @@ export default class ConnectorDetailsGetRequest {
             message: this.props.notificationStrings('connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
-        this.props.setState({
-            requestFailure: true,
-        });
+        this.props.setState({ requestFailure: true });
     }
 
     fatal = (response) => {

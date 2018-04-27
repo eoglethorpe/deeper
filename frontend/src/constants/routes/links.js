@@ -47,7 +47,7 @@ const commonLinks = {
     entries: 'l,p',
     arys: 'l,p,A',
     projects: 'l',
-    connectors: 'l',
+    connectors: 'l,d',
     countries: 'l',
     export: 'l,p',
 

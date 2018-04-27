@@ -42,7 +42,9 @@ export const addUserConnectorAction = ({ connector }) => ({
 export const setUserConnectors = (state, action) => {
     const { connectors } = action;
     const settings = {
-        connectors: { $set: connectors },
+        connectorsView: { $auto: {
+            list: { $set: connectors },
+        } },
     };
     return update(state, settings);
 };
@@ -54,8 +56,16 @@ export const setUserConnectorDetails = (state, action) => {
     } = action;
 
     const settings = {
-        connectors: { $auto: {
-            [connectorId]: { $merge: connectorDetails },
+        connectorsView: { $auto: {
+            list: { $auto: {
+                [connectorId]: {
+                    versionId: { $set: connectorDetails.versionId },
+                    title: { $set: connectorDetails.faramValues.title },
+                },
+            } },
+            details: { $auto: {
+                [connectorId]: { $set: connectorDetails },
+            } },
         } },
     };
     return update(state, settings);
@@ -71,13 +81,15 @@ export const changeUserConnectorDetails = (state, action) => {
     const hasErrors = analyzeErrors(faramErrors);
 
     const settings = {
-        connectors: { $auto: {
-            [connectorId]: {
-                faramValues: { $set: faramValues },
-                faramErrors: { $set: faramErrors },
-                hasErrors: { $set: hasErrors },
-                pristine: { $set: true },
-            },
+        connectorsView: { $auto: {
+            details: { $auto: {
+                [connectorId]: {
+                    faramValues: { $set: faramValues },
+                    faramErrors: { $set: faramErrors },
+                    hasErrors: { $set: hasErrors },
+                    pristine: { $set: true },
+                },
+            } },
         } },
     };
     return update(state, settings);
@@ -92,11 +104,13 @@ export const setErrorUserConnectorDetails = (state, action) => {
     const hasErrors = analyzeErrors(faramErrors);
 
     const settings = {
-        connectors: { $auto: {
-            [connectorId]: {
-                faramErrors: { $set: faramErrors },
-                hasErrors: { $set: hasErrors },
-            },
+        connectorsView: { $auto: {
+            details: { $auto: {
+                [connectorId]: {
+                    faramErrors: { $set: faramErrors },
+                    hasErrors: { $set: hasErrors },
+                },
+            } },
         } },
     };
     return update(state, settings);
@@ -105,9 +119,19 @@ export const setErrorUserConnectorDetails = (state, action) => {
 export const addUserConnector = (state, action) => {
     const { connector } = action;
     const settings = {
-        connectors: {
-            [connector.id]: { $set: connector },
-        },
+        connectorsView: { $auto: {
+            list: { $auto: {
+                [connector.id]: { $auto: {
+                    id: { $set: connector.id },
+                    source: { $set: connector.source },
+                    versionId: { $set: connector.versionId },
+                    title: { $set: connector.faramValues.title },
+                } },
+            } },
+            details: { $auto: {
+                [connector.id]: { $set: connector },
+            } },
+        } },
     };
     return update(state, settings);
 };

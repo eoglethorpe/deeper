@@ -27,14 +27,7 @@ export default class ConnectorsGetRequest {
                     id: c.id,
                     versionId: c.versionId,
                     source: c.source,
-                    faramValues: {
-                        title: c.title,
-                        params: c.params,
-                        users: c.users,
-                        projects: c.projects,
-                    },
-                    faramErrors: {},
-                    pristine: false,
+                    title: c.title,
                 };
             });
             setUserConnectors({ connectors: formattedConnectors });

@@ -4,21 +4,21 @@ import { compareString } from '../../../vendor/react-store/utils/common';
 
 const emptyObject = {};
 
-export const connectorsSelector = ({ siloDomainData }) => (
-    siloDomainData.connectors || emptyObject
+export const connectorsViewSelector = ({ siloDomainData }) => (
+    siloDomainData.connectorsView || emptyObject
 );
 
-export const connectorsListSelector = createSelector(
-    connectorsSelector,
-    c => Object.values(c).sort(
-        ({ aFaramValues = {} }, { bFaramValues = {} }) => compareString(
-            aFaramValues.title,
-            bFaramValues.title,
-        ),
-    ),
+const connectorsSelector = createSelector(
+    connectorsViewSelector,
+    c => c.list || emptyObject,
 );
 
-export const connectorDetailsSelector = createSelector(
+const connectorsDetailsSelector = createSelector(
+    connectorsViewSelector,
+    c => c.details || emptyObject,
+);
+
+const connectorDetailsFromListSelector = createSelector(
     connectorIdFromRoute,
     connectorsSelector,
     (id, connectors) => (
@@ -26,8 +26,21 @@ export const connectorDetailsSelector = createSelector(
     ),
 );
 
+export const connectorsListSelector = createSelector(
+    connectorsSelector,
+    c => Object.values(c).sort((a, b) => compareString(a.title, b.title)),
+);
+
+export const connectorDetailsSelector = createSelector(
+    connectorIdFromRoute,
+    connectorsDetailsSelector,
+    (id, connectors) => (
+        connectors[id] || emptyObject
+    ),
+);
+
 export const connectorSourceSelector = createSelector(
     connectorSourcesSelector,
-    connectorDetailsSelector,
+    connectorDetailsFromListSelector,
     (sources, connector) => sources[connector.source],
 );

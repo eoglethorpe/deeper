@@ -71,19 +71,28 @@ export default class ConnectorDetails extends React.PureComponent {
 
     componentDidMount() {
         if (this.props.connectorId) {
-            this.startConnectorDetailsRequest(this.props.connectorId);
+            this.startConnectorDetailsRequest(
+                this.props.connectorId,
+                this.props.connectorDetails,
+            );
         }
     }
 
     componentWillReceiveProps(nextProps) {
         const {
             connectorId: nextConnectorId,
+            connectorDetails: nextConnectorDetails,
         } = nextProps;
+
         const {
             connectorId: prevConnectorId,
         } = this.props;
+
         if (nextConnectorId && nextConnectorId !== prevConnectorId) {
-            this.startConnectorDetailsRequest(nextConnectorId);
+            this.startConnectorDetailsRequest(
+                nextConnectorId,
+                nextConnectorDetails,
+            );
         }
     }
 
@@ -101,7 +110,7 @@ export default class ConnectorDetails extends React.PureComponent {
         `;
     }
 
-    startConnectorDetailsRequest = (connectorId) => {
+    startConnectorDetailsRequest = (connectorId, connectorDetails) => {
         if (this.requestForConnectorDetails) {
             this.requestForConnectorDetails.stop();
         }
@@ -109,7 +118,7 @@ export default class ConnectorDetails extends React.PureComponent {
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
             notificationStrings: this.props.notificationStrings,
-            connectorDetails: this.props.connectorDetails,
+            connectorDetails,
             isBeingCancelled: false,
         });
         this.requestForConnectorDetails = requestForConnectorDetails.create(connectorId);
@@ -154,7 +163,7 @@ export default class ConnectorDetails extends React.PureComponent {
         return (
             <div className={className}>
                 <Prompt
-                    when={connectorDetails.pristine}
+                    when={connectorDetails.pristine === true}
                     message={this.props.commonStrings('youHaveUnsavedChanges')}
                 />
                 {

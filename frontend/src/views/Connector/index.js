@@ -167,22 +167,19 @@ export default class Connector extends React.PureComponent {
         this.setState({ showAddConnectorModal: false });
     }
 
-    renderConnectorListItem = (key, data = {}) => {
-        const { faramValues = {} } = data;
-        return (
-            <div
-                key={key}
-                className={this.getStyleName(data.id)}
+    renderConnectorListItem = (key, data = {}) => (
+        <div
+            key={key}
+            className={this.getStyleName(data.id)}
+        >
+            <Link
+                to={reverseRoute(pathNames.connectors, { connectorId: data.id })}
+                className={styles.link}
             >
-                <Link
-                    to={reverseRoute(pathNames.connectors, { connectorId: data.id })}
-                    className={styles.link}
-                >
-                    {faramValues.title}
-                </Link>
-            </div>
-        );
-    }
+                {data.title}
+            </Link>
+        </div>
+    )
 
     renderHeader = () => {
         const { connectorStrings } = this.props;
