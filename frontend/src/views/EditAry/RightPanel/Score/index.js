@@ -168,8 +168,13 @@ export default class Score extends React.PureComponent {
             className={styles.item}
             key={data.id}
         >
-            { data.title }
-            <Numeral faramElementName={`${data.id}-score`} />
+            <Numeral
+                className={styles.number}
+                faramElementName={`${data.id}-score`}
+            />
+            <div className={styles.title}>
+                { data.title }
+            </div>
         </div>
     )
 
@@ -178,8 +183,13 @@ export default class Score extends React.PureComponent {
             className={styles.item}
             key={data.id}
         >
-            { data.title }
-            <Numeral faramElementName={`${data.id}-matrix-score`} />
+            <Numeral
+                className={styles.number}
+                faramElementName={`${data.id}-matrix-score`}
+            />
+            <div className={styles.title}>
+                { data.title }
+            </div>
         </div>
     )
 
@@ -245,18 +255,27 @@ export default class Score extends React.PureComponent {
             <div className={className}>
                 <FaramGroup faramElementName="score">
                     <div className={styles.summary}>
-                        <List
-                            data={assessmentPillars}
-                            modifier={this.renderSummaryItem}
-                        />
-                        <List
-                            data={assessmentMatrixPillars}
-                            modifier={this.renderMatrixSummaryItem}
-                        />
-                        <div className={styles.item}>
-                            {/* FIXME: use strings */}
-                            Final Score
-                            <Numeral faramElementName="finalScore" />
+                        <div className={styles.left}>
+                            <List
+                                data={assessmentPillars}
+                                modifier={this.renderSummaryItem}
+                            />
+                            <List
+                                data={assessmentMatrixPillars}
+                                modifier={this.renderMatrixSummaryItem}
+                            />
+                        </div>
+                        <div className={styles.right}>
+                            <div className={styles.item}>
+                                <Numeral
+                                    className={styles.number}
+                                    faramElementName="finalScore"
+                                />
+                                {/* FIXME: use strings */}
+                                <div className={styles.title}>
+                                    Final Score
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className={styles.content}>

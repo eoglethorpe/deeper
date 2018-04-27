@@ -23,7 +23,9 @@
             .row {
                 .section-title {
                     @extend %cell;
+                    text-transform: uppercase;
                     color: $color-accent;
+                    font-weight: $font-weight-bold;
                 }
 
                 .cell {

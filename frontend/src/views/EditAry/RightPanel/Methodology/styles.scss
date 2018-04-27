@@ -1,8 +1,8 @@
 @import '../../../../stylesheets/base';
 
 $width-action-buttons: 48px;
-$height-center: 240px;
-$height-bottom: 180px;
+$height-center: 196px;
+$height-bottom: 144px;
 
 .methodology {
     display: flex;
@@ -11,22 +11,81 @@ $height-bottom: 180px;
     flex-grow: 1;
     background-color: $color-foreground-alt;
 
-    >.header {
+    .attributes-section {
         display: flex;
-        flex-shrink: 0;
-        padding: $spacing-small;
+        flex-direction: column;
+        flex-grow: 1;
 
-        .non-field-errors {
-            flex-grow: 1;
-            padding: 0;
+        .header {
+            flex-shrink: 0;
         }
 
-        .action-buttons {
-            flex-shrink: 0;
+        .scroll-wrap {
+            flex-grow: 1;
+            overflow-x: auto;
+            overflow-y: scroll;
+
+            .attributes {
+                display: table;
+                padding: 0;
+                width: 100%;
+
+                %cell {
+                    display: table-cell;
+                    padding: $spacing-small $spacing-medium;
+
+                    &:not(:last-child) {
+                        border-right: $width-separator-thin solid $color-separator;
+                    }
+                }
+
+                %action-buttons {
+                    @extend %cell;
+                    width: $width-action-buttons;
+                }
+
+                >.header {
+                    display: table-row;
+
+                    %heading {
+                        position: sticky;
+                        top: 0;
+                        z-index: 1;
+                        border-bottom: $width-separator-thin solid $color-separator-alt;
+                        background-color: $color-foreground-alt;
+                    }
+
+                    .title {
+                        @extend %cell;
+                        @extend %heading;
+                        text-transform: uppercase;
+                        color: $color-accent;
+                        font-weight: $font-weight-bold;
+                    }
+
+                    .action-buttons {
+                        @extend %action-buttons;
+                        @extend %heading;
+                    }
+                }
+
+                .row {
+                    @extend %background-alternating-row;
+                    display: table-row;
+
+                    .cell {
+                        @extend %cell;
+                    }
+
+                    .action-buttons {
+                        @extend %action-buttons;
+                    }
+                }
+            }
         }
     }
 
-    .center {
+    .middle-section {
         display: flex;
         flex-shrink: 0;
         border-top: $width-separator-thin solid $color-separator;
@@ -38,116 +97,89 @@ $height-bottom: 180px;
             &:not(:last-child) {
                 border-right: $width-separator-thin solid $color-separator;
             }
+
+            :global {
+                .empty {
+                    display: block;
+                    padding: $spacing-small $spacing-medium;
+                }
+            }
         }
 
-        .focuses {
-            @extend %content;
+        %header {
+            font-size: $font-size-large;
+            font-weight: $font-weight-light;
         }
 
+        .focuses,
         .sectors {
             @extend %content;
+
+            :global {
+                .title {
+                    @extend %header;
+                    padding: $spacing-extra-small $spacing-medium;
+                }
+            }
         }
 
-        .affected-groups {
-            @extend %content;
-        }
-
+        .affected-groups,
         .location-selection {
             @extend %content;
+
+            :global {
+                .header {
+                    @extend %header;
+                    padding: 0;
+
+                    .title {
+                        padding: $spacing-extra-small $spacing-medium;
+                        font-weight: $font-weight-light;
+                    }
+
+                    .button {
+                        padding: $spacing-extra-small $spacing-small;
+                    }
+                }
+            }
         }
     }
 
-    .bottom {
+    .methodology-content {
         display: flex;
         flex-direction: column;
         flex-shrink: 0;
         border-top: $width-separator-thin solid $color-separator;
         height: $height-bottom;
 
-        .title {
+        .header {
             flex-shrink: 0;
-            padding: $spacing-small $spacing-medium;
-            text-transform: uppercase;
         }
 
-        .body {
+        .content {
             display: flex;
             flex-grow: 1;
 
-            .methodology-content {
-                flex-basis: calc(100% / 4 - #{$spacing-medium});
-                padding: 0 $spacing-medium;
-
-                :global .input {
-                    height: 100%;
-                }
-            }
-        }
-    }
-
-    .scroll-wrap {
-        flex-grow: 1;
-        overflow-x: auto;
-        overflow-y: scroll;
-
-        .attributes {
-            display: table;
-            padding: 0;
-            width: 100%;
-
-            %cell {
-                display: table-cell;
+            .input {
+                display: flex;
+                flex-basis: calc(100% / 4);
+                flex-direction: column;
                 padding: $spacing-small $spacing-medium;
+                height: auto;
 
-                &:not(:last-child) {
-                    border-right: $width-separator-thin solid $color-separator;
-                }
-            }
+                :global {
+                    .label {
+                        flex-shrink: 0;
+                    }
 
-            %action-buttons {
-                @extend %cell;
-                width: $width-action-buttons;
-            }
-
-            >.header {
-                @include background-color($color-background-header);
-                display: table-row;
-
-                .title {
-                    @extend %cell;
-                    @include background-color($color-background-header);
-                    position: sticky;
-                    top: 0;
-                    z-index: 1;
-                    border-top: $width-separator-thin solid $color-separator-alt;
-                    border-bottom: $width-separator-thin solid $color-separator-alt;
-                    text-transform: uppercase;
-                }
-
-                .action-buttons {
-                    @extend %action-buttons;
-                    @include background-color($color-background-header);
-                    position: sticky;
-                    top: 0;
-                    z-index: 1;
-                    border-top: $width-separator-thin solid $color-separator-alt;
-                    border-bottom: $width-separator-thin solid $color-separator-alt;
-                }
-            }
-
-            .row {
-                @extend %background-alternating-row;
-                display: table-row;
-
-                .cell {
-                    @extend %cell;
-                }
-
-                .action-buttons {
-                    @extend %action-buttons;
+                    .input {
+                        flex-grow: 1;
+                        resize: none;
+                    }
                 }
             }
         }
     }
+
 }
 

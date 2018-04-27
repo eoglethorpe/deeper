@@ -17,9 +17,25 @@ $width-table: 320px;
         justify-content: space-around;
         padding: $spacing-medium;
 
+        .left {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .right {
+            flex-shrink: 0;
+        }
+
         .item {
-            border: $width-separator-thin solid $color-accent;
             padding: $spacing-small $spacing-medium;
+
+            .title {
+                color: $color-text-label;
+            }
+
+            .number {
+                font-size: $font-size-large;
+            }
         }
     }
 
@@ -35,6 +51,7 @@ $width-table: 320px;
 
                 >.title {
                     padding: $spacing-small;
+                    text-transform: uppercase;
                     color: $color-accent;
                     font-weight: $font-weight-bold;
                 }
@@ -66,11 +83,12 @@ $width-table: 320px;
                 .body {
                     .header-row {
                         &:not(:first-child) {
-                            border-top: $width-separator-thin solid $color-separator-alt;
+                            border-top: $width-separator-thin solid $color-separator;
                         }
 
                         .pillar-title {
                             @extend %cell;
+                            text-transform: uppercase;
                             color: $color-accent;
                             font-weight: $font-weight-bold;
                         }

@@ -1,6 +1,6 @@
 @import '../../../../stylesheets/base';
 
-$height-bottom: 256px;
+$height-additional-documents: 256px;
 
 .metadata {
     display: flex;
@@ -9,62 +9,69 @@ $height-bottom: 256px;
     flex-grow: 1;
     background-color: $color-foreground-alt;
 
-    > .header {
-        @include background-color($color-background-header);
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        border-bottom: $width-separator-thin solid $color-separator;
-
-        .non-field-errors {
-            flex-grow: 1;
-        }
-    }
-
-    .top {
-        display: flex;
-        flex-grow: 1;
-
-        .widget-group {
-            @extend %background-alternating-row;
-            flex-grow: 1;
-
-            .heading {
-                padding: $spacing-medium;
-                color: $color-accent;
-            }
-
-            .content {
-                padding: $spacing-medium;
-            }
-        }
-    }
-
-    .bottom {
+    %section-basic {
         display: flex;
         flex-direction: column;
-        flex-shrink: 1;
-        height: $height-bottom;
 
-        .header {
-            @include background-color($color-background-header);
-            display: flex;
-            align-items: center;
+        >.header {
             flex-shrink: 0;
-            justify-content: space-between;
-            border-top: $width-separator-thin solid $color-separator;
-            border-bottom: $width-separator-thin solid $color-separator;
-            padding: $spacing-small $spacing-medium;
         }
 
-        .documents {
+        >.content {
             display: flex;
             flex-grow: 1;
-            padding: 20px;
+        }
+    }
+
+    .additional-documents {
+        @extend %section-basic;
+        flex-shrink: 0;
+        height: $height-additional-documents;
+
+        .header {
+            flex-shrink: 0;
+        }
+
+        .content {
+            padding: 0 $spacing-medium;
 
             .baksa {
-                margin-right: 5%;
-                width: 20%;
+                flex-basis: calc(100% / 3);
+                padding: $spacing-medium;
+            }
+        }
+    }
+
+    .basic-information {
+        @extend %section-basic;
+        flex-grow: 1;
+        border-bottom: $width-separator-thin solid $color-separator;
+
+        .content {
+            overflow-x: auto;
+
+            .widget-group {
+                display: flex;
+                flex-direction: column;
+                flex-shrink: 0;
+
+                &:not(:last-child) {
+                    border-right: $width-separator-thin solid $color-separator;
+                }
+
+                .heading {
+                    flex-shrink: 0;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-medium;
+                    color: $color-accent;
+                    font-weight: $font-weight-bold;
+                }
+
+                .content {
+                    flex-grow: 1;
+                    padding: $spacing-medium;
+                    overflow-y: auto;
+                }
             }
         }
     }

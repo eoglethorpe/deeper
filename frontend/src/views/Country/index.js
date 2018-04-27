@@ -6,7 +6,6 @@ import { caseInsensitiveSubmatch, compareString } from '../../vendor/react-store
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
-import ListItem from '../../vendor/react-store/components/View/List/ListItem';
 import Modal from '../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
@@ -153,9 +152,8 @@ export default class CountryPanel extends React.PureComponent {
         const activeCountryId = countryId;
         const isActive = country.id === activeCountryId;
         return (
-            <ListItem
+            <div
                 key={key}
-                scrollIntoView={isActive}
                 className={styles.countryListItem}
             >
                 <CountryListItem
@@ -164,7 +162,7 @@ export default class CountryPanel extends React.PureComponent {
                     title={country.title}
                     isActive={isActive}
                 />
-            </ListItem>
+            </div>
         );
     }
 
