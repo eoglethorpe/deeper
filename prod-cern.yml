@@ -6,7 +6,8 @@ services:
         env_file:
             - .env-cern
         environment:
-          - WORKER_TYPE=channel
+          - EBS_ENV_TYPE=web
+          - NO_DJANGO_MIGRATION=True
         command: ['/code/deploy/scripts/eb_exec.sh']
         ports:
             - '8000:80'

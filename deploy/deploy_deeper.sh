@@ -59,6 +59,7 @@ printf "\n\n::::: DOCKER TASK :::::\n"
     SAMPLE_DIR=$ROOT_DIR/deploy/eb-sample
 
     for TYPE in ${ENV_TYPE[@]}; do
+        export TYPE
         if [ "${DJANGO_ONLY_DEPLOY}" == "" ] || [ "${DJANGO_ONLY_DEPLOY}" == "${TYPE}" ] ; then
             printf "\n\n::::::::::::::::::::: Config for EB [$TYPE] :::::::::::::::::::::\n"
             TYPE_DIR=$ROOT_DIR/deploy/eb/$TYPE
@@ -69,10 +70,10 @@ printf "\n\n::::: DOCKER TASK :::::\n"
             echo "  >> Creating .elasticbeanstalk/config.yml file :::::"
             if [ ${TYPE} == 'web' ]; then
                 echo "1" | eb init $DEPLOYMENT_APP_NAME --region $DEPLOYMENT_REGION && eb use $DEPLOYMENT_ENV_NAME_WEB
-                DEPLOYMENT_ENV_NAME=$DEPLOYMENT_ENV_NAME_WEB
+                export DEPLOYMENT_ENV_NAME=$DEPLOYMENT_ENV_NAME_WEB
             else
                 echo "1" | eb init $DEPLOYMENT_APP_NAME --region $DEPLOYMENT_REGION && eb use $DEPLOYMENT_ENV_NAME_WORKER
-                DEPLOYMENT_ENV_NAME=$DEPLOYMENT_ENV_NAME_WORKER
+                export DEPLOYMENT_ENV_NAME=$DEPLOYMENT_ENV_NAME_WORKER
             fi
 
             echo "::::::: Creating additional configs :::::"
