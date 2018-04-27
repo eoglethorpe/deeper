@@ -13,6 +13,7 @@ import {
     assessmentPillarsSelector,
     assessmentMatrixPillarsSelector,
     assessmentScoreScalesSelector,
+    assessmentScoreBucketsSelector,
 
     setErrorAryForEditAryAction,
     setAryForEditAryAction,
@@ -42,19 +43,6 @@ import styles from './styles.scss';
 
 const emptyObject = {};
 
-const FINAL_SCORE_BUCKETS = [
-    [5, 5, 1],
-    [5, 7.5, 2],
-    [7.5, 10, 3],
-    [10, 12.5, 4],
-    [12.5, 15, 5],
-    [15, 17.5, 6],
-    [17.5, 20, 7],
-    [20, 22.5, 8],
-    [22.5, 25, 9],
-    [25, 25, 10],
-];
-
 const propTypes = {
     activeLeadId: PropTypes.number.isRequired,
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
@@ -62,6 +50,7 @@ const propTypes = {
     scorePillars: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     scoreMatrixPillars: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     scoreScales: PropTypes.array, // eslint-disable-line react/forbid-prop-types
+    scoreBuckets: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     editAryFaramValues: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editAryFaramErrors: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     editAryHasErrors: PropTypes.bool.isRequired,
@@ -78,6 +67,7 @@ const defaultProps = {
     scorePillars: [],
     scoreMatrixPillars: [],
     scoreScales: [],
+    scoreBuckets: [],
     editAryFaramErrors: {},
     editAryFaramValues: {},
 };
@@ -89,6 +79,7 @@ const mapStateToProps = state => ({
     scorePillars: assessmentPillarsSelector(state),
     scoreMatrixPillars: assessmentMatrixPillarsSelector(state),
     scoreScales: assessmentScoreScalesSelector(state),
+    scoreBuckets: assessmentScoreBucketsSelector(state),
     aryStrings: aryStringsSelector(state),
 
     editAryFaramValues: editAryFaramValuesSelector(state),
@@ -124,7 +115,7 @@ export default class RightPanel extends React.PureComponent {
         return schema;
     }
 
-    static createComputeSchema = (scorePillars, scoreMatrixPillars, scoreScales) => {
+    static createComputeSchema = (scorePillars, scoreMatrixPillars, scoreScales, scoreBuckets) => {
         if (scoreScales.length === 0) {
             return {};
         }
@@ -164,7 +155,7 @@ export default class RightPanel extends React.PureComponent {
             );
 
             const average = sum([...pillarScores, ...matrixPillarScores]);
-            return bucket(average, FINAL_SCORE_BUCKETS);
+            return bucket(average, scoreBuckets);
         };
 
         return { fields: {
@@ -263,6 +254,7 @@ export default class RightPanel extends React.PureComponent {
                 props.scorePillars,
                 props.scoreMatrixPillars,
                 props.scoreScales,
+                props.scoreBuckets,
             ),
         };
 
@@ -327,6 +319,7 @@ export default class RightPanel extends React.PureComponent {
                     nextProps.scorePillars,
                     nextProps.scoreMatrixPillars,
                     nextProps.scoreScales,
+                    nextProps.scoreBuckets,
                 ),
             });
         }
