@@ -62,6 +62,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const emptyObject = {};
+const emptyList = [];
 
 @BoundError(AppError)
 @connect(mapStateToProps, mapDispatchToProps)
@@ -74,7 +75,7 @@ export default class Connector extends React.PureComponent {
         super(props);
         this.state = {
             searchInputValue: '',
-            displayConnectorsList: props.connectorsList,
+            displayConnectorsList: props.connectorsList || emptyList,
             showAddConnectorModal: false,
         };
     }
@@ -248,6 +249,16 @@ export default class Connector extends React.PureComponent {
             connectorId,
             connectorStrings,
         } = this.props;
+
+        const { displayConnectorsList } = this.state;
+
+        if (displayConnectorsList.length === 0) {
+            return (
+                <p className={styles.noConnector}>
+                    {connectorStrings('noConnectorsLabel')}
+                </p>
+            );
+        }
 
         if (!connectorId) {
             return (

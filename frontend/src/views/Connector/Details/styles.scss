@@ -11,4 +11,14 @@
         padding: $spacing-large;
         padding-bottom: 0;
     }
+
+    .no-connector-found {
+        @include background-color-with-disabled-text($color-foreground-alt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        height: 100%;
+        font-size: $font-size-extra-large;
+    }
 }

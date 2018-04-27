@@ -45,9 +45,9 @@ export default class ConnectorsGetRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: this.props.notificationStrings('connectorTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorSourcesGetFailure'),
+            message: this.props.notificationStrings('connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }

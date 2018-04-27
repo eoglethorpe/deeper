@@ -35,6 +35,9 @@ export default class ConnectorDetailsGetRequest {
                 connectorDetails: formattedConnector,
                 connectorId: formattedConnector.id,
             });
+            this.props.setState({
+                requestFailure: false,
+            });
         } catch (er) {
             console.error(er);
         }
@@ -42,10 +45,13 @@ export default class ConnectorDetailsGetRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: this.props.notificationStrings('connectorTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorSourcesGetFailure'),
+            message: this.props.notificationStrings('connectorGetFailure'),
             duration: notify.duration.MEDIUM,
+        });
+        this.props.setState({
+            requestFailure: true,
         });
     }
 

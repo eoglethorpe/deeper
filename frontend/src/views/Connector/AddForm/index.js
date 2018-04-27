@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Faram, {
     requiredCondition,
@@ -55,6 +56,7 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors: {},
             faramValues: {},
             pending: false,
+            success: false,
             dataLoading: false,
             pristine: false,
         };
@@ -114,6 +116,7 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors,
             pending,
             pristine,
+            redirectTo,
             dataLoading,
         } = this.state;
 
@@ -123,6 +126,15 @@ export default class ConnectorAddForm extends React.PureComponent {
         } = this.props;
 
         const loading = pending || dataLoading;
+
+        if (redirectTo) {
+            return (
+                <Redirect
+                    to={redirectTo}
+                    push
+                />
+            );
+        }
 
         return (
             <Faram

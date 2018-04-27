@@ -23,6 +23,8 @@ const propTypes = {
     className: PropTypes.string,
     connectorId: PropTypes.number,
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    notificationStrings: PropTypes.func.isRequired,
+    connectorStrings: PropTypes.func.isRequired,
     setUserConnectorDetails: PropTypes.func.isRequired,
 };
 
@@ -56,7 +58,10 @@ export default class ConnectorDetails extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        this.state = { dataLoading: false };
+        this.state = {
+            dataLoading: false,
+            requestFailure: false,
+        };
     }
 
     componentDidMount() {
@@ -98,18 +103,45 @@ export default class ConnectorDetails extends React.PureComponent {
         const requestForConnectorDetails = new ConnectorDetailsGetRequest({
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
+            notificationStrings: this.props.notificationStrings,
         });
         this.requestForConnectorDetails = requestForConnectorDetails.create(connectorId);
         this.requestForConnectorDetails.start();
     }
 
+    renderDetails = () => {
+        const {
+            requestFailure,
+        } = this.state;
+
+        const { faramValues: connectorDetails = {} } = this.props.connectorDetails;
+        const {
+            connectorId,
+            connectorStrings,
+        } = this.props;
+
+        if (requestFailure) {
+            return (
+                <div className={styles.noConnectorFound} >
+                    {connectorStrings('noConnectorFoundLabel')}
+                </div>
+            );
+        }
+
+        return (
+            <Fragment>
+                <h3>{connectorDetails.title}</h3>
+                <DetailsForm connectorId={connectorId} />
+            </Fragment>
+        );
+    }
+
 
     render() {
         const { dataLoading } = this.state;
-        const { faramValues: connectorDetails = {} } = this.props.connectorDetails;
-        const { connectorId } = this.props;
 
         const className = this.getClassName();
+        const Details = this.renderDetails;
 
         return (
             <div className={className}>
@@ -117,10 +149,7 @@ export default class ConnectorDetails extends React.PureComponent {
                     dataLoading ? (
                         <LoadingAnimation large />
                     ) : (
-                        <Fragment>
-                            <h3>{connectorDetails.title}</h3>
-                            <DetailsForm connectorId={connectorId} />
-                        </Fragment>
+                        <Details />
                     )
                 }
             </div>
