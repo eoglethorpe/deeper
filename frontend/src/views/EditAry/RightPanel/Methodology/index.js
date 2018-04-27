@@ -141,11 +141,17 @@ export default class Methodology extends React.PureComponent {
         const affectedGroupsTitle = assessmentMethodologyStrings('affectedGroupsTitle');
         const locationsTitle = assessmentMethodologyStrings('locationsTitle');
         const methodologyContentTitle = assessmentMethodologyStrings('methodologyContentTitle');
+        const attributesTitle = assessmentMethodologyStrings('attributesTitle');
+
         const objectivesTitle = assessmentMethodologyStrings('objectivesTitle');
         const dataCollectionTechniquesTitle = assessmentMethodologyStrings('dataCollectionTechniquesTitle');
         const samplingTitle = assessmentMethodologyStrings('samplingTitle');
         const limitationsTitle = assessmentMethodologyStrings('limitationsTitle');
-        const attributesTitle = assessmentMethodologyStrings('attributesTitle');
+
+        const objectivesPlaceholder = assessmentMethodologyStrings('objectivesPlaceholder');
+        const dataCollectionTechniquesPlaceholder = assessmentMethodologyStrings('dataCollectionTechniquesPlaceholder');
+        const samplingPlaceholder = assessmentMethodologyStrings('samplingPlaceholder');
+        const limitationsPlaceholder = assessmentMethodologyStrings('limitationsPlaceholder');
 
         const attributesTemplateKeys = Object.keys(attributesTemplate);
 
@@ -224,25 +230,25 @@ export default class Methodology extends React.PureComponent {
                             <TextArea
                                 faramElementName="objectives"
                                 className={styles.input}
-                                placeholder="Drag and drop objectives here"
+                                placeholder={objectivesPlaceholder}
                                 label={objectivesTitle}
                             />
                             <TextArea
                                 faramElementName="dataCollectionTechniques"
                                 className={styles.input}
-                                placeholder="Drag and drop data collection techniques here"
+                                placeholder={dataCollectionTechniquesPlaceholder}
                                 label={dataCollectionTechniquesTitle}
                             />
                             <TextArea
                                 faramElementName="sampling"
                                 className={styles.input}
-                                placeholder="Drag and drop sampling (site and respondent selection) here"
+                                placeholder={samplingPlaceholder}
                                 label={samplingTitle}
                             />
                             <TextArea
                                 faramElementName="limitations"
                                 className={styles.input}
-                                placeholder="Drag and drop limitations here"
+                                placeholder={limitationsPlaceholder}
                                 label={limitationsTitle}
                             />
                         </div>

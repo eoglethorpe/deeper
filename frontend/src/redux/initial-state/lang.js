@@ -589,11 +589,17 @@ const initialLangState = {
                 9027: 'Affected groups',
                 9028: 'Locations',
                 9029: 'Methodology content',
+
                 9030: 'Objectives',
                 9031: 'Data collection techniques',
                 9032: 'Sampling',
                 9033: 'Limitations',
                 9034: 'Attributes',
+
+                9035: 'Drag and drop objectives here',
+                9036: 'Drag and drop data collection techniques here',
+                9037: 'Drag and drop sampling (site and respondent selection) here',
+                9038: 'Drag and drop limitations here',
 
                 1100: 'Connectors',
                 1101: 'Search Connectors',
@@ -999,11 +1005,16 @@ const initialLangState = {
                     affectedGroupsTitle: 9027,
                     locationsTitle: 9028,
                     methodologyContentTitle: 9029,
+                    attributesTitle: 9034,
                     objectivesTitle: 9030,
                     dataCollectionTechniquesTitle: 9031,
                     samplingTitle: 9032,
                     limitationsTitle: 9033,
-                    attributesTitle: 9034,
+
+                    objectivesPlaceholder: 9035,
+                    dataCollectionTechniquesPlaceholder: 9036,
+                    samplingPlaceholder: 9037,
+                    limitationsPlaceholder: 9038,
                 },
                 assessmentSummary: {
                     priorityIssue: 9000,
