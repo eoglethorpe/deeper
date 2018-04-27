@@ -122,7 +122,7 @@ export default class RightPanel extends React.PureComponent {
 
         const scoreSchema = {};
 
-        const getScaleVal = v => scoreScales.find(s => String(s.id) === String(v)).value;
+        const getScaleVal = v => scoreScales.find(s => String(s.value) === String(v)).value;
 
         scorePillars.forEach((pillar) => {
             scoreSchema[`${pillar.id}-score`] = (data, score) => {
