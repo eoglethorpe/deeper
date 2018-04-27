@@ -320,6 +320,13 @@ export const assessmentScoreScalesSelector = createSelector(
     ),
 );
 
+export const assessmentScoreBucketsSelector = createSelector(
+    aryTemplateSelector,
+    aryTemplate => (
+        aryTemplate.scoreBuckets || emptyList
+    ),
+);
+
 // afIdFromRoute
 export const analysisFrameworkDetailSelector = createSelector(
     analysisFrameworksSelector,

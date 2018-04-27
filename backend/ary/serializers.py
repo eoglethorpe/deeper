@@ -117,6 +117,7 @@ class ScoreMatrixColumnSerializer(serializers.Serializer):
 class ScoreMatrixPillarSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
+    weight = serializers.FloatField()
     rows = ScoreMatrixRowSerializer(many=True, read_only=True)
     columns = ScoreMatrixColumnSerializer(many=True, read_only=True)
     scales = serializers.SerializerMethodField()
@@ -167,6 +168,15 @@ class AssessmentTemplateSerializer(RemoveNullFieldsMixin,
         read_only=True,
     )
 
+    score_buckets = serializers.SerializerMethodField()
+
     class Meta:
         model = AssessmentTemplate
         fields = ('__all__')
+
+    def get_score_buckets(self, template):
+        buckets = template.scorebucket_set.all()
+        return [
+            [b.min_value, b.max_value, b.score]
+            for b in buckets
+        ]
