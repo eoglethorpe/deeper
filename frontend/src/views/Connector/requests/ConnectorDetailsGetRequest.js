@@ -1,43 +1,43 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createParamsForUser,
-    urlForConnectors,
+    createUrlForConnector,
 } from '../../../rest';
 
 import schema from '../../../schema';
 import notify from '../../../notify';
 
-const emptyList = [];
-
-export default class ConnectorsGetRequest {
+export default class ConnectorDetailsGetRequest {
     constructor(props) {
         this.props = props;
     }
 
     success = (response) => {
         const {
-            setUserConnectors,
+            setUserConnectorDetails,
         } = this.props;
         try {
-            schema.validate(response, 'connectors');
-            const connectors = response.results || emptyList;
-            const formattedConnectors = {};
-            connectors.forEach((c) => {
-                formattedConnectors[c.id] = {
-                    id: c.id,
-                    versionId: c.versionId,
-                    source: c.source,
-                    faramValues: {
-                        title: c.title,
-                        params: c.params,
-                        users: c.users,
-                        projects: c.projects,
-                    },
-                    faramErrors: {},
-                    prisitne: false,
-                };
+            schema.validate(response, 'connector');
+            const formattedConnector = {
+                id: response.id,
+                versionId: response.versionId,
+                source: response.source,
+                faramValues: {
+                    title: response.title,
+                    params: response.params,
+                    users: response.users,
+                    projects: response.projects,
+                },
+                faramErrors: {},
+                prisitne: false,
+            };
+            setUserConnectorDetails({
+                connectorDetails: formattedConnector,
+                connectorId: formattedConnector.id,
             });
-            setUserConnectors({ connectors: formattedConnectors });
+            this.props.setState({
+                requestFailure: false,
+            });
         } catch (er) {
             console.error(er);
         }
@@ -50,15 +50,18 @@ export default class ConnectorsGetRequest {
             message: this.props.notificationStrings('connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
+        this.props.setState({
+            requestFailure: true,
+        });
     }
 
     fatal = (response) => {
         console.warn('fatal:', response);
     }
 
-    create = () => {
-        const connectorsRequest = new FgRestBuilder()
-            .url(urlForConnectors)
+    create = (connectorId) => {
+        const connectorDetailsRequest = new FgRestBuilder()
+            .url(createUrlForConnector(connectorId))
             .params(createParamsForUser)
             .preLoad(() => { this.props.setState({ dataLoading: true }); })
             .postLoad(() => { this.props.setState({ dataLoading: false }); })
@@ -66,6 +69,6 @@ export default class ConnectorsGetRequest {
             .failure(this.failure)
             .fatal(this.fatal)
             .build();
-        return connectorsRequest;
+        return connectorDetailsRequest;
     }
 }
