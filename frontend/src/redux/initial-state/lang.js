@@ -576,6 +576,13 @@ const initialLangState = {
                 9017: 'Select at least 3 sectors in Methodology',
                 9018: 'Cross sector',
                 9019: 'Humanitarian access',
+
+                9020: 'Basic information',
+                9021: 'Additional documents',
+                9022: 'Executive summary',
+                9023: 'Assessment database',
+                9024: 'Questionnaire',
+
                 1100: 'Connectors',
                 1101: 'Search Connectors',
                 1102: 'Add Connector',
@@ -966,6 +973,13 @@ const initialLangState = {
                     filterClearFilter: 11,
                     removeAryButtonTitle: 8101,
                     editAryButtonTitle: 8102,
+                },
+                assessmentMetadata: {
+                    basicInformationTitle: 9020,
+                    additionalDocumentsTitle: 9021,
+                    executiveSummaryTitle: 9022,
+                    assessmentDatabaseTitle: 9023,
+                    questionareTitle: 9024,
                 },
                 assessmentSummary: {
                     priorityIssue: 9000,

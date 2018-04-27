@@ -14,7 +14,7 @@ const widgets = {
 };
 
 // eslint-disable-next-line import/prefer-default-export
-export const renderWidget = (data) => {
+export const renderWidget = (k, data) => {
     const {
         fieldType,
         id: key,

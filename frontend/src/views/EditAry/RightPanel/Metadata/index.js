@@ -4,9 +4,12 @@ import { connect } from 'react-redux';
 
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
+import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
-import { aryTemplateMetadataSelector } from '../../../../redux';
+import {
+    aryTemplateMetadataSelector,
+    assessmentMetadataStringsSelector,
+} from '../../../../redux';
 import Baksa from '../../../../components/Baksa';
 
 import { renderWidget } from '../widgetUtils';
@@ -16,6 +19,7 @@ import styles from './styles.scss';
 const propTypes = {
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     pending: PropTypes.bool.isRequired,
+    assessmentMetadataStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -24,6 +28,7 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
+    assessmentMetadataStrings: assessmentMetadataStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -31,13 +36,14 @@ export default class Metadata extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    renderMetadata = (data) => {
+    renderMetadata = (k, data) => {
         const {
             fields,
             id,
             title,
         } = data;
 
+        const fieldValues = Object.values(fields);
         return (
             <div
                 key={id}
@@ -46,23 +52,26 @@ export default class Metadata extends React.PureComponent {
                 <h4 className={styles.heading}>
                     {title}
                 </h4>
-                <div className={styles.content}>
-                    {Object.values(fields).map(renderWidget)}
-                </div>
+                <ListView
+                    className={styles.content}
+                    data={fieldValues}
+                    modifier={renderWidget}
+                />
             </div>
         );
     }
 
     render() {
-        const { aryTemplateMetadata: metadataGroups } = this.props;
-
-        // FIXME: use strings
-        const topHeader = 'Basic Information';
-        const bottomHeader = 'Additional Documents';
-
         const {
+            aryTemplateMetadata: metadataGroups,
             pending,
+            assessmentMetadataStrings,
         } = this.props;
+
+        const basicInformationTitle = assessmentMetadataStrings('basicInformationTitle');
+        const additionalDocumentsTitle = assessmentMetadataStrings('additionalDocumentsTitle');
+
+        const metadataGroupValues = Object.values(metadataGroups);
 
         return (
             <div className={styles.metadata}>
@@ -70,38 +79,37 @@ export default class Metadata extends React.PureComponent {
                 <FaramGroup faramElementName="metadata">
                     <div className={styles.basicInformation}>
                         <Header
-                            title={topHeader}
+                            title={basicInformationTitle}
                             className={styles.header}
                         />
-                        <div className={styles.content}>
-                            {Object.values(metadataGroups).map(this.renderMetadata)}
-                        </div>
+                        <ListView
+                            className={styles.content}
+                            data={metadataGroupValues}
+                            modifier={this.renderMetadata}
+                        />
                     </div>
                 </FaramGroup>
                 <FaramGroup faramElementName="additionalDocuments">
                     <div className={styles.additionalDocuments}>
                         <Header
-                            title={bottomHeader}
+                            title={additionalDocumentsTitle}
                             className={styles.header}
                         />
                         <div className={styles.content}>
                             <Baksa
-                                // FIXME: use strings
-                                label="Executive Summary"
+                                label={assessmentMetadataStrings('executiveSummaryTitle')}
                                 className={styles.baksa}
                                 faramElementName="executiveSummary"
                                 showPageRange
                             />
                             <Baksa
-                                // FIXME: use strings
-                                label="Assessment Database"
+                                label={assessmentMetadataStrings('assessmentDatabaseTitle')}
                                 className={styles.baksa}
                                 faramElementName="assessmentData"
                                 acceptUrl
                             />
                             <Baksa
-                                // FIXME: use strings
-                                label="Questionnaire"
+                                label={assessmentMetadataStrings('questionnaireTitle')}
                                 className={styles.baksa}
                                 faramElementName="questionnaire"
                                 showPageRange
