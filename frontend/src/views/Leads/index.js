@@ -189,7 +189,7 @@ export default class Leads extends React.PureComponent {
                 modifier: row => (
                     (row.assigneeDetails || []).map(person => (
                         <Link
-                            key={person}
+                            key={person.id}
                             className={styles.assigneeLink}
                             to={reverseRoute(pathNames.userProfile, { userId: person.id })}
                         >
