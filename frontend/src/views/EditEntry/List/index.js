@@ -89,6 +89,11 @@ export default class List extends React.PureComponent {
             this.updateAnalysisFramework(nextProps.analysisFramework);
         } else if (this.props.entries !== nextProps.entries) {
             this.updateGridItems(nextProps.entries);
+            const newActivePage = Math.min(
+                this.state.activePage,
+                Math.ceil(nextProps.entries.length / ENTRIES_PER_PAGE),
+            );
+            this.setState({ activePage: newActivePage });
         }
     }
 
