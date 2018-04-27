@@ -17,8 +17,8 @@ import {
 
     setAnalysisFrameworkAction,
     setEditEntryLeadAction,
-    setProjectAction,
     setGeoOptionsAction,
+    setRegionsAction,
 
     saveEntryAction,
     changeEntryAction,
@@ -31,7 +31,6 @@ import {
     removeAllEntriesAction,
 
     routeUrlSelector,
-    entryStringsSelector,
     notificationStringsSelector,
     commonStringsSelector,
 } from '../../redux';
@@ -42,13 +41,9 @@ import {
 } from '../../entities/entry';
 import notify from '../../notify';
 
-import LeadRequest from './requests/LeadRequest';
-import ProjectRequest from './requests/ProjectRequest';
-import AfRequest from './requests/AfRequest';
-import EntriesRequest from './requests/EntriesRequest';
+import EditEntryDataRequest from './requests/EditEntryDataRequest';
 import SaveEntryRequest from './requests/SaveEntryRequest';
 import DeleteEntryRequest from './requests/DeleteEntryRequest';
-import GeoOptionsRequest from './requests/GeoOptionsRequest';
 
 import API from './API';
 import Overview from './Overview';
@@ -64,8 +59,8 @@ const propTypes = {
 
     setAnalysisFramework: PropTypes.func.isRequired,
     setLead: PropTypes.func.isRequired,
-    setProject: PropTypes.func.isRequired,
     setGeoOptions: PropTypes.func.isRequired,
+    setRegions: PropTypes.func.isRequired,
 
     addEntry: PropTypes.func.isRequired,
     saveEntry: PropTypes.func.isRequired,
@@ -80,7 +75,6 @@ const propTypes = {
 
     notificationStrings: PropTypes.func.isRequired,
     commonStrings: PropTypes.func.isRequired,
-    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -98,7 +92,6 @@ const mapStateToProps = (state, props) => ({
 
     notificationStrings: notificationStringsSelector(state),
     commonStrings: commonStringsSelector(state),
-    entryStrings: entryStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -107,8 +100,8 @@ const mapDispatchToProps = dispatch => ({
 
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryLeadAction(params)),
-    setProject: params => dispatch(setProjectAction(params)),
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
+    setRegions: params => dispatch(setRegionsAction(params)),
 
     diffEntries: params => dispatch(diffEntriesAction(params)),
     addEntry: params => dispatch(addEntryAction(params)),
@@ -123,15 +116,6 @@ const mapDispatchToProps = dispatch => ({
 export default class EditEntry extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    static isPageLoading = (state) => {
-        const {
-            pendingEntries,
-            pendingAf,
-            pendingGeo,
-        } = state;
-        return pendingEntries || pendingAf || pendingGeo;
-    }
 
     static calcChoices = (props, state) => {
         const { entries } = props;
@@ -165,7 +149,6 @@ export default class EditEntry extends React.PureComponent {
         );
     }
 
-
     constructor(props) {
         super(props);
 
@@ -180,6 +163,8 @@ export default class EditEntry extends React.PureComponent {
                 1: { pending: true },
                 */
             },
+
+            pendingEditEntryData: true,
 
             pendingEntries: true,
             pendingAf: true,
@@ -264,24 +249,33 @@ export default class EditEntry extends React.PureComponent {
     }
 
     componentWillMount() {
-        const request = new LeadRequest({
+        const anotherRequest = new EditEntryDataRequest({
             api: this.api,
             setLead: this.props.setLead,
-            startProjectRequest: this.startProjectRequest,
             setState: params => this.setState(params),
+            getAf: () => this.props.analysisFramework,
+            removeAllEntries: this.props.removeAllEntries,
+            setAnalysisFramework: this.props.setAnalysisFramework,
+            getEntries: () => this.props.entries,
+            diffEntries: this.props.diffEntries,
+            setGeoOptions: this.props.setGeoOptions,
+            setRegions: this.props.setRegions,
         });
-        this.leadRequest = request.create(this.props.leadId);
-        this.leadRequest.start();
+
+        this.editEntryDataRequest = anotherRequest.create(this.props.leadId);
+        this.editEntryDataRequest.start();
     }
 
     componentWillReceiveProps() {
+        // TODO: make another call if leadId changes
+
         if (!window.location.hash) {
             window.location.replace(`#/${this.defaultHash}`);
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (EditEntry.isPageLoading(nextState)) {
+        if (nextState.pendingEditEntryData) {
             return;
         }
 
@@ -307,72 +301,9 @@ export default class EditEntry extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        this.leadRequest.stop();
-
-        if (this.projectRequest) {
-            this.projectRequest.stop();
-        }
-
-        if (this.analysisFrameworkRequest) {
-            this.analysisFrameworkRequest.stop();
-        }
-
-        if (this.entriesRequest) {
-            this.entriesRequest.stop();
-        }
-
-        if (this.geoOptionsRequest) {
-            this.geoOptionsRequest.stop();
-        }
+        this.editEntryDataRequest.stop();
 
         this.saveRequestCoordinator.stop();
-    }
-
-    startProjectRequest = (project, leadId) => {
-        const request = new ProjectRequest({
-            api: this.api,
-            setProject: this.props.setProject,
-            startAfRequest: this.startAfRequest,
-            startGeoOptionsRequest: this.startGeoOptionsRequest,
-            setState: params => this.setState(params),
-        });
-        this.projectRequest = request.create(project, leadId);
-        this.projectRequest.start();
-    }
-
-    startGeoOptionsRequest = (projectId) => {
-        const request = new GeoOptionsRequest({
-            setState: params => this.setState(params),
-            setGeoOptions: this.props.setGeoOptions,
-            entryStrings: this.props.entryStrings,
-        });
-        this.geoOptionsRequest = request.create(projectId);
-        this.geoOptionsRequest.start();
-    }
-
-    startAfRequest = (analysisFramework, leadId) => {
-        const request = new AfRequest({
-            api: this.api,
-            getAf: () => this.props.analysisFramework,
-            removeAllEntries: this.props.removeAllEntries,
-            setAnalysisFramework: this.props.setAnalysisFramework,
-            startEntriesRequest: this.startEntriesRequest,
-            setState: params => this.setState(params),
-        });
-        this.analysisFrameworkRequest = request.create(analysisFramework, leadId);
-        this.analysisFrameworkRequest.start();
-    }
-
-    startEntriesRequest = (leadId) => {
-        const request = new EntriesRequest({
-            api: this.api,
-            getEntries: () => this.props.entries,
-            diffEntries: this.props.diffEntries,
-            notificationStrings: this.props.notificationStrings,
-            setState: params => this.setState(params),
-        });
-        this.entriesRequest = request.create(leadId);
-        this.entriesRequest.start();
     }
 
     handleAddEntryWithValues = (values) => {
@@ -497,7 +428,7 @@ export default class EditEntry extends React.PureComponent {
     }
 
     render() {
-        if (EditEntry.isPageLoading(this.state)) {
+        if (this.state.pendingEditEntryData) {
             return (
                 <div className={styles.editEntry} >
                     <LoadingAnimation large />
