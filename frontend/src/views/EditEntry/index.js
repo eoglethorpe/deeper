@@ -18,7 +18,7 @@ import {
     setAnalysisFrameworkAction,
     setEditEntryLeadAction,
     setGeoOptionsAction,
-    setRegionsAction,
+    setRegionsForProjectAction,
 
     saveEntryAction,
     changeEntryAction,
@@ -101,7 +101,7 @@ const mapDispatchToProps = dispatch => ({
     setAnalysisFramework: params => dispatch(setAnalysisFrameworkAction(params)),
     setLead: params => dispatch(setEditEntryLeadAction(params)),
     setGeoOptions: params => dispatch(setGeoOptionsAction(params)),
-    setRegions: params => dispatch(setRegionsAction(params)),
+    setRegions: params => dispatch(setRegionsForProjectAction(params)),
 
     diffEntries: params => dispatch(diffEntriesAction(params)),
     addEntry: params => dispatch(addEntryAction(params)),
@@ -216,7 +216,6 @@ export default class EditEntry extends React.PureComponent {
                         analysisFramework={this.props.analysisFramework}
                         entries={this.props.entries}
                         filteredEntries={this.props.filteredEntries}
-                        leadId={this.props.leadId}
                         onEntryAdd={this.handleAddEntry}
                         onEntryDelete={this.handleEntryDelete}
                         selectedEntryId={this.props.selectedEntryId}

@@ -14,9 +14,10 @@ import {
     leadFilterOptionsSelector,
     entryFilterOptionsSelector,
     aryFilterOptionsSelector,
-    regionsSelector,
     projectsSelector,
+    regionsSelector,
     geoOptionsSelector,
+    regionsForAllProjectsSelector,
     projectsOptionsSelector,
     analysisFrameworksSelector,
     adminLevelsSelector,
@@ -218,6 +219,13 @@ export const geoOptionsForProjectSelector = createSelector(
     geoOptionsSelector,
     projectIdFromRoute,
     (geoOptions, activeProject) => geoOptions[activeProject] || emptyObject,
+);
+
+// projectIdFromRoute
+export const regionsForProjectSelector = createSelector(
+    regionsForAllProjectsSelector,
+    projectIdFromRoute,
+    (regions, activeProject) => regions[activeProject] || emptyObject,
 );
 
 // projectIdFromRoute
