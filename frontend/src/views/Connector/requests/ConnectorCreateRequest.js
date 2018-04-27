@@ -4,6 +4,9 @@ import {
     alterResponseErrorToFaramError,
     urlForConnectors,
 } from '../../../rest';
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
+
+import { pathNames } from '../../../constants';
 
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -37,6 +40,11 @@ export default class ConnectorCreateRequest {
                 type: notify.type.SUCCESS,
                 message: this.props.notificationStrings('connectorCreateSuccess'),
                 duration: notify.duration.MEDIUM,
+            });
+            this.props.setState({
+                redirectTo: reverseRoute(
+                    pathNames.connectors, { connectorId: response.id },
+                ),
             });
             this.props.handleModalClose();
         } catch (er) {

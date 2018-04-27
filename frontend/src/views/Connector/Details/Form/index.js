@@ -167,7 +167,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
-                    label={connectorStrings('connectorDetailCancelLabel')}
+                    label={connectorStrings('connectorTitleLabel')}
                     placeholder="Relief Web"
                     autoFocus
                 />
