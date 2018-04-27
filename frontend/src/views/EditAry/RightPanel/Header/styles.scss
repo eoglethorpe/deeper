@@ -1,10 +1,8 @@
 @import '../../../../stylesheets/base';
 
 .header {
-    @include background-color($color-background-header);
     display: flex;
     align-items: center;
-    border-bottom: $width-separator-thin solid $color-separator;
 
     .heading {
         flex-shrink: 0;

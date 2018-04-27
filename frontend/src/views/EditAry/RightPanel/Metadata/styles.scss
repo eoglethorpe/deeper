@@ -54,10 +54,14 @@ $height-additional-documents: 256px;
                 display: flex;
                 flex-direction: column;
                 flex-shrink: 0;
-                border-right: $width-separator-thin solid $color-separator;
+
+                &:not(:last-child) {
+                    border-right: $width-separator-thin solid $color-separator;
+                }
 
                 .heading {
                     flex-shrink: 0;
+                    border-bottom: $width-separator-thin solid $color-separator;
                     padding: $spacing-medium;
                     color: $color-accent;
                     font-weight: $font-weight-bold;

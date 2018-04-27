@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import FaramList from '../../../../vendor/react-store/components/Input/Faram/FaramList';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
-import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import List from '../../../../vendor/react-store/components/View/List';
+import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGroup';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -22,11 +22,13 @@ import {
 
     projectDetailsSelector,
     geoOptionsForProjectSelector,
+    assessmentMethodologyStringsSelector,
 } from '../../../../redux';
 
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoListInput from '../../../../components/GeoListInput/';
 
+import Header from '../Header';
 import { renderWidget } from '../widgetUtils';
 import styles from './styles.scss';
 
@@ -38,6 +40,7 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
     pending: PropTypes.bool.isRequired,
+    assessmentMethodologyStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,14 +56,18 @@ const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     sectors: assessmentSectorsSelector(state),
+    assessmentMethodologyStrings: assessmentMethodologyStringsSelector(state),
 });
+
+const idSelector = d => d.id;
+const titleSelector = d => d.title;
 
 @connect(mapStateToProps)
 export default class Methodology extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    renderAttributeHeader = (key) => {
+    renderAttributeHeader = (k, key) => {
         const { aryTemplateMethodology: attributesTemplate } = this.props;
         const methodologyGroup = attributesTemplate[key];
 
@@ -74,34 +81,38 @@ export default class Methodology extends React.PureComponent {
         );
     };
 
-    renderAttribute = (index, key) => {
+    renderAttribute = (key, index) => {
         const { aryTemplateMethodology: attributesTemplate } = this.props;
         const methodologyGroup = attributesTemplate[key];
 
         return (
-            <div
+            <FaramGroup
                 key={key}
-                className={styles.cell}
+                faramElementName={String(index)}
             >
-                <FaramGroup faramElementName={String(index)}>
-                    {methodologyGroup.fields.map(renderWidget)}
-                </FaramGroup>
-            </div>
+                <ListView
+                    className={styles.cell}
+                    data={methodologyGroup.fields}
+                    modifier={renderWidget}
+                />
+            </FaramGroup>
         );
     }
 
-    renderAttributeRow = (key, attribute, index) => {
+    renderAttributeRow = (dummy, attribute, index) => {
         const { aryTemplateMethodology: attributesTemplate } = this.props;
+        const attributesTemplateKeys = Object.keys(attributesTemplate);
+        const renderAttribute = (k, key) => this.renderAttribute(key, index);
 
         return (
             <div
                 key={index}
                 className={styles.row}
             >
-                {
-                    Object.keys(attributesTemplate)
-                        .map(k => this.renderAttribute(index, k))
-                }
+                <List
+                    data={attributesTemplateKeys}
+                    modifier={renderAttribute}
+                />
                 <div className={styles.actionButtons}>
                     <DangerButton
                         iconName={iconNames.delete}
@@ -121,62 +132,73 @@ export default class Methodology extends React.PureComponent {
             affectedGroups,
             projectDetails,
             geoOptions,
+            pending,
+            assessmentMethodologyStrings,
         } = this.props;
 
-        // FIXME: use strings
-        const focusesTitle = 'Focuses';
-        const sectorsTitle = 'Sectors';
-        const affectedGroupsTitle = 'Affected groups';
-        const locationsTitle = 'Locations';
+        const focusesTitle = assessmentMethodologyStrings('focusesTitle');
+        const sectorsTitle = assessmentMethodologyStrings('sectorsTitle');
+        const affectedGroupsTitle = assessmentMethodologyStrings('affectedGroupsTitle');
+        const locationsTitle = assessmentMethodologyStrings('locationsTitle');
+        const methodologyContentTitle = assessmentMethodologyStrings('methodologyContentTitle');
+        const objectivesTitle = assessmentMethodologyStrings('objectivesTitle');
+        const dataCollectionTechniquesTitle = assessmentMethodologyStrings('dataCollectionTechniquesTitle');
+        const samplingTitle = assessmentMethodologyStrings('samplingTitle');
+        const limitationsTitle = assessmentMethodologyStrings('limitationsTitle');
+        const attributesTitle = assessmentMethodologyStrings('attributesTitle');
+
+        const attributesTemplateKeys = Object.keys(attributesTemplate);
 
         return (
             <div className={styles.methodology}>
                 <FaramGroup faramElementName="methodology">
-                    {this.props.pending && <LoadingAnimation large />}
+                    {pending && <LoadingAnimation large />}
+
                     <FaramList faramElementName="attributes">
-                        <div className={styles.header}>
-                            <NonFieldErrors
-                                className={styles.nonFieldErrors}
-                                faramElement
+                        <div className={styles.attributesSection}>
+                            <Header
+                                className={styles.header}
+                                title={attributesTitle}
                             />
-                        </div>
-                        <div className={styles.scrollWrap}>
-                            <div className={styles.attributes}>
-                                <div className={styles.header}>
-                                    {
-                                        Object.keys(attributesTemplate)
-                                            .map(this.renderAttributeHeader)
-                                    }
-                                    <div className={styles.actionButtons}>
-                                        <PrimaryButton
-                                            faramAction="add"
-                                            iconName={iconNames.add}
+                            <div className={styles.scrollWrap}>
+                                <div className={styles.attributes}>
+                                    <div className={styles.header}>
+                                        <List
+                                            data={attributesTemplateKeys}
+                                            modifier={this.renderAttributeHeader}
                                         />
+                                        <div className={styles.actionButtons}>
+                                            <PrimaryButton
+                                                faramAction="add"
+                                                iconName={iconNames.add}
+                                            />
+                                        </div>
                                     </div>
+                                    <List
+                                        faramElement
+                                        modifier={this.renderAttributeRow}
+                                    />
                                 </div>
-                                <List
-                                    faramElement
-                                    modifier={this.renderAttributeRow}
-                                />
                             </div>
                         </div>
                     </FaramList>
-                    <div className={styles.center}>
+
+                    <section className={styles.middleSection}>
                         <CheckGroup
                             className={styles.focuses}
                             faramElementName="focuses"
                             title={focusesTitle}
                             options={focuses}
-                            keySelector={d => d.id}
-                            labelSelector={d => d.title}
+                            keySelector={idSelector}
+                            labelSelector={titleSelector}
                         />
                         <CheckGroup
                             faramElementName="sectors"
                             title={sectorsTitle}
                             options={sectors}
                             className={styles.sectors}
-                            keySelector={d => d.id}
-                            labelSelector={d => d.title}
+                            keySelector={idSelector}
+                            labelSelector={titleSelector}
                         />
                         <OrganigramWithList
                             faramElementName="affectedGroups"
@@ -191,40 +213,37 @@ export default class Methodology extends React.PureComponent {
                             geoOptionsByRegion={geoOptions}
                             regions={projectDetails.regions}
                         />
-                    </div>
-                    <div className={styles.bottom}>
-                        <div className={styles.title}>
-                            {/* FIXME: use strings */}
-                            Methodology content
-                        </div>
-                        <div className={styles.body}>
+                    </section>
+
+                    <div className={styles.methodologyContent}>
+                        <Header
+                            className={styles.header}
+                            title={methodologyContentTitle}
+                        />
+                        <div className={styles.content}>
                             <TextArea
-                                // FIXME: use strings
                                 faramElementName="objectives"
-                                className={styles.methodologyContent}
+                                className={styles.input}
                                 placeholder="Drag and drop objectives here"
-                                label="Objectives"
+                                label={objectivesTitle}
                             />
                             <TextArea
-                                // FIXME: use strings
                                 faramElementName="dataCollectionTechniques"
-                                className={styles.methodologyContent}
+                                className={styles.input}
                                 placeholder="Drag and drop data collection techniques here"
-                                label="Data collection techniques"
+                                label={dataCollectionTechniquesTitle}
                             />
                             <TextArea
-                                // FIXME: use strings
                                 faramElementName="sampling"
-                                className={styles.methodologyContent}
+                                className={styles.input}
                                 placeholder="Drag and drop sampling (site and respondent selection) here"
-                                label="Sampling"
+                                label={samplingTitle}
                             />
                             <TextArea
-                                // FIXME: use strings
                                 faramElementName="limitations"
-                                className={styles.methodologyContent}
+                                className={styles.input}
                                 placeholder="Drag and drop limitations here"
-                                label="Limitations"
+                                label={limitationsTitle}
                             />
                         </div>
                     </div>
