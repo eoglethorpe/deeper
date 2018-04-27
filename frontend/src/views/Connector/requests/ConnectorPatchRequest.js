@@ -1,25 +1,26 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
-    createParamsForConnectorCreate,
     alterResponseErrorToFaramError,
-    urlForConnectors,
-} from '../../../rest';
-import { reverseRoute } from '../../../vendor/react-store/utils/common';
 
-import { pathNames } from '../../../constants';
+    createParamsForConnectorPatch,
+    createUrlForConnector,
+} from '../../../rest';
 
 import schema from '../../../schema';
 import notify from '../../../notify';
 
-export default class ConnectorCreateRequest {
+export default class ConnectorPatchRequest {
     constructor(props) {
         this.props = props;
     }
 
     success = (response) => {
+        const {
+            setUserConnectorDetails,
+        } = this.props;
         try {
             schema.validate(response, 'connector');
-            const connector = {
+            const formattedConnector = {
                 id: response.id,
                 versionId: response.versionId,
                 source: response.source,
@@ -32,21 +33,16 @@ export default class ConnectorCreateRequest {
                 faramErrors: {},
                 pristine: false,
             };
-
-            this.props.addUserConnector({ connector });
-
+            setUserConnectorDetails({
+                connectorDetails: formattedConnector,
+                connectorId: formattedConnector.id,
+            });
             notify.send({
-                title: this.props.notificationStrings('connectorCreateTitle'),
+                title: this.props.notificationStrings('connectorTitle'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('connectorCreateSuccess'),
+                message: this.props.notificationStrings('connectorPatchSuccess'),
                 duration: notify.duration.MEDIUM,
             });
-            this.props.setState({
-                redirectTo: reverseRoute(
-                    pathNames.connectors, { connectorId: response.id },
-                ),
-            });
-            this.props.handleModalClose();
         } catch (er) {
             console.error(er);
         }
@@ -54,28 +50,29 @@ export default class ConnectorCreateRequest {
 
     failure = (response) => {
         const faramErrors = alterResponseErrorToFaramError(response.errors);
-        this.props.setState({
+        this.props.setConnectorError({
             faramErrors,
-            pending: false,
+            connectorId: this.props.connectorId,
         });
     }
 
     fatal = () => {
-        this.props.setState({
-            faramErrors: { $internal: [this.props.connectorStrings('connectorCreateFailure')] },
+        this.props.setConnectorError({
+            faramErrors: { $internal: [this.props.connectorStrings('connectorPatchFailure')] },
+            connectorId: this.props.connectorId,
         });
     }
 
-    create = (newConnector) => {
-        const connectorsRequest = new FgRestBuilder()
-            .url(urlForConnectors)
-            .params(createParamsForConnectorCreate(newConnector))
-            .preLoad(() => { this.props.setState({ dataLoading: true }); })
-            .postLoad(() => { this.props.setState({ dataLoading: false }); })
+    create = (connectorId, connectorDetails) => {
+        const connectorPatchRequest = new FgRestBuilder()
+            .url(createUrlForConnector(connectorId))
+            .params(createParamsForConnectorPatch(connectorDetails))
+            .preLoad(() => { this.props.setState({ pending: true }); })
+            .postLoad(() => { this.props.setState({ pending: false }); })
             .success(this.success)
             .failure(this.failure)
             .fatal(this.fatal)
             .build();
-        return connectorsRequest;
+        return connectorPatchRequest;
     }
 }

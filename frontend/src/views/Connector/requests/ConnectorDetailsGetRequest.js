@@ -29,7 +29,7 @@ export default class ConnectorDetailsGetRequest {
                     projects: response.projects,
                 },
                 faramErrors: {},
-                prisitne: false,
+                pristine: false,
             };
             setUserConnectorDetails({
                 connectorDetails: formattedConnector,

@@ -34,7 +34,7 @@ export default class ConnectorsGetRequest {
                         projects: c.projects,
                     },
                     faramErrors: {},
-                    prisitne: false,
+                    pristine: false,
                 };
             });
             setUserConnectors({ connectors: formattedConnectors });

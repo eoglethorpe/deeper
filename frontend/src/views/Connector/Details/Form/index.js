@@ -14,13 +14,17 @@ import List from '../../../../vendor/react-store/components/View/List';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
+import ConnectorPatchRequest from '../../requests/ConnectorPatchRequest';
+
 import {
     connectorDetailsSelector,
     connectorStringsSelector,
     connectorSourceSelector,
+    notificationStringsSelector,
 
     changeUserConnectorDetailsAction,
     setErrorUserConnectorDetailsAction,
+    setUserConnectorDetailsAction,
 } from '../../../../redux';
 
 import styles from './styles.scss';
@@ -31,7 +35,9 @@ const propTypes = {
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     connectorSource: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     changeUserConnectorDetails: PropTypes.func.isRequired,
+    notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
+    setUserConnectorDetails: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,11 +50,13 @@ const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
     connectorStrings: connectorStringsSelector(state),
     connectorSource: connectorSourceSelector(state),
+    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     changeUserConnectorDetails: params => dispatch(changeUserConnectorDetailsAction(params)),
     setErrorUserConnectorDetails: params => dispatch(setErrorUserConnectorDetailsAction(params)),
+    setUserConnectorDetails: params => dispatch(setUserConnectorDetailsAction(params)),
 });
 
 const emptyList = [];
@@ -65,6 +73,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
         this.state = {
             dataLoading: false,
+            pending: false,
             schema: this.createSchema(props),
         };
     }
@@ -75,6 +84,12 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             this.setState({
                 schema: this.createSchema(newConnectorSource),
             });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.requestForConnectorPatch) {
+            this.requestForConnectorPatch.stop();
         }
     }
 
@@ -95,10 +110,31 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             if (o.fieldType === 'url') {
                 validation.push(urlCondition);
             }
-            paramFields[o.title] = validation;
+            paramFields[o.key] = validation;
         });
         schema.fields.params.fields = paramFields;
         return schema;
+    }
+
+    startConnectorPatchRequest = (connectorId, connectorDetails) => {
+        if (this.requestForConnectorPatch) {
+            this.requestForConnectorPatch.stop();
+        }
+        const requestForConnectorPatch = new ConnectorPatchRequest({
+            setState: v => this.setState(v),
+            setUserConnectorDetails: this.props.setUserConnectorDetails,
+            notificationStrings: this.props.notificationStrings,
+            connectorStrings: this.props.connectorStrings,
+            connectorId: this.props.connectorId,
+            setConnectorError: this.props.setErrorUserConnectorDetails,
+        });
+
+        this.requestForConnectorPatch = requestForConnectorPatch.create(
+            connectorId,
+            connectorDetails,
+        );
+
+        this.requestForConnectorPatch.start();
     }
 
     handleFaramChange = (faramValues, faramErrors) => {
@@ -116,8 +152,8 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         });
     };
 
-    handleValidationSuccess = (values) => {
-        console.warn(values);
+    handleValidationSuccess = (connectorDetails) => {
+        this.startConnectorPatchRequest(this.props.connectorId, connectorDetails);
     };
 
     renderParamInput = (key, data) => {
@@ -125,7 +161,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             return (
                 <TextInput
                     key={data.key}
-                    faramElementName={data.title}
+                    faramElementName={data.key}
                     label={data.title}
                 />
             );
@@ -137,6 +173,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const {
             schema,
             dataLoading,
+            pending,
         } = this.state;
 
         const {
@@ -150,7 +187,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             connectorStrings,
         } = this.props;
 
-        const loading = dataLoading;
+        const loading = dataLoading || pending;
 
         return (
             <Faram

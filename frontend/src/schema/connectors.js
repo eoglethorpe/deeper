@@ -27,6 +27,7 @@ const connectorsSchema = [];
             title: { type: 'string', required: true },
             source: { type: 'string', required: true },
             projects: { type: 'array' },
+            params: { type: 'object' },
             users: { type: 'array' },
         },
     };
