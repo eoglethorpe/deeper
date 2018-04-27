@@ -313,7 +313,12 @@ export default class RightPanel extends React.PureComponent {
             });
         }
 
-        if (this.props.scorePillars !== nextProps.scorePillars) {
+        if (
+            this.props.scorePillars !== nextProps.scorePillars ||
+            this.props.scoreMatrixPillars !== nextProps.scoreMatrixPillars ||
+            this.props.scoreScales !== nextProps.scoreScales ||
+            this.props.scoreBuckets !== nextProps.scoreBuckets
+        ) {
             this.setState({
                 computeSchema: RightPanel.createComputeSchema(
                     nextProps.scorePillars,

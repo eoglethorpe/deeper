@@ -254,6 +254,7 @@ export default class Score extends React.PureComponent {
                             modifier={this.renderMatrixSummaryItem}
                         />
                         <div className={styles.item}>
+                            {/* FIXME: use strings */}
                             Final Score
                             <Numeral faramElementName="finalScore" />
                         </div>
