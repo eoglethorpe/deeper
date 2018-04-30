@@ -451,6 +451,7 @@ const initialSiloDomainData = {
 
     connectorsView: {
         // index is connector id
+        /*
         list: {
             1: {
                 id: 1,
@@ -465,17 +466,19 @@ const initialSiloDomainData = {
                 hasErrors: false,
                 faramValues: {
                     title: 'IRS reserve',
-                    projects: {},
-                    users: {},
+                    projects: [],
+                    users: [],
                     params: {},
                 },
                 faramErrors: {},
                 pristine: false,
             },
         },
+        */
     },
     regions: {
         // index is regionId
+        /*
         1: {
             formValues: {
                 id: 1,
@@ -488,6 +491,7 @@ const initialSiloDomainData = {
             formFieldErrors: {},
             pristine: false,
         },
+        */
     },
 };
 

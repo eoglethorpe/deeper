@@ -1,16 +1,24 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import Faram, {
     requiredCondition,
     urlCondition,
 } from '../../../../vendor/react-store/components/Input/Faram';
+import {
+    compareString,
+    compareDate,
+} from '../../../../vendor/react-store/utils/common';
+import update from '../../../../vendor/react-store/utils/immutable-update';
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import TabularSelectInput from '../../../../vendor/react-store/components/Input/TabularSelectInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import List from '../../../../vendor/react-store/components/View/List';
+import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
+import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
@@ -22,11 +30,14 @@ import {
     connectorStringsSelector,
     connectorSourceSelector,
     notificationStringsSelector,
+    usersInformationListSelector,
 
     changeUserConnectorDetailsAction,
     setErrorUserConnectorDetailsAction,
     setUserConnectorDetailsAction,
 } from '../../../../redux';
+
+import { iconNames } from '../../../../constants';
 
 import styles from './styles.scss';
 
@@ -35,6 +46,7 @@ const propTypes = {
     connectorStrings: PropTypes.func.isRequired,
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     connectorSource: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     changeUserConnectorDetails: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
@@ -50,6 +62,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
     connectorStrings: connectorStringsSelector(state),
+    users: usersInformationListSelector(state),
     connectorSource: connectorSourceSelector(state),
     notificationStrings: notificationStringsSelector(state),
 });
@@ -68,6 +81,9 @@ export default class ConnectorDetailsForm extends React.PureComponent {
     static defaultProps = defaultProps;
     static keySelector = s => s.key;
     static labelSelector = s => s.title;
+    static userOptionLabelSelector = (d = {}) => d.displayName;
+    static userOptionKeySelector = (d = {}) => d.user;
+
 
     constructor(props) {
         super(props);
@@ -77,14 +93,97 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             pending: false,
             schema: this.createSchema(props),
         };
+
+        const { faramValues = {} } = this.props.connectorDetails;
+
+        this.usersHeader = [
+            {
+                key: 'displayName',
+                label: this.props.connectorStrings('tableHeaderName'),
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => compareString(a.displayName, b.displayName),
+            },
+            {
+                key: 'email',
+                label: this.props.connectorStrings('tableHeaderEmail'),
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => compareString(a.email, b.email),
+            },
+            {
+                key: 'role',
+                label: this.props.connectorStrings('tableHeaderRights'),
+                order: 3,
+                sortable: true,
+                comparator: (a, b) => compareString(a.role, b.role),
+            },
+            {
+                key: 'addedAt',
+                label: this.props.connectorStrings('tableHeaderJoinedAt'),
+                order: 4,
+                sortable: true,
+                comparator: (a, b) => compareDate(a.addedAt, b.addedAt),
+                modifier: row => (
+                    <FormattedDate date={row.addedAt} mode="dd-MM-yyyy hh:mm" />
+                ),
+            },
+            {
+                key: 'actions',
+                label: this.props.connectorStrings('tableHeaderActions'),
+                order: 5,
+                modifier: (row) => {
+                    const isAdmin = row.role === 'admin';
+                    return (
+                        <Fragment>
+                            <PrimaryButton
+                                smallVerticalPadding
+                                key="role-change"
+                                title={
+                                    isAdmin
+                                        ? this.props.connectorStrings('revokeAdminRightsTitle')
+                                        : this.props.connectorStrings('grantAdminRightsTitle')
+                                }
+                                onClick={() => this.handleToggleUserRoleClick(row)}
+                                iconName={isAdmin ? iconNames.locked : iconNames.person}
+                                transparent
+                            />
+                            <DangerButton
+                                smallVerticalPadding
+                                key="delete-member"
+                                title={this.props.connectorStrings('deleteMemberLinkTitle')}
+                                onClick={() => this.handleDeleteUserClick(row)}
+                                iconName={iconNames.delete}
+                                transparent
+                            />
+                        </Fragment>
+                    );
+                },
+            },
+        ];
+        this.usersOptions = this.getOptionsForUser(this.props.users, faramValues.users);
     }
 
     componentWillReceiveProps(nextProps) {
-        const { connectorSource: newConnectorSource } = nextProps;
-        if (this.props.connectorSource !== newConnectorSource) {
+        const {
+            connectorSource: newConnectorSource,
+            connectorDetails: newConnectorDetails,
+            users: newUsers,
+        } = nextProps;
+        const {
+            connectorSource: oldConnectorSource,
+            connectorDetails: oldConnectorDetails,
+            users: oldUsers,
+        } = this.props;
+        if (oldConnectorSource !== newConnectorSource) {
             this.setState({
                 schema: this.createSchema(newConnectorSource),
             });
+        }
+
+        if (newConnectorDetails !== oldConnectorDetails || newUsers !== oldUsers) {
+            const { faramValues = {} } = newConnectorDetails;
+            this.usersOptions = this.getOptionsForUser(newUsers, faramValues.users);
         }
     }
 
@@ -94,12 +193,39 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
     }
 
+    getOptionsForUser = (users, members) => {
+        if (!members) {
+            return emptyList;
+        }
+
+        if (!users) {
+            return members;
+        }
+
+        const finalOptions = [...members];
+
+        users.forEach((u) => {
+            const memberIndex = members.findIndex(m => m.user === u.id);
+            if (memberIndex === -1) {
+                finalOptions.push({
+                    displayName: u.displayName,
+                    email: u.email,
+                    role: 'normal',
+                    user: u.id,
+                });
+            }
+        });
+
+        return finalOptions.sort((a, b) => compareString(a.displayName, b.displayName));
+    }
+
     createSchema = (props) => {
         const { connectorSource = {} } = props;
         const schema = {
             fields: {
                 title: [requiredCondition],
                 params: {},
+                users: [],
             },
         };
         if ((connectorSource.options || emptyList).length === 0) {
@@ -153,7 +279,58 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         this.requestForConnectorDetails.start();
     }
 
+    handleToggleUserRoleClick = (selectedUser) => {
+        const {
+            faramValues,
+            faramErrors,
+        } = this.props.connectorDetails;
+
+        const index = (faramValues.users || emptyList).findIndex(u => u.user === selectedUser.user);
+        if (index !== -1) {
+            const settings = {
+                users: {
+                    [index]: {
+                        role: {
+                            $set: selectedUser.role === 'admin' ? 'normal' : 'admin',
+                        },
+                    },
+                },
+            };
+
+            const newFaramValues = update(faramValues, settings);
+            this.props.changeUserConnectorDetails({
+                faramValues: newFaramValues,
+                faramErrors,
+                connectorId: this.props.connectorId,
+            });
+        }
+    }
+
+    handleDeleteUserClick = (selectedUser) => {
+        const {
+            faramValues,
+            faramErrors,
+        } = this.props.connectorDetails;
+
+        const index = (faramValues.users || emptyList).findIndex(u => u.user === selectedUser.user);
+        if (index !== -1) {
+            const settings = {
+                users: {
+                    $splice: [[index, 1]],
+                },
+            };
+
+            const newFaramValues = update(faramValues, settings);
+            this.props.changeUserConnectorDetails({
+                faramValues: newFaramValues,
+                faramErrors,
+                connectorId: this.props.connectorId,
+            });
+        }
+    }
+
     handleFaramChange = (faramValues, faramErrors) => {
+        console.warn(faramValues);
         this.props.changeUserConnectorDetails({
             faramValues,
             faramErrors,
@@ -205,7 +382,13 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const {
             connectorSource,
             connectorStrings,
+            users,
         } = this.props;
+
+        const {
+            usersHeader,
+            usersOptions,
+        } = this;
 
         const loading = dataLoading || pending;
 
@@ -234,6 +417,16 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                         modifier={this.renderParamInput}
                     />
                 </FaramGroup>
+                <TabularSelectInput
+                    faramElementName="users"
+                    options={usersOptions}
+                    label={connectorStrings('connectorUsersLabel')}
+                    labelSelector={ConnectorDetailsForm.userOptionLabelSelector}
+                    keySelector={ConnectorDetailsForm.userOptionKeySelector}
+                    tableHeaders={usersHeader}
+                    hideRemoveFromListButton
+                    hideSelectAllButton
+                />
                 <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.handleFormCancel}
