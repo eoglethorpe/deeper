@@ -159,24 +159,10 @@ export default class EditAdminLevel extends React.PureComponent {
                 }
             })
             .failure((response) => {
-                // FIXME: no need to notify with farams
-                notify.send({
-                    title: this.props.notificationStrings('adminLevelEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelEditFailure'),
-                    duration: notify.duration.SLOW,
-                });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
                 this.setState({ faramErrors });
             })
             .fatal(() => {
-                // FIXME: no need to notify with farams
-                notify.send({
-                    title: this.props.notificationStrings('adminLevelEdit'),
-                    type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelEditFatal'),
-                    duration: notify.duration.SLOW,
-                });
                 this.setState({
                     // FIXME: use strings
                     faramErrors: { $internal: ['Error while trying to save admin level.'] },

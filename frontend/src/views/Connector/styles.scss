@@ -4,6 +4,7 @@ $width-sidebar: 240px;
 
 .connectors {
     display: flex;
+    position: relative;
     height: 100%;
 
     .sidebar {
@@ -63,5 +64,21 @@ $width-sidebar: 240px;
                 background-color: $color-background-hover;
             }
         }
+    }
+
+    .connector-details {
+        @extend %main-content;
+        @include background-color($color-background-alt);
+        flex-grow: 1;
+    }
+
+    .no-connector {
+        @include background-color-with-disabled-text($color-foreground-alt);
+        display: flex;
+        align-items: center;
+        flex-basis: calc(100% - #{$width-sidebar});
+        justify-content: center;
+        margin: 0;
+        font-size: $font-size-extra-large;
     }
 }

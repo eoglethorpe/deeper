@@ -1,0 +1,24 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+.details {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+
+    h3 {
+        padding: $spacing-large;
+        padding-bottom: 0;
+    }
+
+    .no-connector-found {
+        @include background-color-with-disabled-text($color-foreground-alt);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        height: 100%;
+        font-size: $font-size-extra-large;
+    }
+}

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
 import Faram, {
     requiredCondition,
@@ -17,27 +18,19 @@ import {
     notificationStringsSelector,
     connectorSourcesListSelector,
 
-    setConnectorSourcesAction,
     addUserConnectorAction,
 } from '../../../redux';
 
 import ConnectorCreateRequest from '../requests/ConnectorCreateRequest';
-import ConnectorSourcesGetRequest from '../requests/ConnectorSourcesGetRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     connectorStrings: PropTypes.func.isRequired,
-    setConnectorSources: PropTypes.func.isRequired,
     addUserConnector: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-};
-
-const defaultProps = {
-    userGroups: [],
-    onProjectAdded: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -47,14 +40,12 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    setConnectorSources: params => dispatch(setConnectorSourcesAction(params)),
     addUserConnector: params => dispatch(addUserConnectorAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorAddForm extends React.PureComponent {
     static propTypes = propTypes;
-    static defaultProps = defaultProps;
     static keySelector = s => s.key;
     static labelSelector = s => s.title;
 
@@ -65,6 +56,7 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors: {},
             faramValues: {},
             pending: false,
+            success: false,
             dataLoading: false,
             pristine: false,
         };
@@ -77,16 +69,9 @@ export default class ConnectorAddForm extends React.PureComponent {
         };
     }
 
-    componentWillMount() {
-        this.startConnectorSourcesGetRequest();
-    }
-
     componentWillUnmount() {
         if (this.requestForConnectorCreate) {
             this.requestForConnectorCreate.stop();
-        }
-        if (this.requestForConnectorSources) {
-            this.requestForConnectorSources.stop();
         }
     }
 
@@ -101,19 +86,6 @@ export default class ConnectorAddForm extends React.PureComponent {
     handleValidationFailure = (faramErrors) => {
         this.setState({ faramErrors });
     };
-
-    startConnectorSourcesGetRequest = () => {
-        if (this.requestForConnectorSources) {
-            this.requestForConnectorSources.stop();
-        }
-        const requestForConnectorSources = new ConnectorSourcesGetRequest({
-            setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
-            setConnectorSources: this.props.setConnectorSources,
-        });
-        this.requestForConnectorSources = requestForConnectorSources.create();
-        this.requestForConnectorSources.start();
-    }
 
     startConnectorCreateRequest = (newConnector) => {
         if (this.requestForConnectorCreate) {
@@ -144,6 +116,7 @@ export default class ConnectorAddForm extends React.PureComponent {
             faramErrors,
             pending,
             pristine,
+            redirectTo,
             dataLoading,
         } = this.state;
 
@@ -153,6 +126,15 @@ export default class ConnectorAddForm extends React.PureComponent {
         } = this.props;
 
         const loading = pending || dataLoading;
+
+        if (redirectTo) {
+            return (
+                <Redirect
+                    to={redirectTo}
+                    push
+                />
+            );
+        }
 
         return (
             <Faram

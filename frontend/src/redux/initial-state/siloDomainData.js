@@ -449,16 +449,29 @@ const initialSiloDomainData = {
         },
     },
 
-    connectors: {
+    connectorsView: {
         // index is connector id
-        1: {
-            id: 1,
-            faramValues: {
-                title: 'IRS reserve',
+        list: {
+            1: {
+                id: 1,
                 source: 'rss-feed',
+                title: 'Gotham City',
             },
-            faramErrors: {},
-            pristine: false,
+        },
+        details: {
+            1: {
+                id: 1,
+                source: 'rss-feed',
+                hasErrors: false,
+                faramValues: {
+                    title: 'IRS reserve',
+                    projects: {},
+                    users: {},
+                    params: {},
+                },
+                faramErrors: {},
+                pristine: false,
+            },
         },
     },
     regions: {
