@@ -86,7 +86,7 @@ export default class EditAdminLevel extends React.PureComponent {
             faramErrors: {},
             faramValues: this.props.adminLevelDetail,
             pending: false,
-            pristine: false,
+            pristine: true,
             adminLevelsOfRegion: this.calculateOtherAdminLevels(props.adminLevelsOfRegion),
         };
 
@@ -233,7 +233,7 @@ export default class EditAdminLevel extends React.PureComponent {
         this.setState({
             faramValues,
             faramErrors,
-            pristine: true,
+            pristine: false,
         });
     };
 
@@ -321,10 +321,9 @@ export default class EditAdminLevel extends React.PureComponent {
             <div className={styles.formContainer}>
                 <Faram
                     className={styles.editAdminLevelForm}
-
-                    changeCallback={this.changeCallback}
-                    failureCallback={this.failureCallback}
-                    successCallback={this.successCallback}
+                    onChange={this.changeCallback}
+                    onValidationFailure={this.failureCallback}
+                    onValidationSuccess={this.successCallback}
 
                     schema={this.schema}
                     value={faramValues}
@@ -417,7 +416,7 @@ export default class EditAdminLevel extends React.PureComponent {
                         <PrimaryButton
                             className={styles.saveBtn}
                             type="submit"
-                            disabled={pending || !pristine}
+                            disabled={pending || pristine}
                         >
                             {this.props.countriesStrings('saveChangesButtonLabel')}
                         </PrimaryButton>
