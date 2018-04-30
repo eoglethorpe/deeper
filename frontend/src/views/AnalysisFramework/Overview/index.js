@@ -10,7 +10,6 @@ import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
-import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import {
     randomString,
     reverseRoute,
@@ -250,7 +249,7 @@ export default class Overview extends React.PureComponent {
             analysisFramework,
         } = this.props;
 
-        const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
+        const exitUrl = reverseRoute(pathNames.projects, { projectId });
         const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
 
         return (
@@ -269,7 +268,11 @@ export default class Overview extends React.PureComponent {
                 <div className={styles.actions}>
                     <Link
                         className={styles.exitLink}
-                        to={exitUrl}
+                        to={{
+                            pathname: exitUrl,
+                            hash: '#/frameworks',
+                            state: { selectedFramework: analysisFramework.id },
+                        }}
                     >
                         {this.props.afStrings('exitButtonLabel')}
                     </Link>

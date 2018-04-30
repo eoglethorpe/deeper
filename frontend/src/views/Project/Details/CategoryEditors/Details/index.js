@@ -6,7 +6,6 @@ import { connect } from 'react-redux';
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import { reverseRoute } from '../../../../../vendor/react-store/utils/common';
 import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
-import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
 
@@ -258,13 +257,13 @@ export default class ProjectCeDetail extends React.PureComponent {
         }
 
         return (
-            <WarningButton
+            <AccentButton
                 iconName={iconNames.check}
                 onClick={this.handleCeUseClick}
                 disabled={pending}
             >
                 {projectStrings('useCeButtonLabel')}
-            </WarningButton>
+            </AccentButton>
         );
     }
 

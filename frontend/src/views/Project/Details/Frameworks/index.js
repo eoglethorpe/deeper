@@ -24,6 +24,7 @@ import {
 
     setAnalysisFrameworksAction,
     projectStringsSelector,
+    routeStateSelector,
 } from '../../../../redux';
 import schema from '../../../../schema';
 import { iconNames } from '../../../../constants';
@@ -39,6 +40,7 @@ const propTypes = {
     projectId: PropTypes.number.isRequired,
     setAnalysisFrameworks: PropTypes.func.isRequired,
     projectStrings: PropTypes.func.isRequired,
+    routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -48,6 +50,7 @@ const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
     projectStrings: projectStringsSelector(state),
+    routeState: routeStateSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -64,12 +67,15 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
         const {
             analysisFrameworkList,
             projectDetails,
+            routeState,
         } = props;
 
         const displayAfList = [...analysisFrameworkList];
 
         let selectedAf;
-        if (projectDetails.analysisFramework) {
+        if (routeState.selectedFramework) {
+            selectedAf = routeState.selectedFramework;
+        } else if (projectDetails.analysisFramework) {
             // if there is analysisFramework in current project
             selectedAf = projectDetails.analysisFramework;
         } else {
@@ -99,6 +105,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             const {
                 analysisFrameworkList,
                 projectDetails,
+                routeState,
             } = nextProps;
 
             // why filter again?
@@ -108,7 +115,9 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             );
 
             let selectedAf;
-            if (projectDetails.analysisFramework) {
+            if (routeState.selectedFramework) {
+                selectedAf = routeState.selectedFramework;
+            } else if (projectDetails.analysisFramework) {
                 // if there is analysisFramework in current project
                 selectedAf = projectDetails.analysisFramework;
             } else {
@@ -198,7 +207,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <ListItem
                 active={isActive}
                 className={styles.afListItem}
-                key={key}
+                key={af.id}
                 onClick={() => this.handleAfClick(af.id)}
             >
                 {af.title}
