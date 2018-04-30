@@ -198,7 +198,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             <ListItem
                 active={isActive}
                 className={styles.afListItem}
-                key={key}
+                key={af.id}
                 onClick={() => this.handleAfClick(af.id)}
             >
                 {af.title}
