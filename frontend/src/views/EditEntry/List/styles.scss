@@ -51,6 +51,7 @@ $height-header: 48px;
             display: inline-block;
             position: relative;
             border-bottom: $width-separator-thin solid $color-separator-alt;
+            min-width: 100%;
             line-height: initial;
 
             .action-buttons {
@@ -87,6 +88,7 @@ $height-header: 48px;
 
                         .apply-buttons {
                             display: flex;
+                            transition: .2s opacity ease-in-out;
                             opacity: 0;
 
                             button {
