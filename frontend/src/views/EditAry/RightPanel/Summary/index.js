@@ -27,10 +27,12 @@ const propTypes = {
     sectors: PropTypes.array.isRequired,
     pending: PropTypes.bool.isRequired,
     assessmentSummaryStrings: PropTypes.func.isRequired,
+    onActiveSectorChange: PropTypes.func,
 };
 
 const defaultProps = {
     className: '',
+    onActiveSectorChange: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -65,7 +67,17 @@ export default class Summary extends React.PureComponent {
     }
 
     handleTabClick = (key) => {
-        this.setState({ activeTab: key });
+        this.setState({ activeTab: key }, () => {
+            if (!this.props.onActiveSectorChange) {
+                return;
+            }
+
+            let activeSector;
+            if (key.startsWith(sectorIdentifier)) {
+                activeSector = this.selectedSectors[key];
+            }
+            this.props.onActiveSectorChange(activeSector);
+        });
     }
 
     renderTabs = () => {
@@ -84,6 +96,7 @@ export default class Summary extends React.PureComponent {
             d => `${sectorIdentifier}-${d.id}`,
             d => d.title,
         );
+        this.selectedSectors = selectedSectors;
 
         const { assessmentSummaryStrings } = this.props;
         const tabs = {

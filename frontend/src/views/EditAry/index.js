@@ -71,6 +71,8 @@ export default class EditAry extends React.PureComponent {
 
             pending: true,
             noTemplate: false,
+
+            activeSector: undefined,
         };
     }
 
@@ -110,6 +112,10 @@ export default class EditAry extends React.PureComponent {
         if (this.geoOptionsRequest) {
             this.geoOptionsRequest.stop();
         }
+    }
+
+    handleActiveSectorChange = (activeSector) => {
+        this.setState({ activeSector });
     }
 
     startLeadRequest = (leadId) => {
@@ -188,6 +194,7 @@ export default class EditAry extends React.PureComponent {
             pendingAry,
             noTemplate,
             lead,
+            activeSector,
         } = this.state;
 
         if (noTemplate) {
@@ -209,8 +216,13 @@ export default class EditAry extends React.PureComponent {
                 className={styles.assessments}
                 leftContainerClassName={styles.left}
                 rightContainerClassName={styles.right}
-                leftChild={<LeftPanel lead={lead} />}
-                rightChild={<RightPanel />}
+                leftChild={<LeftPanel
+                    lead={lead}
+                    activeSector={activeSector}
+                />}
+                rightChild={<RightPanel
+                    onActiveSectorChange={this.handleActiveSectorChange}
+                />}
             />
         );
     }

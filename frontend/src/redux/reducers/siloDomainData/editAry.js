@@ -36,12 +36,13 @@ export const saveAryForEditAryAction = ({ lead }) => ({
 });
 
 export const changeAryForEditAryAction = ({
-    lead, faramValues, faramErrors,
+    lead, faramValues, faramErrors, shouldChangePristine,
 }) => ({
     type: EDIT_ARY__CHANGE_ARY,
     lead,
     faramValues,
     faramErrors,
+    shouldChangePristine,
 });
 
 export const setErrorAryForEditAryAction = ({
@@ -99,6 +100,7 @@ const changeAry = (state, action) => {
         lead,
         faramValues,
         faramErrors,
+        shouldChangePristine,
     } = action;
 
     const hasErrors = analyzeErrors(faramErrors);
@@ -106,7 +108,10 @@ const changeAry = (state, action) => {
     const settings = {
         editAry: {
             [lead]: { $auto: {
-                isPristine: { $set: false },
+                $if: [
+                    !shouldChangePristine,
+                    { isPristine: { $set: false } },
+                ],
                 faramValues: { $set: faramValues },
                 faramErrors: { $set: faramErrors },
                 hasErrors: { $set: hasErrors },

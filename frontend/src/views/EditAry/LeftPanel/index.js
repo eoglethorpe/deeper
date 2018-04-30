@@ -33,11 +33,13 @@ const propTypes = {
     ]).isRequired,
 
     entryStrings: PropTypes.func.isRequired,
+    activeSector: PropTypes.string,
 };
 
 const defaultProps = {
     selectedEntryId: undefined,
     widgetDisabled: false,
+    activeSector: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -145,6 +147,7 @@ export default class LeftPanel extends React.PureComponent {
                 <div className={styles.entriesListContainer}>
                     <EntriesListing
                         leadId={this.props.leadId}
+                        activeSector={this.props.activeSector}
                     />
                 </div>
             ),

@@ -59,6 +59,7 @@ const propTypes = {
     setAry: PropTypes.func.isRequired,
     changeAry: PropTypes.func.isRequired,
     aryStrings: PropTypes.func.isRequired,
+    onActiveSectorChange: PropTypes.func,
 };
 
 const defaultProps = {
@@ -70,6 +71,7 @@ const defaultProps = {
     scoreBuckets: [],
     editAryFaramErrors: {},
     editAryFaramValues: {},
+    onActiveSectorChange: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -281,6 +283,7 @@ export default class RightPanel extends React.PureComponent {
                     <Summary
                         className={styles.summary}
                         pending={this.state.pending}
+                        onActiveSectorChange={this.props.onActiveSectorChange}
                     />
                 ),
             },
@@ -336,11 +339,12 @@ export default class RightPanel extends React.PureComponent {
         }
     }
 
-    handleFaramChange = (faramValues, faramErrors) => {
+    handleFaramChange = (faramValues, faramErrors, shouldChangePristine) => {
         this.props.changeAry({
             lead: this.props.activeLeadId,
             faramValues,
             faramErrors,
+            shouldChangePristine,
         });
     }
 

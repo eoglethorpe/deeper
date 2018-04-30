@@ -43,7 +43,7 @@ const entrySchema = [];
         },
         fields: {
             widget: { type: 'uint', required: true },
-            widgetId: { type: 'string', required: true },
+            widgetObj: { type: 'Widget' },
             id: { type: 'uint', required: true },
             data: { type: 'object' },
         },
