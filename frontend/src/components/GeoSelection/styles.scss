@@ -14,8 +14,8 @@
         }
 
         .map-modal-button {
-            flex-shrink: 0;
             align-self: flex-end;
+            flex-shrink: 0;
             margin-bottom: $width-separator-medium;
         }
     }
@@ -31,8 +31,8 @@
             flex-shrink: 0;
 
             .marker {
-                flex-shrink: 0;
                 align-self: flex-start;
+                flex-shrink: 0;
                 padding-right: $spacing-small;
                 color: $color-text-label;
             }
@@ -44,8 +44,8 @@
 
         :global .empty {
             display: flex;
-            flex-grow: 1;
             align-items: center;
+            flex-grow: 1;
             justify-content: center;
         }
     }
@@ -98,8 +98,8 @@
 
                     .region-item {
                         display: flex;
-                        flex-shrink: 0;
                         align-items: center;
+                        flex-shrink: 0;
                         justify-content: space-between;
                         background-color: $color-background-row-alt;
                         padding: $spacing-extra-small $spacing-medium;

@@ -30,7 +30,12 @@ const propTypes = {
     entryStrings: PropTypes.func.isRequired,
     setEntries: PropTypes.func.isRequired,
     activeProjectId: PropTypes.number.isRequired,
+    activeSector: PropTypes.string,
     aryStrings: PropTypes.func.isRequired,
+};
+
+const defaultProps = {
+    activeSector: undefined,
 };
 
 const mapStateToProps = state => ({
@@ -46,17 +51,45 @@ const mapDispatchToProps = dispatch => ({
     setEntries: params => dispatch(setEntriesForEditAryAction(params)),
 });
 
+const emptyObject = {};
+
 @connect(mapStateToProps, mapDispatchToProps)
 export default class EntriesListing extends React.PureComponent {
     static propTypes = propTypes;
+    static defaultProps = defaultProps;
 
     static calcEntryKey = entry => entry.id;
+
+    static calcEntryWithSector = (entry) => {
+        const attr = entry.attributes.find(
+            a => (a.widgetObj || emptyObject).widgetId === 'matrix2dWidget',
+        );
+        if (!attr) {
+            return { ...entry, sectors: [] };
+        }
+
+        const widgetProps = attr.widgetObj.properties.data;
+        const sectors = widgetProps.sectors;
+
+        const selectedSectorIds = Object.values(attr.data).reduce(
+            (acc, b) => [
+                ...acc,
+                ...Object.values(b).reduce((acc2, c) => [...acc2, ...Object.keys(c)], [])],
+            []);
+        const selectedSectors = selectedSectorIds.map(id => sectors.find(s => s.id === id));
+
+        return {
+            ...entry,
+            sectors: selectedSectors.map(s => s.title),
+        };
+    }
 
     constructor(props) {
         super(props);
 
         this.state = {
             pendingEntries: true,
+            entries: this.filterEntries(props.entries, props.activeSector),
         };
     }
 
@@ -81,12 +114,32 @@ export default class EntriesListing extends React.PureComponent {
             this.entriesRequest = request.create(nextProps.leadId);
             this.entriesRequest.start();
         }
+
+        if (
+            this.props.entries !== nextProps.entries ||
+            this.props.activeSector !== nextProps.activeSector
+        ) {
+            this.setState({
+                entries: this.filterEntries(nextProps.entries, nextProps.activeSector),
+            });
+        }
     }
 
     componentWillUnmount() {
         if (this.entriesRequest) {
             this.entriesRequest.stop();
         }
+    }
+
+    filterEntries = (entries, activeSector) => {
+        if (!activeSector) {
+            return entries;
+        }
+
+        const entriesWithSectors = entries.map(EntriesListing.calcEntryWithSector);
+        return entriesWithSectors.filter(
+            e => e.sectors.indexOf(activeSector) >= 0,
+        );
     }
 
     renderEntryLabel = (entry) => {
@@ -134,7 +187,7 @@ export default class EntriesListing extends React.PureComponent {
                 <ListView
                     className={styles.entriesList}
                     modifier={this.renderEntryItem}
-                    data={this.props.entries}
+                    data={this.state.entries}
                     keyExtractor={EntriesListing.calcEntryKey}
                 />
                 <div className={styles.leadDetail}>
