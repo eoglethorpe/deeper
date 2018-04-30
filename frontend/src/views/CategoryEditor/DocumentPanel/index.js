@@ -22,6 +22,7 @@ import DocumentSelect from './DocumentSelect';
 import styles from '../styles.scss';
 
 const propTypes = {
+    projectId: PropTypes.number.isRequired,
     previewId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     setCeNgrams: PropTypes.func.isRequired,
     setPreviewId: PropTypes.func.isRequired,
@@ -186,7 +187,10 @@ export default class DocumentPanel extends React.PureComponent {
             fileIds,
         } = this.state;
 
-        const { previewId } = this.props;
+        const {
+            previewId,
+            projectId,
+        } = this.props;
 
         return (
             <div className={styles.documentPanel}>
@@ -200,7 +204,7 @@ export default class DocumentPanel extends React.PureComponent {
                 <div className={styles.content}>
                     { pending && <LoadingAnimation /> }
                     <div className={`${styles.tabContent} ${this.getTabContentClassName(0)}`}>
-                        <DocumentSelect />
+                        <DocumentSelect projectId={projectId} />
                     </div>
                     <div className={`${styles.tabContent} ${this.getTabContentClassName(1)}`}>
                         <SimplifiedFilePreview

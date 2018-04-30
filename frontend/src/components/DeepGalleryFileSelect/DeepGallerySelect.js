@@ -20,7 +20,7 @@ import AccentButton from '../../vendor/react-store/components/Action/Button/Acce
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 
 import {
-    urlForUsersGalleryFiles,
+    createUrlForGalleryFiles,
     createHeaderForGalleryFile,
 } from '../../rest';
 import {
@@ -34,6 +34,7 @@ import { leadTypeIconMap } from '../../entities/lead';
 import styles from './styles.scss';
 
 const propTypes = {
+    params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     onClose: PropTypes.func.isRequired,
 
     setUserGalleryFiles: PropTypes.func.isRequired,
@@ -44,6 +45,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    params: {},
     galleryFiles: [],
 };
 
@@ -115,12 +117,24 @@ export default class DgSelect extends React.PureComponent {
             selected: [],
             searchInputValue: undefined,
         };
-
-        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles();
     }
 
     componentWillMount() {
         if (this.userGalleryFilesRequest) {
+            this.userGalleryFilesRequest.stop();
+        }
+
+        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(this.props.params);
+        this.userGalleryFilesRequest.start();
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.params !== this.props.params) {
+            if (this.userGalleryFilesRequest) {
+                this.userGalleryFilesRequest.stop();
+            }
+
+            this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(nextProps.params);
             this.userGalleryFilesRequest.start();
         }
     }
@@ -158,9 +172,9 @@ export default class DgSelect extends React.PureComponent {
         ));
     }
 
-    createRequestForUserGalleryFiles = () => {
+    createRequestForUserGalleryFiles = (params) => {
         const userGalleryFilesRequest = new FgRestBuilder()
-            .url(urlForUsersGalleryFiles)
+            .url(createUrlForGalleryFiles(params))
             .params(createHeaderForGalleryFile())
             .preLoad(() => {
                 this.setState({

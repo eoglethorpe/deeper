@@ -20,6 +20,7 @@ import styles from '../../styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    projectId: PropTypes.number.isRequired,
     selectedFiles: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.idRequired,
         title: PropTypes.string,
@@ -69,6 +70,14 @@ export default class DocumentSelect extends React.PureComponent {
                 pristine: false,
             });
         }
+    }
+
+    getGalleryParams = () => {
+        const { projectId } = this.props;
+
+        return {
+            project: projectId,
+        };
     }
 
     handleModalClose = (galleryFiles = []) => {
@@ -172,6 +181,7 @@ export default class DocumentSelect extends React.PureComponent {
                 <DeepGalleryFileSelect
                     show={showGallerySelectModal}
                     onClose={this.handleModalClose}
+                    params={this.getGalleryParams()}
                 />
             </div>
         );

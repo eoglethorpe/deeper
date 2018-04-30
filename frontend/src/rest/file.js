@@ -4,10 +4,10 @@ import {
     wsEndpoint,
     commonHeaderForPost,
     authorizationHeaderForPost,
+    p,
 } from '../config/rest';
 
 export const urlForUpload = `${wsEndpoint}/files/`;
-export const urlForUsersGalleryFiles = `${wsEndpoint}/files/`;
 export const urlForGoogleDriveFileUpload = `${wsEndpoint}/files-google-drive/`;
 export const urlForDropboxFileUpload = `${wsEndpoint}/files-dropbox/`;
 export const createUrlForGalleryFile = fileId => `${wsEndpoint}/files/${fileId}/`;
@@ -47,6 +47,10 @@ export const createHeaderForGalleryFile = () => ({
     method: GET,
     headers: commonHeaderForPost,
 });
+
+export const createUrlForGalleryFiles = (params = {}) => (
+    `${wsEndpoint}/files/?${p(params)}`
+);
 
 export const createUrlForSimplifiedFilePreview = fileId => (
     `${wsEndpoint}/file-previews/${fileId}/`
