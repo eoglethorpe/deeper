@@ -24,6 +24,7 @@ import SuccessButton from '../../../../vendor/react-store/components/Action/Butt
 
 import ConnectorPatchRequest from '../../requests/ConnectorPatchRequest';
 import ConnectorDetailsGetRequest from '../../requests/ConnectorDetailsGetRequest';
+import UserListGetRequest from '../../requests/UserListGetRequest';
 
 import {
     connectorDetailsSelector,
@@ -32,6 +33,7 @@ import {
     notificationStringsSelector,
     usersInformationListSelector,
 
+    setUsersInformationAction,
     changeUserConnectorDetailsAction,
     setErrorUserConnectorDetailsAction,
     setUserConnectorDetailsAction,
@@ -51,6 +53,7 @@ const propTypes = {
     notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
     setUserConnectorDetails: PropTypes.func.isRequired,
+    setUsers: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -68,6 +71,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
+    setUsers: params => dispatch(setUsersInformationAction(params)),
     changeUserConnectorDetails: params => dispatch(changeUserConnectorDetailsAction(params)),
     setErrorUserConnectorDetails: params => dispatch(setErrorUserConnectorDetailsAction(params)),
     setUserConnectorDetails: params => dispatch(setUserConnectorDetailsAction(params)),
@@ -89,7 +93,8 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         super(props);
 
         this.state = {
-            dataLoading: false,
+            userDataLoading: false,
+            connectorDataLoading: false,
             pending: false,
             schema: this.createSchema(props),
         };
@@ -164,6 +169,10 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         this.usersOptions = this.getOptionsForUser(this.props.users, faramValues.users);
     }
 
+    componentWillMount() {
+        this.startUsersListGetRequest();
+    }
+
     componentWillReceiveProps(nextProps) {
         const {
             connectorSource: newConnectorSource,
@@ -190,6 +199,12 @@ export default class ConnectorDetailsForm extends React.PureComponent {
     componentWillUnmount() {
         if (this.requestForConnectorPatch) {
             this.requestForConnectorPatch.stop();
+        }
+        if (this.requestForUserList) {
+            this.requestForUserList.stop();
+        }
+        if (this.requestForConnectorDetails) {
+            this.requestForConnectorDetails.stop();
         }
     }
 
@@ -262,6 +277,20 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         );
 
         this.requestForConnectorPatch.start();
+    }
+
+    startUsersListGetRequest = () => {
+        if (this.requestForUserList) {
+            this.requestForUserList.stop();
+        }
+        const requestForUserList = new UserListGetRequest({
+            setState: v => this.setState(v),
+            notificationStrings: this.props.notificationStrings,
+            setUsers: this.props.setUsers,
+        });
+
+        this.requestForUserList = requestForUserList.create();
+        this.requestForUserList.start();
     }
 
     startConnectorDetailsRequest = (connectorId) => {
@@ -369,8 +398,9 @@ export default class ConnectorDetailsForm extends React.PureComponent {
     render() {
         const {
             schema,
-            dataLoading,
             pending,
+            connectorDataLoading,
+            userDataLoading,
         } = this.state;
 
         const {
@@ -382,7 +412,6 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const {
             connectorSource,
             connectorStrings,
-            users,
         } = this.props;
 
         const {
@@ -390,7 +419,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             usersOptions,
         } = this;
 
-        const loading = dataLoading || pending;
+        const loading = userDataLoading || connectorDataLoading || pending;
 
         return (
             <Faram
@@ -417,16 +446,18 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                         modifier={this.renderParamInput}
                     />
                 </FaramGroup>
-                <TabularSelectInput
-                    faramElementName="users"
-                    options={usersOptions}
-                    label={connectorStrings('connectorUsersLabel')}
-                    labelSelector={ConnectorDetailsForm.userOptionLabelSelector}
-                    keySelector={ConnectorDetailsForm.userOptionKeySelector}
-                    tableHeaders={usersHeader}
-                    hideRemoveFromListButton
-                    hideSelectAllButton
-                />
+                {!(userDataLoading || connectorDataLoading) &&
+                    <TabularSelectInput
+                        faramElementName="users"
+                        options={usersOptions}
+                        label={connectorStrings('connectorUsersLabel')}
+                        labelSelector={ConnectorDetailsForm.userOptionLabelSelector}
+                        keySelector={ConnectorDetailsForm.userOptionKeySelector}
+                        tableHeaders={usersHeader}
+                        hideRemoveFromListButton
+                        hideSelectAllButton
+                    />
+                }
                 <div className={styles.actionButtons}>
                     <DangerButton
                         onClick={this.handleFormCancel}
