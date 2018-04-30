@@ -62,8 +62,12 @@ if [ "$EBS_ENV_TYPE" == "web" ]; then
 
     echo 'API Environment'
     export DJANGO_ALLOWED_HOST=$DJANGO_ALLOWED_HOST_API
-    python3 $ROOT_DIR/backend/manage.py collectstatic --no-input >> /var/log/deep.log 2>&1
-    python3 $ROOT_DIR/backend/manage.py migrate --no-input >> /var/log/deep.log 2>&1
-
+    if [ -z "$NO_DJANGO_MIGRATION" ]; then
+        echo '>> [Running] Django Collectstatic and Migrate'
+        python3 $ROOT_DIR/backend/manage.py collectstatic --no-input >> /var/log/deep.log 2>&1
+        python3 $ROOT_DIR/backend/manage.py migrate --no-input >> /var/log/deep.log 2>&1
+    else # Variable Set
+        echo '>> [Not Running] Django Collectstatic and Migrate, because ENV: NO_DJANGO_MIGRATION is set'
+    fi
     uwsgi --ini $ROOT_DIR/deploy/configs/uwsgi.ini # Start uwsgi server
 fi
