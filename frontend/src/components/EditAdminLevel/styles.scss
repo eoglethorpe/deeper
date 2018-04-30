@@ -16,7 +16,46 @@
                 margin-bottom: $spacing-small;
             }
 
+            .current-upload {
+                display: flex;
+                align-items: center;
+                margin-bottom: $spacing-medium;
+                text-transform: uppercase;
+                color: $color-text-label;
+
+                >p:after {
+                    margin-right: $spacing-small;
+                    content: ':';
+                }
+            }
+
+            .no-file-upload {
+                display: flex;
+                align-items: center;
+                margin-bottom: $spacing-medium;
+                text-transform: uppercase;
+                color: $color-text-label;
+            }
+        }
+
+    }
+
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .left-container {
+            display: flex;
+            align-items: center;
+
+            >* {
+                margin-right: $spacing-medium-alt;
+            }
+
             .geo-file {
+                width: auto;
+
                 :global {
                     label {
                         @include button-like-link($color-accent);
@@ -31,8 +70,8 @@
                     margin-right: $spacing-small;
                 }
 
-                p {
-                    visibility: hidden;
+                >p {
+                    display: none;
                 }
 
                 a {
@@ -42,14 +81,13 @@
             }
         }
 
-    }
+        .right-container {
+            display: flex;
+            align-items: center;
 
-    .action-buttons {
-        display: flex;
-        justify-content: flex-end;
-
-        .save-btn {
-            margin-left: $spacing-medium-alt;
+            >* {
+                margin-left: $spacing-medium-alt;
+            }
         }
     }
 }
