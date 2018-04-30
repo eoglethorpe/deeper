@@ -101,20 +101,40 @@ export default class RightPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static createSchema = (aryTemplateMetadata, aryTemplateMethodology) => {
+    static createSchema = (
+        aryTemplateMetadata,
+        aryTemplateMethodology,
+        scorePillars,
+        scoreMatrixPillars,
+    ) => {
         const schema = { fields: {
             metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
             additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
             methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
             summary: [],
-            score: {
-                fields: {
-                    pillars: [],
-                    matrixPillars: [],
-                },
-            },
+            score: RightPanel.createScoreSchema(scorePillars, scoreMatrixPillars),
         } };
         return schema;
+    }
+
+    static createScoreSchema = (scorePillars, scoreMatrixPillars) => {
+        const scoreSchema = {
+            fields: {
+                pillars: [],
+                matrixPillars: [],
+
+                finalScore: [],
+            },
+        };
+
+        scorePillars.forEach((pillar) => {
+            scoreSchema.fields[`${pillar.id}-score`] = [];
+        });
+        scoreMatrixPillars.forEach((pillar) => {
+            scoreSchema.fields[`${pillar.id}-matrix-score`] = [];
+        });
+
+        return scoreSchema;
     }
 
     static createComputeSchema = (scorePillars, scoreMatrixPillars, scoreScales, scoreBuckets) => {
@@ -251,6 +271,8 @@ export default class RightPanel extends React.PureComponent {
             schema: RightPanel.createSchema(
                 props.aryTemplateMetadata,
                 props.aryTemplateMethodology,
+                props.scorePillars,
+                props.scoreMatrixPillars,
             ),
             computeSchema: RightPanel.createComputeSchema(
                 props.scorePillars,
@@ -306,12 +328,16 @@ export default class RightPanel extends React.PureComponent {
     componentWillReceiveProps(nextProps) {
         if (
             this.props.aryTemplateMetadata !== nextProps.aryTemplateMetadata ||
-            this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology
+            this.props.aryTemplateMethodology !== nextProps.aryTemplateMethodology ||
+            this.props.scorePillars !== nextProps.scorePillars ||
+            this.props.scoreMatrixPillars !== nextProps.scoreMatrixPillars
         ) {
             this.setState({
                 schema: RightPanel.createSchema(
                     nextProps.aryTemplateMetadata,
                     nextProps.aryTemplateMethodology,
+                    nextProps.scorePillars,
+                    nextProps.scoreMatrixPillars,
                 ),
             });
         }
