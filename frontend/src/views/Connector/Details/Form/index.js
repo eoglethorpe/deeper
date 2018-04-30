@@ -25,16 +25,19 @@ import SuccessButton from '../../../../vendor/react-store/components/Action/Butt
 import ConnectorPatchRequest from '../../requests/ConnectorPatchRequest';
 import ConnectorDetailsGetRequest from '../../requests/ConnectorDetailsGetRequest';
 import UserListGetRequest from '../../requests/UserListGetRequest';
+import UserProjectsGetRequest from '../../requests/UserProjectsGetRequest';
 
 import {
     connectorDetailsSelector,
     connectorStringsSelector,
     connectorSourceSelector,
     notificationStringsSelector,
+    currentUserInformationSelector,
     usersInformationListSelector,
     currentUserProjectsSelector,
 
     setUsersInformationAction,
+    setUserProjectsAction,
     changeUserConnectorDetailsAction,
     setErrorUserConnectorDetailsAction,
     setUserConnectorDetailsAction,
@@ -56,9 +59,11 @@ const propTypes = {
             name: PropTypes.string,
         }),
     ),
+    setUserProjects: PropTypes.func.isRequired,
     changeUserConnectorDetails: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
+    userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setUserConnectorDetails: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
 };
@@ -73,6 +78,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
     connectorStrings: connectorStringsSelector(state),
+    userInformation: currentUserInformationSelector(state),
     users: usersInformationListSelector(state),
     userProjects: currentUserProjectsSelector(state),
     connectorSource: connectorSourceSelector(state),
@@ -81,6 +87,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     setUsers: params => dispatch(setUsersInformationAction(params)),
+    setUserProjects: params => dispatch(setUserProjectsAction(params)),
     changeUserConnectorDetails: params => dispatch(changeUserConnectorDetailsAction(params)),
     setErrorUserConnectorDetails: params => dispatch(setErrorUserConnectorDetailsAction(params)),
     setUserConnectorDetails: params => dispatch(setUserConnectorDetailsAction(params)),
@@ -111,6 +118,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
         this.state = {
             userDataLoading: false,
+            projectDataLoading: false,
             connectorDataLoading: false,
             pending: false,
             schema: this.createSchema(props),
@@ -246,6 +254,9 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     componentWillMount() {
         this.startUsersListGetRequest();
+        if (this.props.userInformation.id) {
+            this.startUserProjectsGetRequest(this.props.userInformation.id);
+        }
     }
 
     componentWillReceiveProps(nextProps) {
@@ -285,6 +296,9 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
         if (this.requestForUserList) {
             this.requestForUserList.stop();
+        }
+        if (this.projectsRequest) {
+            this.projectsRequest.stop();
         }
         if (this.requestForConnectorDetails) {
             this.requestForConnectorDetails.stop();
@@ -368,6 +382,18 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         });
         schema.fields.params.fields = paramFields;
         return schema;
+    }
+
+    startUserProjectsGetRequest = (userId) => {
+        if (this.projectsRequest) {
+            this.projectsRequest.stop();
+        }
+        const projectsRequest = new UserProjectsGetRequest({
+            setUserProjects: this.props.setUserProjects,
+            setState: v => this.setState(v),
+        });
+        this.projectsRequest = projectsRequest.create(userId);
+        this.projectsRequest.start();
     }
 
     startConnectorPatchRequest = (connectorId, connectorDetails) => {

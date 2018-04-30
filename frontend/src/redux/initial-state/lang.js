@@ -629,6 +629,7 @@ const initialLangState = {
                 1122: 'Set it to global',
                 1123: 'You need project admin rights to change this setting.',
                 1124: 'Remove project',
+                1125: 'Error while fetching projects of current user',
             },
             views: {
                 af: {
@@ -1227,6 +1228,8 @@ const initialLangState = {
                     adminLevelEditSuccess: 957,
                     adminLevelEditFailure: 958,
                     adminLevelEditFatal: 959,
+                    projectsTitle: 31,
+                    projectsGetFailure: 1125,
                     projectDetails: 960,
                     projectDetailsSuccess: 961,
                     projectDetailsFailure: 962,
