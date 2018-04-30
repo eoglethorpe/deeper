@@ -32,6 +32,7 @@ import {
     connectorSourceSelector,
     notificationStringsSelector,
     usersInformationListSelector,
+    currentUserProjectsSelector,
 
     setUsersInformationAction,
     changeUserConnectorDetailsAction,
@@ -49,6 +50,12 @@ const propTypes = {
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     connectorSource: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    userProjects: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number,
+            name: PropTypes.string,
+        }),
+    ),
     changeUserConnectorDetails: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
@@ -59,6 +66,7 @@ const propTypes = {
 const defaultProps = {
     connectorDetails: {},
     connectorSource: {},
+    userProjects: [],
     connectorId: undefined,
 };
 
@@ -66,6 +74,7 @@ const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
     connectorStrings: connectorStringsSelector(state),
     users: usersInformationListSelector(state),
+    userProjects: currentUserProjectsSelector(state),
     connectorSource: connectorSourceSelector(state),
     notificationStrings: notificationStringsSelector(state),
 });
@@ -85,12 +94,20 @@ export default class ConnectorDetailsForm extends React.PureComponent {
     static defaultProps = defaultProps;
     static keySelector = s => s.key;
     static labelSelector = s => s.title;
-    static userOptionLabelSelector = (d = {}) => d.displayName;
-    static userOptionKeySelector = (d = {}) => d.user;
-
+    static userLabelSelector = (d = {}) => d.displayName;
+    static userKeySelector = (d = {}) => d.user;
+    static projectLabelSelector = (d = {}) => d.title;
+    static projectKeySelector = (d = {}) => d.project;
 
     constructor(props) {
         super(props);
+
+        const {
+            users,
+            userProjects,
+        } = this.props;
+
+        const { faramValues = {} } = this.props.connectorDetails;
 
         this.state = {
             userDataLoading: false,
@@ -98,9 +115,6 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             pending: false,
             schema: this.createSchema(props),
         };
-
-        const { faramValues = {} } = this.props.connectorDetails;
-
         this.usersHeader = [
             {
                 key: 'displayName',
@@ -166,7 +180,68 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                 },
             },
         ];
-        this.usersOptions = this.getOptionsForUser(this.props.users, faramValues.users);
+        this.projectsHeader = [
+            {
+                key: 'title',
+                label: this.props.connectorStrings('tableHeaderTitle'),
+                order: 1,
+                sortable: true,
+                comparator: (a, b) => compareString(a.title, b.title),
+            },
+            {
+                key: 'role',
+                label: this.props.connectorStrings('tableHeaderVisibility'),
+                order: 2,
+                sortable: true,
+                comparator: (a, b) => compareString(a.role, b.role),
+            },
+            {
+                key: 'actions',
+                label: this.props.connectorStrings('tableHeaderActions'),
+                order: 3,
+                modifier: (row) => {
+                    const { connectorStrings } = this.props;
+                    const isGlobal = row.role === 'global';
+                    const isProjectAdmin = row.admin === 'admin';
+                    let toggleTitle = '';
+                    let deleteTitle = connectorStrings('removeProjectTitle');
+                    if (isGlobal) {
+                        toggleTitle = connectorStrings('setLocalVisibilityTitle');
+                    } else {
+                        toggleTitle = connectorStrings('setGlobalVisibilityTitle');
+                    }
+                    if (!isProjectAdmin) {
+                        toggleTitle = connectorStrings('needAdminRightsTitle');
+                        deleteTitle = connectorStrings('needAdminRightsTitle');
+                    }
+
+                    return (
+                        <Fragment>
+                            <PrimaryButton
+                                smallVerticalPadding
+                                key="role-change"
+                                title={toggleTitle}
+                                onClick={() => this.handleToggleProjectRoleClick(row)}
+                                iconName={isGlobal ? iconNames.globe : iconNames.locked}
+                                disabled={!isProjectAdmin}
+                                transparent
+                            />
+                            <DangerButton
+                                smallVerticalPadding
+                                key="delete-member"
+                                title={deleteTitle}
+                                onClick={() => this.handleDeleteProjectClick(row)}
+                                iconName={iconNames.delete}
+                                disabled={!isProjectAdmin}
+                                transparent
+                            />
+                        </Fragment>
+                    );
+                },
+            },
+        ];
+        this.usersOptions = this.getOptionsForUser(users, faramValues.users);
+        this.projectsOptions = this.getOptionsForProjects(userProjects, faramValues.projects);
     }
 
     componentWillMount() {
@@ -178,12 +253,15 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             connectorSource: newConnectorSource,
             connectorDetails: newConnectorDetails,
             users: newUsers,
+            userProjects: newProjects,
         } = nextProps;
         const {
             connectorSource: oldConnectorSource,
             connectorDetails: oldConnectorDetails,
             users: oldUsers,
+            userProjects: oldProjects,
         } = this.props;
+
         if (oldConnectorSource !== newConnectorSource) {
             this.setState({
                 schema: this.createSchema(newConnectorSource),
@@ -193,6 +271,11 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         if (newConnectorDetails !== oldConnectorDetails || newUsers !== oldUsers) {
             const { faramValues = {} } = newConnectorDetails;
             this.usersOptions = this.getOptionsForUser(newUsers, faramValues.users);
+        }
+
+        if (newConnectorDetails !== oldConnectorDetails || newProjects !== oldProjects) {
+            const { faramValues = {} } = newConnectorDetails;
+            this.projectsOptions = this.getOptionsForProjects(newProjects, faramValues.projects);
         }
     }
 
@@ -234,6 +317,34 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         return finalOptions.sort((a, b) => compareString(a.displayName, b.displayName));
     }
 
+    getOptionsForProjects = (allProjects, connectorProjects) => {
+        if (!connectorProjects) {
+            return emptyList;
+        }
+
+        if (!allProjects) {
+            return connectorProjects;
+        }
+
+        const finalOptions = [...connectorProjects];
+
+        allProjects.forEach((a) => {
+            const memberIndex = connectorProjects.findIndex(m => m.project === a.id);
+            if (memberIndex === -1) {
+                finalOptions.push({
+                    title: a.title,
+                    role: 'self',
+                    project: a.id,
+                    admin: a.role,
+                });
+            } else {
+                finalOptions[memberIndex].admin = a.role;
+            }
+        });
+
+        return finalOptions.sort((a, b) => compareString(a.title, b.title));
+    }
+
     createSchema = (props) => {
         const { connectorSource = {} } = props;
         const schema = {
@@ -241,6 +352,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                 title: [requiredCondition],
                 params: {},
                 users: [],
+                projects: [],
             },
         };
         if ((connectorSource.options || emptyList).length === 0) {
@@ -335,6 +447,35 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
     }
 
+    handleToggleProjectRoleClick = (selectedProject) => {
+        const {
+            faramValues,
+            faramErrors,
+        } = this.props.connectorDetails;
+
+        const index = (faramValues.projects || []).findIndex(p =>
+            p.project === selectedProject.project);
+
+        if (index !== -1) {
+            const settings = {
+                projects: {
+                    [index]: {
+                        role: {
+                            $set: selectedProject.role === 'global' ? 'self' : 'global',
+                        },
+                    },
+                },
+            };
+
+            const newFaramValues = update(faramValues, settings);
+            this.props.changeUserConnectorDetails({
+                faramValues: newFaramValues,
+                faramErrors,
+                connectorId: this.props.connectorId,
+            });
+        }
+    }
+
     handleDeleteUserClick = (selectedUser) => {
         const {
             faramValues,
@@ -358,8 +499,32 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
     }
 
+    handleDeleteProjectClick = (selectedProject) => {
+        const {
+            faramValues,
+            faramErrors,
+        } = this.props.connectorDetails;
+
+        const index = (faramValues.projects || []).findIndex(p =>
+            p.project === selectedProject.project);
+
+        if (index !== -1) {
+            const settings = {
+                projects: {
+                    $splice: [[index, 1]],
+                },
+            };
+
+            const newFaramValues = update(faramValues, settings);
+            this.props.changeUserConnectorDetails({
+                faramValues: newFaramValues,
+                faramErrors,
+                connectorId: this.props.connectorId,
+            });
+        }
+    }
+
     handleFaramChange = (faramValues, faramErrors) => {
-        console.warn(faramValues);
         this.props.changeUserConnectorDetails({
             faramValues,
             faramErrors,
@@ -416,7 +581,9 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
         const {
             usersHeader,
+            projectsHeader,
             usersOptions,
+            projectsOptions,
         } = this;
 
         const loading = userDataLoading || connectorDataLoading || pending;
@@ -447,16 +614,28 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                     />
                 </FaramGroup>
                 {!(userDataLoading || connectorDataLoading) &&
-                    <TabularSelectInput
-                        faramElementName="users"
-                        options={usersOptions}
-                        label={connectorStrings('connectorUsersLabel')}
-                        labelSelector={ConnectorDetailsForm.userOptionLabelSelector}
-                        keySelector={ConnectorDetailsForm.userOptionKeySelector}
-                        tableHeaders={usersHeader}
-                        hideRemoveFromListButton
-                        hideSelectAllButton
-                    />
+                    <Fragment>
+                        <TabularSelectInput
+                            faramElementName="users"
+                            options={usersOptions}
+                            label={connectorStrings('connectorUsersLabel')}
+                            labelSelector={ConnectorDetailsForm.userLabelSelector}
+                            keySelector={ConnectorDetailsForm.userKeySelector}
+                            tableHeaders={usersHeader}
+                            hideRemoveFromListButton
+                            hideSelectAllButton
+                        />
+                        <TabularSelectInput
+                            faramElementName="projects"
+                            options={projectsOptions}
+                            label={connectorStrings('connectorProjectsLabel')}
+                            labelSelector={ConnectorDetailsForm.projectLabelSelector}
+                            keySelector={ConnectorDetailsForm.projectKeySelector}
+                            tableHeaders={projectsHeader}
+                            hideRemoveFromListButton
+                            hideSelectAllButton
+                        />
+                    </Fragment>
                 }
                 <div className={styles.actionButtons}>
                     <DangerButton
