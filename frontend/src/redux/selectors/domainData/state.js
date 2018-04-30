@@ -36,6 +36,10 @@ export const geoOptionsSelector = ({ domainData }) => (
     domainData.geoOptions || emptyObject
 );
 
+export const regionsForAllProjectsSelector = ({ domainData }) => (
+    domainData.regionsForProject || emptyObject
+);
+
 export const projectsOptionsSelector = ({ domainData }) => (
     domainData.projectsOptions || emptyObject
 );

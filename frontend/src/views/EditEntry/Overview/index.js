@@ -26,10 +26,6 @@ import LeftPanel from './LeftPanel';
 import styles from './styles.scss';
 
 const propTypes = {
-    leadId: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    ]).isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     entryStrings: PropTypes.func.isRequired,
     afStrings: PropTypes.func.isRequired,
@@ -142,7 +138,7 @@ export default class Overview extends React.PureComponent {
 
     handleEntrySelectChange = (value) => {
         this.props.setActiveEntry({
-            leadId: this.props.leadId,
+            leadId: this.props.lead.id,
             entryId: value,
         });
     }
@@ -184,7 +180,6 @@ export default class Overview extends React.PureComponent {
             entryStrings,
             filteredEntries,
             lead,
-            leadId,
             onEntryAdd,
             onEntryDelete,
             onSaveAll,
@@ -209,7 +204,6 @@ export default class Overview extends React.PureComponent {
                     <LeftPanel
                         api={api}
                         lead={lead}
-                        leadId={leadId}
                         setActiveEntry={setActiveEntry}
                         selectedEntryId={selectedEntryId}
                         entries={entries}

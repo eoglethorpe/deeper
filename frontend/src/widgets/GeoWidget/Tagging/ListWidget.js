@@ -8,6 +8,7 @@ import WidgetError from '../../../components/WidgetError';
 
 import {
     geoOptionsForProjectSelector,
+    regionsForProjectSelector,
 } from '../../../redux';
 
 import styles from './styles.scss';
@@ -18,15 +19,18 @@ const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    regions: PropTypes.arrayOf(PropTypes.object),
 };
 
 const defaultProps = {
     attribute: undefined,
     geoOptions: {},
+    regions: [],
 };
 
 const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
+    regions: regionsForProjectSelector(state, props),
 });
 
 const emptyList = [];
@@ -84,10 +88,8 @@ export default class GeoTaggingList extends React.PureComponent {
         } = this.state;
         const {
             geoOptions,
+            regions,
         } = this.props;
-
-        const { api } = this.props;
-        const regions = api.getProject().regions;
 
         return (
             <GeoSelection

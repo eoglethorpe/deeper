@@ -102,6 +102,14 @@ const initialDomainDataState = {
         */
     },
 
+    // index is project id
+    regionsForProject: {
+        /*
+        1: [
+        ],
+        */
+    },
+
     // index is export id
     userExports: {
         /*

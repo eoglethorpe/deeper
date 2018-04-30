@@ -83,3 +83,11 @@ export const createParamsForDeleteEntry = () => ({
     method: DELETE,
     headers: commonHeaderForPost,
 });
+
+export const createUrlEditEntryGet = leadId => (
+    `${wsEndpoint}/edit-entries-data/${leadId}/`
+);
+export const createParamsForEditEntryGet = () => ({
+    method: GET,
+    headers: commonHeaderForPost,
+});

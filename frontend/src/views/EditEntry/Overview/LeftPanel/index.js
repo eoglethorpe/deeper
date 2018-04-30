@@ -24,11 +24,6 @@ const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    leadId: PropTypes.oneOfType([
-        PropTypes.number,
-        PropTypes.string,
-    ]).isRequired,
-
     selectedEntryId: PropTypes.string,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 
@@ -119,8 +114,8 @@ export default class LeftPanel extends React.PureComponent {
             component: () => (
                 <AssistedTagging
                     className={styles.assistedTagging}
-                    leadId={this.props.leadId}
-                    projectId={this.props.api.getProject().id}
+                    leadId={this.props.lead.id}
+                    projectId={this.props.lead.project}
                     onEntryAdd={this.handleEntryAdd}
                 />
             ),
@@ -272,7 +267,7 @@ export default class LeftPanel extends React.PureComponent {
 
     handleEntryItemClick = (value) => {
         this.props.setActiveEntry({
-            leadId: this.props.leadId,
+            leadId: this.props.lead.id,
             entryId: value,
         });
     }

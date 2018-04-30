@@ -3,7 +3,13 @@ from rest_framework import serializers
 
 from deep.serializers import RemoveNullFieldsMixin
 from user_resource.serializers import UserResourceSerializer
-from analysis_framework.serializers import SimpleWidgetSerializer
+from lead.serializers import LeadSerializer
+from lead.models import Lead
+from analysis_framework.serializers import (
+    AnalysisFrameworkSerializer,
+    SimpleWidgetSerializer,
+)
+from geo.serializers import GeoOptionSerializer, SimpleRegionSerializer
 from .models import (
     Entry, Attribute, FilterData, ExportData
 )
@@ -107,3 +113,31 @@ class EntrySerializer(RemoveNullFieldsMixin,
                   'attributes', 'order',
                   'created_at', 'created_by', 'modified_at', 'modified_by',
                   'version_id')
+
+
+class EditEntriesDataSerializer(RemoveNullFieldsMixin,
+                                serializers.ModelSerializer):
+    lead = LeadSerializer(source='*', read_only=True)
+    entries = EntrySerializer(source='entry_set', many=True, read_only=True)
+    analysis_framework = AnalysisFrameworkSerializer(
+        source='project.analysis_framework',
+        read_only=True,
+    )
+    geo_options = serializers.SerializerMethodField()
+    regions = SimpleRegionSerializer(source='project.regions', many=True,
+                                     read_only=True)
+
+    class Meta:
+        model = Lead
+        fields = ('lead', 'entries', 'analysis_framework', 'geo_options',
+                  'regions')
+
+    def get_geo_options(self, lead):
+        # TODO Check if geo option is required based on analysis framework
+        options = {}
+        for region in lead.project.regions.all():
+            options[str(region.id)] = GeoOptionSerializer(
+                region.get_geo_areas(),
+                many=True,
+            ).data
+        return options
