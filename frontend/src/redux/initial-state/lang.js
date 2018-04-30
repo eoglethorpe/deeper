@@ -519,6 +519,8 @@ const initialLangState = {
                 2005: 'Do you want to apply this value to all entries?',
                 2006: 'Do you want to apply this value to all entries below?',
                 2007: 'Discard',
+                2008: 'No GEO file uploaded.',
+                2009: 'GEO File',
                 5551: 'Selected',
                 5552: 'All',
                 5553: 'Filtered',
@@ -794,6 +796,8 @@ const initialLangState = {
                 },
                 countries: {
                     countriesLabel: 51,
+                    noFileUploadedLabel: 2008,
+                    geoFileLabel: 2009,
                     searchCountryPlaceholer: 52,
                     addCountryButtonLabel: 301,
                     addCountryModalHeaderLabel: 53,

@@ -385,41 +385,55 @@ export default class EditAdminLevel extends React.PureComponent {
                             placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
                             className={styles.selectInput}
                         />
-                        <FileInput
-                            className={styles.geoFile}
-                            onChange={this.handleGeoFileInputChange}
-                            error={faramErrors.geoShapeFile}
-                            accept=".zip, .json, .geojson"
-                        >
-                            <span className={styles.load}>
-                                <i className={iconNames.uploadFa} />
-                                {this.props.countriesStrings('loadGeoShapeFile')}
-                            </span>
-                        </FileInput>
                         {
-                            faramValues.geoShapeFile &&
-                            <InternalGallery
-                                onlyFileName
-                                galleryId={faramValues.geoShapeFile}
-                            />
+                            faramValues.geoShapeFile ? (
+                                <div className={styles.currentUpload}>
+                                    <p>
+                                        {this.props.countriesStrings('geoFileLabel')}
+                                    </p>
+                                    <InternalGallery
+                                        onlyFileName
+                                        galleryId={faramValues.geoShapeFile}
+                                    />
+                                </div>
+                            ) : (
+                                <p className={styles.noFileUpload}>
+                                    {this.props.countriesStrings('noFileUploadedLabel')}
+                                </p>
+                            )
                         }
-                        <span
-                            className={iconNames.help}
-                            title={this.props.countriesStrings('geoshapeTooltip')}
-                        />
-                        <HiddenInput faramElementName="geoShapeFile" />
                     </div>
                     <div className={styles.actionButtons}>
-                        <DangerButton onClick={onClose}>
-                            {this.props.countriesStrings('cancelButtonLabel')}
-                        </DangerButton>
-                        <PrimaryButton
-                            className={styles.saveBtn}
-                            type="submit"
-                            disabled={pending || pristine}
-                        >
-                            {this.props.countriesStrings('saveChangesButtonLabel')}
-                        </PrimaryButton>
+                        <div className={styles.leftContainer}>
+                            <FileInput
+                                className={styles.geoFile}
+                                onChange={this.handleGeoFileInputChange}
+                                error={faramErrors.geoShapeFile}
+                                accept=".zip, .json, .geojson"
+                            >
+                                <span className={styles.load}>
+                                    <i className={iconNames.uploadFa} />
+                                    {this.props.countriesStrings('loadGeoShapeFile')}
+                                </span>
+                            </FileInput>
+                            <span
+                                className={iconNames.help}
+                                title={this.props.countriesStrings('geoshapeTooltip')}
+                            />
+                            <HiddenInput faramElementName="geoShapeFile" />
+                        </div>
+                        <div className={styles.rightContainer}>
+                            <DangerButton onClick={onClose}>
+                                {this.props.countriesStrings('cancelButtonLabel')}
+                            </DangerButton>
+                            <PrimaryButton
+                                className={styles.saveBtn}
+                                type="submit"
+                                disabled={pending || pristine}
+                            >
+                                {this.props.countriesStrings('saveChangesButtonLabel')}
+                            </PrimaryButton>
+                        </div>
                     </div>
                 </Faram>
             </div>
