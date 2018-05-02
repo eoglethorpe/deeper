@@ -9,6 +9,7 @@ $width-table: 320px;
 .score {
     display: flex;
     flex-direction: column;
+    background-color: $color-foreground-alt;
 
     .summary {
         @include background-color($color-background-header);
@@ -58,6 +59,7 @@ $width-table: 320px;
 
                 .content {
                     display: flex;
+                    flex-wrap: wrap;
 
                     .matrix-question {
                         padding: $spacing-small;
@@ -73,6 +75,7 @@ $width-table: 320px;
 
         .left {
             flex-basis: $width-table;
+            flex-shrink: 0;
             border-right: $width-separator-thin solid $color-separator;
             overflow-y: auto;
 
@@ -126,11 +129,9 @@ $width-table: 320px;
                                 }
                             }
                         }
-
                     }
                 }
             }
         }
     }
-
 }

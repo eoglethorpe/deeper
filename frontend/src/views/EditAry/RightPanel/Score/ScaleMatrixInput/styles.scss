@@ -2,7 +2,7 @@
 
 .scale-matrix-input {
     .table {
-        border-spacing: $spacing-small;
+        border-spacing: $width-separator-thin;
 
         .cell {
             .button {
@@ -10,7 +10,7 @@
                 border: 0;
                 background-color: transparent;
                 cursor: pointer;
-                padding: 0 $spacing-small-alt;
+                padding: $spacing-extra-small $spacing-small-alt;
                 color: inherit;
             }
 
