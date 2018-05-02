@@ -61,23 +61,35 @@
                 display: flex;
                 position: sticky;
                 top: 0;
-                justify-content: space-between;
                 z-index: 11;
                 border-bottom: $width-separator-thin solid $color-separator-alt;
                 background-color: $color-background-header;
                 padding: $spacing-small $spacing-medium-alt;
                 line-height: initial;
 
-                .heading {
-                    text-transform: none;
-                    font-weight: $font-weight-medium;
+                .information-container {
+                    flex-grow: 1;
+
+                    .heading {
+                        text-transform: none;
+                        font-weight: $font-weight-medium;
+                    }
+
+                    .detail {
+                        margin: $spacing-small 0;
+
+                        span {
+                            margin-right: $spacing-small;
+                        }
+                    }
                 }
 
-                .detail {
-                    margin: $spacing-small 0;
+                .action-buttons {
+                    flex-shrink: 0;
 
-                    span {
-                        margin-right: $spacing-small;
+                    .edit-entry-link {
+                        @include button-like-link($color-accent);
+                        display: block;
                     }
                 }
             }

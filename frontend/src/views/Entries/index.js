@@ -10,7 +10,6 @@ import GridLayout from '../../vendor/react-store/components/View/GridLayout';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Pager from '../../vendor/react-store/components/View/Pager';
-import AccentButton from '../../vendor/react-store/components/Action/Button/AccentButton';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
 
@@ -120,12 +119,18 @@ export default class Entries extends React.PureComponent {
             pendingEntries: true,
             pendingAf: true,
         };
+
+        this.leadEntries = React.createRef();
     }
 
     componentWillMount() {
         const { projectId } = this.props;
         this.projectRequest = this.createRequestForProject(projectId);
         this.projectRequest.start();
+    }
+
+    componentDidMount() {
+        window.addEventListener('scroll', this.handleScroll, true);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -185,6 +190,8 @@ export default class Entries extends React.PureComponent {
     }
 
     componentWillUnmount() {
+        window.removeEventListener('scroll', this.handleScroll, true);
+
         if (this.entriesRequest) {
             this.entriesRequest.stop();
         }
@@ -405,6 +412,13 @@ export default class Entries extends React.PureComponent {
         return analysisFrameworkRequest;
     }
 
+    handleScroll = (e) => {
+        const headers = e.target.getElementsByClassName(styles.header);
+        for (let i = 0; i < headers.length; i += 1) {
+            headers[i].style.transform = `translateX(${e.target.scrollLeft}px)`;
+        }
+    }
+
     handlePageClick = (page) => {
         this.props.setEntriesViewActivePage({ activePage: page });
     }
@@ -457,7 +471,7 @@ export default class Entries extends React.PureComponent {
 
         return (
             <header className={styles.header}>
-                <div className={styles.infoContainer}>
+                <div className={styles.informationContainer}>
                     <h2 className={styles.heading}>
                         {title}
                     </h2>
@@ -471,12 +485,11 @@ export default class Entries extends React.PureComponent {
                 </div>
                 <div className={styles.actionButtons}>
                     <Link
+                        className={styles.editEntryLink}
                         title={this.props.entryStrings('editEntryLinkTitle')}
                         to={route}
                     >
-                        <AccentButton>
-                            {this.props.entryStrings('editEntryButtonLabel')}
-                        </AccentButton>
+                        {this.props.entryStrings('editEntryButtonLabel')}
                     </Link>
                 </div>
             </header>
@@ -552,6 +565,7 @@ export default class Entries extends React.PureComponent {
 
         return (
             <ListView
+                ref={this.leadEntries}
                 className={styles.leadEntries}
                 data={entries}
                 modifier={this.renderLeadGroupedEntriesItem}
