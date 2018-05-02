@@ -75,47 +75,49 @@ export default class Metadata extends React.PureComponent {
 
         return (
             <div className={styles.metadata}>
-                {pending && <LoadingAnimation large />}
                 <FaramGroup faramElementName="metadata">
-                    <div className={styles.basicInformation}>
-                        <Header
-                            title={basicInformationTitle}
-                            className={styles.header}
-                        />
-                        <ListView
-                            className={styles.content}
-                            data={metadataGroupValues}
-                            modifier={this.renderMetadata}
-                        />
-                    </div>
-                </FaramGroup>
-                <FaramGroup faramElementName="additionalDocuments">
-                    <div className={styles.additionalDocuments}>
-                        <Header
-                            title={additionalDocumentsTitle}
-                            className={styles.header}
-                        />
-                        <div className={styles.content}>
-                            <Baksa
-                                label={assessmentMetadataStrings('executiveSummaryTitle')}
-                                className={styles.baksa}
-                                faramElementName="executiveSummary"
-                                showPageRange
+                    {pending && <LoadingAnimation large />}
+                    <FaramGroup faramElementName="basicInformation">
+                        <div className={styles.basicInformation}>
+                            <Header
+                                title={basicInformationTitle}
+                                className={styles.header}
                             />
-                            <Baksa
-                                label={assessmentMetadataStrings('assessmentDatabaseTitle')}
-                                className={styles.baksa}
-                                faramElementName="assessmentData"
-                                acceptUrl
-                            />
-                            <Baksa
-                                label={assessmentMetadataStrings('questionnaireTitle')}
-                                className={styles.baksa}
-                                faramElementName="questionnaire"
-                                showPageRange
+                            <ListView
+                                className={styles.content}
+                                data={metadataGroupValues}
+                                modifier={this.renderMetadata}
                             />
                         </div>
-                    </div>
+                    </FaramGroup>
+                    <FaramGroup faramElementName="additionalDocuments">
+                        <div className={styles.additionalDocuments}>
+                            <Header
+                                title={additionalDocumentsTitle}
+                                className={styles.header}
+                            />
+                            <div className={styles.content}>
+                                <Baksa
+                                    label={assessmentMetadataStrings('executiveSummaryTitle')}
+                                    className={styles.baksa}
+                                    faramElementName="executiveSummary"
+                                    showPageRange
+                                />
+                                <Baksa
+                                    label={assessmentMetadataStrings('assessmentDatabaseTitle')}
+                                    className={styles.baksa}
+                                    faramElementName="assessmentData"
+                                    acceptUrl
+                                />
+                                <Baksa
+                                    label={assessmentMetadataStrings('questionnaireTitle')}
+                                    className={styles.baksa}
+                                    faramElementName="questionnaire"
+                                    showPageRange
+                                />
+                            </div>
+                        </div>
+                    </FaramGroup>
                 </FaramGroup>
             </div>
         );

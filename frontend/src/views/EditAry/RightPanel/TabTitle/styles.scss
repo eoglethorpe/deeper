@@ -1,0 +1,7 @@
+@import '../../../../stylesheets/base';
+
+.tab-title {
+    &.error {
+        color: $color-danger;
+    }
+}

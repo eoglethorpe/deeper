@@ -38,7 +38,7 @@ import Metadata from './Metadata';
 import Summary from './Summary';
 import Score from './Score';
 import Methodology from './Methodology';
-
+import TabTitle from './TabTitle';
 import styles from './styles.scss';
 
 const emptyObject = {};
@@ -108,8 +108,12 @@ export default class RightPanel extends React.PureComponent {
         scoreMatrixPillars,
     ) => {
         const schema = { fields: {
-            metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
-            additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
+            metadata: {
+                fields: {
+                    basicInformation: RightPanel.createBasicInformationSchema(aryTemplateMetadata),
+                    additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
+                },
+            },
             methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
             summary: [],
             score: RightPanel.createScoreSchema(scorePillars, scoreMatrixPillars),
@@ -211,7 +215,7 @@ export default class RightPanel extends React.PureComponent {
         return schema;
     }
 
-    static createMetadataSchema = (aryTemplateMetadata = {}) => {
+    static createBasicInformationSchema = (aryTemplateMetadata = {}) => {
         // Dynamic fields from metadataGroup
         const dynamicFields = {};
         Object.keys(aryTemplateMetadata).forEach((key) => {
@@ -393,6 +397,17 @@ export default class RightPanel extends React.PureComponent {
         });
     };
 
+    renderTab = (tabKey) => {
+        const title = this.tabs[tabKey];
+
+        return (
+            <TabTitle
+                title={title}
+                faramElementName={tabKey}
+            />
+        );
+    }
+
     render() {
         return (
             <Faram
@@ -413,6 +428,7 @@ export default class RightPanel extends React.PureComponent {
                     defaultHash={this.defaultHash}
                     replaceHistory
                     tabs={this.tabs}
+                    modifier={this.renderTab}
                 >
                     <SuccessButton
                         className={styles.saveButton}
