@@ -65,6 +65,10 @@ const assessmentRegistrySchema = [];
             priorityIssues: { type: 'array', required: true },
             specificNeedGroups: { type: 'array', required: true },
             affectedLocations: { type: 'array', required: true },
+            scoreMatrixPillars: { type: 'array', required: true },
+            scoreBuckets: { type: 'array', required: true },
+            scoreScales: { type: 'array', required: true },
+            scorePillars: { type: 'array', required: true },
         },
     };
     assessmentRegistrySchema.push({ name, schema });
