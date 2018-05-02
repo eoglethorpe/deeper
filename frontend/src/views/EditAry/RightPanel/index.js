@@ -108,8 +108,12 @@ export default class RightPanel extends React.PureComponent {
         scoreMatrixPillars,
     ) => {
         const schema = { fields: {
-            metadata: RightPanel.createMetadataSchema(aryTemplateMetadata),
-            additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
+            metadata: {
+                fields: {
+                    basicInformation: RightPanel.createBasicInformationSchema(aryTemplateMetadata),
+                    additionalDocuments: RightPanel.createAdditionalDocumentsSchema(),
+                },
+            },
             methodology: RightPanel.createMethodologySchema(aryTemplateMethodology),
             summary: [],
             score: RightPanel.createScoreSchema(scorePillars, scoreMatrixPillars),
@@ -211,7 +215,7 @@ export default class RightPanel extends React.PureComponent {
         return schema;
     }
 
-    static createMetadataSchema = (aryTemplateMetadata = {}) => {
+    static createBasicInformationSchema = (aryTemplateMetadata = {}) => {
         // Dynamic fields from metadataGroup
         const dynamicFields = {};
         Object.keys(aryTemplateMetadata).forEach((key) => {
