@@ -38,7 +38,7 @@ import Metadata from './Metadata';
 import Summary from './Summary';
 import Score from './Score';
 import Methodology from './Methodology';
-
+import TabTitle from './TabTitle';
 import styles from './styles.scss';
 
 const emptyObject = {};
@@ -393,6 +393,17 @@ export default class RightPanel extends React.PureComponent {
         });
     };
 
+    renderTab = (tabKey) => {
+        const title = this.tabs[tabKey];
+
+        return (
+            <TabTitle
+                title={title}
+                faramElementName={tabKey}
+            />
+        );
+    }
+
     render() {
         return (
             <Faram
@@ -413,6 +424,7 @@ export default class RightPanel extends React.PureComponent {
                     defaultHash={this.defaultHash}
                     replaceHistory
                     tabs={this.tabs}
+                    modifier={this.renderTab}
                 >
                     <SuccessButton
                         className={styles.saveButton}
