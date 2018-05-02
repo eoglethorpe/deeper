@@ -1,15 +1,16 @@
 @import '../../../../../stylesheets/base';
 
 $width-value: 12px;
-$height-value: 24px;
+$height-value: 20px;
 
 $width-value-active: 16px;
-$height-value-active: 32px;
+$height-value-active: 30px;
 
 .scale-input {
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: $height-value-active;
 
     .value {
         margin: 0 $spacing-extra-small;
