@@ -15,6 +15,7 @@ export default class UserProjectsGetRequest {
     success = userId => (response) => {
         try {
             schema.validate(response, 'projectsGetResponse');
+            console.warn('asdasdas');
             this.props.setUserProjects({
                 userId,
                 projects: response.results,
@@ -25,17 +26,22 @@ export default class UserProjectsGetRequest {
         }
     }
 
-    failure = () => {
+    failure = (response) => {
+        notify.send({
+            title: this.props.notificationStrings('projectsTitle'),
+            type: notify.type.ERROR,
+            message: response.error,
+            duration: notify.duration.MEDIUM,
+        });
+    }
+
+    fatal = () => {
         notify.send({
             title: this.props.notificationStrings('projectsTitle'),
             type: notify.type.ERROR,
             message: this.props.notificationStrings('projectsGetFailure'),
             duration: notify.duration.MEDIUM,
         });
-    }
-
-    fatal = (response) => {
-        console.warn('fatal:', response);
     }
 
     create = (userId) => {

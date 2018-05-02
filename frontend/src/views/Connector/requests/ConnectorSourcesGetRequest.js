@@ -21,17 +21,22 @@ export default class ConnectorsGetRequest {
         }
     }
 
-    failure = () => {
+    failure = (response) => {
+        notify.send({
+            title: this.props.notificationStrings('connectorSourcesTitle'),
+            type: notify.type.ERROR,
+            message: response.error,
+            duration: notify.duration.MEDIUM,
+        });
+    }
+
+    fatal = () => {
         notify.send({
             title: this.props.notificationStrings('connectorSourcesTitle'),
             type: notify.type.ERROR,
             message: this.props.notificationStrings('connectorSourcesGetFailure'),
             duration: notify.duration.MEDIUM,
         });
-    }
-
-    fatal = (response) => {
-        console.warn('fatal:', response);
     }
 
     create = () => {

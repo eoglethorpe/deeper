@@ -32,7 +32,7 @@ import {
     connectorStringsSelector,
     connectorSourceSelector,
     notificationStringsSelector,
-    currentUserInformationSelector,
+    activeUserSelector,
     usersInformationListSelector,
     currentUserProjectsSelector,
 
@@ -63,7 +63,7 @@ const propTypes = {
     changeUserConnectorDetails: PropTypes.func.isRequired,
     notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
-    userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setUserConnectorDetails: PropTypes.func.isRequired,
     setUsers: PropTypes.func.isRequired,
 };
@@ -78,7 +78,7 @@ const defaultProps = {
 const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
     connectorStrings: connectorStringsSelector(state),
-    userInformation: currentUserInformationSelector(state),
+    activeUser: activeUserSelector(state),
     users: usersInformationListSelector(state),
     userProjects: currentUserProjectsSelector(state),
     connectorSource: connectorSourceSelector(state),
@@ -254,8 +254,8 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     componentWillMount() {
         this.startUsersListGetRequest();
-        if (this.props.userInformation.id) {
-            this.startUserProjectsGetRequest(this.props.userInformation.id);
+        if (this.props.activeUser) {
+            this.startUserProjectsGetRequest(this.props.activeUser.userId);
         }
     }
 
@@ -273,20 +273,21 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             userProjects: oldProjects,
         } = this.props;
 
+        const { faramValues: oldFaramValues = {} } = oldConnectorDetails;
+        const { faramValues: newFaramValues = {} } = newConnectorDetails;
+
         if (oldConnectorSource !== newConnectorSource) {
             this.setState({
                 schema: this.createSchema(newConnectorSource),
             });
         }
 
-        if (newConnectorDetails !== oldConnectorDetails || newUsers !== oldUsers) {
-            const { faramValues = {} } = newConnectorDetails;
-            this.usersOptions = this.getOptionsForUser(newUsers, faramValues.users);
+        if (oldFaramValues.users !== newFaramValues.users || newUsers !== oldUsers) {
+            this.usersOptions = this.getOptionsForUser(newUsers, newFaramValues.users);
         }
 
-        if (newConnectorDetails !== oldConnectorDetails || newProjects !== oldProjects) {
-            const { faramValues = {} } = newConnectorDetails;
-            this.projectsOptions = this.getOptionsForProjects(newProjects, faramValues.projects);
+        if (oldFaramValues.projects !== newFaramValues.projects || newProjects !== oldProjects) {
+            this.projectsOptions = this.getOptionsForProjects(newProjects, newFaramValues.projects);
         }
     }
 
@@ -448,7 +449,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     handleToggleUserRoleClick = (selectedUser) => {
         const {
-            faramValues,
+            faramValues = {},
             faramErrors,
         } = this.props.connectorDetails;
 
@@ -475,7 +476,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     handleToggleProjectRoleClick = (selectedProject) => {
         const {
-            faramValues,
+            faramValues = {},
             faramErrors,
         } = this.props.connectorDetails;
 
@@ -504,7 +505,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     handleDeleteUserClick = (selectedUser) => {
         const {
-            faramValues,
+            faramValues = {},
             faramErrors,
         } = this.props.connectorDetails;
 
@@ -527,7 +528,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
 
     handleDeleteProjectClick = (selectedProject) => {
         const {
-            faramValues,
+            faramValues = {},
             faramErrors,
         } = this.props.connectorDetails;
 
@@ -595,7 +596,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         } = this.state;
 
         const {
-            faramValues,
+            faramValues = {},
             faramErrors,
             pristine,
         } = this.props.connectorDetails;
