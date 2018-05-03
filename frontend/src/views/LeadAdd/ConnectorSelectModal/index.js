@@ -1,23 +1,37 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import ListView from '../../../../src/vendor/react-store/components/View/List/ListView';
+import LoadingAnimation from '../../../../src/vendor/react-store/components/View/LoadingAnimation';
+import ListItem from '../../../../src/vendor/react-store/components/View/List/ListItem';
+import SearchInput from '../../../vendor/react-store/components/Input/SearchInput';
+import { caseInsensitiveSubmatch } from '../../../vendor/react-store/utils/common';
+import ConnectorsGetRequest from '../requests/ConnectorsGetRequest';
 
 import {
     leadsStringsSelector,
+    addLeadViewConnectorsListSelector,
+    projectIdFromRouteSelector,
+
+    addLeadViewSetConnectorsAction,
 } from '../../../redux';
 
 import { iconNames } from '../../../constants';
+import ConnectorContent from './Content';
 
 import styles from './styles.scss';
 
 const propTypes = {
     leadsStrings: PropTypes.func.isRequired,
+    onModalClose: PropTypes.func.isRequired,
+    connectorsList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
+    setConnectorsOfProject: PropTypes.func.isRequired,
+    projectId: PropTypes.number.isRequired,
 };
 
 const defaultProps = {
@@ -25,40 +39,181 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     leadsStrings: leadsStringsSelector(state),
+    projectId: projectIdFromRouteSelector(state),
+    connectorsList: addLeadViewConnectorsListSelector(state),
 });
 
-@connect(mapStateToProps, null)
+const mapDispatchToProps = dispatch => ({
+    setConnectorsOfProject: params => dispatch(addLeadViewSetConnectorsAction(params)),
+});
+
+const emptyList = [];
+
+@connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorSelectModal extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
+    static connectorKeySelector = c => c.id;
 
     constructor(props) {
         super(props);
+        const displayConnectorsList = props.connectorsList || emptyList;
+        const selectedConnector = displayConnectorsList.length > 0 ?
+            displayConnectorsList[0].id : 0;
+
         this.state = {
-            dummy: 'dummy',
+            searchInputValue: '',
+            showAddConnectorModal: false,
+            dataLoading: true,
+            displayConnectorsList,
+            selectedConnector,
         };
     }
 
-    render() {
+    componentWillMount() {
+        if (this.props.projectId) {
+            this.startConnectorsRequest(this.props.projectId);
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { connectorsList } = nextProps;
+        const { searchInputValue } = this.state;
+
+        if (this.props.connectorsList !== connectorsList) {
+            const displayConnectorsList = connectorsList.filter(
+                c => caseInsensitiveSubmatch(c.title, searchInputValue),
+            );
+            this.setState({ displayConnectorsList });
+        }
+    }
+
+    componentWillUnmount() {
+        if (this.requestForConnectors) {
+            this.requestForConnectors.stop();
+        }
+    }
+
+    startConnectorsRequest = (projectId) => {
+        if (this.requestForConnectors) {
+            this.requestForConnectors.stop();
+        }
+        const requestForConnectors = new ConnectorsGetRequest({
+            setState: v => this.setState(v),
+            setConnectorsOfProject: this.props.setConnectorsOfProject,
+        });
+        this.requestForConnectors = requestForConnectors.create(projectId);
+        this.requestForConnectors.start();
+    }
+
+    handleSearchInputChange = (searchInputValue) => {
+        const displayConnectorsList = this.props.connectorsList.filter(
+            c => caseInsensitiveSubmatch(c.title, searchInputValue),
+        );
+
+        this.setState({
+            displayConnectorsList,
+            searchInputValue,
+        });
+    };
+
+    handleConnectorSelectModalClose = () => this.props.onModalClose();
+
+    handleConnectorClick = (selectedConnector) => {
+        this.setState({ selectedConnector });
+    }
+
+    renderConnectorListItem = (key, connector) => {
+        const { selectedConnector } = this.state;
+        const isActive = connector.id === selectedConnector;
+
+        return (
+            <ListItem
+                active={isActive}
+                key={connector.id}
+                onClick={() => this.handleConnectorClick(connector.id)}
+            >
+                {connector.title}
+            </ListItem>
+        );
+    }
+
+    renderSidebar = () => {
         const {
+            displayConnectorsList,
+            searchInputValue,
+        } = this.state;
+
+        return (
+            <div className={styles.sidebar}>
+                <header className={styles.header}>
+                    <SearchInput
+                        onChange={this.handleSearchInputChange}
+                        placeholder={this.props.leadsStrings('searchConnectorPlaceholder')}
+                        className={styles.searchInput}
+                        value={searchInputValue}
+                        showLabel={false}
+                        showHintAndError={false}
+                    />
+                </header>
+                <ListView
+                    className={styles.connectorsList}
+                    data={displayConnectorsList}
+                    keyExtractor={ConnectorSelectModal.connectorKeySelector}
+                    modifier={this.renderConnectorListItem}
+                />
+            </div>
+        );
+    }
+
+    renderConnectorContent = () => {
+        const { selectedConnector } = this.state;
+        const {
+            connectorsList,
             leadsStrings,
         } = this.props;
 
+        if (connectorsList.length <= 0) {
+            return (
+                <div className={styles.empty}>
+                    { leadsStrings('noConnectorsLabel') }
+                </div>
+            );
+        }
+
         return (
-            <Modal>
+            <ConnectorContent
+                key={selectedConnector}
+                connectorId={selectedConnector}
+                className={styles.content}
+            />
+        );
+    }
+
+    render() {
+        const { leadsStrings } = this.props;
+        const { dataLoading } = this.state;
+
+        const Sidebar = this.renderSidebar;
+        const Content = this.renderConnectorContent;
+
+        return (
+            <Modal className={styles.modal} >
                 <ModalHeader
                     title={leadsStrings('connectorsLabel')}
                     rightComponent={
                         <PrimaryButton
-                            onClick={this.handleAddConnectorModalClose}
+                            onClick={this.handleConnectorSelectModalClose}
                             transparent
                         >
                             <span className={iconNames.close} />
                         </PrimaryButton>
                     }
                 />
-                <ModalBody>
-                    This is a modal.
+                <ModalBody className={styles.modalBody} >
+                    { dataLoading && <LoadingAnimation large /> }
+                    <Sidebar />
+                    <Content />
                 </ModalBody>
             </Modal>
         );

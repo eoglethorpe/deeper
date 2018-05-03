@@ -9,6 +9,8 @@ export const urlForConnectors = `${wsEndpoint}/connectors/?fields=id,title,versi
 export const createUrlForConnector = connectorId => `${wsEndpoint}/connectors/${connectorId}/`;
 export const urlForConnectorSources = `${wsEndpoint}/connector-sources/`;
 
+export const createUrlForConnectorsOfProject = projectId => `${urlForConnectors}&project=${projectId}`;
+
 export const createParamsForConnectorCreate = data => ({
     method: POST,
     headers: commonHeaderForPost,

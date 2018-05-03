@@ -34,6 +34,7 @@ export const LA__LEAD_SAVE = 'siloDomainData/LA__LEAD_SAVE';
 export const LA__LEAD_REMOVE = 'siloDomainData/LA__LEAD_REMOVE';
 export const LA__LEAD_REMOVE_SAVED = 'siloDomainData/LA__LEAD_REMOVE_SAVED';
 
+export const LA__SET_CONNECTORS = 'siloDomainData/LA__SET_CONNECTORS';
 
 // ACTION-CREATOR
 
@@ -49,6 +50,12 @@ export const addLeadViewUnsetFiltersAction = () => ({
 export const addLeadViewSetActiveLeadIdAction = leadId => ({
     type: LA__SET_ACTIVE_LEAD_ID,
     leadId,
+});
+
+export const addLeadViewSetConnectorsAction = ({ connectors, projectId }) => ({
+    type: LA__SET_CONNECTORS,
+    connectors,
+    projectId,
 });
 
 export const addLeadViewAddLeadsAction = leads => ({
@@ -426,6 +433,22 @@ const addLeadViewSaveLead = (state, action) => {
     return update(state, settings);
 };
 
+const addLeadViewSetConnectors = (state, action) => {
+    const {
+        connectors,
+        projectId,
+    } = action;
+
+    const settings = {
+        addLeadView: {
+            connectorsList: { $auto: {
+                [projectId]: { $set: connectors },
+            } },
+        },
+    };
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -441,5 +464,6 @@ const reducers = {
     [LA__COPY_ALL]: addLeadViewCopyAll('all'),
     [LA__COPY_ALL_BELOW]: addLeadViewCopyAll('below'),
     [LA__LEAD_REMOVE_SAVED]: addLeadViewRemoveSavedLeads,
+    [LA__SET_CONNECTORS]: addLeadViewSetConnectors,
 };
 export default reducers;

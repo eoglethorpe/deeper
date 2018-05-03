@@ -1,0 +1,49 @@
+@import '../../../stylesheets/base';
+
+$width-connectors-list: 240px;
+
+.modal {
+    width: 80vw;
+    height: 80vh;
+
+    .modal-body {
+        display: flex;
+        position: relative;
+        padding: 0;
+
+        .sidebar {
+            flex-basis: $width-connectors-list;
+            flex-shrink: 0;
+            border-right: $width-separator-thin solid $color-separator;
+
+            .header {
+                @include background-color($color-background-header);
+                display: flex;
+                align-items: center;
+                flex-shrink: 0;
+                flex-wrap: wrap;
+                border-bottom: $width-separator-thin solid $color-separator;
+                padding: $spacing-small;
+
+                .search-input {
+                    flex-basis: 100%;
+                }
+            }
+            .connectors-list {
+                flex-grow: 1;
+                overflow-y: auto;
+            }
+        }
+
+        .content {
+            flex-grow: 1;
+        }
+
+        .empty {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            justify-content: center;
+        }
+    }
+}

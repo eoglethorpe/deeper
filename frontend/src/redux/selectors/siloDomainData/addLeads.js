@@ -1,5 +1,12 @@
 import { createSelector } from 'reselect';
-import { isObjectEmpty } from '../../../vendor/react-store/utils/common';
+import {
+    isObjectEmpty,
+    compareString,
+} from '../../../vendor/react-store/utils/common';
+import {
+    projectIdFromRoute,
+    connectorIdFromRoute,
+} from '../domainData';
 import { leadAccessor } from '../../../entities/lead';
 
 const emptyList = [];
@@ -55,4 +62,26 @@ export const addLeadViewCanPrevSelector = createSelector(
         );
         return index - 1 >= 0;
     },
+);
+
+const addLeadViewConnectorsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.connectorsList || emptyObject,
+);
+
+const addLeadViewConnectorsForProjectSelector = createSelector(
+    addLeadViewConnectorsSelector,
+    projectIdFromRoute,
+    (addLeadViewConnectors, projectId) => addLeadViewConnectors[projectId] || emptyObject,
+);
+
+export const addLeadViewConnectorsListSelector = createSelector(
+    addLeadViewConnectorsForProjectSelector,
+    c => Object.values(c).sort((a, b) => compareString(a.title, b.title)),
+);
+
+export const addLeadViewConnectorSelector = createSelector(
+    addLeadViewConnectorsForProjectSelector,
+    connectorIdFromRoute,
+    (connectors, connectorId) => connectors[connectorId] || emptyObject,
 );

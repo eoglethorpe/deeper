@@ -558,6 +558,7 @@ const initialLangState = {
                 1003: 'Error while trying to save region detail.',
                 1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
                 251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
+                252: 'We couldn\'t find any connectors associated to this project',
 
                 1005: 'Edit entries',
                 9000: 'Priority issue',
@@ -1135,6 +1136,7 @@ const initialLangState = {
                     leadDelete: 191,
                     removeAllCompletedButtonTitle: 360,
                     noLeadsText: 8501,
+                    searchConnectorPlaceholder: 1101,
                 },
                 login: {
                     welcomeToText: 803,

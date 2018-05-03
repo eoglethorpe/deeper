@@ -75,7 +75,10 @@ export default class LeadButtons extends React.PureComponent {
         super(props);
         // NOTE: dropbox button must be manullay disabled and enabled unlike
         // google-drive which creates an overlay and disables everything in bg
-        this.state = { dropboxDisabled: false };
+        this.state = {
+            dropboxDisabled: false,
+            connectorSelectModalShow: true,
+        };
         // NOTE: google drive access token is received at start
         this.googleDriveAccessToken = undefined;
     }
@@ -260,8 +263,15 @@ export default class LeadButtons extends React.PureComponent {
 
     handleDropboxChooserCancel = () => this.setState({ dropboxDisabled: false });
 
+    handleConnectorSelectButtonClick = () => this.setState({ connectorSelectModalShow: true });
+
+    handleConnectorSelectModalClose = () => this.setState({ connectorSelectModalShow: false });
+
     render() {
-        const { dropboxDisabled } = this.state;
+        const {
+            dropboxDisabled,
+            connectorSelectModalShow,
+        } = this.state;
 
         return (
             <div className={styles.addLeadButtons}>
@@ -333,14 +343,18 @@ export default class LeadButtons extends React.PureComponent {
                 <Button
                     className={styles.addLeadBtn}
                     transparent
-                    onClick={this.handleConnectorButtonClick}
+                    onClick={this.handleConnectorSelectButtonClick}
                 >
                     <span className={iconNames.link} />
                     <p>
                         {_ts('leads', 'connectorsLabel')}
                     </p>
                 </Button>
-                <ConnectorSelectModal />
+                {connectorSelectModalShow &&
+                    <ConnectorSelectModal
+                        onModalClose={this.handleConnectorSelectModalClose}
+                    />
+                }
             </div>
         );
     }

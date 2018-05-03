@@ -36,6 +36,32 @@ const initialSiloDomainData = {
             },
             */
         ],
+        connectorsList: {
+            1: {
+                1: {
+                    id: 1,
+                    source: 'rss-feed',
+                    title: 'Gotham City in Bulbasaur',
+                },
+                2: {
+                    id: 2,
+                    source: 'rss-feed',
+                    title: 'Daily Bugle',
+                },
+            },
+            2: {
+                1: {
+                    id: 1,
+                    source: 'rss-feed',
+                    title: 'Gotham City',
+                },
+                2: {
+                    id: 2,
+                    source: 'rss-feed',
+                    title: 'Daily Bugle',
+                },
+            },
+        },
     },
 
     // i specifies project
