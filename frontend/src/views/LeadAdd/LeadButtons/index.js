@@ -17,6 +17,7 @@ import {
 } from '../../../redux';
 import DropboxChooser from '../../../components/DropboxChooser';
 import GooglePicker from '../../../components/GooglePicker';
+import ConnectorSelectModal from '../ConnectorSelectModal';
 import notify from '../../../notify';
 import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
@@ -329,6 +330,17 @@ export default class LeadButtons extends React.PureComponent {
                         {_ts('leads', 'textLabel')}
                     </p>
                 </Button>
+                <Button
+                    className={styles.addLeadBtn}
+                    transparent
+                    onClick={this.handleConnectorButtonClick}
+                >
+                    <span className={iconNames.link} />
+                    <p>
+                        {_ts('leads', 'connectorsLabel')}
+                    </p>
+                </Button>
+                <ConnectorSelectModal />
             </div>
         );
     }
