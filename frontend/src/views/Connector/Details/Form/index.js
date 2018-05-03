@@ -117,8 +117,8 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const { faramValues = {} } = this.props.connectorDetails;
 
         this.state = {
-            userDataLoading: false,
-            projectDataLoading: false,
+            userDataLoading: true,
+            projectDataLoading: true,
             connectorDataLoading: false,
             pending: false,
             schema: this.createSchema(props),

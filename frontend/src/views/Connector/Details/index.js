@@ -64,7 +64,7 @@ export default class ConnectorDetails extends React.PureComponent {
         super(props);
 
         this.state = {
-            dataLoading: false,
+            connectorDataLoading: true,
             requestFailure: false,
         };
     }
@@ -146,7 +146,11 @@ export default class ConnectorDetails extends React.PureComponent {
 
         return (
             <Fragment>
-                <h3>{connectorDetails.title}</h3>
+                <header className={styles.header} >
+                    <h3 className={styles.heading} >
+                        {connectorDetails.title}
+                    </h3>
+                </header>
                 <DetailsForm connectorId={connectorId} />
             </Fragment>
         );
@@ -154,7 +158,7 @@ export default class ConnectorDetails extends React.PureComponent {
 
 
     render() {
-        const { dataLoading } = this.state;
+        const { connectorDataLoading } = this.state;
         const { connectorDetails } = this.props;
 
         const className = this.getClassName();
@@ -167,7 +171,7 @@ export default class ConnectorDetails extends React.PureComponent {
                     message={this.props.commonStrings('youHaveUnsavedChanges')}
                 />
                 {
-                    dataLoading ? (
+                    connectorDataLoading ? (
                         <LoadingAnimation large />
                     ) : (
                         <Details />

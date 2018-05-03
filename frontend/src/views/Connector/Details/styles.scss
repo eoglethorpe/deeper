@@ -7,9 +7,14 @@
     flex-direction: column;
     height: 100%;
 
-    h3 {
-        padding: $spacing-large;
-        padding-bottom: 0;
+    .header {
+        border-bottom: $width-separator-thin solid $color-separator;
+        background-color: $color-background-header;
+        padding: $spacing-medium;
+
+        .heading {
+            margin: 0;
+        }
     }
 
     .no-connector-found {

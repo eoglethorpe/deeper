@@ -15,7 +15,6 @@ export default class UserProjectsGetRequest {
     success = userId => (response) => {
         try {
             schema.validate(response, 'projectsGetResponse');
-            console.warn('asdasdas');
             this.props.setUserProjects({
                 userId,
                 projects: response.results,
