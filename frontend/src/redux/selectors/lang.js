@@ -3,7 +3,7 @@ import stringFormat from 'string-format';
 
 const emptyObject = {};
 
-export const selectedLanguageNameSelector = ({ lang }) => (
+const selectedLanguageNameSelector = ({ lang }) => (
     lang.selectedLanguage
 );
 
@@ -11,73 +11,37 @@ const languagesSelector = ({ lang }) => (
     lang.languages || emptyObject
 );
 
-export const selectedLanguageSelector = createSelector(
+const selectedLanguageSelector = createSelector(
     selectedLanguageNameSelector,
     languagesSelector,
     (selectedLanguage, languages) => languages[selectedLanguage] || emptyObject,
 );
 
-export const selectedRawStringsSelector = createSelector(
+export const selectedStringsSelector = createSelector(
     selectedLanguageSelector,
     selectedLanguage => selectedLanguage.strings || emptyObject,
 );
 
-export const selectedViewStringsSelector = createSelector(
+export const selectedLinksSelector = createSelector(
     selectedLanguageSelector,
-    selectedLanguage => selectedLanguage.views || emptyObject,
+    selectedLanguage => selectedLanguage.links || emptyObject,
 );
 
-const createSelectorForView = name => createSelector(
-    selectedViewStringsSelector,
-    selectedRawStringsSelector,
-    (selectedViewStrings, selectedRawStrings) => (identifier, params) => {
-        const namedViewStrings = selectedViewStrings[name] || emptyObject;
-        const id = namedViewStrings[identifier];
-        if (!id || !selectedRawStrings[id]) {
-            console.warn(`String not found for ${name}:${identifier}`);
-            return `{${name}:${identifier}}`;
-        }
-        if (params) {
-            return stringFormat(selectedRawStrings[id], params);
-        }
-        return selectedRawStrings[id];
-    },
-);
-export const afStringsSelector = createSelectorForView('af');
-export const apiStringsSelector = createSelectorForView('api');
-export const aryStringsSelector = createSelectorForView('ary');
-export const ceStringsSelector = createSelectorForView('ce');
-export const commonStringsSelector = createSelectorForView('common');
-export const countriesStringsSelector = createSelectorForView('countries');
-export const entryStringsSelector = createSelectorForView('entry');
-export const exportStringsSelector = createSelectorForView('export');
-export const fourHundredFourStringsSelector = createSelectorForView('fourHundredFour');
-export const homescreenStringsSelector = createSelectorForView('homescreen');
-export const leadsStringsSelector = createSelectorForView('leads');
-export const arysStringsSelector = createSelectorForView('arys');
-export const loginStringsSelector = createSelectorForView('login');
-export const notificationStringsSelector = createSelectorForView('notification');
-export const projectStringsSelector = createSelectorForView('project');
-export const connectorStringsSelector = createSelectorForView('connector');
-export const userStringsSelector = createSelectorForView('user');
-export const pageTitleStringsSelector = createSelectorForView('pageTitle');
-export const assessmentMetadataStringsSelector = createSelectorForView('assessmentMetadata');
-export const assessmentMethodologyStringsSelector = createSelectorForView('assessmentMethodology');
-export const assessmentSummaryStringsSelector = createSelectorForView('assessmentSummary');
+// Af page
 
-const getStringRefsInCode = (usageMap, viewName, stringName) => (
-    (usageMap[viewName] && usageMap[viewName][stringName])
-        ? usageMap[viewName][stringName].length
+const getStringRefsInCode = (usageMap, linkName, stringName) => (
+    (usageMap[linkName] && usageMap[linkName][stringName])
+        ? usageMap[linkName][stringName].length
         : 0
 );
-const getViewFromViews = (views = {}, viewName) => (
-    views[viewName] || {}
+const getLinkFromLinks = (links = {}, linkName) => (
+    links[linkName] || {}
 );
-const getViewFromUsageMap = (usedMaps = {}, viewName) => (
-    usedMaps[viewName] || {}
+const getLinkFromUsageMap = (usageMaps = {}, linkName) => (
+    usageMaps[linkName] || {}
 );
-const getStringIdFromView = (view = {}, stringName) => (
-    view[stringName]
+const getStringIdFromLink = (link = {}, stringName) => (
+    link[stringName]
 );
 const getStringFromStrings = (strings = {}, stringId) => (
     strings[stringId]
@@ -96,11 +60,11 @@ const usageMapSelector = () => {
     }
 };
 
-const duplicatedRawStringsSelector = createSelector(
-    selectedRawStringsSelector,
+const duplicatedStringsSelector = createSelector(
+    selectedStringsSelector,
     (strings) => {
         // Get duplicated strings
-        const duplicatedRawStrings = {};
+        const duplicatedStrings = {};
 
         const memory = {};
         Object.keys(strings).forEach((stringId) => {
@@ -108,33 +72,34 @@ const duplicatedRawStringsSelector = createSelector(
             // first encountered string id with this value
             const firstEncounteredStringId = memory[value];
             if (firstEncounteredStringId) {
-                duplicatedRawStrings[stringId] = firstEncounteredStringId;
+                // set id of first encountered string
+                duplicatedStrings[stringId] = firstEncounteredStringId;
             } else {
-                // memorize duplicates
+                // memorize to identify duplicates
                 memory[value] = stringId;
             }
         });
 
-        return duplicatedRawStrings;
+        return duplicatedStrings;
     },
 );
 
-const referenceCountOfRawStringsSelector = createSelector(
-    selectedRawStringsSelector,
-    selectedViewStringsSelector,
+const referenceCountOfStringsSelector = createSelector(
+    selectedStringsSelector,
+    selectedLinksSelector,
     usageMapSelector,
-    (strings, views, usedMaps) => {
+    (strings, links, usageMaps) => {
         // Initialize reference count
         const stringsReferenceCount = {};
         Object.keys(strings).forEach((stringId) => {
             stringsReferenceCount[stringId] = 0;
         });
         // Calculate reference count
-        Object.keys(views).forEach((viewName) => {
-            const view = getViewFromViews(views, viewName);
-            Object.keys(view).forEach((stringName) => {
-                const refsInCode = getStringRefsInCode(usedMaps, viewName, stringName);
-                const stringId = getStringIdFromView(view, stringName);
+        Object.keys(links).forEach((linkName) => {
+            const link = getLinkFromLinks(links, linkName);
+            Object.keys(link).forEach((stringName) => {
+                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
+                const stringId = getStringIdFromLink(link, stringName);
                 const string = getStringFromStrings(strings, stringId);
                 if (stringId && string) {
                     stringsReferenceCount[stringId] += refsInCode;
@@ -145,11 +110,11 @@ const referenceCountOfRawStringsSelector = createSelector(
     },
 );
 
-export const problemsWithRawStringsSelector = createSelector(
-    selectedRawStringsSelector,
-    selectedViewStringsSelector,
+export const problemsWithStringsSelector = createSelector(
+    selectedStringsSelector,
+    selectedLinksSelector,
     usageMapSelector,
-    (strings, views, usedMaps) => {
+    (strings, links, usageMaps) => {
         const problems = [];
 
         const stringIdReferenced = Object.keys(strings).reduce(
@@ -159,11 +124,11 @@ export const problemsWithRawStringsSelector = createSelector(
             },
             {},
         );
-        Object.keys(views).forEach((viewName) => {
-            const view = getViewFromViews(views, viewName);
-            Object.keys(view).forEach((stringName) => {
-                // Identify bad references in view (not available in strings)
-                const stringId = getStringIdFromView(view, stringName);
+        Object.keys(links).forEach((linkName) => {
+            const link = getLinkFromLinks(links, linkName);
+            Object.keys(link).forEach((stringName) => {
+                // Identify bad references in link (not available in strings)
+                const stringId = getStringIdFromLink(link, stringName);
                 if (stringId) {
                     stringIdReferenced[stringId] = true;
                 }
@@ -180,48 +145,48 @@ export const problemsWithRawStringsSelector = createSelector(
             }
         });
 
-        Object.keys(views).forEach((viewName) => {
-            const view = getViewFromViews(views, viewName);
-            Object.keys(view).forEach((stringName) => {
-                // Identify unused references in view (not referenced in code)
-                const refsInCode = getStringRefsInCode(usedMaps, viewName, stringName);
+        Object.keys(links).forEach((linkName) => {
+            const link = getLinkFromLinks(links, linkName);
+            Object.keys(link).forEach((stringName) => {
+                // Identify unused references in link (not referenced in code)
+                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
                 if (refsInCode <= 0) {
                     problems.push({
                         key: problems.length,
                         type: 'warning',
                         title: 'Unused string',
-                        description: `${viewName}:${stringName}`,
+                        description: `${linkName}:${stringName}`,
                     });
                 }
 
-                // Identify bad references in view (not available in strings)
-                const stringId = getStringIdFromView(view, stringName);
+                // Identify bad references in link (not available in strings)
+                const stringId = getStringIdFromLink(link, stringName);
                 const string = getStringFromStrings(strings, stringId);
                 if (!stringId || !string) {
                     problems.push({
                         key: problems.length,
                         type: 'error',
                         title: 'Undefined value for string',
-                        description: `${viewName}:${stringName}`,
+                        description: `${linkName}:${stringName}`,
                     });
                 }
             });
         });
 
         // Identify bad-references of string in code
-        Object.keys(usedMaps).forEach((viewName) => {
-            const viewFromUsage = getViewFromUsageMap(usedMaps, viewName);
-            const view = getViewFromViews(views, viewName);
-            Object.keys(viewFromUsage).forEach((stringName) => {
-                // Identify bad references in view (not available in views or strings)
-                const stringId = getStringIdFromView(view, stringName);
+        Object.keys(usageMaps).forEach((linkName) => {
+            const linkFromUsage = getLinkFromUsageMap(usageMaps, linkName);
+            const link = getLinkFromLinks(links, linkName);
+            Object.keys(linkFromUsage).forEach((stringName) => {
+                // Identify bad references in link (not available in links or strings)
+                const stringId = getStringIdFromLink(link, stringName);
                 const string = getStringFromStrings(strings, stringId);
                 if (!stringId || !string) {
                     problems.push({
                         key: problems.length,
                         type: 'error',
                         title: 'Undefined value for string',
-                        description: `${viewName}:${stringName}`,
+                        description: `${linkName}:${stringName}`,
                     });
                 }
             });
@@ -232,35 +197,35 @@ export const problemsWithRawStringsSelector = createSelector(
 );
 
 export const allStringsSelector = createSelector(
-    selectedRawStringsSelector,
-    duplicatedRawStringsSelector,
-    referenceCountOfRawStringsSelector,
-    (strings, duplicatedRawStrings, stringsReferenceCount) => (
+    selectedStringsSelector,
+    duplicatedStringsSelector,
+    referenceCountOfStringsSelector,
+    (strings, duplicatedStrings, stringsReferenceCount) => (
         Object.keys(strings).reduce(
             (acc, id) => acc.concat({
                 id,
                 value: strings[id],
                 referenceCount: stringsReferenceCount[id],
-                duplicated: duplicatedRawStrings[id],
+                duplicated: duplicatedStrings[id],
             }),
             [],
         )
     ),
 );
 
-export const viewStringsSelector = createSelector(
-    selectedRawStringsSelector,
-    selectedViewStringsSelector,
+export const linkStringsSelector = createSelector(
+    selectedStringsSelector,
+    selectedLinksSelector,
     usageMapSelector,
-    (strings, views, usedMaps) => {
+    (strings, links, usageMaps) => {
         // Initialize
-        const finalViews = {};
+        const finalLinks = {};
         // Calculate
-        Object.keys(views).forEach((viewName) => {
-            const view = getViewFromViews(views, viewName);
-            finalViews[viewName] = Object.keys(view).map((stringName) => {
-                const refsInCode = getStringRefsInCode(usedMaps, viewName, stringName);
-                const stringId = getStringIdFromView(view, stringName);
+        Object.keys(links).forEach((linkName) => {
+            const link = getLinkFromLinks(links, linkName);
+            finalLinks[linkName] = Object.keys(link).map((stringName) => {
+                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
+                const stringId = getStringIdFromLink(link, stringName);
                 const string = getStringFromStrings(strings, stringId);
 
                 return {
@@ -271,6 +236,46 @@ export const viewStringsSelector = createSelector(
                 };
             });
         });
-        return finalViews;
+        return finalLinks;
     },
 );
+
+// FIXME: remove these later
+
+const createSelectorForLink = name => createSelector(
+    selectedLinksSelector,
+    selectedStringsSelector,
+    (selectedLinks, selectedStrings) => (identifier, params) => {
+        const namedLinkStrings = selectedLinks[name] || emptyObject;
+        const id = namedLinkStrings[identifier];
+        if (!id || !selectedStrings[id]) {
+            console.warn(`String not found for ${name}:${identifier}`);
+            return `{${name}:${identifier}}`;
+        }
+        if (params) {
+            return stringFormat(selectedStrings[id], params);
+        }
+        return selectedStrings[id];
+    },
+);
+export const afStringsSelector = createSelectorForLink('af');
+export const apiStringsSelector = createSelectorForLink('api');
+export const aryStringsSelector = createSelectorForLink('ary');
+export const ceStringsSelector = createSelectorForLink('ce');
+export const commonStringsSelector = createSelectorForLink('common');
+export const countriesStringsSelector = createSelectorForLink('countries');
+export const entryStringsSelector = createSelectorForLink('entry');
+export const exportStringsSelector = createSelectorForLink('export');
+export const fourHundredFourStringsSelector = createSelectorForLink('fourHundredFour');
+export const homescreenStringsSelector = createSelectorForLink('homescreen');
+export const leadsStringsSelector = createSelectorForLink('leads');
+export const arysStringsSelector = createSelectorForLink('arys');
+export const loginStringsSelector = createSelectorForLink('login');
+export const notificationStringsSelector = createSelectorForLink('notification');
+export const projectStringsSelector = createSelectorForLink('project');
+export const connectorStringsSelector = createSelectorForLink('connector');
+export const userStringsSelector = createSelectorForLink('user');
+export const pageTitleStringsSelector = createSelectorForLink('pageTitle');
+export const assessmentMetadataStringsSelector = createSelectorForLink('assessmentMetadata');
+export const assessmentMethodologyStringsSelector = createSelectorForLink('assessmentMethodology');
+export const assessmentSummaryStringsSelector = createSelectorForLink('assessmentSummary');

@@ -1,10 +1,10 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import {
-    // urlForLeadTopicModeling,
     createUrlForLeadTopicModeling,
     createParamsForLeadTopicModeling,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadTopicModelingRequest {
     constructor(params) {
@@ -18,7 +18,6 @@ export default class LeadTopicModelingRequest {
 
     create = ({ docIds, activeProject, isFilter }) => {
         const request = new FgRestBuilder()
-            // .url(urlForLeadTopicModeling)
             .url(createUrlForLeadTopicModeling(activeProject, isFilter))
             .params(createParamsForLeadTopicModeling({
                 doc_ids: docIds,
@@ -46,17 +45,17 @@ export default class LeadTopicModelingRequest {
             .failure((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'topicModeling'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Hierarchical Data from NLP Server',
+                    message: _ts('leadsViz', 'topicModelingFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'topicModeling'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Hierarchical Data from NLP Server',
+                    message: _ts('leadsViz', 'topicModelingFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })

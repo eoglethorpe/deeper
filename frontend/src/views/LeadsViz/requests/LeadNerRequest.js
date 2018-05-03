@@ -1,10 +1,10 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import {
-    // urlForLeadNerDocsId,
     createUrlForLeadNerDocsId,
     createParamsForLeadNer,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadNerRequest {
     constructor(params) {
@@ -18,7 +18,6 @@ export default class LeadNerRequest {
 
     create = ({ docIds, activeProject, isFilter }) => {
         const request = new FgRestBuilder()
-            // .url(urlForLeadNerDocsId)
             .url(createUrlForLeadNerDocsId(activeProject, isFilter))
             .params(createParamsForLeadNer({
                 doc_ids: docIds,
@@ -43,17 +42,17 @@ export default class LeadNerRequest {
             .failure((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'ner'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Geo Points Data from NLP Server',
+                    message: _ts('leadsViz', 'nerGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'ner'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Geo Points Data from NLP Server',
+                    message: _ts('leadsViz', 'nerGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })

@@ -7,6 +7,7 @@ import {
     createUrlForLeadsOfProject,
     transformResponseErrorToFormError,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadCDIdRequest {
     constructor(params) {
@@ -68,7 +69,7 @@ export default class LeadCDIdRequest {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leadsViz', 'leads'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -84,9 +85,9 @@ export default class LeadCDIdRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leadsViz', 'leads'),
                     type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
+                    message: _ts('leadsViz', 'leadsGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({

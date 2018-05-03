@@ -7,6 +7,7 @@ import {
     createUrlForLeadsOfProject,
     transformResponseErrorToFormError,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadsRequest {
     constructor(params) {
@@ -58,7 +59,7 @@ export default class LeadsRequest {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leads', 'leads'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -66,9 +67,9 @@ export default class LeadsRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leads', 'leads'),
                     type: notify.type.ERROR,
-                    message: 'Couldn\'t load leads', // FIXME: strings
+                    message: _ts('leads', 'leadsGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })

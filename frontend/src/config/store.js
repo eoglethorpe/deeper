@@ -5,6 +5,7 @@ const storeConfig = {
     // blacklist: ['domainData', 'siloDomainData'],
     blacklist: ['notify', 'route', 'lang', 'app'],
     key: 'deeper',
+    version: 1,
     // storage: localStorage,
     storage: localforage,
 };
