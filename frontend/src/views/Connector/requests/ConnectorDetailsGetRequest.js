@@ -66,27 +66,32 @@ export default class ConnectorDetailsGetRequest {
         }
     }
 
-    failure = () => {
+    failure = (response) => {
         // FIXME: Handle error during isBeingCanelled
+        notify.send({
+            title: this.props.notificationStrings('connectorTitle'),
+            type: notify.type.ERROR,
+            message: response.error,
+            duration: notify.duration.MEDIUM,
+        });
+        this.props.setState({ requestFailure: true });
+    }
+
+    fatal = () => {
         notify.send({
             title: this.props.notificationStrings('connectorTitle'),
             type: notify.type.ERROR,
             message: this.props.notificationStrings('connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
-        this.props.setState({ requestFailure: true });
-    }
-
-    fatal = (response) => {
-        console.warn('fatal:', response);
     }
 
     create = (connectorId) => {
         const connectorDetailsRequest = new FgRestBuilder()
             .url(createUrlForConnector(connectorId))
             .params(createParamsForUser)
-            .preLoad(() => { this.props.setState({ dataLoading: true }); })
-            .postLoad(() => { this.props.setState({ dataLoading: false }); })
+            .preLoad(() => { this.props.setState({ connectorDataLoading: true }); })
+            .postLoad(() => { this.props.setState({ connectorDataLoading: false }); })
             .success(this.success)
             .failure(this.failure)
             .fatal(this.fatal)

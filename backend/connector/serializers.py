@@ -39,19 +39,19 @@ class SourceDataSerializer(RemoveNullFieldsMixin,
 class ConnectorUserSerializer(RemoveNullFieldsMixin,
                               DynamicFieldsMixin,
                               serializers.ModelSerializer):
-    user_email = serializers.CharField(source='user.email', read_only=True)
-    user_name = serializers.SerializerMethodField()
+    email = serializers.CharField(source='user.email', read_only=True)
+    display_name = serializers.CharField(
+        source='user.profile.get_display_name',
+        read_only=True,
+    )
 
     class Meta:
         model = ConnectorUser
-        fields = ('id', 'user', 'user_name', 'user_email',
+        fields = ('id', 'user', 'display_name', 'email',
                   'connector', 'role', 'added_at')
 
     def get_unique_together_validators(self):
         return []
-
-    def get_user_name(self, connector_user):
-        return connector_user.user.profile.get_display_name()
 
     # Validations
     def validate_connector(self, connector):
@@ -63,12 +63,12 @@ class ConnectorUserSerializer(RemoveNullFieldsMixin,
 class ConnectorProjectSerializer(RemoveNullFieldsMixin,
                                  DynamicFieldsMixin,
                                  serializers.ModelSerializer):
-    project_title = serializers.CharField(source='project.title',
-                                          read_only=True)
+    title = serializers.CharField(source='project.title',
+                                  read_only=True)
 
     class Meta:
         model = ConnectorProject
-        fields = ('id', 'project', 'project_title',
+        fields = ('id', 'project', 'title',
                   'connector', 'role', 'added_at')
 
     def get_unique_together_validators(self):

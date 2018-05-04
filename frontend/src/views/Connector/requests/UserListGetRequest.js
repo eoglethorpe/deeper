@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createParamsForUser,
-    urlForConnectorSources,
+    createUrlForUsers,
 } from '../../../rest';
 
 import schema from '../../../schema';
@@ -13,9 +13,10 @@ export default class ConnectorsGetRequest {
     }
 
     success = (response) => {
+        const { setUsers } = this.props;
         try {
-            schema.validate(response, 'connectorSources');
-            this.props.setConnectorSources({ connectorSources: response.results });
+            schema.validate(response, 'usersGetResponse');
+            setUsers({ users: response.results });
         } catch (er) {
             console.error(er);
         }
@@ -23,7 +24,7 @@ export default class ConnectorsGetRequest {
 
     failure = (response) => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: this.props.notificationStrings('usersTitle'),
             type: notify.type.ERROR,
             message: response.error,
             duration: notify.duration.MEDIUM,
@@ -32,23 +33,24 @@ export default class ConnectorsGetRequest {
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: this.props.notificationStrings('usersTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorSourcesGetFailure'),
+            message: this.props.notificationStrings('usersListGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
 
     create = () => {
-        const connectorsRequest = new FgRestBuilder()
-            .url(urlForConnectorSources)
+        const usersFields = ['display_name', 'email', 'id'];
+        const userListGetRequest = new FgRestBuilder()
+            .url(createUrlForUsers(usersFields))
             .params(createParamsForUser)
-            .preLoad(() => { this.props.setState({ dataLoading: true }); })
-            .postLoad(() => { this.props.setState({ dataLoading: false }); })
+            .preLoad(() => { this.props.setState({ userDataLoading: true }); })
+            .postLoad(() => { this.props.setState({ userDataLoading: false }); })
             .success(this.success)
             .failure(this.failure)
             .fatal(this.fatal)
             .build();
-        return connectorsRequest;
+        return userListGetRequest;
     }
 }

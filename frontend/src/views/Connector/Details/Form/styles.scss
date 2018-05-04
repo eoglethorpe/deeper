@@ -4,7 +4,7 @@
     display: flex;
     position: relative;
     flex-direction: column;
-    padding: $spacing-extra-large;
+    padding: $spacing-extra-small $spacing-extra-large;
     height: 100%;
 
     .action-buttons {
