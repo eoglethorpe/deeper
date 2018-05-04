@@ -1,21 +1,19 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import _ts from '../../../ts';
+
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
+import Button from '../../../vendor/react-store/components/Action/Button';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 
 import {
     iconNames,
     pathNames,
 } from '../../../constants/';
-
-import {
-    reverseRoute,
-} from '../../../vendor/react-store/utils/common';
-
-import Button from '../../../vendor/react-store/components/Action/Button';
-import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
-import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
-import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
+import Cloak from '../../../components/Cloak';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -150,14 +148,21 @@ export default class ActionButtons extends React.PureComponent {
                 >
                     <i className={iconNames.edit} />
                 </Link>
-                <Link
-                    className={styles.addAssessmentLink}
-                    tabIndex="-1"
-                    title={_ts('leads', 'addAssessmentFromLeadButtonTitle')}
-                    to={links.addAssessment}
-                >
-                    <i className={iconNames.forward} />
-                </Link>
+                <Cloak
+                    requireAssessmentTemplate
+                    render={
+                        () => (
+                            <Link
+                                className={styles.addAssessmentLink}
+                                tabIndex="-1"
+                                title={_ts('leads', 'addAssessmentFromLeadButtonTitle')}
+                                to={links.addAssessment}
+                            >
+                                <i className={iconNames.forward} />
+                            </Link>
+                        )
+                    }
+                />
                 <Link
                     className={styles.addEntryLink}
                     tabIndex="-1"

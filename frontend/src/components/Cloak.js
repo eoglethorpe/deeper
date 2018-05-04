@@ -45,7 +45,7 @@ const defaultProps = {
 };
 
 @connect(mapStateToProps, undefined)
-export default class Navbar extends React.PureComponent {
+export default class Cloak extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
