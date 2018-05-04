@@ -35,7 +35,6 @@ $width-sidebar: 320px;
             &.active {
                 border-left: $width-separator-thick solid $color-accent;
             }
-
         }
     }
 
@@ -66,6 +65,10 @@ $width-sidebar: 320px;
                 border-bottom: $width-separator-thin solid $color-separator;
                 padding: $spacing-small;
 
+                .title {
+                    font-weight: bold;
+                }
+
                 &.error {
                     .title {
                         color: $color-danger;
@@ -76,10 +79,6 @@ $width-sidebar: 320px;
                     .title {
                         color: $color-warning;
                     }
-                }
-
-                .title {
-                    font-weight: bold;
                 }
 
                 .description {

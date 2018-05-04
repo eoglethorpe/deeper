@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -26,7 +26,7 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     linkStrings: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    problemsWithStrings: PropTypes.array.isRequired,
+    problemsWithStrings: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     linkKeys: PropTypes.array.isRequired,
 };
@@ -55,7 +55,6 @@ export default class StringManagement extends React.PureComponent {
         super(props);
 
         this.state = {
-            mode: 'string', // string or link
             linkName: undefined,
         };
 
@@ -154,64 +153,77 @@ export default class StringManagement extends React.PureComponent {
         </div>
     )
 
+    renderLeftPane = () => {
+        const { linkName } = this.state;
+        const { linkKeys } = this.props;
+        return (
+            <div className={styles.sidebar}>
+                <h2 className={styles.heading}>
+                    String Management
+                </h2>
+                <button
+                    className={`${styles.sidebarButton} ${linkName === undefined ? styles.active : ''}`}
+                    onClick={() => { this.setState({ linkName: undefined }); }}
+                >
+                    { (this.props.problemsWithStrings.$common || emptyArray).length } ALL
+                </button>
+                { linkKeys.map(name => (
+                    <button
+                        key={name}
+                        className={`${styles.sidebarButton} ${linkName === name ? styles.active : ''}`}
+                        onClick={() => { this.setState({ linkName: name }); }}
+                        type="button"
+                    >
+                        { (this.props.problemsWithStrings[name] || emptyArray).length } { name }
+                    </button>
+                )) }
+            </div>
+        );
+    }
+
+    renderStringsTable = () => (
+        <div className={styles.content}>
+            <Table
+                data={this.props.allStrings}
+                headers={this.headers}
+                keyExtractor={StringManagement.keyExtractor}
+                defaultSort={this.defaultSort}
+            />
+        </div>
+    )
+
+    renderLinksTable = () => (
+        <div className={styles.content} >
+            <Table
+                data={this.props.linkStrings[this.state.linkName] || emptyArray}
+                headers={this.headers2}
+                keyExtractor={StringManagement.keyExtractor2}
+                defaultSort={this.defaultSort2}
+            />
+        </div>
+    )
+
     render() {
+        const LeftPane = this.renderLeftPane;
+        const StringsTable = this.renderStringsTable;
+        const LinksTable = this.renderLinksTable;
+
+        const { linkName } = this.state;
+        const { problemsWithStrings } = this.props;
+
+        const problems = problemsWithStrings[linkName || '$common'] || emptyArray;
+
         return (
             <div className={styles.stringPanel}>
-                <div className={styles.sidebar}>
-                    <h2 className={styles.heading}>
-                        String Management
-                    </h2>
-                    <button
-                        className={`${styles.sidebarButton} ${this.state.mode === 'string' ? styles.active : ''}`}
-                        onClick={() => { this.setState({ mode: 'string' }); }}
-                    >
-                        All Strings
-                    </button>
-                    { this.props.linkKeys.map(linkName => (
-                        <button
-                            key={linkName}
-                            className={`${styles.sidebarButton} ${this.state.mode === 'link' && this.state.linkName === linkName ? styles.active : ''}`}
-                            onClick={() => { this.setState({ mode: 'link', linkName }); }}
-                        >
-                            { linkName }
-                        </button>
-                    )) }
-                </div>
+                <LeftPane />
                 <div className={styles.stringDetail}>
-                    {
-                        this.state.mode === 'string' && ([
-                            <div
-                                className={styles.content}
-                                key="content"
-                            >
-                                <Table
-                                    data={this.props.allStrings}
-                                    headers={this.headers}
-                                    keyExtractor={StringManagement.keyExtractor}
-                                    defaultSort={this.defaultSort}
-                                />
-                            </div>,
-                            <ListView
-                                key="sidebar-right"
-                                className={styles.sidebarRight}
-                                data={this.props.problemsWithStrings}
-                                modifier={this.renderError}
-                                keyExtractor={StringManagement.keyExtractor}
-                            />,
-                        ])
-                    }
-                    {
-                        this.state.mode === 'link' && (
-                            <div className={styles.content} >
-                                <Table
-                                    data={this.props.linkStrings[this.state.linkName] || emptyArray}
-                                    headers={this.headers2}
-                                    keyExtractor={StringManagement.keyExtractor2}
-                                    defaultSort={this.defaultSort2}
-                                />
-                            </div>
-                        )
-                    }
+                    { linkName ? <LinksTable /> : <StringsTable /> }
+                    <ListView
+                        className={styles.sidebarRight}
+                        data={problems}
+                        modifier={this.renderError}
+                        keyExtractor={StringManagement.keyExtractor}
+                    />
                 </div>
             </div>
         );
