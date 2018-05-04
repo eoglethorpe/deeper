@@ -12,8 +12,8 @@ import {
     setCeNgramsAction,
     setCeSimplifiedPreviewIdAction,
     ceIdFromRouteSelector,
-    ceStringsSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 import SimplifiedFilePreview from '../../../components/SimplifiedFilePreview';
 
 import DocumentNGram from './DocumentNGram';
@@ -31,7 +31,6 @@ const propTypes = {
         title: PropTypes.string,
     })),
     categoryEditorId: PropTypes.number.isRequired,
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -46,7 +45,6 @@ const mapStateToProps = (state, props) => ({
     previewId: categoryEditorSimplifiedPreviewIdSelector(state, props),
 
     categoryEditorId: ceIdFromRouteSelector(state, props),
-    ceStrings: ceStringsSelector(state),
 });
 
 
@@ -74,15 +72,15 @@ export default class DocumentPanel extends React.PureComponent {
         this.tabs = [
             {
                 key: 'document',
-                title: this.props.ceStrings('documentTabLabel'),
+                title: _ts('ce', 'documentTabLabel'),
             },
             {
                 key: 'simplified',
-                title: this.props.ceStrings('simplifiedTabLabel'),
+                title: _ts('ce', 'simplifiedTabLabel'),
             },
             {
                 key: 'ngrams',
-                title: this.props.ceStrings('ngramsTabLabel'),
+                title: _ts('ce', 'ngramsTabLabel'),
             },
         ];
     }

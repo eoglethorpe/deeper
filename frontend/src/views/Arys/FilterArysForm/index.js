@@ -16,10 +16,10 @@ import {
     setAryPageFilterAction,
     aryPageFilterSelector,
     unsetAryPageFilterAction,
-    arysStringsSelector,
     aryFilterOptionsForProjectSelector,
     setAryFilterOptionsAction,
 } from '../../../redux';
+import _ts from '../../../ts';
 
 import AryFilterOptionsGetRequest from './requests/AryFilterOptionsGetRequest';
 
@@ -40,7 +40,6 @@ const propTypes = {
     setAryFilterOptions: PropTypes.func.isRequired,
 
     applyOnChange: PropTypes.bool,
-    arysStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -52,7 +51,6 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectIdFromStateSelector(state),
     filters: aryPageFilterSelector(state),
     aryFilterOptions: aryFilterOptionsForProjectSelector(state, props),
-    arysStrings: arysStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -174,7 +172,6 @@ export default class FilterArysForm extends React.PureComponent {
                 createdBy,
             },
             applyOnChange,
-            arysStrings,
             filters,
         } = this.props;
 
@@ -199,8 +196,8 @@ export default class FilterArysForm extends React.PureComponent {
             >
                 <DateFilter
                     faramElementName="created_at"
-                    label={arysStrings('filterDateCreated')}
-                    placeholder={arysStrings('placeholderAnytime')}
+                    label={_ts('arys', 'filterDateCreated')}
+                    placeholder={_ts('arys', 'placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="arys-filter"
@@ -209,17 +206,17 @@ export default class FilterArysForm extends React.PureComponent {
                     className="arys-filter"
                     faramElementName="created_by"
                     keySelector={FilterArysForm.optionKeySelector}
-                    label={arysStrings('createdByFilterLabel')}
+                    label={_ts('arys', 'createdByFilterLabel')}
                     labelSelector={FilterArysForm.optionLabelSelector}
                     options={createdBy}
-                    placeholder={arysStrings('placeholderAnybody')}
+                    placeholder={_ts('arys', 'placeholderAnybody')}
                     showHintAndError={false}
                     showLabel
                 />
                 <SearchInput
                     faramElementName="search"
-                    label={arysStrings('placeholderSearch')}
-                    placeholder={arysStrings('placeholderSearch')}
+                    label={_ts('arys', 'placeholderSearch')}
+                    placeholder={_ts('arys', 'placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="arys-filter"
@@ -230,7 +227,7 @@ export default class FilterArysForm extends React.PureComponent {
                         disabled={isApplyDisabled}
                         type="submit"
                     >
-                        {arysStrings('filterApplyFilter')}
+                        {_ts('arys', 'filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
@@ -238,7 +235,7 @@ export default class FilterArysForm extends React.PureComponent {
                     disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >
-                    {arysStrings('filterClearFilter')}
+                    {_ts('arys', 'filterClearFilter')}
                 </DangerButton>
             </Faram>
         );

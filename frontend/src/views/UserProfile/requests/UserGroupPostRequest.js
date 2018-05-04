@@ -6,6 +6,7 @@ import {
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
+import _ts from '../../../ts';
 
 export default class UserGroupPostRequest {
     constructor(props) {
@@ -30,9 +31,9 @@ export default class UserGroupPostRequest {
                         userGroup: response,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('userGroupCreate'),
+                        title: _ts('notification', 'userGroupCreate'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userGroupCreateSuccess'),
+                        message: _ts('notification', 'userGroupCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -42,9 +43,9 @@ export default class UserGroupPostRequest {
             })
             .failure((response) => {
                 notify.send({
-                    title: this.props.notificationStrings('userGroupCreate'),
+                    title: _ts('notification', 'userGroupCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupCreateFailure'),
+                    message: _ts('notification', 'userGroupCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
@@ -52,9 +53,9 @@ export default class UserGroupPostRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userGroupCreate'),
+                    title: _ts('notification', 'userGroupCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupCreateFatal'),
+                    message: _ts('notification', 'userGroupCreateFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.props.setState({

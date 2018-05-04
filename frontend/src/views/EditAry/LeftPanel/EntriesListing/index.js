@@ -4,20 +4,18 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { reverseRoute } from '../../../../vendor/react-store/utils/common';
-import { pathNames } from '../../../../constants';
-
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
     leadIdFromRouteSelector,
-    entryStringsSelector,
     editAryEntriesSelector,
     editAryLeadSelector,
     setEntriesForEditAryAction,
     projectIdFromRouteSelector,
-    aryStringsSelector,
 } from '../../../../redux';
+import { pathNames } from '../../../../constants';
+import _ts from '../../../../ts';
 
 import EntriesRequest from './requests/EntriesRequest';
 import styles from './styles.scss';
@@ -27,11 +25,9 @@ const propTypes = {
     leadId: PropTypes.number.isRequired,
     entries: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    entryStrings: PropTypes.func.isRequired,
     setEntries: PropTypes.func.isRequired,
     activeProjectId: PropTypes.number.isRequired,
     activeSector: PropTypes.string,
-    aryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -40,10 +36,8 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
-    entryStrings: entryStringsSelector(state),
     entries: editAryEntriesSelector(state),
     lead: editAryLeadSelector(state),
-    aryStrings: aryStringsSelector(state),
     activeProjectId: projectIdFromRouteSelector(state),
 });
 
@@ -148,7 +142,7 @@ export default class EntriesListing extends React.PureComponent {
                 <img
                     className={styles.image}
                     src={entry.image}
-                    alt={this.props.entryStrings('altLabel')}
+                    alt={_ts('entry', 'altLabel')}
                 />
             );
         }
@@ -198,7 +192,7 @@ export default class EntriesListing extends React.PureComponent {
                         to={linkToEditEntries}
                         className={styles.editEntriesLink}
                     >
-                        {this.props.aryStrings('editEntriesText')}
+                        {_ts('ary', 'editEntriesText')}
                     </Link>
                 </div>
             </div>

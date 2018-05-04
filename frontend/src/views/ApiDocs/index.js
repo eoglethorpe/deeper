@@ -1,6 +1,4 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import { PropTypes } from 'prop-types';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
@@ -9,24 +7,18 @@ import { isObjectEmpty, compareString } from '../../vendor/react-store/utils/com
 import List from '../../vendor/react-store/components/View/List';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 
-import { apiStringsSelector } from '../../redux';
+import _ts from '../../ts';
 import { urlForApiDocs } from '../../rest';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    apiStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    apiStrings: apiStringsSelector(state),
-});
-
 @BoundError(AppError)
-@connect(mapStateToProps)
 export default class ApiDocs extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -177,7 +169,7 @@ export default class ApiDocs extends React.PureComponent {
             {!isObjectEmpty(method.requestSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        {this.props.apiStrings('requestSchemaLabel')}
+                        {_ts('api', 'requestSchemaLabel')}
                     </h5>
                     {this.renderSchema(method.requestSchema)}
                 </div>
@@ -185,7 +177,7 @@ export default class ApiDocs extends React.PureComponent {
             {!isObjectEmpty(method.responseSchema) && (
                 <div className={styles.schema}>
                     <h5>
-                        {this.props.apiStrings('responseSchemaLabel')}
+                        {_ts('api', 'responseSchemaLabel')}
                     </h5>
                     {this.renderSchema(method.responseSchema)}
                 </div>
@@ -208,7 +200,7 @@ export default class ApiDocs extends React.PureComponent {
         if (pending) {
             content = (
                 <p className={styles.message}>
-                    {this.props.apiStrings('loadingLabel')}
+                    {_ts('api', 'loadingLabel')}
                 </p>
             );
         } else {

@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
 import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 
-import { leadsStringsSelector } from '../../../../../redux';
+import _ts from '../../../../../ts';
 import { iconNames } from '../../../../../constants';
 
 import styles from './styles.scss';
@@ -17,18 +16,12 @@ const propTypes = {
     identiferName: PropTypes.string.isRequired,
     onApplyAllClick: PropTypes.func.isRequired,
     onApplyAllBelowClick: PropTypes.func.isRequired,
-    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: undefined,
 };
 
-const mapStateToProps = state => ({
-    leadsStrings: leadsStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ApplyAll extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -50,7 +43,7 @@ export default class ApplyAll extends React.PureComponent {
                     <AccentButton
                         className={styles.applyButton}
                         transparent
-                        title={this.props.leadsStrings('applyAllButtonTitle')}
+                        title={_ts('leads', 'applyAllButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllClick(identiferName)}
                         tabIndex="-1"
@@ -60,7 +53,7 @@ export default class ApplyAll extends React.PureComponent {
                     <WarningButton
                         className={styles.applyButton}
                         transparent
-                        title={this.props.leadsStrings('applyAllBelowButtonTitle')}
+                        title={_ts('leads', 'applyAllBelowButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllBelowClick(identiferName)}
                         tabIndex="-1"

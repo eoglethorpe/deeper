@@ -10,7 +10,6 @@ import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
-import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import {
     randomString,
     reverseRoute,
@@ -26,8 +25,8 @@ import {
     updateAfViewWidgetAction,
 
     activeProjectIdFromStateSelector,
-    afStringsSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 
 import widgetStore from '../../../widgets';
 import styles from './styles.scss';
@@ -39,7 +38,6 @@ const propTypes = {
     updateWidget: PropTypes.func.isRequired,
     removeWidget: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
-    afStrings: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -50,7 +48,6 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
     projectId: activeProjectIdFromStateSelector(state, props),
-    afStrings: afStringsSelector(state),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -230,7 +227,7 @@ export default class Overview extends React.PureComponent {
             .filter(widget => widget.analysisFramework.overviewComponent)
             .map(widget => ({
                 id: widget.id,
-                title: this.props.afStrings(widget.title),
+                title: _ts('af', widget.title),
                 overviewComponent: widget.analysisFramework.overviewComponent,
                 listComponent: widget.analysisFramework.listComponent,
                 overviewMinSize: widget.analysisFramework.overviewMinSize,
@@ -251,7 +248,7 @@ export default class Overview extends React.PureComponent {
         } = this.props;
 
         const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
-        const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
+        const frameworkTitle = analysisFramework.title || _ts('af', 'analysisFramework');
 
         return (
             <header className={styles.header}>
@@ -263,7 +260,7 @@ export default class Overview extends React.PureComponent {
                         /
                     </span>
                     <span className={styles.pageType}>
-                        {this.props.afStrings('headerOverview')}
+                        {_ts('af', 'headerOverview')}
                     </span>
                 </h2>
                 <div className={styles.actions}>
@@ -271,20 +268,20 @@ export default class Overview extends React.PureComponent {
                         className={styles.exitLink}
                         to={exitUrl}
                     >
-                        {this.props.afStrings('exitButtonLabel')}
+                        {_ts('af', 'exitButtonLabel')}
                     </Link>
                     <Link
                         className={styles.gotoListLink}
                         to="#/list"
                         replace
                     >
-                        {this.props.afStrings('gotoListButtonLabel')}
+                        {_ts('af', 'gotoListButtonLabel')}
                     </Link>
                     <SuccessButton
                         className={styles.saveButton}
                         onClick={this.props.onSave}
                     >
-                        {this.props.afStrings('saveButtonLabel')}
+                        {_ts('af', 'saveButtonLabel')}
                     </SuccessButton>
                 </div>
             </header>

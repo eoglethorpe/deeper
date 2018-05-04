@@ -21,12 +21,12 @@ import {
     currentUserAdminProjectsSelector,
     setActiveProjectAction,
     projectIdFromRouteSelector,
-    projectStringsSelector,
 } from '../../redux';
 import {
     iconNames,
     pathNames,
 } from '../../constants';
+import _ts from '../../ts';
 
 import Details from './Details';
 import styles from './styles.scss';
@@ -41,7 +41,6 @@ const propTypes = {
         }),
     ),
     projectId: PropTypes.number,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,7 +52,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userProjects: currentUserAdminProjectsSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -156,17 +154,17 @@ export default class ProjectPanel extends React.PureComponent {
                 <div className={styles.sidebar}>
                     <header className={styles.header}>
                         <h3 className={styles.heading}>
-                            {this.props.projectStrings('headerProjects')}
+                            {_ts('project', 'headerProjects')}
                         </h3>
                         <PrimaryButton
                             onClick={this.handleAddProjectClick}
                             iconName={iconNames.add}
                         >
-                            {this.props.projectStrings('addProjectButtonLabel')}
+                            {_ts('project', 'addProjectButtonLabel')}
                         </PrimaryButton>
                         <SearchInput
                             onChange={this.handleSearchInputChange}
-                            placeholder={this.props.projectStrings('searchProjectPlaceholder')}
+                            placeholder={_ts('project', 'searchProjectPlaceholder')}
                             className={styles.searchInput}
                             value={this.state.searchInputValue}
                             showLabel={false}
@@ -190,7 +188,7 @@ export default class ProjectPanel extends React.PureComponent {
                         />
                     ) : (
                         <p className={styles.noProjectText}>
-                            {this.props.projectStrings('noProjectText')}
+                            {_ts('project', 'noProjectText')}
                         </p>
                     )
                 }
@@ -201,7 +199,7 @@ export default class ProjectPanel extends React.PureComponent {
                             onClose={this.handleAddProjectModalClose}
                         >
                             <ModalHeader
-                                title={this.props.projectStrings('addProjectModalTitle')}
+                                title={_ts('project', 'addProjectModalTitle')}
                                 rightComponent={
                                     <PrimaryButton
                                         onClick={this.handleAddProjectModalClose}

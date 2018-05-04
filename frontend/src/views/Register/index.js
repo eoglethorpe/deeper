@@ -4,8 +4,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { reverseRoute } from '../../vendor/react-store/utils/common';
@@ -24,25 +22,19 @@ import {
     createParamsForUserCreate,
     urlForUserCreate,
 } from '../../rest';
-import { loginStringsSelector } from '../../redux';
 import { pathNames } from '../../constants';
 import { reCaptchaSiteKey } from '../../config/reCaptcha';
 import schema from '../../schema';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    loginStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    loginStrings: loginStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class Register extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -182,24 +174,24 @@ export default class Register extends React.PureComponent {
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="firstname"
-                    label={this.props.loginStrings('firstNameLabel')}
-                    placeholder={this.props.loginStrings('firstNamePlaceholder')}
+                    label={_ts('login', 'firstNameLabel')}
+                    placeholder={_ts('login', 'firstNamePlaceholder')}
                     autoFocus
                 />
                 <TextInput
                     faramElementName="lastname"
-                    label={this.props.loginStrings('lastNameLabel')}
-                    placeholder={this.props.loginStrings('lastNamePlaceholder')}
+                    label={_ts('login', 'lastNameLabel')}
+                    placeholder={_ts('login', 'lastNamePlaceholder')}
                 />
                 <TextInput
                     faramElementName="organization"
-                    label={this.props.loginStrings('organizationLabel')}
-                    placeholder={this.props.loginStrings('organizationPlaceholder')}
+                    label={_ts('login', 'organizationLabel')}
+                    placeholder={_ts('login', 'organizationPlaceholder')}
                 />
                 <TextInput
                     faramElementName="email"
-                    label={this.props.loginStrings('emailLabel')}
-                    placeholder={this.props.loginStrings('emailPlaceholder')}
+                    label={_ts('login', 'emailLabel')}
+                    placeholder={_ts('login', 'emailPlaceholder')}
                 />
                 <ReCaptcha
                     ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
@@ -209,7 +201,7 @@ export default class Register extends React.PureComponent {
                 />
                 <div className={styles.actionButtons}>
                     <PrimaryButton type="submit" >
-                        { this.props.loginStrings('registerLabel')}
+                        { _ts('login', 'registerLabel')}
                     </PrimaryButton>
                 </div>
             </Faram>
@@ -220,7 +212,7 @@ export default class Register extends React.PureComponent {
         const { email } = this.state.faramValues;
         return (
             <div className={styles.registerSuccess}>
-                {this.props.loginStrings('checkYourEmailText', { email })}
+                {_ts('login', 'checkYourEmailText', { email })}
             </div>
         );
     }
@@ -237,15 +229,15 @@ export default class Register extends React.PureComponent {
                     <div className={styles.loginLinkContainer}>
                         <p>
                             { success ?
-                                this.props.loginStrings('goBackToLoginText') :
-                                this.props.loginStrings('alreadyHaveAccountText')
+                                _ts('login', 'goBackToLoginText') :
+                                _ts('login', 'alreadyHaveAccountText')
                             }
                         </p>
                         <Link
                             to={reverseRoute(pathNames.login, {})}
                             className={styles.loginLink}
                         >
-                            {this.props.loginStrings('loginLabel')}
+                            {_ts('login', 'loginLabel')}
                         </Link>
                     </div>
                 </div>

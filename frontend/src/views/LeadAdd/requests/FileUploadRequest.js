@@ -6,20 +6,19 @@ import {
     urlForUpload,
     createParamsForFileUpload,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class FileUploadRequest {
     constructor(params) {
         const {
             uploadCoordinator,
             addLeadViewLeadChange,
-            leadsStrings,
             getLeadFromId,
             setState,
             getState,
         } = params;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.uploadCoordinator = uploadCoordinator;
-        this.leadsStrings = leadsStrings;
         this.getLeadFromId = getLeadFromId;
         this.setState = setState;
         this.getState = getState;
@@ -93,7 +92,7 @@ export default class FileUploadRequest {
             },
             faramErrors: {
                 $internal: [
-                    `${this.leadsStrings('fileUploadFailText')} ${response.errors.file[0]}`,
+                    `${_ts('leads', 'fileUploadFailText')} ${response.errors.file[0]}`,
                 ],
             },
             uiState: { serverError: false },

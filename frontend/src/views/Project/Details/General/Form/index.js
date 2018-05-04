@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
@@ -15,7 +14,7 @@ import Form, {
     requiredCondition,
 } from '../../../../../vendor/react-store/components/Input/Form';
 
-import { projectStringsSelector } from '../../../../../redux';
+import _ts from '../../../../../ts';
 
 import styles from './styles.scss';
 
@@ -33,7 +32,6 @@ const propTypes = {
     successCallback: PropTypes.func.isRequired,
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -42,11 +40,6 @@ const defaultProps = {
     className: '',
 };
 
-const mapStateToProps = state => ({
-    projectStrings: projectStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ProjectGeneralForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -88,7 +81,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
             pending,
             pristine,
             successCallback,
-            projectStrings,
         } = this.props;
 
         return (
@@ -109,13 +101,13 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         onClick={handleFormCancel}
                         disabled={pending || !pristine}
                     >
-                        {projectStrings('modalRevert')}
+                        {_ts('project', 'modalRevert')}
                     </DangerButton>
                     <SuccessButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {projectStrings('modalSave')}
+                        {_ts('project', 'modalSave')}
                     </SuccessButton>
                 </div>
                 <NonFieldErrors
@@ -124,36 +116,36 @@ export default class ProjectGeneralForm extends React.PureComponent {
                 />
                 <div className={styles.inputsContainer}>
                     <TextInput
-                        label={projectStrings('projectNameLabel')}
+                        label={_ts('project', 'projectNameLabel')}
                         formname="title"
-                        placeholder={projectStrings('projectNamePlaceholder')}
+                        placeholder={_ts('project', 'projectNamePlaceholder')}
                         className={styles.name}
                     />
                     <DateInput
-                        label={projectStrings('projectStartDateLabel')}
+                        label={_ts('project', 'projectStartDateLabel')}
                         formname="startDate"
-                        placeholder={projectStrings('projectStartDatePlaceholder')}
+                        placeholder={_ts('project', 'projectStartDatePlaceholder')}
                         className={styles.startDate}
                     />
                     <DateInput
-                        label={projectStrings('projectEndDateLabel')}
+                        label={_ts('project', 'projectEndDateLabel')}
                         formname="endDate"
-                        placeholder={projectStrings('projectEndDatePlaceholder')}
+                        placeholder={_ts('project', 'projectEndDatePlaceholder')}
                         className={styles.endDate}
                     />
                 </div>
                 <TextArea
-                    label={projectStrings('projectDescriptionLabel')}
+                    label={_ts('project', 'projectDescriptionLabel')}
                     formname="description"
-                    placeholder={projectStrings('projectDescriptionPlaceholder')}
+                    placeholder={_ts('project', 'projectDescriptionPlaceholder')}
                     className={styles.description}
                     rows={3}
                 />
                 <div className={styles.selectsContainer}>
                     <SelectInputWithList
-                        label={projectStrings('projectRegionLabel')}
+                        label={_ts('project', 'projectRegionLabel')}
                         formname="regions"
-                        placeholder={projectStrings('projectRegionPlaceholder')}
+                        placeholder={_ts('project', 'projectRegionPlaceholder')}
                         className={styles.regions}
                         options={regionOptions}
                         labelSelector={ProjectGeneralForm.optionLabelSelector}
@@ -161,9 +153,9 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         hideSelectAllButton
                     />
                     <SelectInputWithList
-                        label={projectStrings('projectUserGroupLabel')}
+                        label={_ts('project', 'projectUserGroupLabel')}
                         formname="userGroups"
-                        placeholder={projectStrings('projectUserGroupPlaceholder')}
+                        placeholder={_ts('project', 'projectUserGroupPlaceholder')}
                         className={styles.userGroups}
                         options={userGroupsOptions}
                         labelSelector={ProjectGeneralForm.optionLabelSelector}
@@ -174,7 +166,7 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         formname="memberships"
                         className={styles.members}
                         options={memberOptions}
-                        label={projectStrings('projectMembersLabel')}
+                        label={_ts('project', 'projectMembersLabel')}
                         optionsIdentifier="select-input-inside-modal"
                         labelSelector={ProjectGeneralForm.memberOptionLabelSelector}
                         keySelector={ProjectGeneralForm.memberOptionKeySelector}

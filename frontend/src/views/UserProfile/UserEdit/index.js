@@ -18,11 +18,8 @@ import DangerButton from '../../../vendor/react-store/components/Action/Button/D
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
-import {
-    setUserInformationAction,
-    notificationStringsSelector,
-    userStringsSelector,
-} from '../../../redux';
+import { setUserInformationAction } from '../../../redux';
+import _ts from '../../../ts';
 import notify from '../../../notify';
 
 import UserPatchRequest from '../requests/UserPatchRequest';
@@ -37,24 +34,16 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setUserInformation: PropTypes.func.isRequired,
     userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     setUserInformation: params => dispatch(setUserInformationAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class UserEdit extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -95,7 +84,6 @@ export default class UserEdit extends React.PureComponent {
         }
         const userPatchRequest = new UserPatchRequest({
             setUserInformation: this.props.setUserInformation,
-            notificationStrings: this.props.notificationStrings,
             handleModalClose: this.props.handleModalClose,
             setState: v => this.setState(v),
         });
@@ -109,7 +97,6 @@ export default class UserEdit extends React.PureComponent {
         }
         const userImageUploader = new UserImageUploadRequest({
             handleImageUploadSuccess: this.handleImageUploadSuccess,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.userImageUploader = userImageUploader.create(file);
@@ -142,9 +129,9 @@ export default class UserEdit extends React.PureComponent {
     handleImageInputChange = (files, { invalidFiles }) => {
         if (invalidFiles > 0) {
             notify.send({
-                title: this.props.notificationStrings('fileSelection'),
+                title: _ts('notification', 'fileSelection'),
                 type: notify.type.WARNING,
-                message: this.props.notificationStrings('invalidFileSelection'),
+                message: _ts('notification', 'invalidFileSelection'),
                 duration: notify.duration.SLOW,
             });
         }
@@ -205,30 +192,30 @@ export default class UserEdit extends React.PureComponent {
                     accept="image/png, image/jpeg, image/fig, image/gif"
                 />
                 <TextInput
-                    label={this.props.userStrings('firstNameLabel')}
+                    label={_ts('user', 'firstNameLabel')}
                     faramElementName="firstName"
-                    placeholder={this.props.userStrings('firstNamePlaceholder')}
+                    placeholder={_ts('user', 'firstNamePlaceholder')}
                     autoFocus
                 />
                 <TextInput
-                    label={this.props.userStrings('lastNameLabel')}
+                    label={_ts('user', 'lastNameLabel')}
                     faramElementName="lastName"
-                    placeholder={this.props.userStrings('lastNamePlaceholder')}
+                    placeholder={_ts('user', 'lastNamePlaceholder')}
                 />
                 <TextInput
-                    label={this.props.userStrings('organizationLabel')}
+                    label={_ts('user', 'organizationLabel')}
                     faramElementName="organization"
-                    placeholder={this.props.userStrings('organizationPlaceholder')}
+                    placeholder={_ts('user', 'organizationPlaceholder')}
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.handleFaramClose}>
-                        {this.props.userStrings('modalCancel')}
+                        {_ts('user', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {this.props.userStrings('modalSave')}
+                        {_ts('user', 'modalSave')}
                     </PrimaryButton>
                 </div>
             </Faram>

@@ -4,9 +4,10 @@ import {
     createParamsForCountryDelete,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * setState, unSetRegion, notificationStrings
+ * setState, unSetRegion
 */
 export default class RegionDeleteRequest {
     constructor(props) {
@@ -17,9 +18,9 @@ export default class RegionDeleteRequest {
         try {
             this.props.unSetRegion({ regionId });
             notify.send({
-                title: this.props.notificationStrings('countryDelete'),
+                title: _ts('notification', 'countryDelete'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('countryDeleteSuccess'),
+                message: _ts('notification', 'countryDeleteSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -29,18 +30,18 @@ export default class RegionDeleteRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('countryDelete'),
+            title: _ts('notification', 'countryDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('countryDeleteFailure'),
+            message: _ts('notification', 'countryDeleteFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('countryDelete'),
+            title: _ts('notification', 'countryDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('countryDeleteFatal'),
+            message: _ts('notification', 'countryDeleteFatal'),
             duration: notify.duration.SLOW,
         });
     }

@@ -13,11 +13,9 @@ import LoadingAnimation from '../../../vendor/react-store/components/View/Loadin
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 
+import _ts from '../../../ts';
 import {
-    connectorStringsSelector,
-    notificationStringsSelector,
     connectorSourcesListSelector,
-
     addUserConnectorAction,
 } from '../../../redux';
 
@@ -27,15 +25,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     onModalClose: PropTypes.func.isRequired,
-    connectorStrings: PropTypes.func.isRequired,
     addUserConnector: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
     connectorSourcesList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const mapStateToProps = state => ({
-    connectorStrings: connectorStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
     connectorSourcesList: connectorSourcesListSelector(state),
 });
 
@@ -93,7 +87,6 @@ export default class ConnectorAddForm extends React.PureComponent {
         }
         const requestForConnectorCreate = new ConnectorCreateRequest({
             setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
             handleModalClose: this.handleModalClose,
             addUserConnector: this.props.addUserConnector,
         });
@@ -121,7 +114,6 @@ export default class ConnectorAddForm extends React.PureComponent {
         } = this.state;
 
         const {
-            connectorStrings,
             connectorSourcesList = [],
         } = this.props;
 
@@ -151,27 +143,27 @@ export default class ConnectorAddForm extends React.PureComponent {
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
-                    label={connectorStrings('addConnectorModalTitleLabel')}
-                    placeholder={connectorStrings('addConnectorModalTitlePlaceholder')}
+                    label={_ts('connector', 'addConnectorModalTitleLabel')}
+                    placeholder={_ts('connector', 'addConnectorModalTitlePlaceholder')}
                     autoFocus
                 />
                 <SelectInput
                     faramElementName="source"
-                    label={connectorStrings('addConnectorModalSourceLabel')}
+                    label={_ts('connector', 'addConnectorModalSourceLabel')}
                     options={connectorSourcesList}
                     keySelector={ConnectorAddForm.keySelector}
                     labelSelector={ConnectorAddForm.labelSelector}
-                    placeholder={connectorStrings('addConnectorModalSourcePlaceholder')}
+                    placeholder={_ts('connector', 'addConnectorModalSourcePlaceholder')}
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.handleModalClose}>
-                        {connectorStrings('modalCancel')}
+                        {_ts('connector', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         type="submit"
                         disabled={loading || !pristine}
                     >
-                        {connectorStrings('modalCreate')}
+                        {_ts('connector', 'modalCreate')}
                     </PrimaryButton>
                 </div>
             </Faram>

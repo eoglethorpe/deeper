@@ -3,6 +3,7 @@ import {
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -20,9 +21,9 @@ export default class ProjectPatchRequest {
                 regionId: removedRegionId,
             });
             notify.send({
-                title: this.props.notificationStrings('regionRemove'),
+                title: _ts('notification', 'regionRemove'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('regionRemoveSuccess'),
+                message: _ts('notification', 'regionRemoveSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -32,18 +33,18 @@ export default class ProjectPatchRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('regionRemove'),
+            title: _ts('notification', 'regionRemove'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('regionRemoveFailure'),
+            message: _ts('notification', 'regionRemoveFailure'),
             duration: notify.duration.SLOW,
         });
     }
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('regionRemove'),
+            title: _ts('notification', 'regionRemove'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('regionRemoveFatal'),
+            message: _ts('notification', 'regionRemoveFatal'),
             duration: notify.duration.SLOW,
         });
     }

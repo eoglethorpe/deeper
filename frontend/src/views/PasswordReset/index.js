@@ -4,8 +4,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
-import PropTypes from 'prop-types';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { reverseRoute } from '../../vendor/react-store/utils/common';
@@ -19,29 +17,23 @@ import Faram, {
     emailCondition,
 } from '../../vendor/react-store/components/Input/Faram';
 
+import _ts from '../../ts';
 import {
     alterResponseErrorToFaramError,
     createParamsForUserPasswordReset,
     urlForUserPasswordReset,
 } from '../../rest';
 import { pathNames } from '../../constants';
-import { loginStringsSelector } from '../../redux';
 import { reCaptchaSiteKey } from '../../config/reCaptcha';
 import schema from '../../schema';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    loginStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = { };
 
-const mapStateToProps = state => ({
-    loginStrings: loginStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class PasswordReset extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -152,7 +144,7 @@ export default class PasswordReset extends React.PureComponent {
                             <div className={styles.info}>
                                 <p>
                                     {
-                                        this.props.loginStrings('checkInboxText', { email: faramValues.email })
+                                        _ts('login', 'checkInboxText', { email: faramValues.email })
                                     }
                                 </p>
                             </div>
@@ -171,8 +163,8 @@ export default class PasswordReset extends React.PureComponent {
                                 <NonFieldErrors faramElement />
                                 <TextInput
                                     faramElementName="email"
-                                    label={this.props.loginStrings('emailLabel')}
-                                    placeholder={this.props.loginStrings('emailPlaceholder')}
+                                    label={_ts('login', 'emailLabel')}
+                                    placeholder={_ts('login', 'emailPlaceholder')}
                                 />
                                 <ReCaptcha
                                     ref={(reCaptcha) => { this.reCaptcha = reCaptcha; }}
@@ -181,7 +173,7 @@ export default class PasswordReset extends React.PureComponent {
                                 />
                                 <div className={styles.actionButtons}>
                                     <PrimaryButton type="submit">
-                                        { this.props.loginStrings('submitForgetPassword') }
+                                        { _ts('login', 'submitForgetPassword') }
                                     </PrimaryButton>
                                 </div>
                             </Faram>
@@ -192,7 +184,7 @@ export default class PasswordReset extends React.PureComponent {
                             className={styles.goBackLink}
                             to={reverseRoute(pathNames.login, {})}
                         >
-                            {this.props.loginStrings('goBackToLoginText')}
+                            {_ts('login', 'goBackToLoginText')}
                         </Link>
                     </div>
                 </div>

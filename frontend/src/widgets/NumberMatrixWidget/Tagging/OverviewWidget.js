@@ -1,14 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 import NumberInput from '../../../vendor/react-store/components/Input/NumberInput';
 import List from '../../../vendor/react-store/components/View/List';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
-import WidgetError from '../../../components/WidgetError';
 
-import { afStringsSelector } from '../../../redux';
+import WidgetError from '../../../components/WidgetError';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -17,7 +16,6 @@ const propTypes = {
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -28,12 +26,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class NumberMatrixOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -115,7 +108,7 @@ export default class NumberMatrixOverview extends React.PureComponent {
                 key={`${rowKey}-${key}`}
             >
                 <NumberInput
-                    placeholder={this.props.afStrings('numberPlaceholder')}
+                    placeholder={_ts('af', 'numberPlaceholder')}
                     showLabel={false}
                     onChange={newValue => this.onChangeNumberField(rowKey, key, newValue)}
                     value={value}

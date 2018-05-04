@@ -22,9 +22,8 @@ import {
     unsetUserAction,
     activeUserSelector,
     userIdFromRouteSelector,
-
-    userStringsSelector,
 } from '../../redux';
+import _ts from '../../ts';
 import { iconNames } from '../../constants';
 
 import UserGetRequest from './requests/UserGetRequest';
@@ -40,8 +39,6 @@ const propTypes = {
     userInformation: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.number.isRequired,
-
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -52,7 +49,6 @@ const mapStateToProps = (state, props) => ({
     userInformation: userInformationSelector(state, props),
     activeUser: activeUserSelector(state),
     userId: userIdFromRouteSelector(state, props),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -138,7 +134,7 @@ export default class UserProfile extends React.PureComponent {
             return (
                 <div className={styles.userProfile}>
                     <div className={styles.userDetailAlt}>
-                        {this.props.userStrings('userNotFound')}
+                        {_ts('user', 'userNotFound')}
                     </div>
                 </div>
             );
@@ -153,7 +149,7 @@ export default class UserProfile extends React.PureComponent {
                     {/* FIXME: add a default image in img */}
                     <InternalGallery
                         galleryId={userInformation.displayPicture}
-                        notFoundMessage={this.props.userStrings('userImageNotFound')}
+                        notFoundMessage={_ts('user', 'userImageNotFound')}
                         className={styles.displayPicture}
                     />
                     <div className={styles.detail}>
@@ -182,7 +178,7 @@ export default class UserProfile extends React.PureComponent {
                                     className={styles.userProfileEditModal}
                                 >
                                     <ModalHeader
-                                        title={this.props.userStrings('editProfileModalHeader')}
+                                        title={_ts('user', 'editProfileModalHeader')}
                                         rightComponent={
                                             <PrimaryButton
                                                 onClick={this.handleEditProfileClose}

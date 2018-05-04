@@ -31,14 +31,12 @@ import {
     activeUserSelector,
     unSetProjectAction,
     userIdFromRouteSelector,
-
-    notificationStringsSelector,
-    userStringsSelector,
 } from '../../../redux';
 import {
     iconNames,
     pathNames,
 } from '../../../constants';
+import _ts from '../../../ts';
 import UserProjectAdd from '../../../components/UserProjectAdd';
 
 import UserProjectsGetRequest from '../requests/UserProjectsGetRequest';
@@ -53,9 +51,6 @@ const propTypes = {
     userProjects: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userId: PropTypes.number.isRequired,
-
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -67,9 +62,6 @@ const mapStateToProps = (state, props) => ({
     userProjects: userProjectsSelector(state, props),
     activeUser: activeUserSelector(state),
     userId: userIdFromRouteSelector(state, props),
-
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -102,14 +94,14 @@ export default class UserProject extends React.PureComponent {
         this.projectTableHeaders = [
             {
                 key: 'title',
-                label: this.props.userStrings('tableHeaderTitle'),
+                label: _ts('user', 'tableHeaderTitle'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'rights',
-                label: this.props.userStrings('tableHeaderRights'),
+                label: _ts('user', 'tableHeaderRights'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.role, b.role),
@@ -117,7 +109,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'createdAt',
-                label: this.props.userStrings('tableHeaderCreatedAt'),
+                label: _ts('user', 'tableHeaderCreatedAt'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.createdAt, b.createdAt),
@@ -130,7 +122,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'modifiedAt',
-                label: this.props.userStrings('tableHeaderLastModifiedAt'),
+                label: _ts('user', 'tableHeaderLastModifiedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.modifiedAt, b.modifiedAt),
@@ -143,13 +135,13 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: this.props.userStrings('tableHeaderStatus'),
+                label: _ts('user', 'tableHeaderStatus'),
                 order: 5,
                 modifier: () => 'Active', // NOTE: Show 'Active' for now
             },
             {
                 key: 'members',
-                label: this.props.userStrings('tableHeaderMembers'),
+                label: _ts('user', 'tableHeaderMembers'),
                 order: 6,
                 sortable: true,
                 comparator: (a, b) => compareLength(a.memberships, b.memberships),
@@ -157,7 +149,7 @@ export default class UserProject extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: this.props.userStrings('tableHeaderActions'),
+                label: _ts('user', 'tableHeaderActions'),
                 order: 7,
                 modifier: (d) => {
                     const { activeUser } = this.props;
@@ -167,7 +159,7 @@ export default class UserProject extends React.PureComponent {
                     if (!activeUserMembership || activeUserMembership.role !== 'admin') {
                         return (
                             <Link
-                                title={this.props.userStrings('viewProjectLinkTitle')}
+                                title={_ts('user', 'viewProjectLinkTitle')}
                                 to={reverseRoute(pathNames.projects, { projectId: d.id })}
                                 className={styles.link}
                             >
@@ -178,7 +170,7 @@ export default class UserProject extends React.PureComponent {
 
                     return ([
                         <Link
-                            title={this.props.userStrings('editProjectLinkTitle')}
+                            title={_ts('user', 'editProjectLinkTitle')}
                             key="project-panel"
                             to={reverseRoute(pathNames.projects, { projectId: d.id })}
                             className={styles.link}
@@ -186,7 +178,7 @@ export default class UserProject extends React.PureComponent {
                             <span className={iconNames.edit} />
                         </Link>,
                         <DangerButton
-                            title={this.props.userStrings('deleteProjectLinkTitle')}
+                            title={_ts('user', 'deleteProjectLinkTitle')}
                             key="delete"
                             onClick={() => this.handleDeleteProjectClick(d)}
                             iconName={iconNames.delete}
@@ -234,7 +226,6 @@ export default class UserProject extends React.PureComponent {
         }
         const projectDeleteRequest = new ProjectDeleteRequest({
             unSetProject: this.props.unSetProject,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.projectDeleteRequest = projectDeleteRequest.create({ projectId, userId });
@@ -255,7 +246,7 @@ export default class UserProject extends React.PureComponent {
 
     // Delete Click
     handleDeleteProjectClick = (project) => {
-        const confirmText = this.props.userStrings('confirmTextDeleteProject', {
+        const confirmText = _ts('user', 'confirmTextDeleteProject', {
             title: project.title,
         });
 
@@ -298,13 +289,13 @@ export default class UserProject extends React.PureComponent {
                 { deletePending && <LoadingAnimation /> }
                 <div className={styles.header}>
                     <h2>
-                        {this.props.userStrings('headerProjects')}
+                        {_ts('user', 'headerProjects')}
                     </h2>
                     {
 
                         isCurrentUser && (
                             <PrimaryButton onClick={this.handleAddProjectClick} >
-                                {this.props.userStrings('addProjectButtonLabel')}
+                                {_ts('user', 'addProjectButtonLabel')}
                             </PrimaryButton>
                         )
                     }
@@ -315,7 +306,7 @@ export default class UserProject extends React.PureComponent {
                         onClose={this.handleAddProjectClose}
                     >
                         <ModalHeader
-                            title={this.props.userStrings('addProjectButtonLabel')}
+                            title={_ts('user', 'addProjectButtonLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddProjectClose}

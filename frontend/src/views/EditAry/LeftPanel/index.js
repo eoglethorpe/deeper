@@ -12,14 +12,13 @@ import {
 } from '../../../entities/lead';
 import SimplifiedLeadPreview from '../../../components/SimplifiedLeadPreview';
 import LeadPreview from '../../../components/LeadPreview';
-
 import AssistedTagging from '../../../components/AssistedTagging';
 import ImagesGrid from '../../../components/ImagesGrid';
 import {
-    entryStringsSelector,
     leadIdFromRouteSelector,
     projectIdFromRouteSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 
 import EntriesListing from './EntriesListing';
 import styles from './styles.scss';
@@ -32,7 +31,6 @@ const propTypes = {
         PropTypes.string,
     ]).isRequired,
 
-    entryStrings: PropTypes.func.isRequired,
     activeSector: PropTypes.string,
 };
 
@@ -43,7 +41,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
     leadId: leadIdFromRouteSelector(state),
     projectId: projectIdFromRouteSelector(state),
 });
@@ -164,21 +161,21 @@ export default class LeftPanel extends React.PureComponent {
         switch (leadPaneType) {
             case LEAD_PANE_TYPE.spreadsheet:
                 tabs = {
-                    'original-preview': this.props.entryStrings('tabularTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'original-preview': _ts('entry', 'tabularTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.image:
                 tabs = {
-                    'original-preview': this.props.entryStrings('imagesTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'original-preview': _ts('entry', 'imagesTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.text:
                 tabs = {
-                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
-                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'simplified-preview': _ts('entry', 'simplifiedTabLabel'),
+                    'assisted-tagging': _ts('entry', 'assistedTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.word:
@@ -186,10 +183,10 @@ export default class LeftPanel extends React.PureComponent {
             case LEAD_PANE_TYPE.presentation:
             case LEAD_PANE_TYPE.website:
                 tabs = {
-                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
-                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
-                    'original-preview': this.props.entryStrings('originalTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'simplified-preview': _ts('entry', 'simplifiedTabLabel'),
+                    'assisted-tagging': _ts('entry', 'assistedTabLabel'),
+                    'original-preview': _ts('entry', 'originalTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             default:
@@ -198,7 +195,7 @@ export default class LeftPanel extends React.PureComponent {
         if (!images || images.length <= 0) {
             tabs['images-preview'] = undefined;
         }
-        tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
+        tabs['entries-listing'] = _ts('entry', 'entriesTabLabel');
         return tabs;
     }
 
@@ -244,7 +241,7 @@ export default class LeftPanel extends React.PureComponent {
         if (!tabs) {
             return (
                 <p>
-                    {this.props.entryStrings('unrecognizedLeadMessage')}
+                    {_ts('entry', 'unrecognizedLeadMessage')}
                 </p>
             );
         }

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import _ts from '../../../ts';
 
 import {
     iconNames,
@@ -20,7 +21,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     row: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    leadsStrings: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
     onSearchSimilarLead: PropTypes.func.isRequired,
     onRemoveLead: PropTypes.func.isRequired,
@@ -98,7 +98,6 @@ export default class ActionButtons extends React.PureComponent {
             onMarkProcessed,
             onMarkPending,
             row,
-            leadsStrings,
         } = this.props;
 
         return (
@@ -107,8 +106,7 @@ export default class ActionButtons extends React.PureComponent {
                     row.status === 'pending' &&
                     <SuccessButton
                         tabIndex="-1"
-                        // FIXME: Use strings
-                        title="Mark as processed"
+                        title={_ts('leads', 'markAsProcessedTitle')}
                         iconName={iconNames.check}
                         onClick={() => onMarkProcessed(row)}
                         smallVerticalPadding
@@ -119,8 +117,7 @@ export default class ActionButtons extends React.PureComponent {
                     row.status === 'processed' &&
                     <WarningButton
                         tabIndex="-1"
-                        // FIXME: Use strings
-                        title="Mark as pending"
+                        title={_ts('leads', 'markAsPendingTitle')}
                         iconName={iconNames.undo}
                         onClick={() => onMarkPending(row)}
                         smallVerticalPadding
@@ -129,7 +126,7 @@ export default class ActionButtons extends React.PureComponent {
                 }
                 <Button
                     tabIndex="-1"
-                    title={leadsStrings('searchSimilarLeadButtonTitle')}
+                    title={_ts('leads', 'searchSimilarLeadButtonTitle')}
                     onClick={() => onSearchSimilarLead(row)}
                     smallVerticalPadding
                     transparent
@@ -138,7 +135,7 @@ export default class ActionButtons extends React.PureComponent {
                 </Button>
                 <DangerButton
                     tabIndex="-1"
-                    title={leadsStrings('removeLeadLeadButtonTitle')}
+                    title={_ts('leads', 'removeLeadLeadButtonTitle')}
                     onClick={() => onRemoveLead(row)}
                     smallVerticalPadding
                     transparent
@@ -148,7 +145,7 @@ export default class ActionButtons extends React.PureComponent {
                 <Link
                     className={styles.editLink}
                     tabIndex="-1"
-                    title={leadsStrings('editLeadButtonTitle')}
+                    title={_ts('leads', 'editLeadButtonTitle')}
                     to={links.editLead}
                 >
                     <i className={iconNames.edit} />
@@ -156,7 +153,7 @@ export default class ActionButtons extends React.PureComponent {
                 <Link
                     className={styles.addAssessmentLink}
                     tabIndex="-1"
-                    title={leadsStrings('addAssessmentFromLeadButtonTitle')}
+                    title={_ts('leads', 'addAssessmentFromLeadButtonTitle')}
                     to={links.addAssessment}
                 >
                     <i className={iconNames.forward} />
@@ -164,7 +161,7 @@ export default class ActionButtons extends React.PureComponent {
                 <Link
                     className={styles.addEntryLink}
                     tabIndex="-1"
-                    title={leadsStrings('addEntryFromLeadButtonTitle')}
+                    title={_ts('leads', 'addEntryFromLeadButtonTitle')}
                     to={links.editEntries}
                 >
                     <i className={iconNames.forward} />

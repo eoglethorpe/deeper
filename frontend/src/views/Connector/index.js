@@ -10,39 +10,37 @@ import BoundError from '../../vendor/react-store/components/General/BoundError';
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import ListView from '../../../src/vendor/react-store/components/View/List/ListView';
-import AppError from '../../components/AppError';
 import {
     reverseRoute,
     caseInsensitiveSubmatch,
 } from '../../vendor/react-store/utils/common';
+
+import AppError from '../../components/AppError';
 import {
-    connectorStringsSelector,
     connectorsListSelector,
     connectorIdFromRouteSelector,
-    notificationStringsSelector,
 
     setConnectorSourcesAction,
     setUserConnectorsAction,
 } from '../../redux';
+import {
+    iconNames,
+    pathNames,
+} from '../../constants';
+import _ts from '../../ts';
+
 import ConnectorsGetRequest from './requests/ConnectorsGetRequest';
 import ConnectorSourcesGetRequest from './requests/ConnectorSourcesGetRequest';
 import AddConnectorForm from './AddForm';
 import ConnectorDetails from './Details';
 
-import {
-    iconNames,
-    pathNames,
-} from '../../constants';
-
 import styles from './styles.scss';
 
 const propTypes = {
-    connectorStrings: PropTypes.func.isRequired,
     connectorId: PropTypes.number,
     setUserConnectors: PropTypes.func.isRequired,
     setConnectorSources: PropTypes.func.isRequired,
     connectorsList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
-    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,8 +48,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    connectorStrings: connectorStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
     connectorsList: connectorsListSelector(state),
     connectorId: connectorIdFromRouteSelector(state),
 });
@@ -138,7 +134,6 @@ export default class Connector extends React.PureComponent {
         }
         const requestForConnectorSources = new ConnectorSourcesGetRequest({
             setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
             setConnectorSources: this.props.setConnectorSources,
         });
         this.requestForConnectorSources = requestForConnectorSources.create();
@@ -182,7 +177,6 @@ export default class Connector extends React.PureComponent {
     )
 
     renderHeader = () => {
-        const { connectorStrings } = this.props;
         const { searchInputValue } = this.state;
 
         const AddModal = this.renderAddModal;
@@ -190,17 +184,17 @@ export default class Connector extends React.PureComponent {
         return (
             <header className={styles.header}>
                 <h3 className={styles.heading}>
-                    {connectorStrings('headerConnectors')}
+                    {_ts('connector', 'headerConnectors')}
                 </h3>
                 <PrimaryButton
                     onClick={this.handleAddConnectorClick}
                     iconName={iconNames.add}
                 >
-                    {connectorStrings('addConnectorButtonLabel')}
+                    {_ts('connector', 'addConnectorButtonLabel')}
                 </PrimaryButton>
                 <SearchInput
                     onChange={this.handleSearchInputChange}
-                    placeholder={connectorStrings('searchConnectorPlaceholder')}
+                    placeholder={_ts('connector', 'searchConnectorPlaceholder')}
                     className={styles.searchInput}
                     value={searchInputValue}
                     showLabel={false}
@@ -213,7 +207,6 @@ export default class Connector extends React.PureComponent {
 
     renderAddModal = () => {
         const { showAddConnectorModal } = this.state;
-        const { connectorStrings } = this.props;
 
         if (!showAddConnectorModal) {
             return null;
@@ -222,7 +215,7 @@ export default class Connector extends React.PureComponent {
         return (
             <Modal>
                 <ModalHeader
-                    title={connectorStrings('addConnectorModalTitle')}
+                    title={_ts('connector', 'addConnectorModalTitle')}
                     rightComponent={
                         <PrimaryButton
                             onClick={this.handleAddConnectorModalClose}
@@ -244,7 +237,6 @@ export default class Connector extends React.PureComponent {
     renderDetails = () => {
         const {
             connectorId,
-            connectorStrings,
         } = this.props;
 
         const { displayConnectorsList } = this.state;
@@ -252,7 +244,7 @@ export default class Connector extends React.PureComponent {
         if (displayConnectorsList.length === 0) {
             return (
                 <p className={styles.noConnector}>
-                    {connectorStrings('noConnectorsLabel')}
+                    {_ts('connector', 'noConnectorsLabel')}
                 </p>
             );
         }
@@ -260,7 +252,7 @@ export default class Connector extends React.PureComponent {
         if (!connectorId) {
             return (
                 <p className={styles.noConnector}>
-                    {connectorStrings('noConnectorSelectedTitle')}
+                    {_ts('connector', 'noConnectorSelectedTitle')}
                 </p>
             );
         }

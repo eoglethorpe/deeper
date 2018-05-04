@@ -1,15 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Button from '../../../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../../../vendor/react-store/components/View/List/ListView';
 
 import { entryAccessor, ENTRY_STATUS } from '../../../../../entities/entry';
-
-import { entryStringsSelector } from '../../../../../redux';
 import { iconNames } from '../../../../../constants';
+import _ts from '../../../../../ts';
 
 import styles from './styles.scss';
 
@@ -20,7 +18,6 @@ const propTypes = {
 
     onEntryDelete: PropTypes.func.isRequired,
 
-    entryStrings: PropTypes.func.isRequired,
     handleEntryItemClick: PropTypes.func.isRequired,
 };
 
@@ -28,11 +25,6 @@ const defaultProps = {
     selectedEntryId: undefined,
 };
 
-const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class EntriesListing extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -60,7 +52,7 @@ export default class EntriesListing extends React.PureComponent {
                 <img
                     className={styles.image}
                     src={values.image}
-                    alt={this.props.entryStrings('altLabel')}
+                    alt={_ts('entry', 'altLabel')}
                 />
             );
         }
@@ -115,7 +107,7 @@ export default class EntriesListing extends React.PureComponent {
                             className={styles.removeButton}
                             onClick={() => onEntryDelete(false, key)}
                             iconName={iconNames.undo}
-                            title={this.props.entryStrings('removeEntryButtonTitle')}
+                            title={_ts('entry', 'removeEntryButtonTitle')}
                         />
                     ) : (
                         <DangerButton
@@ -123,7 +115,7 @@ export default class EntriesListing extends React.PureComponent {
                             className={styles.removeButton}
                             onClick={() => onEntryDelete(true, key)}
                             iconName={iconNames.delete}
-                            title={this.props.entryStrings('undoRemoveEntryButtonTitle')}
+                            title={_ts('entry', 'undoRemoveEntryButtonTitle')}
                         />
                     )
                 }

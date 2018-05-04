@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { iconNames } from '../../../../constants';
-import { commonStringsSelector } from '../../../../redux';
+import _ts from '../../../../ts';
 
 import styles from './styles.scss';
 
@@ -12,7 +11,6 @@ export { galleryImageMimeType as supportedMimeType } from '../../../../config/de
 const propTypes = {
     className: PropTypes.string,
     imageUrl: PropTypes.string,
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -20,14 +18,9 @@ const defaultProps = {
     imageUrl: undefined,
 };
 
-const mapStateToProps = state => ({
-    commonStrings: commonStringsSelector(state),
-});
-
 /*
  * Gallery viewer component for Images [galleryImageMimeType]
  */
-@connect(mapStateToProps)
 export default class GalleryImage extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -43,7 +36,7 @@ export default class GalleryImage extends React.PureComponent {
                 {
                     imageUrl ? (
                         <img
-                            alt={this.props.commonStrings('altUser')}
+                            alt={_ts('common', 'altUser')}
                             className={`image ${styles.image}`}
                             src={imageUrl}
                         />

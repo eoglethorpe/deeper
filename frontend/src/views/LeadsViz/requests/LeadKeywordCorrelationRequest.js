@@ -2,10 +2,10 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
 import {
-    // urlForLeadKeywordCorrelation,
     createUrlForLeadKeywordCorrelation,
     createParamsForLeadKeywordCorrelation,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadKeywordCorrelationRequest {
     constructor(params) {
@@ -19,7 +19,6 @@ export default class LeadKeywordCorrelationRequest {
 
     create = ({ docIds, activeProject, isFilter }) => {
         const request = new FgRestBuilder()
-            // .url(urlForLeadNerDocsId(activeProject))
             .url(createUrlForLeadKeywordCorrelation(activeProject, isFilter))
             .params(createParamsForLeadKeywordCorrelation({
                 doc_ids: docIds,
@@ -32,7 +31,6 @@ export default class LeadKeywordCorrelationRequest {
             })
             .success((response) => {
                 try {
-                    // FIXME: write schema
                     schema.validate(response, 'leadKeywordCorrelationResponse');
                     this.setLeadVisualization({
                         keywordCorrelation: response,
@@ -45,19 +43,17 @@ export default class LeadKeywordCorrelationRequest {
             .failure((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'keywordCorrelation'),
                     type: notify.type.ERROR,
-                    // FIXME: strings
-                    message: 'Failed to load Keyword Correlation Data from NLP Server',
+                    message: _ts('leadsViz', 'keywordCorrelationGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'keywordCorrelation'),
                     type: notify.type.ERROR,
-                    // FIXME: strings
-                    message: 'Failed to load Keyword Correlation Data from NLP Server',
+                    message: _ts('leadsViz', 'keywordCorrelationGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })

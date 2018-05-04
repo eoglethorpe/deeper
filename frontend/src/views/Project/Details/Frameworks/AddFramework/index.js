@@ -17,11 +17,8 @@ import {
     createParamsForAfCreate,
     urlForAfCreate,
 } from '../../../../../rest';
-import {
-    addNewAfAction,
-    notificationStringsSelector,
-    projectStringsSelector,
-} from '../../../../../redux';
+import { addNewAfAction } from '../../../../../redux';
+import _ts from '../../../../../ts';
 import notify from '../../../../../notify';
 import schema from '../../../../../schema';
 
@@ -32,8 +29,6 @@ const propTypes = {
     addNewAf: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
-    notificationStrings: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -41,16 +36,11 @@ const defaultProps = {
     projectId: undefined,
 };
 
-const mapStateToProps = state => ({
-    notificationStrings: notificationStringsSelector(state),
-    projectStrings: projectStringsSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     addNewAf: params => dispatch(addNewAfAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class AddAnalysisFramework extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -99,9 +89,9 @@ export default class AddAnalysisFramework extends React.PureComponent {
                         projectId,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('afCreate'),
+                        title: _ts('notification', 'afCreate'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('afCreateSuccess'),
+                        message: _ts('notification', 'afCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onModalClose();
@@ -111,9 +101,9 @@ export default class AddAnalysisFramework extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: this.props.notificationStrings('afCreate'),
+                    title: _ts('notification', 'afCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('afCreateFailure'),
+                    message: _ts('notification', 'afCreateFailure'),
                     duration: notify.duration.SLOW,
                 });
                 const {
@@ -127,9 +117,9 @@ export default class AddAnalysisFramework extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('afCreate'),
+                    title: _ts('notification', 'afCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('afCreateFatal'),
+                    message: _ts('notification', 'afCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -197,20 +187,20 @@ export default class AddAnalysisFramework extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors formerror="" />
                 <TextInput
-                    label={this.props.projectStrings('addAfTitleLabel')}
+                    label={_ts('project', 'addAfTitleLabel')}
                     formname="title"
-                    placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
+                    placeholder={_ts('project', 'addAfTitlePlaceholder')}
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.props.onModalClose}>
-                        {this.props.projectStrings('modalCancel')}
+                        {_ts('project', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {this.props.projectStrings('modalAdd')}
+                        {_ts('project', 'modalAdd')}
                     </PrimaryButton>
                 </div>
             </Form>

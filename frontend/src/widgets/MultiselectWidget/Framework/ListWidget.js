@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { randomString } from '../../../vendor/react-store/utils/common';
 import update from '../../../vendor/react-store/utils/immutable-update';
@@ -15,10 +14,10 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
-
-import { iconNames } from '../../../constants';
-import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
+import _ts from '../../../ts';
+import { iconNames } from '../../../constants';
 import WidgetError from '../../../components/WidgetError';
 
 import styles from './styles.scss';
@@ -29,7 +28,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -39,12 +37,7 @@ const defaultProps = {
 const emptyObject = {};
 const emptyList = [];
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class Multiselect extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -150,8 +143,8 @@ export default class Multiselect extends React.PureComponent {
         >
             <TextInput
                 className={styles.titleInput}
-                label={this.props.afStrings('optionLabel')}
-                placeholder={this.props.afStrings('optionPlaceholder')}
+                label={_ts('af', 'optionLabel')}
+                placeholder={_ts('af', 'optionPlaceholder')}
                 onChange={(value) => { this.handleValueInputChange(key, value); }}
                 showHintAndError={false}
                 value={data.label}
@@ -185,14 +178,13 @@ export default class Multiselect extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-        const headerTitle = afStrings('editMultiselectModalTitle');
-        const titleInputLabel = afStrings('titleLabel');
-        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
-        const optionsTitle = afStrings('optionsHeader');
-        const addOptionButtonLabel = afStrings('addOptionButtonLabel');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editMultiselectModalTitle');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const titleInputPlaceholder = _ts('af', 'titlePlaceholderScale');
+        const optionsTitle = _ts('af', 'optionsHeader');
+        const addOptionButtonLabel = _ts('af', 'addOptionButtonLabel');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal className={styles.editModal}>

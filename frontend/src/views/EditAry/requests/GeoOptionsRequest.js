@@ -6,6 +6,7 @@ import {
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class GeoOptionsRequest {
     constructor(params) {
@@ -37,7 +38,7 @@ export default class GeoOptionsRequest {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -45,9 +46,9 @@ export default class GeoOptionsRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
-                    message: this.props.entryStrings('geoOptionsFatalMessage'),
+                    message: _ts('entry', 'geoOptionsFatalMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })

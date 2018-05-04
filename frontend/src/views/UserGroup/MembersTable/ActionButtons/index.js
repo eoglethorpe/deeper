@@ -1,19 +1,16 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
-import { connect } from 'react-redux';
 
-import { userStringsSelector } from '../../../../redux';
+import { reverseRoute } from '../../../../vendor/react-store/utils/common';
+import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
+import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import {
     iconNames,
     pathNames,
 } from '../../../../constants/';
-
-import { reverseRoute } from '../../../../vendor/react-store/utils/common';
-
-import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
-import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import _ts from '../../../../ts';
 
 import styles from './styles.scss';
 
@@ -24,17 +21,10 @@ const propTypes = {
 
     onRemoveMember: PropTypes.func.isRequired,
     onChangeMemberRole: PropTypes.func.isRequired,
-
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {};
 
-const mapStateToProps = state => ({
-    userStrings: userStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ActionButtons extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -59,7 +49,7 @@ export default class ActionButtons extends React.PureComponent {
     renderLinkToUserProfile = () => (
         <Link
             className={styles.link}
-            title={this.props.userStrings('viewMemberLinkTitle')}
+            title={_ts('user', 'viewMemberLinkTitle')}
             to={this.getLinks().userProfile}
         >
             <i className={iconNames.openLink} />
@@ -73,7 +63,6 @@ export default class ActionButtons extends React.PureComponent {
             isCurrentUserAdmin,
             onRemoveMember,
             onChangeMemberRole,
-            userStrings,
         } = this.props;
 
         const isAdmin = row.role === 'admin';
@@ -89,8 +78,8 @@ export default class ActionButtons extends React.PureComponent {
                 <PrimaryButton
                     title={
                         isAdmin
-                            ? userStrings('revokeAdminLinkTitle')
-                            : userStrings('grantAdminLinkTitle')
+                            ? _ts('user', 'revokeAdminLinkTitle')
+                            : _ts('user', 'grantAdminLinkTitle')
                     }
                     onClick={() => onChangeMemberRole(row)}
                     iconName={isAdmin ? iconNames.locked : iconNames.person}
@@ -98,7 +87,7 @@ export default class ActionButtons extends React.PureComponent {
                     transparent
                 />
                 <DangerButton
-                    title={userStrings('deleteMemberLinkTitle')}
+                    title={_ts('user', 'deleteMemberLinkTitle')}
                     onClick={() => onRemoveMember(row)}
                     iconName={iconNames.delete}
                     smallVerticalPadding

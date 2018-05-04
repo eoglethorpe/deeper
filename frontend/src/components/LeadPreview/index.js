@@ -1,18 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { LEAD_TYPE } from '../../entities/lead';
 import {
     InternalGallery,
     ExternalGallery,
 } from '../../components/DeepGallery';
-import { entryStringsSelector } from '../../redux';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    entryStrings: PropTypes.func.isRequired,
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     handleScreenshot: PropTypes.func.isRequired,
 };
@@ -20,11 +18,6 @@ const propTypes = {
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-});
-
-@connect(mapStateToProps, undefined)
 export default class LeadPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -64,7 +57,7 @@ export default class LeadPreview extends React.PureComponent {
         return (
             <div className={styles.emptyText}>
                 <h1>
-                    {this.props.entryStrings('previewNotAvailableText')}
+                    {_ts('entry', 'previewNotAvailableText')}
                 </h1>
             </div>
         );

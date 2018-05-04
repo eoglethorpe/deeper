@@ -27,8 +27,8 @@ import {
     leadPageFilterSelector,
     setLeadFilterOptionsAction,
     unsetLeadPageFilterAction,
-    leadsStringsSelector,
 } from '../../redux';
+import _ts from '../../ts';
 import schema from '../../schema';
 
 
@@ -47,7 +47,6 @@ const propTypes = {
     unsetLeadPageFilter: PropTypes.func.isRequired,
 
     applyOnChange: PropTypes.bool,
-    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -61,7 +60,6 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectIdFromStateSelector(state),
     filters: leadPageFilterSelector(state),
     leadFilterOptions: leadFilterOptionsForProjectSelector(state, props),
-    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -221,7 +219,6 @@ export default class FilterLeadsForm extends React.PureComponent {
                 assignee,
             },
             filters,
-            leadsStrings,
             applyOnChange,
         } = this.props;
 
@@ -247,26 +244,26 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     faramElementName="assignee"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsStrings('assigneeLabel')}
+                    label={_ts('leads', 'assigneeLabel')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={assignee}
-                    placeholder={leadsStrings('placeholderAnybody')}
+                    placeholder={_ts('leads', 'placeholderAnybody')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <DateFilter
                     faramElementName="created_at"
-                    label={leadsStrings('filterDateCreated')}
-                    placeholder={leadsStrings('placeholderAnytime')}
+                    label={_ts('leads', 'filterDateCreated')}
+                    placeholder={_ts('leads', 'placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <DateFilter
                     faramElementName="published_on"
-                    label={leadsStrings('filterDatePublished')}
-                    placeholder={leadsStrings('placeholderAnytime')}
+                    label={_ts('leads', 'filterDatePublished')}
+                    placeholder={_ts('leads', 'placeholderAnytime')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -274,10 +271,10 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     faramElementName="confidentiality"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsStrings('filterConfidentiality')}
+                    label={_ts('leads', 'filterConfidentiality')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={confidentiality}
-                    placeholder={leadsStrings('placeholderAny')}
+                    placeholder={_ts('leads', 'placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -285,18 +282,18 @@ export default class FilterLeadsForm extends React.PureComponent {
                 <MultiSelectInput
                     faramElementName="status"
                     keySelector={FilterLeadsForm.optionKeySelector}
-                    label={leadsStrings('filterStatus')}
+                    label={_ts('leads', 'filterStatus')}
                     labelSelector={FilterLeadsForm.optionLabelSelector}
                     options={status}
-                    placeholder={leadsStrings('placeholderAny')}
+                    placeholder={_ts('leads', 'placeholderAny')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
                 />
                 <SearchInput
                     faramElementName="search"
-                    label={leadsStrings('placeholderSearch')}
-                    placeholder={leadsStrings('placeholderSearch')}
+                    label={_ts('leads', 'placeholderSearch')}
+                    placeholder={_ts('leads', 'placeholderSearch')}
                     showHintAndError={false}
                     showLabel
                     className="leads-filter"
@@ -307,7 +304,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                         disabled={isApplyDisabled}
                         type="submit"
                     >
-                        {leadsStrings('filterApplyFilter')}
+                        {_ts('leads', 'filterApplyFilter')}
                     </Button>
                 }
                 <DangerButton
@@ -315,7 +312,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                     disabled={isClearDisabled}
                     onClick={this.handleClearFilters}
                 >
-                    {leadsStrings('filterClearFilter')}
+                    {_ts('leads', 'filterClearFilter')}
                 </DangerButton>
                 {
                     isTruthy(filters.similar) && (
@@ -323,7 +320,7 @@ export default class FilterLeadsForm extends React.PureComponent {
                             className="button clear-similar-filter-button"
                             onClick={this.handleClearSimilarSelection}
                         >
-                            {leadsStrings('filterClearSimilarFilter')}
+                            {_ts('leads', 'filterClearSimilarFilter')}
                         </DangerButton>
                     )
                 }

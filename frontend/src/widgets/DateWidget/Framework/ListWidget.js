@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Checkbox from '../../../vendor/react-store/components/Input/Checkbox';
 import DateInput from '../../../vendor/react-store/components/Input/DateInput';
@@ -11,10 +10,10 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
-
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
 import WidgetError from '../../../components/WidgetError';
-import { afStringsSelector } from '../../../redux';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -23,7 +22,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -32,12 +30,7 @@ const defaultProps = {
 
 const emptyObject = {};
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class DateFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -106,14 +99,12 @@ export default class DateFrameworkList extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-
-        const headerTitle = afStrings('editTitleModalHeader');
-        const titleInputLabel = afStrings('titleLabel');
-        const titleInputPlaceholder = afStrings('widgetTitlePlaceholder');
-        const checkboxLabel = afStrings('informationDateCheckboxLabel');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editTitleModalHeader');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const titleInputPlaceholder = _ts('af', 'widgetTitlePlaceholder');
+        const checkboxLabel = _ts('af', 'informationDateCheckboxLabel');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal className={styles.editModal}>

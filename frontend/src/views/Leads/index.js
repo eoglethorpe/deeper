@@ -40,8 +40,6 @@ import {
     leadPageLeadsPerPageSelector,
     setLeadPageLeadsPerPageAction,
 
-    leadsStringsSelector,
-
     removeLeadAction,
     patchLeadAction,
 } from '../../redux';
@@ -49,6 +47,7 @@ import {
     iconNames,
     pathNames,
 } from '../../constants/';
+import _ts from '../../ts';
 import { leadTypeIconMap } from '../../entities/lead';
 
 import LeadsRequest from './requests/LeadsRequest';
@@ -74,8 +73,6 @@ const propTypes = {
     setLeadPageActiveSort: PropTypes.func.isRequired,
     setLeadPageActivePage: PropTypes.func.isRequired,
     setLeadsPerPage: PropTypes.func.isRequired,
-
-    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -92,7 +89,6 @@ const mapStateToProps = (state, props) => ({
     activeSort: leadPageActiveSortSelector(state, props),
     leadsPerPage: leadPageLeadsPerPageSelector(state, props),
     filters: leadPageFilterSelector(state, props),
-    leadsStrings: leadsStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -133,7 +129,7 @@ export default class Leads extends React.PureComponent {
         this.headers = [
             {
                 key: 'attachmentMimeType',
-                label: this.props.leadsStrings('filterSourceType'),
+                label: _ts('leads', 'filterSourceType'),
                 order: 1,
                 sortable: false,
                 modifier: (row) => {
@@ -145,19 +141,19 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: this.props.leadsStrings('titleLabel'),
+                label: _ts('leads', 'titleLabel'),
                 order: 2,
                 sortable: true,
             },
             {
                 key: 'source',
-                label: this.props.leadsStrings('tableHeaderPublisher'),
+                label: _ts('leads', 'tableHeaderPublisher'),
                 order: 3,
                 sortable: true,
             },
             {
                 key: 'published_on',
-                label: this.props.leadsStrings('tableHeaderDatePublished'),
+                label: _ts('leads', 'tableHeaderDatePublished'),
                 order: 4,
                 sortable: true,
                 modifier: row => (
@@ -169,7 +165,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'created_by',
-                label: this.props.leadsStrings('tableHeaderOwner'),
+                label: _ts('leads', 'tableHeaderOwner'),
                 order: 5,
                 sortable: true,
                 modifier: row => (
@@ -183,7 +179,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'assignee',
-                label: 'Assignee', // FIXME: use strings
+                label: _ts('leads', 'assignee'),
                 order: 6,
                 sortable: false,
                 modifier: row => (
@@ -200,7 +196,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'created_at',
-                label: this.props.leadsStrings('tableHeaderDateCreated'),
+                label: _ts('leads', 'tableHeaderDateCreated'),
                 order: 7,
                 sortable: true,
                 modifier: row => (
@@ -212,7 +208,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'confidentiality',
-                label: this.props.leadsStrings('tableHeaderConfidentiality'),
+                label: _ts('leads', 'tableHeaderConfidentiality'),
                 sortable: true,
                 order: 8,
                 modifier: row => (
@@ -223,7 +219,7 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'status',
-                label: this.props.leadsStrings('tableHeaderStatus'),
+                label: _ts('leads', 'tableHeaderStatus'),
                 sortable: true,
                 order: 9,
                 modifier: row => (
@@ -234,20 +230,19 @@ export default class Leads extends React.PureComponent {
             },
             {
                 key: 'no_of_entries',
-                label: this.props.leadsStrings('tableHeaderNoOfEntries'),
+                label: _ts('leads', 'tableHeaderNoOfEntries'),
                 order: 10,
                 sortable: true,
                 modifier: row => row.noOfEntries,
             },
             {
                 key: 'actions',
-                label: this.props.leadsStrings('tableHeaderActions'),
+                label: _ts('leads', 'tableHeaderActions'),
                 order: 11,
                 sortable: false,
                 modifier: row => (
                     <ActionButtons
                         row={row}
-                        leadsStrings={this.props.leadsStrings}
                         onSearchSimilarLead={this.handleSearchSimilarLead}
                         onRemoveLead={r => this.handleLeadAction(r, ACTION.delete)}
                         onMarkProcessed={r => this.handleLeadAction(r, ACTION.markAsProcessed)}
@@ -370,7 +365,6 @@ export default class Leads extends React.PureComponent {
                     const request = new DeleteLeadRequest({
                         setState: params => this.setState(params),
                         removeLead: this.props.removeLead,
-                        leadsStrings: this.props.leadsStrings,
                     });
                     this.leadDeleteRequest = request.create(selectedLead);
                     this.leadDeleteRequest.start();
@@ -504,7 +498,7 @@ export default class Leads extends React.PureComponent {
                     className={styles.addLeadLink}
                 >
                     {/* add icon aswell */}
-                    {this.props.leadsStrings('addSourcesButtonLabel')}
+                    {_ts('leads', 'addSourcesButtonLabel')}
                 </Link>
             </header>
         );
@@ -522,7 +516,6 @@ export default class Leads extends React.PureComponent {
             { projectId: activeProject },
         );
 
-        // FIXME: use strings
         return (
             <footer className={styles.footer}>
                 <div className={styles.linkContainer}>
@@ -531,10 +524,10 @@ export default class Leads extends React.PureComponent {
                         to={showVisualizationLink}
                         replace
                     >
-                        Show Visualization
+                        {_ts('leads', 'showViz')}
                     </Link>
                     <span className={styles.label}>
-                        Leads per page
+                        {_ts('leads', 'leadsPerPage')}
                     </span>
                     <SelectInput
                         className={styles.leadsPerPageInput}
@@ -582,16 +575,16 @@ export default class Leads extends React.PureComponent {
         const getModalText = (action) => {
             switch (action) {
                 case ACTION.delete:
-                    return this.props.leadsStrings('leadDeleteConfirmText');
+                    return _ts('leads', 'leadDeleteConfirmText');
                 case ACTION.markAsPending:
-                    // FIXME: Use strings
-                    return 'Do you want to mark the lead as pending?';
+                    // 'Do you want to mark the lead as pending?'
+                    return _ts('leads', 'leadMarkPendingConfirmText');
                 case ACTION.markAsProcessed:
-                    // FIXME: Use strings
-                    return 'Do you want to mark the lead as processed?';
+                    // 'Do you want to mark the lead as processed?'
+                    return _ts('leads', 'leadMarkProcessedConfirmText');
                 default:
-                    // FIXME: Use strings
-                    return 'Are you sure?';
+                    // 'Are you sure?'
+                    return _ts('leads', 'leadConfirmText');
             }
         };
 

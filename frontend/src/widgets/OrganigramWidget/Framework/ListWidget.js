@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import {
     randomString,
@@ -16,9 +15,9 @@ import ModalHeader from '../../../vendor/react-store/components/View/Modal/Heade
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
-import WidgetError from '../../../components/WidgetError';
 
-import { afStringsSelector } from '../../../redux';
+import WidgetError from '../../../components/WidgetError';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -27,7 +26,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -55,12 +53,7 @@ const buildSettings = (indices, action, value, wrapper) => (
     )
 );
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class Organigram extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -159,9 +152,9 @@ export default class Organigram extends React.PureComponent {
         const isFatherOrgan = isFalsy(j);
         const nextIndices = isFatherOrgan ? indices : [...indices, j];
 
-        const organPlaceholder = this.props.afStrings('organPlaceholder');
-        const addChildButtonTitle = this.props.afStrings('addChildButtonTitle');
-        const removeElementButtonTitle = this.props.afStrings('removeElementButtonTitle');
+        const organPlaceholder = _ts('af', 'organPlaceholder');
+        const addChildButtonTitle = _ts('af', 'addChildButtonTitle');
+        const removeElementButtonTitle = _ts('af', 'removeElementButtonTitle');
 
         return (
             <div
@@ -223,12 +216,11 @@ export default class Organigram extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-        const headerTitle = afStrings('editOrganigramModaltitle');
-        const textInputLabel = afStrings('titleLabel');
-        const textInputPlaceholder = afStrings('titlePlaceholderScale');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editOrganigramModaltitle');
+        const textInputLabel = _ts('af', 'titleLabel');
+        const textInputPlaceholder = _ts('af', 'titlePlaceholderScale');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal className={styles.editModal}>
@@ -264,8 +256,7 @@ export default class Organigram extends React.PureComponent {
 
     render() {
         const EditModal = this.renderEditModal;
-        const { afStrings } = this.props;
-        const label = afStrings('organigramWidgetLabel');
+        const label = _ts('af', 'organigramWidgetLabel');
 
         return ([
             <div

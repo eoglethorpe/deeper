@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { randomString } from '../../../vendor/react-store/utils/common';
 import update from '../../../vendor/react-store/utils/immutable-update';
@@ -17,11 +16,11 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
-
-import { iconNames } from '../../../constants';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
+import _ts from '../../../ts';
+import { iconNames } from '../../../constants';
 import WidgetError from '../../../components/WidgetError';
-import { afStringsSelector } from '../../../redux';
 
 import MatrixRow from './MatrixRow';
 import styles from './styles.scss';
@@ -31,7 +30,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -40,14 +38,9 @@ const defaultProps = {
     },
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 const emptyList = [];
 
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class Matrix1dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static cellKeyExtractor = d => d.key;
@@ -319,7 +312,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                 key={key}
                 onClick={() => this.handleRowClick(key)}
             >
-                { data.title || this.props.afStrings('untitledRowTitle') }
+                { data.title || _ts('af', 'untitledRowTitle') }
             </button>
         );
     }
@@ -354,15 +347,15 @@ export default class Matrix1dOverview extends React.PureComponent {
         return (
             <div className={styles.editRow}>
                 <ColorInput
-                    label={this.props.afStrings('colorLabel')}
+                    label={_ts('af', 'colorLabel')}
                     onChange={newColor => this.handleColorChange(newColor, key)}
                     showHintAndError={false}
                     value={data.color}
                 />
                 <TextInput
                     className={styles.titleInput}
-                    label={this.props.afStrings('titleLabel')}
-                    placeholder={this.props.afStrings('optionPlaceholder')}
+                    label={_ts('af', 'titleLabel')}
+                    placeholder={_ts('af', 'optionPlaceholder')}
                     onChange={value => this.handleRowValueInputChange(key, value, 'title')}
                     value={data.title}
                     showHintAndError={false}
@@ -370,8 +363,8 @@ export default class Matrix1dOverview extends React.PureComponent {
                 />
                 <TextInput
                     className={styles.titleInput}
-                    label={this.props.afStrings('tooltipTitle')}
-                    placeholder={this.props.afStrings('tooltipPlaceholder')}
+                    label={_ts('af', 'tooltipTitle')}
+                    placeholder={_ts('af', 'tooltipPlaceholder')}
                     onChange={value => this.handleRowValueInputChange(key, value, 'tooltip')}
                     showHintAndError={false}
                     value={data.tooltip}
@@ -393,8 +386,8 @@ export default class Matrix1dOverview extends React.PureComponent {
         >
             <TextInput
                 className={styles.titleInput}
-                label={this.props.afStrings('titleLabel')}
-                placeholder={this.props.afStrings('titlePlaceholderOverview')}
+                label={_ts('af', 'titleLabel')}
+                placeholder={_ts('af', 'titlePlaceholderOverview')}
                 onChange={value => this.handleCellValueInputChange(key, value)}
                 showHintAndError={false}
                 value={data.value}
@@ -410,14 +403,13 @@ export default class Matrix1dOverview extends React.PureComponent {
     )
 
     renderRowCells = () => {
-        const { afStrings } = this.props;
         const {
             data: parentData,
             activeRow,
         } = this.state;
 
-        const headerTitle = afStrings('matrix1DModalTitle');
-        const addCellButtonLabel = afStrings('addCellButtonLabel');
+        const headerTitle = _ts('af', 'matrix1DModalTitle');
+        const addCellButtonLabel = _ts('af', 'addCellButtonLabel');
 
         const rowIndex = parentData.rows.findIndex(r => r.key === activeRow);
         let additionalStyle = '';
@@ -475,14 +467,12 @@ export default class Matrix1dOverview extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-
-        const headerTitle = afStrings('editRowModalTitle');
-        const addRowButtonLabel = afStrings('addRowButtonLabel');
-        const titleInputLabel = afStrings('titleLabel');
-        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editRowModalTitle');
+        const addRowButtonLabel = _ts('af', 'addRowButtonLabel');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const titleInputPlaceholder = _ts('af', 'titlePlaceholderScale');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         const RowDetail = this.renderRowEditFields;
         const RowCells = this.renderRowCells;
@@ -538,7 +528,7 @@ export default class Matrix1dOverview extends React.PureComponent {
                                 <RowCells key="row-cells" />,
                             ]) : (
                                 <span className={styles.emptyContainer}>
-                                    {this.props.afStrings('noRowSelected')}
+                                    {_ts('af', 'noRowSelected')}
                                 </span>
                             )}
                         </div>

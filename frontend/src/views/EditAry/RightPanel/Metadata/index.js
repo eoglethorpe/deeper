@@ -6,20 +6,18 @@ import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/Fa
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
-import {
-    aryTemplateMetadataSelector,
-    assessmentMetadataStringsSelector,
-} from '../../../../redux';
+import { aryTemplateMetadataSelector } from '../../../../redux';
+import _ts from '../../../../ts';
 import Baksa from '../../../../components/Baksa';
 
 import { renderWidget } from '../widgetUtils';
 import Header from '../Header';
+
 import styles from './styles.scss';
 
 const propTypes = {
     aryTemplateMetadata: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     pending: PropTypes.bool.isRequired,
-    assessmentMetadataStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -28,7 +26,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     aryTemplateMetadata: aryTemplateMetadataSelector(state),
-    assessmentMetadataStrings: assessmentMetadataStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -65,11 +62,10 @@ export default class Metadata extends React.PureComponent {
         const {
             aryTemplateMetadata: metadataGroups,
             pending,
-            assessmentMetadataStrings,
         } = this.props;
 
-        const basicInformationTitle = assessmentMetadataStrings('basicInformationTitle');
-        const additionalDocumentsTitle = assessmentMetadataStrings('additionalDocumentsTitle');
+        const basicInformationTitle = _ts('assessmentMetadata', 'basicInformationTitle');
+        const additionalDocumentsTitle = _ts('assessmentMetadata', 'additionalDocumentsTitle');
 
         const metadataGroupValues = Object.values(metadataGroups);
 
@@ -98,19 +94,19 @@ export default class Metadata extends React.PureComponent {
                             />
                             <div className={styles.content}>
                                 <Baksa
-                                    label={assessmentMetadataStrings('executiveSummaryTitle')}
+                                    label={_ts('assessmentMetadata', 'executiveSummaryTitle')}
                                     className={styles.baksa}
                                     faramElementName="executiveSummary"
                                     showPageRange
                                 />
                                 <Baksa
-                                    label={assessmentMetadataStrings('assessmentDatabaseTitle')}
+                                    label={_ts('assessmentMetadata', 'assessmentDatabaseTitle')}
                                     className={styles.baksa}
                                     faramElementName="assessmentData"
                                     acceptUrl
                                 />
                                 <Baksa
-                                    label={assessmentMetadataStrings('questionnaireTitle')}
+                                    label={_ts('assessmentMetadata', 'questionnaireTitle')}
                                     className={styles.baksa}
                                     faramElementName="questionnaire"
                                     showPageRange

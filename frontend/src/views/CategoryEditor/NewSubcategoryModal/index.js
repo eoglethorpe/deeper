@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -10,24 +9,18 @@ import PrimaryButton from '../../../vendor/react-store/components/Action/Button/
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
-import { ceStringsSelector } from '../../../redux';
+import _ts from '../../../ts';
 
 import styles from '../styles.scss';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    ceStrings: ceStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class NewSubcategoryModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
@@ -92,31 +85,31 @@ export default class NewSubcategoryModal extends React.PureComponent {
             >
                 <ModalHeader
                     key="header"
-                    title={this.props.ceStrings('addNewSubCategoryModalTitle')}
+                    title={_ts('ce', 'addNewSubCategoryModalTitle')}
                 />
                 <ModalBody key="body">
                     <TextInput
                         faramElementName="title"
-                        label={this.props.ceStrings('addSubCategoryTitleLabel')}
-                        placeholder={this.props.ceStrings('addSubCategoryTitlePlaceholder')}
+                        label={_ts('ce', 'addSubCategoryTitleLabel')}
+                        placeholder={_ts('ce', 'addSubCategoryTitlePlaceholder')}
                         autoFocus
                     />
                     <TextInput
                         faramElementName="description"
-                        label={this.props.ceStrings('addSubCategoryDescriptionLabel')}
-                        placeholder={this.props.ceStrings('addSubCategoryDescriptionPlaceholder')}
+                        label={_ts('ce', 'addSubCategoryDescriptionLabel')}
+                        placeholder={_ts('ce', 'addSubCategoryDescriptionPlaceholder')}
                     />
                 </ModalBody>
                 <ModalFooter key="footer">
                     <Button onClick={this.handleModalClose}>
-                        {this.props.ceStrings('modalCancel')}
+                        {_ts('ce', 'modalCancel')}
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
                         disabled={pristine}
                         type="submit"
                     >
-                        {this.props.ceStrings('modalOk')}
+                        {_ts('ce', 'modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
             </Faram>

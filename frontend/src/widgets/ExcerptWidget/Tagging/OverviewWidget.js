@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import TextArea from '../../../vendor/react-store/components/Input/TextArea';
 import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
-
 import { formatPdfText } from '../../../vendor/react-store/utils/common';
-import { iconNames } from '../../../constants';
-import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
+import { iconNames } from '../../../constants';
+import _ts from '../../../ts';
 import WidgetError from '../../../components/WidgetError';
 
 import styles from './styles.scss';
@@ -20,7 +19,6 @@ const propTypes = {
     entryId: PropTypes.string,
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -28,12 +26,7 @@ const defaultProps = {
     entryId: undefined,
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -159,7 +152,6 @@ export default class ExcerptTextOverview extends React.PureComponent {
 
     renderExcerptContent = (p) => {
         const { dragOver } = this.state;
-        const { afStrings } = this.props;
 
         if (dragOver) {
             return null;
@@ -172,7 +164,7 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 <img
                     className={styles.image}
                     src={attribute.image}
-                    alt={afStrings('altEntryLabel')}
+                    alt={_ts('af', 'altEntryLabel')}
                 />
             );
         }
@@ -191,13 +183,13 @@ export default class ExcerptTextOverview extends React.PureComponent {
     renderFormatButton = (p) => {
         const { attribute } = p;
         const { dragOver } = this.state;
-        const { entryId, afStrings } = this.props;
+        const { entryId } = this.props;
 
         if (dragOver || attribute.type === IMAGE || !entryId) {
             return null;
         }
 
-        const buttonTitle = afStrings('formatExcerpt');
+        const buttonTitle = _ts('af', 'formatExcerpt');
         return (
             <AccentButton
                 className={styles.formatButton}

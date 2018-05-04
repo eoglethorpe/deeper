@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { reverseRoute } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
@@ -13,7 +12,7 @@ import {
     createParamsForExportTrigger,
 } from '../../rest';
 import { pathNames } from '../../constants';
-import { exportStringsSelector } from '../../redux';
+import _ts from '../../ts';
 import notify from '../../notify';
 
 import styles from './styles.scss';
@@ -29,7 +28,6 @@ const propTypes = {
     selectedLeads: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     onPreview: PropTypes.func.isRequired,
     pending: PropTypes.bool.isRequired,
-    exportStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,11 +36,6 @@ const defaultProps = {
     entriesFilters: {},
 };
 
-const mapStateToProps = state => ({
-    exportStrings: exportStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ExportHeader extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -116,9 +109,9 @@ export default class ExportHeader extends React.PureComponent {
         const exportFn = (exportId) => {
             console.log('Exporting to ', exportId);
             notify.send({
-                title: this.props.exportStrings('headerExport'),
+                title: _ts('export', 'headerExport'),
                 type: notify.type.SUCCESS,
-                message: this.props.exportStrings('exportStartedNotifyMessage'),
+                message: _ts('export', 'exportStartedNotifyMessage'),
                 duration: 15000,
             });
         };
@@ -136,28 +129,28 @@ export default class ExportHeader extends React.PureComponent {
         return (
             <header className={styles.header}>
                 <h2>
-                    {this.props.exportStrings('headerExport')}
+                    {_ts('export', 'headerExport')}
                 </h2>
                 <div className={styles.actionButtons}>
                     <Link
                         to={reverseRoute(pathNames.userExports, { projectId })}
                         className={styles.link}
                     >
-                        {this.props.exportStrings('viewAllExportsButtonLabel')}
+                        {_ts('export', 'viewAllExportsButtonLabel')}
                     </Link>
                     <Button
                         className={styles.button}
                         onClick={this.handlePreview}
                         disabled={this.props.pending}
                     >
-                        {this.props.exportStrings('showPreviewButtonLabel')}
+                        {_ts('export', 'showPreviewButtonLabel')}
                     </Button>
                     <PrimaryButton
                         className={styles.button}
                         onClick={this.handleExport}
                         disabled={this.props.pending}
                     >
-                        {this.props.exportStrings('startExportButtonLabel')}
+                        {_ts('export', 'startExportButtonLabel')}
                     </PrimaryButton>
                 </div>
             </header>

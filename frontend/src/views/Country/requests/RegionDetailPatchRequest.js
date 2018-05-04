@@ -6,9 +6,10 @@ import {
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * setState, setRegionDetails, countriesStrings
+ * setState, setRegionDetails
 */
 export default class RegionDetailPatchRequest {
     constructor(props) {
@@ -30,8 +31,8 @@ export default class RegionDetailPatchRequest {
             });
             notify.send({
                 type: notify.type.SUCCESS,
-                title: this.props.notificationStrings('regionSave'),
-                message: this.props.notificationStrings('regionSaveSuccess'),
+                title: _ts('notification', 'regionSave'),
+                message: _ts('notification', 'regionSaveSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -53,7 +54,7 @@ export default class RegionDetailPatchRequest {
 
     fatal = () => {
         this.props.setState({
-            formErrors: { errors: [this.props.countriesStrings('regionPatchErrorText')] },
+            formErrors: { errors: [_ts('countries', 'regionPatchErrorText')] },
             pending: false,
         });
     }

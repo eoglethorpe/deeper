@@ -4,6 +4,7 @@ import {
     createParamsForProjectDelete,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class ProjectDeleteRequest {
     constructor(props) {
@@ -23,9 +24,9 @@ export default class ProjectDeleteRequest {
                         projectId,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('userProjectDelete'),
+                        title: _ts('notification', 'userProjectDelete'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userProjectDeleteSuccess'),
+                        message: _ts('notification', 'userProjectDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -40,17 +41,17 @@ export default class ProjectDeleteRequest {
             })
             .failure(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userProjectDelete'),
+                    title: _ts('notification', 'userProjectDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectDeleteFailure'),
+                    message: _ts('notification', 'userProjectDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userProjectDelete'),
+                    title: _ts('notification', 'userProjectDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectDeleteFatal'),
+                    message: _ts('notification', 'userProjectDeleteFatal'),
                     duration: notify.duration.SLOW,
                 });
             })

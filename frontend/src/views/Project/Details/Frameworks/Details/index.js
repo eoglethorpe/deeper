@@ -23,8 +23,6 @@ import {
     setProjectAfAction,
     setAfDetailAction,
     addNewAfAction,
-    notificationStringsSelector,
-    projectStringsSelector,
 } from '../../../../../redux';
 import {
     iconNames,
@@ -32,6 +30,7 @@ import {
 } from '../../../../../constants';
 import schema from '../../../../../schema';
 import notify from '../../../../../notify';
+import _ts from '../../../../../ts';
 
 import ProjectAfForm from './ProjectAfForm';
 import styles from './styles.scss';
@@ -43,8 +42,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectFramework: PropTypes.func.isRequired,
     setFrameworkDetails: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,8 +50,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     frameworkDetails: analysisFrameworkDetailSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
-    notificationStrings: notificationStringsSelector(state),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -154,9 +149,9 @@ export default class ProjectAfDetail extends React.PureComponent {
                         afDetail: response,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('afFormEdit'),
+                        title: _ts('notification', 'afFormEdit'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('afFormEditSuccess'),
+                        message: _ts('notification', 'afFormEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -165,17 +160,17 @@ export default class ProjectAfDetail extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: this.props.notificationStrings('afFormEdit'),
+                    title: _ts('notification', 'afFormEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('afFormEditFailure'),
+                    message: _ts('notification', 'afFormEditFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('afFormEdit'),
+                    title: _ts('notification', 'afFormEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('afFormEditFatal'),
+                    message: _ts('notification', 'afFormEditFatal'),
                     duration: notify.duration.SLOW,
                 });
             })
@@ -260,7 +255,6 @@ export default class ProjectAfDetail extends React.PureComponent {
         const {
             analysisFrameworkId,
             projectDetails,
-            projectStrings,
         } = this.props;
 
         if (analysisFrameworkId === projectDetails.analysisFramework) {
@@ -268,7 +262,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         }
 
         const { pending } = this.state;
-        const useFrameworkButtonLabel = projectStrings('useAfButtonLabel');
+        const useFrameworkButtonLabel = _ts('project', 'useAfButtonLabel');
 
         return (
             <AccentButton
@@ -285,7 +279,6 @@ export default class ProjectAfDetail extends React.PureComponent {
         const {
             analysisFrameworkId,
             frameworkDetails,
-            projectStrings,
         } = this.props;
 
         if (!frameworkDetails.isAdmin) {
@@ -293,7 +286,7 @@ export default class ProjectAfDetail extends React.PureComponent {
         }
 
         const { pending } = this.state;
-        const editFrameworkButtonLabel = projectStrings('editAfButtonLabel');
+        const editFrameworkButtonLabel = _ts('project', 'editAfButtonLabel');
 
         const params = {
             analysisFrameworkId,
@@ -311,16 +304,13 @@ export default class ProjectAfDetail extends React.PureComponent {
     }
 
     renderHeader = () => {
-        const {
-            frameworkDetails,
-            projectStrings,
-        } = this.props;
+        const { frameworkDetails } = this.props;
         const { pending } = this.state;
 
         const UseFrameworkButton = this.renderUseFrameworkButton;
         const EditFrameworkButton = this.renderEditFrameworkButton;
 
-        const cloneAndEditFrameworkButtonLabel = projectStrings('cloneEditAfButtonLabel');
+        const cloneAndEditFrameworkButtonLabel = _ts('project', 'cloneEditAfButtonLabel');
 
         return (
             <header className={styles.header}>
@@ -346,7 +336,6 @@ export default class ProjectAfDetail extends React.PureComponent {
             frameworkDetails,
             analysisFrameworkId,
             projectDetails,
-            projectStrings,
         } = this.props;
 
         const {
@@ -387,10 +376,10 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        { projectStrings('confirmUseAf', { title: frameworkDetails.title }) }
+                        { _ts('project', 'confirmUseAf', { title: frameworkDetails.title }) }
                     </p>
                     <p>
-                        { projectStrings('confirmUseAfText') }
+                        { _ts('project', 'confirmUseAfText') }
                     </p>
                 </Confirm>
                 <Confirm
@@ -400,7 +389,7 @@ export default class ProjectAfDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        { projectStrings('confirmCloneAf', { title: frameworkDetails.title }) }
+                        { _ts('project', 'confirmCloneAf', { title: frameworkDetails.title }) }
                     </p>
                 </Confirm>
             </div>

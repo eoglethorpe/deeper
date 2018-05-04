@@ -14,9 +14,8 @@ import Pager from '../../vendor/react-store/components/View/Pager';
 import RawTable from '../../vendor/react-store/components/View/RawTable';
 import TableHeader from '../../vendor/react-store/components/View/TableHeader';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
-import AppError from '../../components/AppError';
-import ActionButtons from './ActionButtons';
 
+import AppError from '../../components/AppError';
 import {
     activeProjectIdFromStateSelector,
 
@@ -25,14 +24,15 @@ import {
     aryPageActivePageSelector,
     aryPageActiveSortSelector,
     aryPageFilterSelector,
-    arysStringsSelector,
 
     setArysAction,
     setAryPageActivePageAction,
     setAryPageActiveSortAction,
 } from '../../redux';
-
 import { pathNames } from '../../constants/';
+import _ts from '../../ts';
+
+import ActionButtons from './ActionButtons';
 import FilterArysForm from './FilterArysForm';
 import ArysGetRequest from './requests/ArysGetRequest';
 import AryDeleteRequest from './requests/AryDeleteRequest';
@@ -50,8 +50,6 @@ const propTypes = {
     totalArysCount: PropTypes.number,
     setAryPageActiveSort: PropTypes.func.isRequired,
     setAryPageActivePage: PropTypes.func.isRequired,
-
-    arysStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -68,7 +66,6 @@ const mapStateToProps = (state, props) => ({
     activePage: aryPageActivePageSelector(state, props),
     activeSort: aryPageActiveSortSelector(state, props),
     filters: aryPageFilterSelector(state, props),
-    arysStrings: arysStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -92,14 +89,14 @@ export default class Arys extends React.PureComponent {
         this.headers = [
             {
                 key: 'lead__title',
-                label: this.props.arysStrings('titleLabel'),
+                label: _ts('arys', 'titleLabel'),
                 order: 1,
                 sortable: true,
                 modifier: row => row.leadTitle,
             },
             {
                 key: 'created_at',
-                label: this.props.arysStrings('createdAt'),
+                label: _ts('arys', 'createdAt'),
                 order: 2,
                 sortable: true,
                 modifier: row => (
@@ -111,7 +108,7 @@ export default class Arys extends React.PureComponent {
             },
             {
                 key: 'created_by',
-                label: this.props.arysStrings('createdByFilterLabel'),
+                label: _ts('arys', 'createdByFilterLabel'),
                 order: 3,
                 sortable: true,
                 modifier: row => (
@@ -125,13 +122,12 @@ export default class Arys extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: this.props.arysStrings('tableHeaderActions'),
+                label: _ts('arys', 'tableHeaderActions'),
                 order: 4,
                 sortable: false,
                 modifier: row => (
                     <ActionButtons
                         row={row}
-                        arysStrings={this.props.arysStrings}
                         activeProject={this.props.activeProject}
                         onRemoveAry={this.handleRemoveAry}
                     />
@@ -353,7 +349,7 @@ export default class Arys extends React.PureComponent {
                     onClose={this.handleDeleteModalClose}
                 >
                     <p>
-                        {this.props.arysStrings('aryDeleteConfirmText')}
+                        {_ts('arys', 'aryDeleteConfirmText')}
                     </p>
                 </Confirm>
             </div>

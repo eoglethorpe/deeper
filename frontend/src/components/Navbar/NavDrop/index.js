@@ -13,7 +13,6 @@ import DropdownMenu from '../../../vendor/react-store/components/Action/Dropdown
 import DropdownGroup from '../../../vendor/react-store/components/Action/DropdownMenu/Group';
 
 import { stopSiloBackgroundTasksAction } from '../../../redux/middlewares/siloBackgroundTasks';
-// import { stopRefreshAction } from '../../../redux/middlewares/refresher';
 import { adminEndpoint } from '../../../config/rest';
 import {
     logoutAction,
@@ -21,15 +20,12 @@ import {
     activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserInformationSelector,
-
-    commonStringsSelector,
-    pageTitleStringsSelector,
 } from '../../../redux';
-
 import {
     iconNames,
     pathNames,
 } from '../../../constants';
+import _ts from '../../../ts';
 
 import Cloak from '../../Cloak';
 import styles from './styles.scss';
@@ -39,13 +35,10 @@ const mapStateToProps = state => ({
     activeCountry: activeCountryIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     userInformation: currentUserInformationSelector(state),
-    commonStrings: commonStringsSelector(state),
-    pageTitleStrings: pageTitleStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     logout: () => dispatch(logoutAction()),
-    // stopRefresh: () => dispatch(stopRefreshAction()),
     stopSiloTasks: () => dispatch(stopSiloBackgroundTasksAction()),
 });
 
@@ -54,14 +47,11 @@ const propTypes = {
     activeCountry: PropTypes.number,
     activeProject: PropTypes.number,
     logout: PropTypes.func.isRequired,
-    // stopRefresh: PropTypes.func.isRequired,
     stopSiloTasks: PropTypes.func.isRequired,
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
     userInformation: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    commonStrings: PropTypes.func.isRequired,
-    pageTitleStrings: PropTypes.func.isRequired,
     links: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     adminPanelLink: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
@@ -92,7 +82,6 @@ export default class Navdrop extends React.PureComponent {
     static getDropItemKey = item => item.key
 
     handleLogoutButtonClick = () => {
-        // this.props.stopRefresh();
         this.props.stopSiloTasks();
         this.props.logout();
     }
@@ -102,7 +91,6 @@ export default class Navdrop extends React.PureComponent {
             activeProject,
             activeCountry,
             activeUser = {},
-            pageTitleStrings,
         } = this.props;
 
         const params = {
@@ -123,7 +111,7 @@ export default class Navdrop extends React.PureComponent {
                         className={styles.dropdownItem}
                     >
                         { iconName && <span className={`${iconName} ${styles.icon}`} />}
-                        { pageTitleStrings(key) }
+                        { _ts('pageTitle', key) }
                     </Link>
                 )}
             />
@@ -134,8 +122,6 @@ export default class Navdrop extends React.PureComponent {
         const {
             activeUser,
             userInformation,
-            commonStrings,
-            pageTitleStrings,
             className,
             links,
             adminPanelLink,
@@ -144,7 +130,7 @@ export default class Navdrop extends React.PureComponent {
         const userName = (
             userInformation.displayName ||
             activeUser.displayName ||
-            commonStrings('anonymousLabel')
+            _ts('common', 'anonymousLabel')
         );
 
         return (
@@ -169,7 +155,7 @@ export default class Navdrop extends React.PureComponent {
                                     target="_blank"
                                 >
                                     <span className={`${styles.icon} ${iconNames.locked}`} />
-                                    {commonStrings('adminPanelLabel')}
+                                    {_ts('common', 'adminPanelLabel')}
                                 </a>
                             )
                         }
@@ -182,7 +168,7 @@ export default class Navdrop extends React.PureComponent {
                 >
                     <span className={`${styles.icon} ${iconNames.chrome}`} />
                     <span className={styles.label}>
-                        { pageTitleStrings('browserExtension') }
+                        { _ts('pageTitle', 'browserExtension') }
                     </span>
                 </Link>
                 <Cloak
@@ -195,7 +181,7 @@ export default class Navdrop extends React.PureComponent {
                                     onClick={this.handleLogoutButtonClick}
                                 >
                                     <span className={`${styles.icon} ${iconNames.logout}`} />
-                                    {commonStrings('logoutLabel')}
+                                    {_ts('common', 'logoutLabel')}
                                 </button>
                             </DropdownGroup>
                         )

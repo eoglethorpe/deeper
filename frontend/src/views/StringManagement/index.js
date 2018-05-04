@@ -13,24 +13,22 @@ import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Table from '../../vendor/react-store/components/View/Table';
 import {
     allStringsSelector,
-    viewStringsSelector,
-    problemsWithRawStringsSelector,
+    linkStringsSelector,
+    problemsWithStringsSelector,
+    linkKeysSelector,
 } from '../../redux';
 
-
 import styles from './styles.scss';
-
-// TODO:
-// Search
-// Add/Delete entry
 
 const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     allStrings: PropTypes.array.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    viewStrings: PropTypes.object.isRequired,
+    linkStrings: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
-    problemsWithAllStrings: PropTypes.array.isRequired,
+    problemsWithStrings: PropTypes.array.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    linkKeys: PropTypes.array.isRequired,
 };
 
 const defaultProps = {
@@ -38,9 +36,12 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     allStrings: allStringsSelector(state),
-    viewStrings: viewStringsSelector(state),
-    problemsWithAllStrings: problemsWithRawStringsSelector(state),
+    linkStrings: linkStringsSelector(state),
+    problemsWithStrings: problemsWithStringsSelector(state),
+    linkKeys: linkKeysSelector(state),
 });
+
+const emptyArray = [];
 
 @connect(mapStateToProps)
 export default class StringManagement extends React.PureComponent {
@@ -54,8 +55,8 @@ export default class StringManagement extends React.PureComponent {
         super(props);
 
         this.state = {
-            mode: 'string', // string or view
-            viewName: undefined,
+            mode: 'string', // string or link
+            linkName: undefined,
         };
 
         this.headers = [
@@ -96,6 +97,11 @@ export default class StringManagement extends React.PureComponent {
                 modifier: a => (a.duplicated ? a.duplicated : '-'),
             },
         ];
+        this.defaultSort = {
+            key: 'value',
+            order: 'asc',
+        };
+
         this.headers2 = [
             {
                 key: 'name',
@@ -115,18 +121,19 @@ export default class StringManagement extends React.PureComponent {
                 ),
             },
             {
+                key: 'valueId',
+                label: 'String Id',
+                order: 3,
+                sortable: false,
+            },
+            {
                 key: 'referenceCount',
                 label: 'Refs',
-                order: 3,
+                order: 4,
                 sortable: true,
                 comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
             },
         ];
-
-        this.defaultSort = {
-            key: 'value',
-            order: 'asc',
-        };
         this.defaultSort2 = {
             key: 'name',
             order: 'asc',
@@ -160,13 +167,13 @@ export default class StringManagement extends React.PureComponent {
                     >
                         All Strings
                     </button>
-                    { Object.keys(this.props.viewStrings).map(viewName => (
+                    { this.props.linkKeys.map(linkName => (
                         <button
-                            key={viewName}
-                            className={`${styles.sidebarButton} ${this.state.mode === 'view' && this.state.viewName === viewName ? styles.active : ''}`}
-                            onClick={() => { this.setState({ mode: 'view', viewName }); }}
+                            key={linkName}
+                            className={`${styles.sidebarButton} ${this.state.mode === 'link' && this.state.linkName === linkName ? styles.active : ''}`}
+                            onClick={() => { this.setState({ mode: 'link', linkName }); }}
                         >
-                            { viewName }
+                            { linkName }
                         </button>
                     )) }
                 </div>
@@ -187,17 +194,17 @@ export default class StringManagement extends React.PureComponent {
                             <ListView
                                 key="sidebar-right"
                                 className={styles.sidebarRight}
-                                data={this.props.problemsWithAllStrings}
+                                data={this.props.problemsWithStrings}
                                 modifier={this.renderError}
                                 keyExtractor={StringManagement.keyExtractor}
                             />,
                         ])
                     }
                     {
-                        this.state.mode === 'view' && (
+                        this.state.mode === 'link' && (
                             <div className={styles.content} >
                                 <Table
-                                    data={this.props.viewStrings[this.state.viewName]}
+                                    data={this.props.linkStrings[this.state.linkName] || emptyArray}
                                     headers={this.headers2}
                                     keyExtractor={StringManagement.keyExtractor2}
                                     defaultSort={this.defaultSort2}

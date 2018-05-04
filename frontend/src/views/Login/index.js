@@ -34,7 +34,6 @@ import {
 import {
     loginAction,
     authenticateAction,
-    loginStringsSelector,
 } from '../../redux';
 import { startSiloBackgroundTasksAction } from '../../redux/middlewares/siloBackgroundTasks';
 import { pathNames } from '../../constants';
@@ -45,6 +44,7 @@ import { reCaptchaSiteKey } from '../../config/reCaptcha';
 import logo from '../../resources/img/deep-logo.svg';
 import hidLogo from '../../resources/img/hid-logo.png';
 
+import _ts from '../../ts';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -52,15 +52,10 @@ const propTypes = {
     location: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     login: PropTypes.func.isRequired,
     startSiloTasks: PropTypes.func.isRequired,
-    loginStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
-
-const mapStateToProps = state => ({
-    loginStrings: loginStringsSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     authenticate: () => dispatch(authenticateAction()),
@@ -68,7 +63,7 @@ const mapDispatchToProps = dispatch => ({
     startSiloTasks: params => dispatch(startSiloBackgroundTasksAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class Login extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -243,7 +238,7 @@ export default class Login extends React.PureComponent {
                         path={logo}
                     />
                     <h2 className={styles.heading}>
-                        <small>{this.props.loginStrings('welcomeToText')}</small><br />
+                        <small>{_ts('login', 'welcomeToText')}</small><br />
                     </h2>
                 </div>
                 <div className={styles.loginFormContainer}>
@@ -256,13 +251,18 @@ export default class Login extends React.PureComponent {
                             <img
                                 className={styles.logo}
                                 src={hidLogo}
-                                alt={this.props.loginStrings('logInWIthHid')}
+                                alt={_ts('login', 'logInWIthHid')}
                                 draggable="false"
                             />
-                            <span>{this.props.loginStrings('logInWIthHid')}</span>
+                            <span>
+                                {_ts('login', 'logInWIthHid')}
+                            </span>
                         </a>
                         <div className={styles.orContainer}>
-                            <hr /><span className={styles.or}>{this.props.loginStrings('orText')}</span>
+                            <hr />
+                            <span className={styles.or}>
+                                {_ts('login', 'orText')}
+                            </span>
                         </div>
                     </div>
                     { pending && <LoadingAnimation /> }
@@ -279,17 +279,15 @@ export default class Login extends React.PureComponent {
                         <NonFieldErrors faramElement />
                         <TextInput
                             faramElementName="email"
-                            label={this.props.loginStrings('emailLabel')}
-                            // FIXME: use strings
-                            placeholder="john.doe@mail.com"
+                            label={_ts('login', 'emailLabel')}
+                            placeholder={_ts('login', 'emailPlaceholder')}
                             autoFocus
                         />
                         <TextInput
                             faramElementName="password"
-                            label={this.props.loginStrings('passwordLabel')}
+                            label={_ts('login', 'passwordLabel')}
                             // FIXME: use strings
                             placeholder="**********"
-                            required
                             type="password"
                         />
                         { showReCaptcha &&
@@ -304,20 +302,22 @@ export default class Login extends React.PureComponent {
                                 className={styles.forgotPasswordLink}
                                 to={reverseRoute(pathNames.passwordReset, {})}
                             >
-                                {this.props.loginStrings('forgotPasswordText')}
+                                {_ts('login', 'forgotPasswordText')}
                             </Link>
                             <PrimaryButton type="submit">
-                                {this.props.loginStrings('loginLabel')}
+                                {_ts('login', 'loginLabel')}
                             </PrimaryButton>
                         </div>
                     </Faram>
                     <div className={styles.registerLinkContainer}>
-                        <p>{this.props.loginStrings('noAccountYetText')}</p>
+                        <p>
+                            {_ts('login', 'noAccountYetText')}
+                        </p>
                         <Link
                             className={styles.registerLink}
                             to={reverseRoute(pathNames.register, {})}
                         >
-                            {this.props.loginStrings('registerLabel')}
+                            {_ts('login', 'registerLabel')}
                         </Link>
                     </div>
                 </div>

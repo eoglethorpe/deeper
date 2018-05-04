@@ -1,10 +1,10 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import notify from '../../../notify';
 import {
-    // urlForLeadTopicCorrelation,
     createUrlForLeadTopicCorrelation,
     createParamsForLeadTopicCorrelation,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class LeadTopicCorrelationRequest {
     constructor(params) {
@@ -18,7 +18,6 @@ export default class LeadTopicCorrelationRequest {
 
     create = ({ docIds, activeProject, isFilter }) => {
         const request = new FgRestBuilder()
-            // .url(urlForLeadTopicCorrelation)
             .url(createUrlForLeadTopicCorrelation(activeProject, isFilter))
             .params(createParamsForLeadTopicCorrelation({
                 doc_ids: docIds,
@@ -51,17 +50,17 @@ export default class LeadTopicCorrelationRequest {
             .failure((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'topicCorrelation'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Topic Correlation Data from NLP Server',
+                    message: _ts('leadsViz', 'topicCorrelationGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads Visualization', // FIXME: strings
+                    title: _ts('leadsViz', 'topicCorrelation'),
                     type: notify.type.ERROR,
-                    message: 'Failed to load Topic Correlation Data from NLP Server',
+                    message: _ts('leadsViz', 'topicCorrelationGetFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })

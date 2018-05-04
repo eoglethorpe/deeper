@@ -1,10 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import AccentButton from '../../../../../vendor/react-store/components/Action/Button/AccentButton';
 
-import { leadsStringsSelector } from '../../../../../redux';
+import _ts from '../../../../../ts';
 import { iconNames } from '../../../../../constants';
 
 import styles from './styles.scss';
@@ -14,17 +13,11 @@ const propTypes = {
     disabled: PropTypes.bool.isRequired,
     children: PropTypes.node.isRequired,
     onClick: PropTypes.func.isRequired,
-    leadsStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: undefined,
 };
 
-const mapStateToProps = state => ({
-    leadsStrings: leadsStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ExtractThis extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -44,7 +37,7 @@ export default class ExtractThis extends React.PureComponent {
                     <AccentButton
                         className={styles.applyButton}
                         transparent
-                        title={this.props.leadsStrings('extractLead')}
+                        title={_ts('leads', 'extractLead')}
                         disabled={disabled}
                         onClick={onClick}
                         tabIndex="-1"

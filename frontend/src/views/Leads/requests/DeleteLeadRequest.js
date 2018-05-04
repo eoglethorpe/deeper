@@ -5,18 +5,17 @@ import {
     createUrlForLeadDelete,
     createParamsForLeadDelete,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class DeleteLeadRequest {
     constructor(params) {
         const {
             setState,
-            leadsStrings,
             removeLead,
         } = params;
 
         this.setState = setState;
         this.removeLead = removeLead;
-        this.leadsStrings = leadsStrings;
     }
 
     create = (lead) => {
@@ -29,9 +28,9 @@ export default class DeleteLeadRequest {
             })
             .success(() => {
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leads', 'leadDelete'),
                     type: notify.type.SUCCESS,
-                    message: this.leadsStrings('leadDeleteSuccess'),
+                    message: _ts('leads', 'leadDeleteSuccess'),
                     duration: notify.duration.MEDIUM,
                 });
 
@@ -44,7 +43,7 @@ export default class DeleteLeadRequest {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.leadsStrings('leadDelete'),
+                    title: _ts('leads', 'leadDelete'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -53,9 +52,9 @@ export default class DeleteLeadRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.leadsStrings('leadDelete'),
+                    title: _ts('leads', 'leadDelete'),
                     type: notify.type.ERROR,
-                    message: this.leadsStrings('leadDeleteFailure'),
+                    message: _ts('leads', 'leadDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({ loadingLeads: false });

@@ -14,11 +14,9 @@ import GridLayout from '../../../vendor/react-store/components/View/GridLayout';
 import {
     setActiveEntryAction,
     editEntryCurrentLeadSelector,
-    entryStringsSelector,
-    afStringsSelector,
 } from '../../../redux';
 import { iconNames } from '../../../constants';
-
+import _ts from '../../../ts';
 import widgetStore from '../../../widgets';
 import { entryAccessor } from '../../../entities/entry';
 
@@ -27,8 +25,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     lead: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    entryStrings: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
 
     analysisFramework: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -52,8 +48,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     lead: editEntryCurrentLeadSelector(state, props),
-    entryStrings: entryStringsSelector(state),
-    afStrings: afStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -98,7 +92,7 @@ export default class Overview extends React.PureComponent {
             .filter(widget => widget.tagging.overviewComponent)
             .map(widget => ({
                 id: widget.id,
-                title: this.props.afStrings(widget.title),
+                title: _ts('af', widget.title),
                 overviewComponent: widget.tagging.overviewComponent,
             }));
 
@@ -177,7 +171,6 @@ export default class Overview extends React.PureComponent {
             api,
             choices,
             entries,
-            entryStrings,
             filteredEntries,
             lead,
             onEntryAdd,
@@ -220,7 +213,7 @@ export default class Overview extends React.PureComponent {
                         <div className={styles.entryActions}>
                             <SelectInput
                                 className={styles.selectInput}
-                                placeholder={entryStrings('selectExcerptPlaceholder')}
+                                placeholder={_ts('entry', 'selectExcerptPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
                                 hideClearButton
@@ -231,14 +224,14 @@ export default class Overview extends React.PureComponent {
                                 onChange={this.handleEntrySelectChange}
                             />
                             <PrimaryButton
-                                title={entryStrings('addEntryButtonTitle')}
+                                title={_ts('entry', 'addEntryButtonTitle')}
                                 onClick={onEntryAdd}
                             >
                                 <i className={iconNames.add} />
                             </PrimaryButton>
                             { selectedEntry && !isMarkedForDelete &&
                                 <DangerButton
-                                    title={entryStrings('removeEntryButtonTitle')}
+                                    title={_ts('entry', 'removeEntryButtonTitle')}
                                     onClick={() => onEntryDelete(true)}
                                 >
                                     <i className={iconNames.delete} />
@@ -251,14 +244,14 @@ export default class Overview extends React.PureComponent {
                                 to="#/list"
                                 replace
                             >
-                                {entryStrings('gotoListButtonLabel')}
+                                {_ts('entry', 'gotoListButtonLabel')}
                             </Link>
                             <SuccessButton
                                 className={styles.saveButton}
                                 onClick={onSaveAll}
                                 disabled={saveAllDisabled}
                             >
-                                {entryStrings('saveButtonLabel')}
+                                {_ts('entry', 'saveButtonLabel')}
                             </SuccessButton>
                         </div>
                     </header>,

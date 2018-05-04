@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../vendor/react-store/components/Action/Button';
@@ -9,25 +8,20 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
-
-import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
 import WidgetError from '../../../components/WidgetError';
+import _ts from '../../../ts';
+
 import styles from './styles.scss';
 
 const propTypes = {
     title: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class ExcerptTextOverview extends React.PureComponent {
     static propTypes = propTypes;
 
@@ -83,10 +77,9 @@ export default class ExcerptTextOverview extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-        const headerTitle = afStrings('editTitleModalHeader');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editTitleModalHeader');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal className={styles.editOverviewModal}>
@@ -94,9 +87,9 @@ export default class ExcerptTextOverview extends React.PureComponent {
                 <ModalBody>
                     <TextInput
                         autoFocus
-                        label={this.props.afStrings('titleLabel')}
+                        label={_ts('af', 'titleLabel')}
                         onChange={this.handleWidgetTitleChange}
-                        placeholder={this.props.afStrings('widgetTitlePlaceholder')}
+                        placeholder={_ts('af', 'widgetTitlePlaceholder')}
                         selectOnFocus
                         showHintAndError={false}
                         value={title}
@@ -115,9 +108,8 @@ export default class ExcerptTextOverview extends React.PureComponent {
     }
 
     render() {
-        const { afStrings } = this.props;
         const EditModal = this.renderEditModal;
-        const contentText = afStrings('textOrImageExcerptWidgetLabel');
+        const contentText = _ts('af', 'textOrImageExcerptWidgetLabel');
 
         return [
             <div

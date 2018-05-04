@@ -11,8 +11,8 @@ import ListView from '../../vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import Pager from '../../vendor/react-store/components/View/Pager';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
-import AppError from '../../components/AppError';
 
+import AppError from '../../components/AppError';
 import {
     iconNames,
     pathNames,
@@ -35,8 +35,6 @@ import {
     entriesViewActivePageSelector,
     totalEntriesCountForProjectSelector,
     setEntriesViewActivePageAction,
-
-    entryStringsSelector,
 } from '../../redux';
 import {
     createUrlForFilteredEntries,
@@ -48,6 +46,7 @@ import {
 
     transformResponseErrorToFormError,
 } from '../../rest';
+import _ts from '../../ts';
 import schema from '../../schema';
 import notify from '../../notify';
 
@@ -64,8 +63,6 @@ const mapStateToProps = (state, props) => ({
     projectId: projectIdFromRouteSelector(state, props),
     activePage: entriesViewActivePageSelector(state, props),
     totalEntriesCount: totalEntriesCountForProjectSelector(state, props),
-
-    entryStrings: entryStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -93,8 +90,6 @@ const propTypes = {
     maxHeight: PropTypes.number,
     totalEntriesCount: PropTypes.number,
     setEntriesViewActivePage: PropTypes.func.isRequired,
-
-    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -271,7 +266,7 @@ export default class Entries extends React.PureComponent {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -279,7 +274,7 @@ export default class Entries extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
                     message: 'Couldn\'t load entries', // FIXME: strings
                     duration: notify.duration.MEDIUM,
@@ -486,10 +481,10 @@ export default class Entries extends React.PureComponent {
                 <div className={styles.actionButtons}>
                     <Link
                         className={styles.editEntryLink}
-                        title={this.props.entryStrings('editEntryLinkTitle')}
+                        title={_ts('entry', 'editEntryLinkTitle')}
                         to={route}
                     >
-                        {this.props.entryStrings('editEntryButtonLabel')}
+                        {_ts('entry', 'editEntryButtonLabel')}
                     </Link>
                 </div>
             </header>

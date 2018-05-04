@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import NumberInput from '../../../vendor/react-store/components/Input/NumberInput';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
@@ -11,9 +10,9 @@ import ModalHeader from '../../../vendor/react-store/components/View/Modal/Heade
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
-import WidgetError from '../../../components/WidgetError';
 
-import { afStringsSelector } from '../../../redux';
+import WidgetError from '../../../components/WidgetError';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -21,18 +20,12 @@ const propTypes = {
     title: PropTypes.string.isRequired,
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class NumberFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -89,12 +82,11 @@ export default class NumberFrameworkList extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-        const headerTitle = afStrings('editTitleModalHeader');
-        const titleInputLabel = afStrings('titleLabel');
-        const titleInputPlaceholder = afStrings('widgetTitlePlaceholder');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editTitleModalHeader');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const titleInputPlaceholder = _ts('af', 'widgetTitlePlaceholder');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal>
@@ -130,7 +122,7 @@ export default class NumberFrameworkList extends React.PureComponent {
             <div className={styles.list}>
                 <NumberInput
                     className={styles.input}
-                    placeholder={this.props.afStrings('numberPlaceholder')}
+                    placeholder={_ts('af', 'numberPlaceholder')}
                     showLabel={false}
                     showHintAndError={false}
                     separator={separatorText}

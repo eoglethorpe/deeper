@@ -14,11 +14,8 @@ import LoadingAnimation from '../../../vendor/react-store/components/View/Loadin
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import TextArea from '../../../vendor/react-store/components/Input/TextArea';
 
-import {
-    setUserGroupAction,
-    notificationStringsSelector,
-    userStringsSelector,
-} from '../../../redux';
+import _ts from '../../../ts';
+import { setUserGroupAction } from '../../../redux';
 
 import UserGroupPatchRequest from '../requests/UserGroupPatchRequest';
 
@@ -32,8 +29,6 @@ const propTypes = {
         description: PropTypes.string.isRequired,
     }).isRequired,
     setUserGroup: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {};
@@ -42,12 +37,7 @@ const mapDispatchToProps = dispatch => ({
     setUserGroup: params => dispatch(setUserGroupAction(params)),
 });
 
-const mapStateToProps = state => ({
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class UserGroupEdit extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -86,8 +76,6 @@ export default class UserGroupEdit extends React.PureComponent {
         const userGroupCreateRequest = new UserGroupPatchRequest({
             setUserGroup: this.props.setUserGroup,
             handleModalClose: this.props.handleModalClose,
-            userStrings: this.props.userStrings,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.userGroupCreateRequest = userGroupCreateRequest.create(userGroupId, {
@@ -142,27 +130,27 @@ export default class UserGroupEdit extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors faramElementName />
                 <TextInput
-                    label={this.props.userStrings('addUserGroupModalLabel')}
+                    label={_ts('user', 'addUserGroupModalLabel')}
                     faramElementName="title"
-                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
+                    placeholder={_ts('user', 'addUserGroupModalPlaceholder')}
                     autoFocus
                 />
                 <TextArea
-                    label={this.props.userStrings('userGroupModalDescriptionLabel')}
+                    label={_ts('user', 'userGroupModalDescriptionLabel')}
                     faramElementName="description"
                     className={styles.description}
-                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
+                    placeholder={_ts('user', 'addUserGroupModalPlaceholder')}
                     rows={3}
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.handleFaramClose}>
-                        {this.props.userStrings('modalCancel')}
+                        {_ts('user', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {this.props.userStrings('modalSave')}
+                        {_ts('user', 'modalSave')}
                     </PrimaryButton>
                 </div>
             </Faram>

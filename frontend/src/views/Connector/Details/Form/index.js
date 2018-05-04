@@ -22,6 +22,8 @@ import PrimaryButton from '../../../../vendor/react-store/components/Action/Butt
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
 
+import _ts from '../../../../ts';
+
 import ConnectorPatchRequest from '../../requests/ConnectorPatchRequest';
 import ConnectorDetailsGetRequest from '../../requests/ConnectorDetailsGetRequest';
 import UserListGetRequest from '../../requests/UserListGetRequest';
@@ -29,13 +31,10 @@ import UserProjectsGetRequest from '../../requests/UserProjectsGetRequest';
 
 import {
     connectorDetailsSelector,
-    connectorStringsSelector,
     connectorSourceSelector,
-    notificationStringsSelector,
     activeUserSelector,
     usersInformationListSelector,
     currentUserProjectsSelector,
-
     setUsersInformationAction,
     setUserProjectsAction,
     changeUserConnectorDetailsAction,
@@ -49,7 +48,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     connectorId: PropTypes.number,
-    connectorStrings: PropTypes.func.isRequired,
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     connectorSource: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -61,7 +59,6 @@ const propTypes = {
     ),
     setUserProjects: PropTypes.func.isRequired,
     changeUserConnectorDetails: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
     setErrorUserConnectorDetails: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setUserConnectorDetails: PropTypes.func.isRequired,
@@ -77,12 +74,10 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     connectorDetails: connectorDetailsSelector(state),
-    connectorStrings: connectorStringsSelector(state),
     activeUser: activeUserSelector(state),
     users: usersInformationListSelector(state),
     userProjects: currentUserProjectsSelector(state),
     connectorSource: connectorSourceSelector(state),
-    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -126,28 +121,28 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         this.usersHeader = [
             {
                 key: 'displayName',
-                label: this.props.connectorStrings('tableHeaderName'),
+                label: _ts('connector', 'tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.displayName, b.displayName),
             },
             {
                 key: 'email',
-                label: this.props.connectorStrings('tableHeaderEmail'),
+                label: _ts('connector', 'tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.email, b.email),
             },
             {
                 key: 'role',
-                label: this.props.connectorStrings('tableHeaderRights'),
+                label: _ts('connector', 'tableHeaderRights'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'addedAt',
-                label: this.props.connectorStrings('tableHeaderJoinedAt'),
+                label: _ts('connector', 'tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.addedAt, b.addedAt),
@@ -157,7 +152,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: this.props.connectorStrings('tableHeaderActions'),
+                label: _ts('connector', 'tableHeaderActions'),
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -168,8 +163,8 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                                 key="role-change"
                                 title={
                                     isAdmin
-                                        ? this.props.connectorStrings('revokeAdminRightsTitle')
-                                        : this.props.connectorStrings('grantAdminRightsTitle')
+                                        ? _ts('connector', 'revokeAdminRightsTitle')
+                                        : _ts('connector', 'grantAdminRightsTitle')
                                 }
                                 onClick={() => this.handleToggleUserRoleClick(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
@@ -178,7 +173,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                             <DangerButton
                                 smallVerticalPadding
                                 key="delete-member"
-                                title={this.props.connectorStrings('deleteMemberLinkTitle')}
+                                title={_ts('connector', 'deleteMemberLinkTitle')}
                                 onClick={() => this.handleDeleteUserClick(row)}
                                 iconName={iconNames.delete}
                                 transparent
@@ -191,36 +186,35 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         this.projectsHeader = [
             {
                 key: 'title',
-                label: this.props.connectorStrings('tableHeaderTitle'),
+                label: _ts('connector', 'tableHeaderTitle'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'role',
-                label: this.props.connectorStrings('tableHeaderVisibility'),
+                label: _ts('connector', 'tableHeaderVisibility'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'actions',
-                label: this.props.connectorStrings('tableHeaderActions'),
+                label: _ts('connector', 'tableHeaderActions'),
                 order: 3,
                 modifier: (row) => {
-                    const { connectorStrings } = this.props;
                     const isGlobal = row.role === 'global';
                     const isProjectAdmin = row.admin === 'admin';
                     let toggleTitle = '';
-                    let deleteTitle = connectorStrings('removeProjectTitle');
+                    let deleteTitle = _ts('connector', 'removeProjectTitle');
                     if (isGlobal) {
-                        toggleTitle = connectorStrings('setLocalVisibilityTitle');
+                        toggleTitle = _ts('connector', 'setLocalVisibilityTitle');
                     } else {
-                        toggleTitle = connectorStrings('setGlobalVisibilityTitle');
+                        toggleTitle = _ts('connector', 'setGlobalVisibilityTitle');
                     }
                     if (!isProjectAdmin) {
-                        toggleTitle = connectorStrings('needAdminRightsTitle');
-                        deleteTitle = connectorStrings('needAdminRightsTitle');
+                        toggleTitle = _ts('connector', 'needAdminRightsTitle');
+                        deleteTitle = _ts('connector', 'needAdminRightsTitle');
                     }
 
                     return (
@@ -404,8 +398,6 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const requestForConnectorPatch = new ConnectorPatchRequest({
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
-            notificationStrings: this.props.notificationStrings,
-            connectorStrings: this.props.connectorStrings,
             connectorId: this.props.connectorId,
             setConnectorError: this.props.setErrorUserConnectorDetails,
         });
@@ -424,7 +416,6 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
         const requestForUserList = new UserListGetRequest({
             setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
             setUsers: this.props.setUsers,
         });
 
@@ -439,7 +430,6 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         const requestForConnectorDetails = new ConnectorDetailsGetRequest({
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
-            notificationStrings: this.props.notificationStrings,
             connectorDetails: this.props.connectorDetails,
             isBeingCancelled: true,
         });
@@ -601,10 +591,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
             pristine,
         } = this.props.connectorDetails;
 
-        const {
-            connectorSource,
-            connectorStrings,
-        } = this.props;
+        const { connectorSource } = this.props;
 
         const {
             usersHeader,
@@ -630,7 +617,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
-                    label={connectorStrings('connectorTitleLabel')}
+                    label={_ts('connector', 'connectorTitleLabel')}
                     placeholder="Relief Web"
                     autoFocus
                 />
@@ -645,7 +632,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                         <TabularSelectInput
                             faramElementName="users"
                             options={usersOptions}
-                            label={connectorStrings('connectorUsersLabel')}
+                            label={_ts('connector', 'connectorUsersLabel')}
                             labelSelector={ConnectorDetailsForm.userLabelSelector}
                             keySelector={ConnectorDetailsForm.userKeySelector}
                             tableHeaders={usersHeader}
@@ -655,7 +642,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                         <TabularSelectInput
                             faramElementName="projects"
                             options={projectsOptions}
-                            label={connectorStrings('connectorProjectsLabel')}
+                            label={_ts('connector', 'connectorProjectsLabel')}
                             labelSelector={ConnectorDetailsForm.projectLabelSelector}
                             keySelector={ConnectorDetailsForm.projectKeySelector}
                             tableHeaders={projectsHeader}
@@ -669,13 +656,13 @@ export default class ConnectorDetailsForm extends React.PureComponent {
                         onClick={this.handleFormCancel}
                         disabled={loading || !pristine}
                     >
-                        {connectorStrings('connectorDetailCancelLabel')}
+                        {_ts('connector', 'connectorDetailCancelLabel')}
                     </DangerButton>
                     <SuccessButton
                         type="submit"
                         disabled={loading || !pristine}
                     >
-                        {connectorStrings('connectorDetailSaveLabel')}
+                        {_ts('connector', 'connectorDetailSaveLabel')}
                     </SuccessButton>
                 </div>
             </Faram>

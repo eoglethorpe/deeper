@@ -12,8 +12,8 @@ import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/Fa
 import {
     editArySelectedSectorsSelector,
     assessmentSectorsSelector,
-    assessmentSummaryStringsSelector,
 } from '../../../../redux';
+import _ts from '../../../../ts';
 
 import CrossSector from './CrossSector';
 import HumanitarianAccess from './HumanitarianAccess';
@@ -26,7 +26,6 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     sectors: PropTypes.array.isRequired,
     pending: PropTypes.bool.isRequired,
-    assessmentSummaryStrings: PropTypes.func.isRequired,
     onActiveSectorChange: PropTypes.func,
 };
 
@@ -38,7 +37,6 @@ const defaultProps = {
 const mapStateToProps = state => ({
     selectedSectors: editArySelectedSectorsSelector(state),
     sectors: assessmentSectorsSelector(state),
-    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 const sectorIdentifier = 'sector';
@@ -98,10 +96,9 @@ export default class Summary extends React.PureComponent {
         );
         this.selectedSectors = selectedSectors;
 
-        const { assessmentSummaryStrings } = this.props;
         const tabs = {
-            crossSector: assessmentSummaryStrings('crossSectorTitle'),
-            humanitarianAccess: assessmentSummaryStrings('humanitarianAccessTitle'),
+            crossSector: _ts('assessmentSummary', 'crossSectorTitle'),
+            humanitarianAccess: _ts('assessmentSummary', 'humanitarianAccessTitle'),
             ...selectedSectors,
         };
 

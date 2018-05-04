@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import {
     getHexFromString,
@@ -24,11 +23,11 @@ import {
     createParamsForNer,
     createParamsForFeedback,
 } from '../../rest';
-import { entryStringsSelector } from '../../redux';
 import { iconNames } from '../../constants';
 import notify from '../../notify';
 import schema from '../../schema';
 import SimplifiedLeadPreview from '../SimplifiedLeadPreview';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
@@ -37,7 +36,6 @@ const propTypes = {
     projectId: PropTypes.number.isRequired,
     onEntryAdd: PropTypes.func.isRequired,
     className: PropTypes.string,
-    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,11 +48,6 @@ const emptyObject = {};
 // Cut off threshold for NLP classification's confidence
 const NLP_THRESHOLD = 0.33;
 
-const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class AssistedTagging extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -81,15 +74,15 @@ export default class AssistedTagging extends React.PureComponent {
 
         this.assitedTaggingSources = [
             {
-                label: this.props.entryStrings('nlpLabel'),
+                label: _ts('entry', 'nlpLabel'),
                 value: 'nlp',
             },
             {
-                label: this.props.entryStrings('entitiesLabel'),
+                label: _ts('entry', 'entitiesLabel'),
                 value: 'ner',
             },
             {
-                label: this.props.entryStrings('ceLabel'),
+                label: _ts('entry', 'ceLabel'),
                 value: 'ce',
             },
         ];
@@ -216,7 +209,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('serverErrorText'),
+                    error: _ts('entry', 'serverErrorText'),
                 });
                 */
             })
@@ -226,7 +219,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('connectionFailureText'),
+                    error: _ts('entry', 'connectionFailureText'),
                 });
                 */
             })
@@ -250,7 +243,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('serverErrorText'),
+                    error: _ts('entry', 'serverErrorText'),
                 });
                 */
             })
@@ -260,7 +253,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('connectionFailureText'),
+                    error: _ts('entry', 'connectionFailureText'),
                 });
                 */
             })
@@ -290,7 +283,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('serverErrorText'),
+                    error: _ts('entry', 'serverErrorText'),
                 });
                 */
             })
@@ -300,7 +293,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('connectionFailureText'),
+                    error: _ts('entry', 'connectionFailureText'),
                 });
                 */
             })
@@ -316,9 +309,9 @@ export default class AssistedTagging extends React.PureComponent {
                 try {
                     // console.warn('feedback sent', response);
                     notify.send({
-                        title: this.props.entryStrings('assitedTaggingFeedbackTitle'),
+                        title: _ts('entry', 'assitedTaggingFeedbackTitle'),
                         type: notify.type.SUCCESS,
-                        message: this.props.entryStrings('assitedTaggingFeedbackMessage'),
+                        message: _ts('entry', 'assitedTaggingFeedbackMessage'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (err) {
@@ -331,7 +324,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('serverErrorText'),
+                    error: _ts('entry', 'serverErrorText'),
                 });
                 */
             })
@@ -341,7 +334,7 @@ export default class AssistedTagging extends React.PureComponent {
                 /*
                 this.setState({
                     pending: false,
-                    error: this.props.entryStrings('connectionFailureText'),
+                    error: _ts('entry', 'connectionFailureText'),
                 });
                 */
             })
@@ -445,7 +438,7 @@ export default class AssistedTagging extends React.PureComponent {
         const highlights = filteredClassifications.map(excerpt => ({
             ...excerpt,
             color: getHexFromString(excerpt.sectors[0].label),
-            source: this.props.entryStrings('sourceNLP'),
+            source: _ts('entry', 'sourceNLP'),
         }));
         this.setState({ highlights });
     }
@@ -468,7 +461,7 @@ export default class AssistedTagging extends React.PureComponent {
             end: keyword.length + keyword.start,
             label: keyword.entity,
             color: getHexFromString(keyword.entity),
-            source: this.props.entryStrings('sourceNER'),
+            source: _ts('entry', 'sourceNER'),
             details: keyword.entity,
         }));
         this.setState({ highlights });
@@ -492,7 +485,7 @@ export default class AssistedTagging extends React.PureComponent {
             end: keyword.start + keyword.length,
             label: keyword.subcategory,
             color: getHexFromString(keyword.subcategory),
-            source: this.props.entryStrings('sourceCE'),
+            source: _ts('entry', 'sourceCE'),
             details: keyword.subcategory,
         }));
         this.setState({ highlights });
@@ -543,14 +536,14 @@ export default class AssistedTagging extends React.PureComponent {
             </div>
             <div className={styles.feedbackButtons}>
                 <SuccessButton
-                    title={this.props.entryStrings('accurateTextTitle')}
+                    title={_ts('entry', 'accurateTextTitle')}
                     onClick={() => this.handleFeedbackClick(sector.label, 'true')}
                     transparent
                 >
                     <span className={iconNames.thumbsUp} />
                 </SuccessButton>
                 <WarningButton
-                    title={this.props.entryStrings('notAccurateTextTitle')}
+                    title={_ts('entry', 'notAccurateTextTitle')}
                     onClick={() => this.handleFeedbackClick(sector.label, 'false')}
                     transparent
                 >
@@ -613,7 +606,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'nlp' && (
                             <MultiSelectInput
                                 disabled={this.state.pendingNlpClassify}
-                                label={this.props.entryStrings('showSuggestionText')}
+                                label={_ts('entry', 'showSuggestionText')}
                                 className={styles.selectInput}
                                 options={nlpSectorOptions}
                                 showHintAndError={false}
@@ -626,7 +619,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'ce' && (
                             <MultiSelectInput
                                 disabled={this.state.pendingCeClassify}
-                                label={this.props.entryStrings('showSuggestionText')}
+                                label={_ts('entry', 'showSuggestionText')}
                                 className={styles.selectInput}
                                 options={ceSectorOptions}
                                 showHintAndError={false}
@@ -639,7 +632,7 @@ export default class AssistedTagging extends React.PureComponent {
                         selectedAssitedTaggingSource === 'ner' && (
                             <MultiSelectInput
                                 disabled={this.state.pendingNerClassify}
-                                label={this.props.entryStrings('showSuggestionText')}
+                                label={_ts('entry', 'showSuggestionText')}
                                 className={styles.selectInput}
                                 options={nerSectorOptions}
                                 showHintAndError={false}
@@ -658,8 +651,7 @@ export default class AssistedTagging extends React.PureComponent {
                             <header className={styles.header}>
                                 <div className={styles.title}>
                                     <span className={styles.label}>
-                                        {/* FIXME: use strings */}
-                                        Source:
+                                        {_ts('entry', 'sourceText')}
                                     </span>
                                     <span className={styles.source}>
                                         {activeHighlightDetails.source}
@@ -700,7 +692,7 @@ export default class AssistedTagging extends React.PureComponent {
                                         activeHighlightDetails.text,
                                     )}
                                 >
-                                    {this.props.entryStrings('addEntryButtonLabel')}
+                                    {_ts('entry', 'addEntryButtonLabel')}
                                 </PrimaryButton>
                             )}
                         </div>

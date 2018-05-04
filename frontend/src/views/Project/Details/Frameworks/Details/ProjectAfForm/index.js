@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import DangerButton from '../../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../../../../vendor/react-store/components/Action/Button/SuccessButton';
@@ -11,7 +10,7 @@ import Form, {
     requiredCondition,
 } from '../../../../../../vendor/react-store/components/Input/Form';
 
-import { projectStringsSelector } from '../../../../../../redux';
+import _ts from '../../../../../../ts';
 
 import styles from './styles.scss';
 
@@ -26,7 +25,6 @@ const propTypes = {
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
     readOnly: PropTypes.bool,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,11 +34,6 @@ const defaultProps = {
     readOnly: false,
 };
 
-const mapStateToProps = state => ({
-    projectStrings: projectStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ProjectAfForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -88,28 +81,28 @@ export default class ProjectAfForm extends React.PureComponent {
                             onClick={handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            {this.props.projectStrings('modalRevert')}
+                            {_ts('project', 'modalRevert')}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
                             type="submit"
                         >
-                            {this.props.projectStrings('modalSave')}
+                            {_ts('project', 'modalSave')}
                         </SuccessButton>
                     </div>
                 }
                 <NonFieldErrors errorname="" />
                 <TextInput
-                    label={this.props.projectStrings('addAfTitleLabel')}
+                    label={_ts('project', 'addAfTitleLabel')}
                     formname="title"
-                    placeholder={this.props.projectStrings('addAfTitlePlaceholder')}
+                    placeholder={_ts('project', 'addAfTitlePlaceholder')}
                     className={styles.name}
                     readOnly={readOnly}
                 />
                 <TextArea
-                    label={this.props.projectStrings('projectDescriptionLabel')}
+                    label={_ts('project', 'projectDescriptionLabel')}
                     formname="description"
-                    placeholder={this.props.projectStrings('projectDescriptionPlaceholder')}
+                    placeholder={_ts('project', 'projectDescriptionPlaceholder')}
                     className={styles.description}
                     rows={3}
                     readOnly={readOnly}

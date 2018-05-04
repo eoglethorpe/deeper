@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 
@@ -16,13 +15,12 @@ import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
-
 import { randomString } from '../../../vendor/react-store/utils/common';
-
-import { iconNames } from '../../../constants';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
 import WidgetError from '../../../components/WidgetError';
-import { afStringsSelector } from '../../../redux';
+import { iconNames } from '../../../constants';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -31,7 +29,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -41,12 +38,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class ScaleFrameworkList extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -226,11 +218,10 @@ export default class ScaleFrameworkList extends React.PureComponent {
             defaultIconName = iconNames.checkbox;
         }
 
-        const { afStrings } = this.props;
-        const colorInputLabel = afStrings('colorLabel');
-        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
-        const titleInputLabel = afStrings('titleLabel');
-        const defaultButtonLabel = afStrings('defaultButtonLabel');
+        const colorInputLabel = _ts('af', 'colorLabel');
+        const titleInputPlaceholder = _ts('af', 'titlePlaceholderScale');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const defaultButtonLabel = _ts('af', 'defaultButtonLabel');
 
         return (
             <div
@@ -289,13 +280,12 @@ export default class ScaleFrameworkList extends React.PureComponent {
             return null;
         }
 
-        const { afStrings } = this.props;
-        const headerTitle = afStrings('editScaleModalTitle');
-        const addScaleUnitButtonLabel = afStrings('addscaleUnitButtonLabel');
-        const titleInputLabel = afStrings('titleLabel');
-        const titleInputPlaceholder = afStrings('titlePlaceholderScale');
-        const cancelButtonLabel = afStrings('cancelButtonLabel');
-        const saveButtonLabel = afStrings('saveButtonLabel');
+        const headerTitle = _ts('af', 'editScaleModalTitle');
+        const addScaleUnitButtonLabel = _ts('af', 'addscaleUnitButtonLabel');
+        const titleInputLabel = _ts('af', 'titleLabel');
+        const titleInputPlaceholder = _ts('af', 'titlePlaceholderScale');
+        const cancelButtonLabel = _ts('af', 'cancelButtonLabel');
+        const saveButtonLabel = _ts('af', 'saveButtonLabel');
 
         return (
             <Modal className={styles.editModal}>

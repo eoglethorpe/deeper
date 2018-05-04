@@ -26,9 +26,9 @@ import {
     setProjectCeAction,
     setCeDetailAction,
     addNewCeAction,
-    projectStringsSelector,
 } from '../../../../../redux';
 import schema from '../../../../../schema';
+import _ts from '../../../../../ts';
 import {
     iconNames,
     pathNames,
@@ -44,7 +44,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setProjectCe: PropTypes.func.isRequired,
     setCeDetail: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -53,7 +52,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     ceDetails: categoryEditorDetailSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -249,7 +247,6 @@ export default class ProjectCeDetail extends React.PureComponent {
         const {
             categoryEditorId,
             projectDetails,
-            projectStrings,
         } = this.props;
 
         const { pending } = this.state;
@@ -263,7 +260,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                 onClick={this.handleCeUseClick}
                 disabled={pending}
             >
-                {projectStrings('useCeButtonLabel')}
+                {_ts('project', 'useCeButtonLabel')}
             </WarningButton>
         );
     }
@@ -271,7 +268,6 @@ export default class ProjectCeDetail extends React.PureComponent {
     renderEditCeButton = () => {
         const {
             ceDetails,
-            projectStrings,
             categoryEditorId,
         } = this.props;
 
@@ -283,7 +279,7 @@ export default class ProjectCeDetail extends React.PureComponent {
         };
 
         const { pending } = this.state;
-        const editCeButtonLabel = projectStrings('editCeButtonLabel');
+        const editCeButtonLabel = _ts('project', 'editCeButtonLabel');
 
         return (
             <Link
@@ -297,10 +293,7 @@ export default class ProjectCeDetail extends React.PureComponent {
     }
 
     renderHeader = () => {
-        const {
-            ceDetails,
-            projectStrings,
-        } = this.props;
+        const { ceDetails } = this.props;
 
         const { pending } = this.state;
 
@@ -319,7 +312,7 @@ export default class ProjectCeDetail extends React.PureComponent {
                         onClick={this.handleCeCloneClick}
                         disabled={pending}
                     >
-                        {projectStrings('cloneEditCeButtonLabel')}
+                        {_ts('project', 'cloneEditCeButtonLabel')}
                     </AccentButton>
                 </div>
             </header>
@@ -331,7 +324,6 @@ export default class ProjectCeDetail extends React.PureComponent {
             ceDetails,
             categoryEditorId,
             projectDetails,
-            projectStrings,
         } = this.props;
 
         const {
@@ -372,10 +364,10 @@ export default class ProjectCeDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        {projectStrings('confirmUseCe', { title: ceDetails.title })}
+                        {_ts('project', 'confirmUseCe', { title: ceDetails.title })}
                     </p>
                     <p>
-                        {projectStrings('confirmUseCeText')}
+                        {_ts('project', 'confirmUseCeText')}
                     </p>
                 </Confirm>
                 {/* FIXME: don't use inline functions */}
@@ -386,10 +378,10 @@ export default class ProjectCeDetail extends React.PureComponent {
                     )}
                 >
                     <p>
-                        {projectStrings('confirmCloneCe', { title: ceDetails.title })}
+                        {_ts('project', 'confirmCloneCe', { title: ceDetails.title })}
                     </p>
                     <p>
-                        {projectStrings('confirmCloneCeText')}
+                        {_ts('project', 'confirmCloneCeText')}
                     </p>
                 </Confirm>
             </div>

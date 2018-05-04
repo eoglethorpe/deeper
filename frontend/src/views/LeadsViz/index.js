@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import _ts from '../../ts';
 
 import {
     reverseRoute,
@@ -16,7 +17,6 @@ import ForceDirectedGraphView from '../../vendor/react-store/components/Visualiz
 import CollapsibleTreeView from '../../vendor/react-store/components/Visualization/CollapsibleTreeView';
 import RadialDendrogramView from '../../vendor/react-store/components/Visualization/RadialDendrogramView';
 import GeoReferencedMap from '../../vendor/react-store/components/Visualization/GeoReferencedMap';
-import FormattedDate from '../../vendor/react-store/components/View/FormattedDate';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
 
@@ -229,10 +229,19 @@ export default class LeadsViz extends React.PureComponent {
     }
 
     renderNoLeadFound = () => (
-        // FIXME: strings
         <div className={styles.noLeadFound}>
-            <h3>No leads found</h3>
-            <p>Try with different filters</p>
+            <h3>
+                {
+                    // No leads found
+                    _ts('leadsViz', 'noLeadsFoundHeader')
+                }
+            </h3>
+            <p>
+                {
+                    // Try with different filters
+                    _ts('leadsViz', 'noLeadsFoundDescription')
+                }
+            </p>
         </div>
     )
 
@@ -253,8 +262,6 @@ export default class LeadsViz extends React.PureComponent {
             geoPointsDataPending,
         } = this.state;
 
-        // FIXME: Use strings in headerText in all views
-
         return (
             <div className={styles.vizContainer}>
                 <GeoReferencedMap
@@ -268,7 +275,7 @@ export default class LeadsViz extends React.PureComponent {
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
-                    headerText="Tree Map"
+                    headerText={_ts('leadsViz', 'treeMap')}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
@@ -277,7 +284,7 @@ export default class LeadsViz extends React.PureComponent {
                     data={hierarchicalData}
                     vizContainerClass={styles.chartContainer}
                     loading={loadingLeads || hierarchicalDataPending}
-                    headerText="Sunburst"
+                    headerText={_ts('leadsViz', 'sunburst')}
                     valueAccessor={LeadsViz.sizeValueAccessor}
                     labelAccessor={LeadsViz.labelValueAccessor}
                 />
@@ -285,7 +292,7 @@ export default class LeadsViz extends React.PureComponent {
                     className={`${styles.chordDiagram} ${styles.viz}`}
                     data={chordData.values}
                     loading={loadingLeads || chordDataPending}
-                    headerText="Chord diagram"
+                    headerText={_ts('leadsViz', 'chordDiagram')}
                     vizContainerClass={styles.chartContainer}
                     labelsData={chordData.labels}
                     valueAccessor={LeadsViz.sizeValueAccessor}
@@ -294,7 +301,7 @@ export default class LeadsViz extends React.PureComponent {
                 <CorrelationMatrixView
                     className={`${styles.correlationMatrix} ${styles.viz}`}
                     data={correlationData}
-                    headerText="Correlation matrix"
+                    headerText={_ts('leadsViz', 'correlationMatrix')}
                     loading={loadingLeads || correlationDataPending}
                     vizContainerClass={styles.chartContainer}
                 />
@@ -302,7 +309,7 @@ export default class LeadsViz extends React.PureComponent {
                     className={`${styles.forceDirectedGraph} ${styles.viz}`}
                     data={forceDirectedData}
                     loading={loadingLeads || forceDirectedDataPending}
-                    headerText="Force directed graph"
+                    headerText={_ts('leadsViz', 'forcedDirectedGraph')}
                     vizContainerClass={styles.chartContainer}
                     idAccessor={d => d.id}
                     groupAccessor={LeadsViz.groupValueAccessor}
@@ -311,7 +318,7 @@ export default class LeadsViz extends React.PureComponent {
                 />
                 <CollapsibleTreeView
                     className={`${styles.collapsibleTree} ${styles.viz}`}
-                    headerText="Collapsible tree view"
+                    headerText={_ts('leadsViz', 'collapsibleTreeView')}
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
                     vizContainerClass={styles.chartContainer}
@@ -319,7 +326,7 @@ export default class LeadsViz extends React.PureComponent {
                 />
                 <RadialDendrogramView
                     className={`${styles.radialDendrogram} ${styles.viz}`}
-                    headerText="Radial dendrogram"
+                    headerText={_ts('leadsViz', 'radialDendogram')}
                     data={hierarchicalData}
                     loading={loadingLeads || hierarchicalDataPending}
                     vizContainerClass={styles.chartContainer}
@@ -345,7 +352,10 @@ export default class LeadsViz extends React.PureComponent {
                         to={reverseRoute(pathNames.leads, { projectId: activeProject.id })}
                         replace
                     >
-                        Show Table
+                        {
+                            // Show Table
+                            _ts('leadsViz', 'showTable')
+                        }
                     </Link>
                 </footer>
             </div>

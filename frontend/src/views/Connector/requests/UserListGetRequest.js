@@ -6,6 +6,7 @@ import {
 
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class ConnectorsGetRequest {
     constructor(props) {
@@ -24,7 +25,7 @@ export default class ConnectorsGetRequest {
 
     failure = (response) => {
         notify.send({
-            title: this.props.notificationStrings('usersTitle'),
+            title: _ts('notification', 'usersTitle'),
             type: notify.type.ERROR,
             message: response.error,
             duration: notify.duration.MEDIUM,
@@ -33,9 +34,9 @@ export default class ConnectorsGetRequest {
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('usersTitle'),
+            title: _ts('notification', 'usersTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('usersListGetFailure'),
+            message: _ts('notification', 'usersListGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }

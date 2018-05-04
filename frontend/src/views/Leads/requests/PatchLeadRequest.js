@@ -5,6 +5,7 @@ import {
     createParamsForLeadPatch,
     transformResponseErrorToFormError,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 export default class PatchLeadRequest {
     constructor(params) {
@@ -28,9 +29,9 @@ export default class PatchLeadRequest {
             })
             .success((response) => {
                 notify.send({
-                    title: 'Leads', // FIXME: strings
+                    title: _ts('leads', 'leads'),
                     type: notify.type.SUCCESS,
-                    message: 'Lead changed successfully.',
+                    message: _ts('leads', 'leadsPatchSuccess'),
                     duration: notify.duration.MEDIUM,
                 });
 
@@ -43,7 +44,7 @@ export default class PatchLeadRequest {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: 'Leads',
+                    title: _ts('leads', 'leads'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -52,9 +53,9 @@ export default class PatchLeadRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: 'Leads',
+                    title: _ts('leads', 'leads'),
                     type: notify.type.ERROR,
-                    message: 'Lead couldn\'t be changed.',
+                    message: _ts('leads', 'leadsPatchFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({ loadingLeads: false });

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import DangerButton from '../../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../../../../../vendor/react-store/components/Action/Button/SuccessButton';
@@ -10,7 +9,7 @@ import Form, {
     requiredCondition,
 } from '../../../../../../vendor/react-store/components/Input/Form';
 
-import { projectStringsSelector } from '../../../../../../redux';
+import _ts from '../../../../../../ts';
 
 import styles from './styles.scss';
 
@@ -25,7 +24,6 @@ const propTypes = {
     pending: PropTypes.bool,
     pristine: PropTypes.bool,
     readOnly: PropTypes.bool,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -35,12 +33,7 @@ const defaultProps = {
     readOnly: false,
 };
 
-const mapStateToProps = state => ({
-    projectStrings: projectStringsSelector(state),
-});
-
-// FIMXE: Unnecessary component, not reused
-@connect(mapStateToProps)
+// FIXME: Unnecessary component, not reused
 export default class ProjectCeForm extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -87,21 +80,21 @@ export default class ProjectCeForm extends React.PureComponent {
                             onClick={handleFormCancel}
                             disabled={pending || !pristine}
                         >
-                            {this.props.projectStrings('modalRevert')}
+                            {_ts('project', 'modalRevert')}
                         </DangerButton>
                         <SuccessButton
                             disabled={pending || !pristine}
                             type="submit"
                         >
-                            {this.props.projectStrings('modalSave')}
+                            {_ts('project', 'modalSave')}
                         </SuccessButton>
                     </div>
                 }
                 <NonFieldErrors errorname="" />
                 <TextInput
-                    label={this.props.projectStrings('addCeTitleLabel')}
+                    label={_ts('project', 'addCeTitleLabel')}
                     formname="title"
-                    placeholder={this.props.projectStrings('addCeTitlePlaceholder')}
+                    placeholder={_ts('project', 'addCeTitlePlaceholder')}
                     className={styles.name}
                     readOnly={readOnly}
                 />

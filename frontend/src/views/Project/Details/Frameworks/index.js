@@ -23,8 +23,8 @@ import {
     projectDetailsSelector,
 
     setAnalysisFrameworksAction,
-    projectStringsSelector,
 } from '../../../../redux';
+import _ts from '../../../../ts';
 import schema from '../../../../schema';
 import { iconNames } from '../../../../constants';
 
@@ -38,7 +38,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setAnalysisFrameworks: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -47,7 +46,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     analysisFrameworkList: analysisFrameworkListSelector(state),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -209,12 +207,9 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
     renderSelectedAfDetails = () => {
         const { selectedAf } = this.state;
-        const {
-            analysisFrameworkList,
-            projectStrings,
-        } = this.props;
+        const { analysisFrameworkList } = this.props;
 
-        const noAFText = projectStrings('noAfText');
+        const noAFText = _ts('project', 'noAfText');
 
         if (analysisFrameworkList.length <= 0) {
             return (
@@ -238,10 +233,8 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
             displayAfList,
         } = this.state;
 
-        const { projectStrings } = this.props;
-
-        const searchAFPlaceholder = projectStrings('searchAfPlaceholder');
-        const addAFButtonLabel = projectStrings('addAfButtonLabel');
+        const searchAFPlaceholder = _ts('project', 'searchAfPlaceholder');
+        const addAFButtonLabel = _ts('project', 'addAfButtonLabel');
 
         const sortedAfs = [...displayAfList];
         sortedAfs.sort((a, b) => compareString(a.title, b.title));
@@ -282,16 +275,13 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
 
     renderAddAFModal = () => {
         const { showAddAFModal } = this.state;
-        const {
-            projectId,
-            projectStrings,
-        } = this.props;
+        const { projectId } = this.props;
 
         if (!showAddAFModal) {
             return null;
         }
 
-        const addAFModalTitle = projectStrings('addAfModalTitle');
+        const addAFModalTitle = _ts('project', 'addAfModalTitle');
 
         return (
             <Modal>

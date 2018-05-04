@@ -17,9 +17,9 @@ import {
     projectDetailsSelector,
     setProjectAction,
     setProjectOptionsAction,
-    projectStringsSelector,
 } from '../../../redux';
 import schema from '../../../schema';
+import _ts from '../../../ts';
 
 import General from './General';
 import Regions from './Regions';
@@ -33,7 +33,6 @@ const propTypes = {
     projectId: PropTypes.number,
     setProject: PropTypes.func.isRequired,
     setProjectOptions: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,7 +43,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     project: projectDetailsSelector(state, props),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -111,10 +109,10 @@ export default class ProjectDetails extends React.PureComponent {
         };
 
         this.titles = {
-            general: this.props.projectStrings('generalDetailsLabel'),
-            regions: this.props.projectStrings('regionsLabel'),
-            frameworks: this.props.projectStrings('analysisFrameworkLabel'),
-            categoryEditors: this.props.projectStrings('categoryEditorLabel'),
+            general: _ts('project', 'generalDetailsLabel'),
+            regions: _ts('project', 'regionsLabel'),
+            frameworks: _ts('project', 'analysisFrameworkLabel'),
+            categoryEditors: _ts('project', 'categoryEditorLabel'),
         };
 
         const { projectId } = props;
@@ -240,7 +238,7 @@ export default class ProjectDetails extends React.PureComponent {
                 </React.Fragment>
             ) : (
                 <p className={styles.forbiddenText}>
-                    {this.props.projectStrings('forbiddenText')}
+                    {_ts('project', 'forbiddenText')}
                 </p>
             )
         );

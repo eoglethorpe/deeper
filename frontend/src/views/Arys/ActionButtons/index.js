@@ -2,20 +2,19 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+
 import {
     iconNames,
     pathNames,
 } from '../../../constants/';
-
-import { reverseRoute } from '../../../vendor/react-store/utils/common';
-
-import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
 const propTypes = {
     row: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    arysStrings: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
     onRemoveAry: PropTypes.func.isRequired,
 };
@@ -51,13 +50,12 @@ export default class ActionButtons extends React.PureComponent {
         const {
             onRemoveAry,
             row,
-            arysStrings,
         } = this.props;
 
         return (
             <Fragment>
                 <DangerButton
-                    title={arysStrings('removeAryButtonTitle')}
+                    title={_ts('arys', 'removeAryButtonTitle')}
                     onClick={() => onRemoveAry(row)}
                     smallVerticalPadding
                     transparent
@@ -66,7 +64,7 @@ export default class ActionButtons extends React.PureComponent {
                 </DangerButton>
                 <Link
                     className={styles.editLink}
-                    title={arysStrings('editAryButtonTitle')}
+                    title={_ts('arys', 'editAryButtonTitle')}
                     to={links.editAry}
                 >
                     <i className={iconNames.edit} />

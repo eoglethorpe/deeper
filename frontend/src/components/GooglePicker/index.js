@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import Button from '../../vendor/react-store/components/Action/Button';
-import { commonStringsSelector } from '../../redux';
+import _ts from '../../ts';
 
 const propTypes = {
     className: PropTypes.string,
@@ -22,8 +21,6 @@ const propTypes = {
     mimeTypes: PropTypes.arrayOf(PropTypes.string),
     // Callback when api is loaded successfully and ready to use
     onApiLoad: PropTypes.func,
-    // Api load delay and limit
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -42,11 +39,6 @@ const defaultProps = {
     onApiLoad: undefined,
 };
 
-const mapStateToProps = state => ({
-    commonStrings: commonStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class GooglePicker extends React.Component {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -185,7 +177,7 @@ export default class GooglePicker extends React.Component {
                 transparent
             >
                 {
-                    children || this.props.commonStrings('openGoogleChooserText')
+                    children || _ts('common', 'openGoogleChooserText')
                 }
             </Button>
         );

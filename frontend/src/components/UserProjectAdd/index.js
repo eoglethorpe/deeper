@@ -22,13 +22,12 @@ import {
     urlForProjectCreate,
 } from '../../rest';
 import {
-    notificationStringsSelector,
-    userStringsSelector,
     setProjectAction,
     activeUserSelector,
 } from '../../redux';
 import schema from '../../schema';
 
+import _ts from '../../ts';
 import notify from '../../notify';
 import styles from './styles.scss';
 
@@ -40,8 +39,6 @@ const propTypes = {
     userGroups: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.isRequired,
     })),
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -51,8 +48,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -110,9 +105,9 @@ export default class UserProjectAdd extends React.PureComponent {
                         this.props.onProjectAdded(response.id);
                     }
                     notify.send({
-                        title: this.props.notificationStrings('userProjectCreate'),
+                        title: _ts('notification', 'userProjectCreate'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userProjectCreateSuccess'),
+                        message: _ts('notification', 'userProjectCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -123,9 +118,9 @@ export default class UserProjectAdd extends React.PureComponent {
             .failure((response) => {
                 // FIXME: no need to use notify here
                 notify.send({
-                    title: this.props.notificationStrings('userProjectCreate'),
+                    title: _ts('notification', 'userProjectCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectCreateFailure'),
+                    message: _ts('notification', 'userProjectCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
@@ -134,9 +129,9 @@ export default class UserProjectAdd extends React.PureComponent {
             .fatal(() => {
                 // FIXME: no need to use notify here
                 notify.send({
-                    title: this.props.notificationStrings('userProjectCreate'),
+                    title: _ts('notification', 'userProjectCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userProjectCreateFatal'),
+                    message: _ts('notification', 'userProjectCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 // FIXME: use strings
@@ -199,19 +194,19 @@ export default class UserProjectAdd extends React.PureComponent {
                 <NonFieldErrors faramElement />
                 <TextInput
                     faramElementName="title"
-                    label={this.props.userStrings('addProjectModalLabel')}
-                    placeholder={this.props.userStrings('addProjectModalPlaceholder')}
+                    label={_ts('user', 'addProjectModalLabel')}
+                    placeholder={_ts('user', 'addProjectModalPlaceholder')}
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.handleModalClose}>
-                        {this.props.userStrings('modalCancel')}
+                        {_ts('user', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         type="submit"
                         disabled={pending || !pristine}
                     >
-                        {this.props.userStrings('modalCreate')}
+                        {_ts('user', 'modalCreate')}
                     </PrimaryButton>
                 </div>
             </Faram>
