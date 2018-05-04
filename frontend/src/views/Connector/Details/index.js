@@ -89,6 +89,7 @@ export default class ConnectorDetails extends React.PureComponent {
         } = this.props;
 
         if (nextConnectorId && nextConnectorId !== prevConnectorId) {
+            this.setState({ connectorDataLoading: true });
             this.startConnectorDetailsRequest(
                 nextConnectorId,
                 nextConnectorDetails,
