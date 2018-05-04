@@ -4,6 +4,7 @@ import {
     createParamsForUserGroupsDelete,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class UserGroupDeleteRequest {
     constructor(props) {
@@ -23,9 +24,9 @@ export default class UserGroupDeleteRequest {
                         userId,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('userGroupDelete'),
+                        title: _ts('notification', 'userGroupDelete'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userGroupDeleteSuccess'),
+                        message: _ts('notification', 'userGroupDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -40,17 +41,17 @@ export default class UserGroupDeleteRequest {
             })
             .failure(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userGroupDelete'),
+                    title: _ts('notification', 'userGroupDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupDeleteFailure'),
+                    message: _ts('notification', 'userGroupDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userGroupDelete'),
+                    title: _ts('notification', 'userGroupDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userGroupDeleteFatal'),
+                    message: _ts('notification', 'userGroupDeleteFatal'),
                     duration: notify.duration.MEDIUM,
                 });
             })

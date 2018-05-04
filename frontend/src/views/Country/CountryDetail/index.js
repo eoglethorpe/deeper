@@ -19,12 +19,10 @@ import {
     regionDetailSelector,
     unSetRegionAction,
     activeUserSelector,
-    notificationStringsSelector,
-    countriesStringsSelector,
     setRegionDetailsAction,
-    commonStringsSelector,
     routeUrlSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 import RegionDetailView from '../../../components/RegionDetailView';
 import RegionMap from '../../../components/RegionMap';
 
@@ -55,9 +53,6 @@ const propTypes = {
     unSetRegion: PropTypes.func.isRequired,
     countryId: PropTypes.number.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    notificationStrings: PropTypes.func.isRequired,
-    countriesStrings: PropTypes.func.isRequired,
-    commonStrings: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
 
     routeUrl: PropTypes.string.isRequired,
@@ -78,9 +73,6 @@ const mapStateToProps = (state, props) => ({
     countryDetail: countryDetailSelector(state, props),
     regionDetail: regionDetailSelector(state, props),
     activeUser: activeUserSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    countriesStrings: countriesStringsSelector(state),
-    commonStrings: commonStringsSelector(state),
     routeUrl: routeUrlSelector(state),
 });
 
@@ -159,11 +151,11 @@ export default class CountryDetail extends React.PureComponent {
         };
 
         this.titles = {
-            general: props.countriesStrings('generalTabLabel'),
-            keyFigures: props.countriesStrings('keyFiguesTabLabel'),
-            mediaSources: props.countriesStrings('mediaTabLabel'),
-            populationData: props.countriesStrings('populationTabLabel'),
-            seasonalCalendar: props.countriesStrings('seasonalTabLabel'),
+            general: _ts('countries', 'generalTabLabel'),
+            keyFigures: _ts('countries', 'keyFiguesTabLabel'),
+            mediaSources: _ts('countries', 'mediaTabLabel'),
+            populationData: _ts('countries', 'populationTabLabel'),
+            seasonalCalendar: _ts('countries', 'seasonalTabLabel'),
         };
 
         this.schema = {
@@ -235,7 +227,6 @@ export default class CountryDetail extends React.PureComponent {
         const requestForRegion = new RegionGetRequest({
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
             regionDetail: this.props.regionDetail || {},
             discard,
         });
@@ -249,7 +240,6 @@ export default class CountryDetail extends React.PureComponent {
         }
         const regionDeleteRequest = new RegionDeleteRequest({
             unSetRegion: this.props.unSetRegion,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.regionDeleteRequest = regionDeleteRequest.create(regionId);
@@ -262,8 +252,6 @@ export default class CountryDetail extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
-            countriesStrings: this.props.countriesStrings,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
@@ -301,7 +289,6 @@ export default class CountryDetail extends React.PureComponent {
         const {
             countryDetail,
             activeUser,
-            countriesStrings,
             regionDetail,
         } = this.props;
 
@@ -323,7 +310,7 @@ export default class CountryDetail extends React.PureComponent {
                             activeUser.isSuperuser &&
                             <Fragment>
                                 <DangerButton onClick={this.handleDeleteButtonClick}>
-                                    {countriesStrings('deleteCountryButtonLabel')}
+                                    {_ts('countries', 'deleteCountryButtonLabel')}
                                 </DangerButton>
                                 <Form
                                     failureCallback={this.failureCallback}
@@ -337,13 +324,13 @@ export default class CountryDetail extends React.PureComponent {
                                         disabled={!pristine}
                                         onClick={this.handleDiscardButtonClick}
                                     >
-                                        {countriesStrings('discardButtonLabel')}
+                                        {_ts('countries', 'discardButtonLabel')}
                                     </WarningButton>
                                     <SuccessButton
                                         type="submit"
                                         disabled={!pristine}
                                     >
-                                        {countriesStrings('saveButtonLabel')}
+                                        {_ts('countries', 'saveButtonLabel')}
                                     </SuccessButton>
                                 </Form>
                             </Fragment>
@@ -353,7 +340,7 @@ export default class CountryDetail extends React.PureComponent {
                             closeOnEscape
                             onClose={this.deleteActiveCountry}
                         >
-                            <p>{`${countriesStrings('deleteCountryConfirm')}
+                            <p>{`${_ts('countries', 'deleteCountryConfirm')}
                                     ${countryDetail.title}?`}
                             </p>
                         </Confirm>
@@ -392,15 +379,12 @@ export default class CountryDetail extends React.PureComponent {
                     message={
                         (location) => {
                             const { pathname } = location;
-                            const {
-                                routeUrl,
-                                commonStrings,
-                            } = this.props;
+                            const { routeUrl } = this.props;
 
                             if (!pristine || pathname === routeUrl) {
                                 return true;
                             }
-                            return commonStrings('youHaveUnsavedChanges');
+                            return _ts('common', 'youHaveUnsavedChanges');
                         }
                     }
                 />

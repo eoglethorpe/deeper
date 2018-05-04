@@ -16,8 +16,8 @@ import {
 
     setRegionsAction,
     activeUserSelector,
-    countriesStringsSelector,
 } from '../../redux';
+import _ts from '../../ts';
 import { iconNames } from '../../constants';
 import AddRegion from '../../components/AddRegion';
 
@@ -35,7 +35,6 @@ const propTypes = {
     setRegions: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number,
-    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -47,7 +46,6 @@ const mapStateToProps = (state, props) => ({
     countries: regionsListSelector(state),
     activeUser: activeUserSelector(state),
     countryId: countryIdFromRouteSelector(state, props),
-    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -177,7 +175,7 @@ export default class CountryPanel extends React.PureComponent {
         if (countries.length <= 0) {
             return (
                 <div className={styles.countryDetailAlt}>
-                    {this.props.countriesStrings('noCountriesText')}
+                    {_ts('countries', 'noCountriesText')}
                 </div>
             );
         }
@@ -185,7 +183,7 @@ export default class CountryPanel extends React.PureComponent {
         if (!activeCountryId) {
             return (
                 <div className={styles.countryDetailAlt}>
-                    {this.props.countriesStrings('selectCountryText')}
+                    {_ts('countries', 'selectCountryText')}
                 </div>
             );
         }
@@ -206,7 +204,7 @@ export default class CountryPanel extends React.PureComponent {
 
         return (
             <div className={styles.countryDetailAlt}>
-                {this.props.countriesStrings('countryNotFoundText')}
+                {_ts('countries', 'countryNotFoundText')}
             </div>
         );
     }
@@ -220,7 +218,7 @@ export default class CountryPanel extends React.PureComponent {
                 <div className={styles.sidebar}>
                     <header className={styles.header}>
                         <h3 className={styles.heading}>
-                            {this.props.countriesStrings('countriesLabel')}
+                            {_ts('countries', 'countriesLabel')}
                         </h3>
                         {
                             activeUser.isSuperuser &&
@@ -228,13 +226,13 @@ export default class CountryPanel extends React.PureComponent {
                                 iconName={iconNames.add}
                                 onClick={this.onAddCountry}
                             >
-                                {this.props.countriesStrings('addCountryButtonLabel')}
+                                {_ts('countries', 'addCountryButtonLabel')}
                             </PrimaryButton>
                         }
                         <SearchInput
                             className={styles.searchInput}
                             onChange={this.handleSearchInputChange}
-                            placeholder={this.props.countriesStrings('searchCountryPlaceholer')}
+                            placeholder={_ts('countries', 'searchCountryPlaceholer')}
                             value={this.state.searchInputValue}
                             showLabel={false}
                             showHintAndError={false}
@@ -246,7 +244,7 @@ export default class CountryPanel extends React.PureComponent {
                             onClose={this.handleModalClose}
                             closeOnBlur
                         >
-                            <ModalHeader title={this.props.countriesStrings('addCountryModalHeaderLabel')} />
+                            <ModalHeader title={_ts('countries', 'addCountryModalHeaderLabel')} />
                             <ModalBody>
                                 <AddRegion onModalClose={this.handleModalClose} />
                             </ModalBody>

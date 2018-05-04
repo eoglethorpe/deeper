@@ -1,15 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 
-import { leadsStringsSelector } from '../../../../redux';
 import { iconNames } from '../../../../constants';
 import {
     createUrlForWebsiteFetch,
     createParamsForGenericGet,
 } from '../../../../rest';
+import _ts from '../../../../ts';
 
 import GalleryViewer from '../GalleryViewer';
 import styles from './styles.scss';
@@ -17,8 +16,6 @@ import styles from './styles.scss';
 const propTypes = {
     className: PropTypes.string,
     url: PropTypes.string,
-
-    leadsStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -26,11 +23,6 @@ const defaultProps = {
     url: undefined,
 };
 
-const mapStateToProps = state => ({
-    leadsStrings: leadsStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ExternalGallery extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -150,7 +142,7 @@ export default class ExternalGallery extends React.PureComponent {
         <div className={`${styles.pendingContainer} ${className}`}>
             <span className={`${iconNames.loading} ${styles.loadingAnimation}`} />
             <span className={styles.waitingText}>
-                {this.props.leadsStrings('gatheringWebsiteInfoLabel')}
+                {_ts('leads', 'gatheringWebsiteInfoLabel')}
             </span>
         </div>
     )

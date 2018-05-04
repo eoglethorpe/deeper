@@ -4,9 +4,10 @@ import {
     createParamsForUserMembershipDelete,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * props: setState, unSetMembership, notificationStrings
+ * props: setState, unSetMembership
 */
 
 export default class MembershipDeleteRequest {
@@ -21,9 +22,9 @@ export default class MembershipDeleteRequest {
                 userGroupId,
             });
             notify.send({
-                title: this.props.notificationStrings('userMembershipDelete'),
+                title: _ts('notification', 'userMembershipDelete'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('userMembershipDeleteSuccess'),
+                message: _ts('notification', 'userMembershipDeleteSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -33,18 +34,18 @@ export default class MembershipDeleteRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('userMembershipDelete'),
+            title: _ts('notification', 'userMembershipDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userMembershipDeleteFailure'),
+            message: _ts('notification', 'userMembershipDeleteFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('userMembershipDelete'),
+            title: _ts('notification', 'userMembershipDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userMembershipDeleteFatal'),
+            message: _ts('notification', 'userMembershipDeleteFatal'),
             duration: notify.duration.SLOW,
         });
     }

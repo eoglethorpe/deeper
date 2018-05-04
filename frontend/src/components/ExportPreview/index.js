@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
@@ -9,7 +8,7 @@ import {
     createParamsForGenericGet,
     createUrlForExport,
 } from '../../rest';
-import { exportStringsSelector } from '../../redux';
+import _ts from '../../ts';
 
 import { GalleryViewer } from '../DeepGallery';
 import styles from './styles.scss';
@@ -18,7 +17,6 @@ const propTypes = {
     className: PropTypes.string,
     exportId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     onLoad: PropTypes.func, // eslint-disable-line react/no-unused-prop-types
-    exportStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
     className: '',
@@ -26,11 +24,6 @@ const defaultProps = {
     onLoad: undefined,
 };
 
-const mapStateToProps = state => ({
-    exportStrings: exportStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ExportPreview extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -101,13 +94,13 @@ export default class ExportPreview extends React.PureComponent {
             .failure(() => {
                 this.setState({
                     pending: false,
-                    error: this.props.exportStrings('serverErrorText'),
+                    error: _ts('export', 'serverErrorText'),
                 });
             })
             .fatal(() => {
                 this.setState({
                     pending: false,
-                    error: this.props.exportStrings('connectionFailureText'),
+                    error: _ts('export', 'connectionFailureText'),
                 });
             })
             .build()
@@ -133,7 +126,7 @@ export default class ExportPreview extends React.PureComponent {
                     url={exportObj.file}
                     mimeType={exportObj.mimeType}
                     canShowIframe={false}
-                    invalidUrlMessage={this.props.exportStrings('previewNotAvailableLabel')}
+                    invalidUrlMessage={_ts('export', 'previewNotAvailableLabel')}
                     showUrl
                 />
             );
@@ -141,7 +134,7 @@ export default class ExportPreview extends React.PureComponent {
 
         return (
             <div className={styles.message}>
-                {this.props.exportStrings('previewNotAvailableLabel')}
+                {_ts('export', 'previewNotAvailableLabel')}
             </div>
         );
     }

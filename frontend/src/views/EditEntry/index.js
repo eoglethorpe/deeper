@@ -31,8 +31,6 @@ import {
     removeAllEntriesAction,
 
     routeUrlSelector,
-    notificationStringsSelector,
-    commonStringsSelector,
 } from '../../redux';
 import {
     ENTRY_STATUS,
@@ -40,6 +38,7 @@ import {
     calcEntryState,
 } from '../../entities/entry';
 import notify from '../../notify';
+import _ts from '../../ts';
 
 import EditEntryDataRequest from './requests/EditEntryDataRequest';
 import SaveEntryRequest from './requests/SaveEntryRequest';
@@ -72,9 +71,6 @@ const propTypes = {
     removeAllEntries: PropTypes.func.isRequired,
 
     routeUrl: PropTypes.string.isRequired,
-
-    notificationStrings: PropTypes.func.isRequired,
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -89,9 +85,6 @@ const mapStateToProps = (state, props) => ({
     filteredEntries: editEntryFilteredEntriesSelector(state, props),
     selectedEntryId: editEntrySelectedEntryIdSelector(state, props),
     routeUrl: routeUrlSelector(state),
-
-    notificationStrings: notificationStringsSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -182,15 +175,15 @@ export default class EditEntry extends React.PureComponent {
                 if (totalErrors > 0) {
                     notify.send({
                         type: notify.type.ERROR,
-                        title: this.props.notificationStrings('entrySave'),
-                        message: this.props.notificationStrings('entrySaveFailure', { errorCount: totalErrors }),
+                        title: _ts('notification', 'entrySave'),
+                        message: _ts('notification', 'entrySaveFailure', { errorCount: totalErrors }),
                         duration: notify.duration.SLOW,
                     });
                 } else {
                     notify.send({
                         type: notify.type.SUCCESS,
-                        title: this.props.notificationStrings('entrySave'),
-                        message: this.props.notificationStrings('entrySaveSuccess'),
+                        title: _ts('notification', 'entrySave'),
+                        message: _ts('notification', 'entrySaveSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 }
@@ -446,7 +439,7 @@ export default class EditEntry extends React.PureComponent {
                             } else if (this.isSaveAllDisabled) {
                                 return true;
                             }
-                            return this.props.commonStrings('youHaveUnsavedChanges');
+                            return _ts('common', 'youHaveUnsavedChanges');
                         }
                     }
                 />

@@ -22,11 +22,10 @@ import {
     adminLevelForRegionSelector,
     setAdminLevelsForRegionAction,
     unsetAdminLevelForRegionAction,
-    notificationStringsSelector,
-    countriesStringsSelector,
 } from '../../redux';
 import schema from '../../schema';
 import { iconNames } from '../../constants';
+import _ts from '../../ts';
 
 import notify from '../../notify';
 import EditAdminLevel from '../EditAdminLevel';
@@ -49,8 +48,6 @@ const propTypes = {
 
     setAdminLevelsForRegion: PropTypes.func.isRequired,
     unsetAdminLevelForRegion: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,8 +57,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     adminLevelList: adminLevelForRegionSelector(state, props),
-    notificationStrings: notificationStringsSelector(state),
-    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -77,42 +72,40 @@ export default class RegionAdminLevel extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { countriesStrings } = props;
-
         this.adminLevelHeaders = [
             {
                 key: 'level',
-                label: countriesStrings('levelLabel'),
+                label: _ts('countries', 'levelLabel'),
                 order: 1,
             },
             {
                 key: 'title',
-                label: countriesStrings('adminLevelNameText'),
+                label: _ts('countries', 'adminLevelNameText'),
                 order: 2,
             },
             {
                 key: 'nameProp',
-                label: countriesStrings('namePropertyLabel'),
+                label: _ts('countries', 'namePropertyLabel'),
                 order: 3,
             },
             {
                 key: 'codeProp',
-                label: countriesStrings('pcodePropertyLabel'),
+                label: _ts('countries', 'pcodePropertyLabel'),
                 order: 4,
             },
             {
                 key: 'parentNameProp',
-                label: countriesStrings('parentNamePropLabel'),
+                label: _ts('countries', 'parentNamePropLabel'),
                 order: 5,
             },
             {
                 key: 'parentCodeProp',
-                label: countriesStrings('parentCodePropLabel'),
+                label: _ts('countries', 'parentCodePropLabel'),
                 order: 6,
             },
             {
                 key: 'actions',
-                label: countriesStrings('actionsLabel'),
+                label: _ts('countries', 'actionsLabel'),
                 order: 7,
                 modifier: row => (
                     <div className="action-btns">
@@ -198,9 +191,9 @@ export default class RegionAdminLevel extends React.PureComponent {
                         regionId,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('adminLevelDelete'),
+                        title: _ts('notification', 'adminLevelDelete'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('adminLevelDeleteSuccess'),
+                        message: _ts('notification', 'adminLevelDeleteSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -209,17 +202,17 @@ export default class RegionAdminLevel extends React.PureComponent {
             })
             .failure(() => {
                 notify.send({
-                    title: this.props.notificationStrings('adminLevelDelete'),
+                    title: _ts('notification', 'adminLevelDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelDeleteFailure'),
+                    message: _ts('notification', 'adminLevelDeleteFailure'),
                     duration: notify.duration.MEDIUM,
                 });
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('adminLevelDelete'),
+                    title: _ts('notification', 'adminLevelDelete'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelDeleteFatal'),
+                    message: _ts('notification', 'adminLevelDeleteFatal'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -276,7 +269,6 @@ export default class RegionAdminLevel extends React.PureComponent {
             className,
             adminLevelList,
             countryId,
-            countriesStrings,
         } = this.props;
         const {
             activeAdminLevelDelete: { title },
@@ -289,14 +281,14 @@ export default class RegionAdminLevel extends React.PureComponent {
                 { deletePending && <LoadingAnimation /> }
                 <div className={styles.header}>
                     <h5>
-                        {countriesStrings('adminLevelsHeader')}
+                        {_ts('countries', 'adminLevelsHeader')}
                     </h5>
                     <PrimaryButton
                         iconName={iconNames.add}
                         disabled={deletePending}
                         onClick={this.addAdminLevel}
                     >
-                        {countriesStrings('addAdminLevelButtonLabel')}
+                        {_ts('countries', 'addAdminLevelButtonLabel')}
                     </PrimaryButton>
                     { this.state.addAdminLevel &&
                         <Modal
@@ -304,7 +296,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                             onClose={this.handleModalClose}
                         >
                             <ModalHeader
-                                title={countriesStrings('addAdminLevelButtonLabel')}
+                                title={_ts('countries', 'addAdminLevelButtonLabel')}
                                 rightComponent={
                                     <PrimaryButton
                                         onClick={this.handleModalClose}
@@ -336,7 +328,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                             onClose={this.handleModalClose}
                         >
                             <ModalHeader
-                                title={countriesStrings('editAdminLevelModalTitle')}
+                                title={_ts('countries', 'editAdminLevelModalTitle')}
                                 rightComponent={
                                     <PrimaryButton
                                         onClick={this.handleModalClose}
@@ -362,7 +354,7 @@ export default class RegionAdminLevel extends React.PureComponent {
                     onClose={this.handleDeleteActiveAdminLevelConfirmClose}
                 >
                     <p>
-                        {countriesStrings('removeAdminLevelConfirm', { adminLevel: title })}
+                        {_ts('countries', 'removeAdminLevelConfirm', { adminLevel: title })}
                     </p>
                 </Confirm>
             </div>

@@ -22,8 +22,8 @@ import {
     projectDetailsSelector,
 
     setCategoryEditorsAction,
-    projectStringsSelector,
 } from '../../../../redux';
+import _ts from '../../../../ts';
 import schema from '../../../../schema';
 import { iconNames } from '../../../../constants';
 
@@ -36,7 +36,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     projectId: PropTypes.number.isRequired,
     setCategoryEditors: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -45,7 +44,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
     categoryEditorList: categoryEditorListSelector(state),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -230,13 +228,13 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                         iconName={iconNames.add}
                         onClick={this.handleAddCeButtonClick}
                     >
-                        {this.props.projectStrings('addCeButtonLabel')}
+                        {_ts('project', 'addCeButtonLabel')}
                     </AccentButton>
                     <SearchInput
                         className={styles.searchCeInput}
                         value={searchInputValue}
                         onChange={this.handleSearchInputChange}
-                        placeholder={this.props.projectStrings('searchCePlaceholder')}
+                        placeholder={_ts('project', 'searchCePlaceholder')}
                         showHintAndError={false}
                         showLabel={false}
                     />
@@ -258,7 +256,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
         if (categoryEditorList.length <= 0) {
             return (
                 <div className={styles.empty}>
-                    {this.props.projectStrings('noCeText')}
+                    {_ts('project', 'noCeText')}
                 </div>
             );
         }
@@ -283,7 +281,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
                 onClose={this.handleModalClose}
                 closeOnBlur
             >
-                <ModalHeader title={this.props.projectStrings('addCeModalTitle')} />
+                <ModalHeader title={_ts('project', 'addCeModalTitle')} />
                 <ModalBody>
                     <AddCategoryEditor
                         projectId={projectId}

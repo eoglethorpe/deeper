@@ -1,11 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import Button from '../../vendor/react-store/components/Action/Button';
 
+import _ts from '../../ts';
 import { SCRIPT_ID } from '../../config/dropbox';
-import { commonStringsSelector } from '../../redux';
 
 import styles from './styles.scss';
 
@@ -22,8 +21,6 @@ const propTypes = {
     disabled: PropTypes.bool,
     // Callback when api is loaded successfully and ready to use
     onApiLoad: PropTypes.func,
-    // Api load delay and limit
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -38,13 +35,8 @@ const defaultProps = {
     onApiLoad: undefined,
 };
 
-const mapStateToProps = state => ({
-    commonStrings: commonStringsSelector(state),
-});
-
 // read more
 // https://www.dropbox.com/developers/chooser
-@connect(mapStateToProps)
 export default class DropboxChooser extends React.Component {
     static propTypes = propTypes ;
     static defaultProps = defaultProps ;
@@ -121,7 +113,6 @@ export default class DropboxChooser extends React.Component {
             className,
             disabled,
             children,
-            commonStrings,
         } = this.props;
         const { ready } = this.state;
 
@@ -133,7 +124,7 @@ export default class DropboxChooser extends React.Component {
                 transparent
             >
                 {
-                    children || commonStrings('openDropboxChooserText')
+                    children || _ts('common', 'openDropboxChooserText')
                 }
             </Button>
         );

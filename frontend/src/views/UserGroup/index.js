@@ -8,7 +8,9 @@ import ModalBody from '../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
+
 import AppError from '../../components/AppError';
+import _ts from '../../ts';
 
 import MembersTable from './MembersTable';
 import ProjectsTable from './ProjectsTable';
@@ -21,7 +23,6 @@ import {
 
     activeUserSelector,
     groupIdFromRouteSelector,
-    userStringsSelector,
 } from '../../redux';
 import { iconNames } from '../../constants';
 
@@ -35,7 +36,6 @@ const propTypes = {
     unSetUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     userGroupId: PropTypes.number.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {};
@@ -44,7 +44,6 @@ const mapStateToProps = (state, props) => ({
     userGroup: groupSelector(state, props),
     activeUser: activeUserSelector(state),
     userGroupId: groupIdFromRouteSelector(state, props),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -114,7 +113,6 @@ export default class UserGroup extends React.PureComponent {
         const {
             userGroup,
             userGroupId,
-            userStrings,
         } = this.props;
         const {
             showUserGroupEditModal,
@@ -135,7 +133,7 @@ export default class UserGroup extends React.PureComponent {
             return (
                 <div className={styles.usergroup}>
                     <div className={styles.usergroupAlt}>
-                        {userStrings('userGroupNotFound')}
+                        {_ts('user', 'userGroupNotFound')}
                     </div>
                 </div>
             );
@@ -145,7 +143,7 @@ export default class UserGroup extends React.PureComponent {
             <div className={styles.usergroup}>
                 <header className={styles.header}>
                     <h2>
-                        {userStrings('userGroupTitle')}
+                        {_ts('user', 'userGroupTitle')}
                     </h2>
                 </header>
                 <div className={styles.info}>
@@ -167,7 +165,7 @@ export default class UserGroup extends React.PureComponent {
                 </div>
                 <div className={styles.stats}>
                     <h2>
-                        {userStrings('userGroupActivtyLogTitle')}
+                        {_ts('user', 'userGroupActivtyLogTitle')}
                     </h2>
                 </div>
                 <ProjectsTable
@@ -189,7 +187,7 @@ export default class UserGroup extends React.PureComponent {
                         className={styles.userGroupEditModal}
                     >
                         <ModalHeader
-                            title={userStrings('userGroupEditModalLabel')}
+                            title={_ts('user', 'userGroupEditModalLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleUserGroupEditModalClose}

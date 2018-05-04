@@ -5,8 +5,13 @@ import { connect } from 'react-redux';
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
+import Faram, {
+    requiredCondition,
+} from '../../../vendor/react-store/components/Input/Faram';
+import { getObjectChildren } from '../../../vendor/react-store/utils/common';
+import { median, sum, bucket } from '../../../vendor/react-store/utils/stats';
+
 import {
-    aryStringsSelector,
     leadIdFromRouteSelector,
     aryTemplateMetadataSelector,
     aryTemplateMethodologySelector,
@@ -24,15 +29,10 @@ import {
     editAryHasErrorsSelector,
     editAryIsPristineSelector,
 } from '../../../redux';
-
-import Faram, {
-    requiredCondition,
-} from '../../../vendor/react-store/components/Input/Faram';
+import _ts from '../../../ts';
 import Baksa from '../../../components/Baksa';
-import AryPutRequest from '../requests/AryPutRequest';
 
-import { getObjectChildren } from '../../../vendor/react-store/utils/common';
-import { median, sum, bucket } from '../../../vendor/react-store/utils/stats';
+import AryPutRequest from '../requests/AryPutRequest';
 
 import Metadata from './Metadata';
 import Summary from './Summary';
@@ -58,7 +58,6 @@ const propTypes = {
     setErrorAry: PropTypes.func.isRequired,
     setAry: PropTypes.func.isRequired,
     changeAry: PropTypes.func.isRequired,
-    aryStrings: PropTypes.func.isRequired,
     onActiveSectorChange: PropTypes.func,
 };
 
@@ -82,7 +81,6 @@ const mapStateToProps = state => ({
     scoreMatrixPillars: assessmentMatrixPillarsSelector(state),
     scoreScales: assessmentScoreScalesSelector(state),
     scoreBuckets: assessmentScoreBucketsSelector(state),
-    aryStrings: aryStringsSelector(state),
 
     editAryFaramValues: editAryFaramValuesSelector(state),
     editAryFaramErrors: editAryFaramErrorsSelector(state),
@@ -287,10 +285,10 @@ export default class RightPanel extends React.PureComponent {
         };
 
         this.tabs = {
-            metadata: props.aryStrings('metadataTabLabel'),
-            methodology: props.aryStrings('methodologyTabLabel'),
-            summary: props.aryStrings('summaryTabLabel'),
-            score: props.aryStrings('scoreTabLabel'),
+            metadata: _ts('ary', 'metadataTabLabel'),
+            methodology: _ts('ary', 'methodologyTabLabel'),
+            summary: _ts('ary', 'summaryTabLabel'),
+            score: _ts('ary', 'scoreTabLabel'),
         };
 
         this.defaultHash = 'metadata';

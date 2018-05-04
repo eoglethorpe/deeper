@@ -10,7 +10,6 @@ import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
-import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import {
     randomString,
     reverseRoute,
@@ -26,8 +25,8 @@ import {
     updateAfViewWidgetAction,
 
     activeProjectIdFromStateSelector,
-    afStringsSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 
 import widgetStore from '../../../widgets';
 import styles from './styles.scss';
@@ -39,7 +38,6 @@ const propTypes = {
     removeWidget: PropTypes.func.isRequired,
     updateWidget: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
-    afStrings: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = dispatch => ({
@@ -50,7 +48,6 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = (state, props) => ({
     projectId: activeProjectIdFromStateSelector(state, props),
-    afStrings: afStringsSelector(state),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -207,7 +204,7 @@ export default class List extends React.PureComponent {
             analysisFramework: analysisFrameworkId,
             key: `list-${this.getUniqueKey()}`,
             widgetId: widget.id,
-            title: this.props.afStrings(widget.title),
+            title: _ts('af', widget.title),
             properties: {
                 overviewGridLayout: widget.overviewComponent && {
                     left: 0,
@@ -286,7 +283,7 @@ export default class List extends React.PureComponent {
                         key={widget.id}
                     >
                         <div className={styles.title}>
-                            {this.props.afStrings(widget.title)}
+                            {_ts('af', widget.title)}
                         </div>
                         <div className={styles.actions}>
                             <Button
@@ -313,7 +310,7 @@ export default class List extends React.PureComponent {
         } = this.props;
 
         const exitUrl = `${reverseRoute(pathNames.projects, { projectId })}#/frameworks`;
-        const frameworkTitle = analysisFramework.title || this.props.afStrings('analysisFramework');
+        const frameworkTitle = analysisFramework.title || _ts('af', 'analysisFramework');
 
         return (
             <header className={styles.header}>
@@ -325,7 +322,7 @@ export default class List extends React.PureComponent {
                         /
                     </span>
                     <span className={styles.pageType}>
-                        {this.props.afStrings('headerList')}
+                        {_ts('af', 'headerList')}
                     </span>
                 </h2>
                 <div className={styles.actions}>
@@ -333,20 +330,20 @@ export default class List extends React.PureComponent {
                         className={styles.exitLink}
                         to={exitUrl}
                     >
-                        {this.props.afStrings('exitButtonLabel')}
+                        {_ts('af', 'exitButtonLabel')}
                     </Link>
                     <Link
                         className={styles.gotoOverviewLink}
                         to="#/overview"
                         replace
                     >
-                        {this.props.afStrings('gotoOverviewButtonLabel')}
+                        {_ts('af', 'gotoOverviewButtonLabel')}
                     </Link>
                     <SuccessButton
                         className={styles.saveButton}
                         onClick={this.props.onSave}
                     >
-                        {this.props.afStrings('saveButtonLabel')}
+                        {_ts('af', 'saveButtonLabel')}
                     </SuccessButton>
                 </div>
             </header>
@@ -378,7 +375,7 @@ export default class List extends React.PureComponent {
                     show={this.state.showDeleteModal}
                 >
                     <p>
-                        {this.props.afStrings('confirmDeletewWidget')}
+                        {_ts('af', 'confirmDeletewWidget')}
                     </p>
                 </Confirm>
             </div>

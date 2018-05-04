@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 
@@ -8,8 +7,8 @@ import {
     createUrlForGalleryFile,
     createHeaderForGalleryFile,
 } from '../../../../rest';
-import { commonStringsSelector } from '../../../../redux';
 import { iconNames } from '../../../../constants';
+import _ts from '../../../../ts';
 
 import GalleryViewer from '../GalleryViewer';
 import styles from './styles.scss';
@@ -20,8 +19,6 @@ const propTypes = {
     onlyFileName: PropTypes.bool,
     pendingLabel: PropTypes.string,
     notFoundMessage: PropTypes.string,
-
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -32,11 +29,6 @@ const defaultProps = {
     notFoundMessage: undefined,
 };
 
-const mapStateToProps = state => ({
-    commonStrings: commonStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class InternalGallery extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -132,7 +124,7 @@ export default class InternalGallery extends React.PureComponent {
                 {
                     onlyFileName &&
                     <span className={styles.label} >
-                        { pendingLabel || this.props.commonStrings('loadingFileLabel') }
+                        { pendingLabel || _ts('common', 'loadingFileLabel') }
                     </span>
                 }
                 <span className={`${iconNames.loading} ${styles.loadingAnimation}`} />
@@ -146,7 +138,7 @@ export default class InternalGallery extends React.PureComponent {
         return (
             <div className={`${styles.show404} ${onlyFileName ? styles.fileName : ''} ${className}`}>
                 <span className={styles.label}>
-                    {notFoundMessage || this.props.commonStrings('deepFileNotFound')}
+                    {notFoundMessage || _ts('common', 'deepFileNotFound')}
                 </span>
             </div>
         );

@@ -1,7 +1,18 @@
 import stringFormat from 'string-format';
 
-import { selectedLinksSelector, selectedStringsSelector } from './redux';
+import {
+    selectedLinksSelector,
+    selectedStringsSelector,
+    fallbackLinksSelector,
+    fallbackStringsSelector,
+} from './redux';
 import store from './store';
+
+const getString = (strings, links, namespace, identifier) => {
+    const namedLinkStrings = links[namespace];
+    const linkName = namedLinkStrings ? namedLinkStrings[identifier] : undefined;
+    return linkName ? strings[linkName] : undefined;
+};
 
 // eslint-disable-next-line no-underscore-dangle
 const _ts = (namespace, identifier, params) => {
@@ -10,15 +21,20 @@ const _ts = (namespace, identifier, params) => {
     const selectedStrings = selectedStringsSelector(state);
     const selectedLinks = selectedLinksSelector(state);
 
-    const namedLinkStrings = selectedLinks[namespace];
+    const fallbackStrings = fallbackStringsSelector(state);
+    const fallbackLinks = fallbackLinksSelector(state);
 
-    const id = namedLinkStrings ? namedLinkStrings[identifier] : undefined;
-    const str = id ? selectedStrings[id] : undefined;
+    let str = getString(selectedStrings, selectedLinks, namespace, identifier);
+    if (!str) {
+        str = getString(fallbackStrings, fallbackLinks, namespace, identifier);
+    }
 
     if (!str) {
-        return `{${namespace}:${identifier}}`;
+        str = `{${namespace}:${identifier}}`;
+    } else if (params) {
+        str = stringFormat(str, params);
     }
-    return params ? stringFormat(str, params) : str;
+    return str;
 };
 
 export default _ts;

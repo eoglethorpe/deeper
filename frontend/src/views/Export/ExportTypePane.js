@@ -1,13 +1,12 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import Checkbox from '../../vendor/react-store/components/Input/Checkbox';
 import TreeSelection from '../../vendor/react-store/components/Input/TreeSelection';
 import List from '../../vendor/react-store/components/View/List';
 
 import { iconNames } from '../../constants';
-import { exportStringsSelector } from '../../redux';
+import _ts from '../../ts';
 
 import wordIcon from '../../resources/img/word.svg';
 import excelIcon from '../../resources/img/excel.svg';
@@ -24,7 +23,6 @@ const propTypes = {
     onExportTypeChange: PropTypes.func.isRequired,
     onReportStructureChange: PropTypes.func.isRequired,
     onDecoupledEntriesChange: PropTypes.func.isRequired,
-    exportStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -32,11 +30,6 @@ const defaultProps = {
     reportStructure: undefined,
 };
 
-const mapStateToProps = state => ({
-    exportStrings: exportStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class ExportTypePane extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -91,22 +84,22 @@ export default class ExportTypePane extends React.PureComponent {
             {
                 key: 'word',
                 img: wordIcon,
-                title: this.props.exportStrings('docxLabel'),
+                title: _ts('export', 'docxLabel'),
             },
             {
                 key: 'pdf',
                 img: pdfIcon,
-                title: this.props.exportStrings('pdfLabel'),
+                title: _ts('export', 'pdfLabel'),
             },
             {
                 key: 'excel',
-                title: this.props.exportStrings('xlxsLabel'),
+                title: _ts('export', 'xlxsLabel'),
                 img: excelIcon,
             },
             {
                 key: 'json',
                 img: jsonIcon,
-                title: this.props.exportStrings('jsonLabel'),
+                title: _ts('export', 'jsonLabel'),
             },
         ];
     }
@@ -158,14 +151,14 @@ export default class ExportTypePane extends React.PureComponent {
         if (!this.props.reportStructure) {
             return (
                 <p>
-                    { this.props.exportStrings('noMatrixAfText')}
+                    { _ts('export', 'noMatrixAfText')}
                 </p>
             );
         }
 
         return [
             <h4 key="header">
-                {this.props.exportStrings('reportStructureLabel')}
+                {_ts('export', 'reportStructureLabel')}
             </h4>,
             <TreeSelection
                 key="tree-selection"
@@ -178,7 +171,7 @@ export default class ExportTypePane extends React.PureComponent {
     renderExcelOptions = () => ([
         <Checkbox
             key="checkbox"
-            label={this.props.exportStrings('decoupledEntriesLabel')}
+            label={_ts('export', 'decoupledEntriesLabel')}
             value={this.props.decoupledEntries}
             onChange={this.props.onDecoupledEntriesChange}
         />,
@@ -188,8 +181,8 @@ export default class ExportTypePane extends React.PureComponent {
         >
             <span className={`${styles.icon} ${iconNames.info}`} />
             <div>
-                <p>{this.props.exportStrings('decoupledEntriesTitle2')}</p>
-                <p>{this.props.exportStrings('decoupledEntriesTitle')}</p>
+                <p>{_ts('export', 'decoupledEntriesTitle2')}</p>
+                <p>{_ts('export', 'decoupledEntriesTitle')}</p>
             </div>
         </div>,
     ])
@@ -204,7 +197,7 @@ export default class ExportTypePane extends React.PureComponent {
             default:
                 return (
                     <p>
-                        { this.props.exportStrings('noOptionsAvailable') }
+                        { _ts('export', 'noOptionsAvailable') }
                     </p>
                 );
         }

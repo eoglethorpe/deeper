@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -10,7 +9,7 @@ import PrimaryButton from '../../../vendor/react-store/components/Action/Button/
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
-import { ceStringsSelector } from '../../../redux';
+import _ts from '../../../ts';
 
 import styles from '../styles.scss';
 
@@ -19,7 +18,6 @@ const propTypes = {
     onSubmit: PropTypes.func.isRequired,
     editMode: PropTypes.bool,
     initialValue: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -27,11 +25,6 @@ const defaultProps = {
     initialValue: {},
 };
 
-const mapStateToProps = state => ({
-    ceStrings: ceStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class NewCategoryModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
@@ -84,8 +77,8 @@ export default class NewCategoryModal extends React.PureComponent {
         } = this.state;
 
         const title = editMode
-            ? this.props.ceStrings('editCategoryTooltip')
-            : this.props.ceStrings('addCategoryTooltip');
+            ? _ts('ce', 'editCategoryTooltip')
+            : _ts('ce', 'addCategoryTooltip');
 
         return (
             <Faram
@@ -103,21 +96,21 @@ export default class NewCategoryModal extends React.PureComponent {
                 <ModalBody key="body">
                     <TextInput
                         faramElementName="title"
-                        label={this.props.ceStrings('addCategoryTitleLabel')}
-                        placeholder={this.props.ceStrings('addCategoryTitlePlaceholder')}
+                        label={_ts('ce', 'addCategoryTitleLabel')}
+                        placeholder={_ts('ce', 'addCategoryTitlePlaceholder')}
                         autoFocus
                     />
                 </ModalBody>
                 <ModalFooter key="footer">
                     <Button onClick={this.handleModalClose} >
-                        {this.props.ceStrings('modalCancel')}
+                        {_ts('ce', 'modalCancel')}
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
                         disabled={pristine}
                         type="submit"
                     >
-                        {this.props.ceStrings('modalOk')}
+                        {_ts('ce', 'modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
             </Faram>

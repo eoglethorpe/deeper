@@ -2,12 +2,11 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {
-    generalDetailsForRegionSelector,
-    countriesStringsSelector,
-} from '../../redux';
-
 import ListView from '../../vendor/react-store/components/View/List/ListView';
+
+import { generalDetailsForRegionSelector } from '../../redux';
+import _ts from '../../ts';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -18,7 +17,6 @@ const propTypes = {
         title: PropTypes.string,
         regionalGroups: PropTypes.shape({}),
     }).isRequired,
-    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -27,10 +25,9 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: generalDetailsForRegionSelector(state, props),
-    countriesStrings: countriesStringsSelector(state),
 });
 
-@connect(mapStateToProps, null)
+@connect(mapStateToProps)
 export default class RegionDetailView extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -81,10 +78,7 @@ export default class RegionDetailView extends React.PureComponent {
     }
 
     render() {
-        const {
-            className,
-            countriesStrings,
-        } = this.props;
+        const { className } = this.props;
 
         const regionDetailsList = Object.keys(this.regionDetailMeta);
 
@@ -93,7 +87,7 @@ export default class RegionDetailView extends React.PureComponent {
             styles.regionDetailView,
         ];
 
-        const headingText = countriesStrings('regionGeneralInfoLabel');
+        const headingText = _ts('countries', 'regionGeneralInfoLabel');
 
         return (
             <div className={classNames.join(' ')}>

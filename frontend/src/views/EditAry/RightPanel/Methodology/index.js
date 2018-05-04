@@ -12,8 +12,8 @@ import CheckGroup from '../../../../vendor/react-store/components/Input/CheckGro
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 
+import _ts from '../../../../ts';
 import { iconNames } from '../../../../constants';
-
 import {
     aryTemplateMethodologySelector,
     assessmentSectorsSelector,
@@ -22,14 +22,13 @@ import {
 
     projectDetailsSelector,
     geoOptionsForProjectSelector,
-    assessmentMethodologyStringsSelector,
 } from '../../../../redux';
-
 import OrganigramWithList from '../../../../components/OrganigramWithList/';
 import GeoListInput from '../../../../components/GeoListInput/';
 
 import Header from '../Header';
 import { renderWidget } from '../widgetUtils';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -40,7 +39,6 @@ const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     sectors: PropTypes.arrayOf(PropTypes.object).isRequired,
     pending: PropTypes.bool.isRequired,
-    assessmentMethodologyStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -56,7 +54,6 @@ const mapStateToProps = (state, props) => ({
     geoOptions: geoOptionsForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     sectors: assessmentSectorsSelector(state),
-    assessmentMethodologyStrings: assessmentMethodologyStringsSelector(state),
 });
 
 const idSelector = d => d.id;
@@ -133,25 +130,24 @@ export default class Methodology extends React.PureComponent {
             projectDetails,
             geoOptions,
             pending,
-            assessmentMethodologyStrings,
         } = this.props;
 
-        const focusesTitle = assessmentMethodologyStrings('focusesTitle');
-        const sectorsTitle = assessmentMethodologyStrings('sectorsTitle');
-        const affectedGroupsTitle = assessmentMethodologyStrings('affectedGroupsTitle');
-        const locationsTitle = assessmentMethodologyStrings('locationsTitle');
-        const methodologyContentTitle = assessmentMethodologyStrings('methodologyContentTitle');
-        const attributesTitle = assessmentMethodologyStrings('attributesTitle');
+        const focusesTitle = _ts('assessmentMethodology', 'focusesTitle');
+        const sectorsTitle = _ts('assessmentMethodology', 'sectorsTitle');
+        const affectedGroupsTitle = _ts('assessmentMethodology', 'affectedGroupsTitle');
+        const locationsTitle = _ts('assessmentMethodology', 'locationsTitle');
+        const methodologyContentTitle = _ts('assessmentMethodology', 'methodologyContentTitle');
+        const attributesTitle = _ts('assessmentMethodology', 'attributesTitle');
 
-        const objectivesTitle = assessmentMethodologyStrings('objectivesTitle');
-        const dataCollectionTechniquesTitle = assessmentMethodologyStrings('dataCollectionTechniquesTitle');
-        const samplingTitle = assessmentMethodologyStrings('samplingTitle');
-        const limitationsTitle = assessmentMethodologyStrings('limitationsTitle');
+        const objectivesTitle = _ts('assessmentMethodology', 'objectivesTitle');
+        const dataCollectionTechniquesTitle = _ts('assessmentMethodology', 'dataCollectionTechniquesTitle');
+        const samplingTitle = _ts('assessmentMethodology', 'samplingTitle');
+        const limitationsTitle = _ts('assessmentMethodology', 'limitationsTitle');
 
-        const objectivesPlaceholder = assessmentMethodologyStrings('objectivesPlaceholder');
-        const dataCollectionTechniquesPlaceholder = assessmentMethodologyStrings('dataCollectionTechniquesPlaceholder');
-        const samplingPlaceholder = assessmentMethodologyStrings('samplingPlaceholder');
-        const limitationsPlaceholder = assessmentMethodologyStrings('limitationsPlaceholder');
+        const objectivesPlaceholder = _ts('assessmentMethodology', 'objectivesPlaceholder');
+        const dataCollectionTechniquesPlaceholder = _ts('assessmentMethodology', 'dataCollectionTechniquesPlaceholder');
+        const samplingPlaceholder = _ts('assessmentMethodology', 'samplingPlaceholder');
+        const limitationsPlaceholder = _ts('assessmentMethodology', 'limitationsPlaceholder');
 
         const attributesTemplateKeys = Object.keys(attributesTemplate);
 

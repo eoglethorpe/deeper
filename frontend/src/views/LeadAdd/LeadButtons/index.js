@@ -14,12 +14,11 @@ import FileInput from '../../../vendor/react-store/components/Input/FileInput';
 import {
     addLeadViewAddLeadsAction,
     activeProjectIdFromStateSelector,
-    leadsStringsSelector,
-    notificationStringsSelector,
 } from '../../../redux';
 import DropboxChooser from '../../../components/DropboxChooser';
 import GooglePicker from '../../../components/GooglePicker';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
 import { LEAD_TYPE } from '../../../entities/lead';
 import { dropboxAppKey } from '../../../config/dropbox';
@@ -56,14 +55,10 @@ const propTypes = {
     onFileSelect: PropTypes.func.isRequired,
     onGoogleDriveSelect: PropTypes.func.isRequired,
     onDropboxSelect: PropTypes.func.isRequired,
-    leadsStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectIdFromStateSelector(state),
-    leadsStrings: leadsStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -162,9 +157,9 @@ export default class LeadButtons extends React.PureComponent {
     handleLeadAddFromDisk = (files, { invalidFiles }) => {
         if (invalidFiles > 0) {
             notify.send({
-                title: this.props.notificationStrings('fileSelection'),
+                title: _ts('notification', 'fileSelection'),
                 type: notify.type.WARNING,
-                message: this.props.notificationStrings('invalidFileSelection'),
+                message: _ts('notification', 'invalidFileSelection'),
                 duration: notify.duration.SLOW,
             });
         }
@@ -270,7 +265,7 @@ export default class LeadButtons extends React.PureComponent {
         return (
             <div className={styles.addLeadButtons}>
                 <h3 className={styles.heading}>
-                    {this.props.leadsStrings('addSourceFromLabel')}
+                    {_ts('leads', 'addSourceFromLabel')}
                 </h3>
                 <GooglePicker
                     className={styles.addLeadBtn}
@@ -284,7 +279,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.googleDrive} />
                     <p>
-                        {this.props.leadsStrings('googleDriveLabel')}
+                        {_ts('leads', 'googleDriveLabel')}
                     </p>
                 </GooglePicker>
                 <DropboxChooser
@@ -299,7 +294,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.dropbox} />
                     <p>
-                        {this.props.leadsStrings('dropboxLabel')}
+                        {_ts('leads', 'dropboxLabel')}
                     </p>
                 </DropboxChooser>
                 <FileInput
@@ -311,7 +306,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.upload} />
                     <p>
-                        {this.props.leadsStrings('localDiskLabel')}
+                        {_ts('leads', 'localDiskLabel')}
                     </p>
                 </FileInput>
                 <Button
@@ -321,7 +316,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.globe} />
                     <p>
-                        {this.props.leadsStrings('websiteLabel')}
+                        {_ts('leads', 'websiteLabel')}
                     </p>
                 </Button>
                 <Button
@@ -331,7 +326,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.clipboard} />
                     <p>
-                        {this.props.leadsStrings('textLabel')}
+                        {_ts('leads', 'textLabel')}
                     </p>
                 </Button>
             </div>

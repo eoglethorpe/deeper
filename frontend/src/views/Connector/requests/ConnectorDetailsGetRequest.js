@@ -1,10 +1,10 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
+import { checkVersion } from '../../../vendor/react-store/utils/common';
 import {
     createParamsForUser,
     createUrlForConnector,
 } from '../../../rest';
-import { checkVersion } from '../../../vendor/react-store/utils/common';
-
+import _ts from '../../../ts';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
@@ -17,7 +17,6 @@ export default class ConnectorDetailsGetRequest {
         const {
             setUserConnectorDetails,
             connectorDetails,
-            notificationStrings,
             isBeingCancelled,
         } = this.props;
 
@@ -56,8 +55,8 @@ export default class ConnectorDetailsGetRequest {
             if (isValueOverriden && !isBeingCancelled) {
                 notify.send({
                     type: notify.type.WARNING,
-                    title: notificationStrings('connectorTitle'),
-                    message: notificationStrings('connectorUpdateOverriden'),
+                    title: _ts('notification', 'connectorTitle'),
+                    message: _ts('notification', 'connectorUpdateOverriden'),
                     duration: notify.duration.SLOW,
                 });
             }
@@ -69,7 +68,7 @@ export default class ConnectorDetailsGetRequest {
     failure = (response) => {
         // FIXME: Handle error during isBeingCanelled
         notify.send({
-            title: this.props.notificationStrings('connectorTitle'),
+            title: _ts('notification', 'connectorTitle'),
             type: notify.type.ERROR,
             message: response.error,
             duration: notify.duration.MEDIUM,
@@ -79,9 +78,9 @@ export default class ConnectorDetailsGetRequest {
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorTitle'),
+            title: _ts('notification', 'connectorTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorGetFailure'),
+            message: _ts('notification', 'connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }

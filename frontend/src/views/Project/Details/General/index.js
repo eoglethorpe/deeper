@@ -31,12 +31,10 @@ import {
     unsetUserProjectMembershipAction,
     setUsersInformationAction,
     setProjectAction,
-
-    notificationStringsSelector,
-    projectStringsSelector,
 } from '../../../../redux';
 import schema from '../../../../schema';
 import notify from '../../../../notify';
+import _ts from '../../../../ts';
 import {
     pathNames,
     iconNames,
@@ -53,8 +51,6 @@ const propTypes = {
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setUsers: PropTypes.func.isRequired,
     className: PropTypes.string,
-    notificationStrings: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -65,8 +61,6 @@ const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     projectOptions: projectOptionsSelector(state, props),
-    notificationStrings: notificationStringsSelector(state),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -124,28 +118,28 @@ export default class ProjectGeneral extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'name',
-                label: this.props.projectStrings('tableHeaderName'),
+                label: _ts('project', 'tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.memberName, b.memberName),
             },
             {
                 key: 'email',
-                label: this.props.projectStrings('tableHeaderEmail'),
+                label: _ts('project', 'tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.memberEmail, b.memberEmail),
             },
             {
                 key: 'role',
-                label: this.props.projectStrings('tableHeaderRights'),
+                label: _ts('project', 'tableHeaderRights'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'joinedAt',
-                label: this.props.projectStrings('tableHeaderJoinedAt'),
+                label: _ts('project', 'tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.joinedAt, b.joinedAt),
@@ -155,7 +149,7 @@ export default class ProjectGeneral extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: this.props.projectStrings('tableHeaderActions'),
+                label: _ts('project', 'tableHeaderActions'),
                 order: 5,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
@@ -166,8 +160,8 @@ export default class ProjectGeneral extends React.PureComponent {
                                 key="role-change"
                                 title={
                                     isAdmin
-                                        ? this.props.projectStrings('revokeAdminRightsTitle')
-                                        : this.props.projectStrings('grantAdminRightsTitle')
+                                        ? _ts('project', 'revokeAdminRightsTitle')
+                                        : _ts('project', 'grantAdminRightsTitle')
                                 }
                                 onClick={() => this.handleToggleMemberRoleClick(row)}
                                 iconName={isAdmin ? iconNames.locked : iconNames.person}
@@ -176,7 +170,7 @@ export default class ProjectGeneral extends React.PureComponent {
                             <DangerButton
                                 smallVerticalPadding
                                 key="delete-member"
-                                title={this.props.projectStrings('deleteMemberLinkTitle')}
+                                title={_ts('project', 'deleteMemberLinkTitle')}
                                 onClick={() => this.handleDeleteMemberClick(row)}
                                 iconName={iconNames.delete}
                                 transparent
@@ -318,9 +312,9 @@ export default class ProjectGeneral extends React.PureComponent {
                         project: response,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('projectDetails'),
+                        title: _ts('notification', 'projectDetails'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('projectDetailsSuccess'),
+                        message: _ts('notification', 'projectDetailsSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -329,9 +323,9 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: this.props.notificationStrings('projectDetails'),
+                    title: _ts('notification', 'projectDetails'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('projectDetailsFailure'),
+                    message: _ts('notification', 'projectDetailsFailure'),
                     duration: notify.duration.SLOW,
                 });
                 const {
@@ -345,9 +339,9 @@ export default class ProjectGeneral extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('projectDetails'),
+                    title: _ts('notification', 'projectDetails'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('projectDetailsFatal'),
+                    message: _ts('notification', 'projectDetailsFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({

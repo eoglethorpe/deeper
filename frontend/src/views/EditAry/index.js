@@ -12,9 +12,9 @@ import {
 
     projectDetailsSelector,
     leadIdFromRouteSelector,
-    aryStringsSelector,
     editAryVersionIdSelector,
 } from '../../redux';
+import _ts from '../../ts';
 
 import LeadRequest from './requests/LeadRequest';
 import AryTemplateRequest from './requests/AryTemplateRequest';
@@ -33,7 +33,6 @@ const propTypes = {
     setAry: PropTypes.func.isRequired,
     setGeoOptions: PropTypes.func.isRequired,
 
-    aryStrings: PropTypes.func.isRequired,
     editAryVersionId: PropTypes.number,
 };
 
@@ -44,7 +43,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeLeadId: leadIdFromRouteSelector(state),
-    aryStrings: aryStringsSelector(state),
     activeProject: projectDetailsSelector(state),
     editAryVersionId: editAryVersionIdSelector(state),
 });
@@ -186,7 +184,6 @@ export default class EditAry extends React.PureComponent {
     }
 
     render() {
-        const { aryStrings } = this.props;
         const {
             pendingLead,
             pendingAryTemplate,
@@ -201,7 +198,7 @@ export default class EditAry extends React.PureComponent {
             return (
                 <div className={styles.noTemplate}>
                     <p>
-                        {aryStrings('noAryTemplateForProject')}
+                        {_ts('ary', 'noAryTemplateForProject')}
                     </p>
                 </div>
             );

@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import OrgChart from '../../../vendor/react-store/components/Visualization/OrgChart';
 import Button from '../../../vendor/react-store/components/Action/Button';
@@ -11,13 +10,12 @@ import ModalHeader from '../../../vendor/react-store/components/View/Modal/Heade
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
 
 import WidgetEmptyComponent from '../../../components/WidgetEmptyComponent';
-
-import { iconNames } from '../../../constants';
-import { afStringsSelector } from '../../../redux';
-import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import WidgetError from '../../../components/WidgetError';
+import { iconNames } from '../../../constants';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
@@ -27,7 +25,6 @@ const propTypes = {
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -35,12 +32,7 @@ const defaultProps = {
     attribute: {},
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class OrganigramTaggingList extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static propTypes = propTypes;
@@ -105,7 +97,7 @@ export default class OrganigramTaggingList extends React.PureComponent {
 
         return (
             <Modal className={styles.orgChartModal}>
-                <ModalHeader title={this.props.afStrings('organigramWidgetLabel')} />
+                <ModalHeader title={_ts('af', 'organigramWidgetLabel')} />
                 <ModalBody className={styles.body}>
                     <div className={styles.excerpt} >
                         {this.props.api.getEntryExcerpt(this.props.entryId)}
@@ -121,10 +113,10 @@ export default class OrganigramTaggingList extends React.PureComponent {
                 </ModalBody>
                 <ModalFooter>
                     <Button onClick={this.handleCancelClick} >
-                        {this.props.afStrings('cancelButtonLabel')}
+                        {_ts('af', 'cancelButtonLabel')}
                     </Button>
                     <PrimaryButton onClick={this.handleSaveClick} >
-                        {this.props.afStrings('applyButtonLabel')}
+                        {_ts('af', 'applyButtonLabel')}
                     </PrimaryButton>
                 </ModalFooter>
             </Modal>

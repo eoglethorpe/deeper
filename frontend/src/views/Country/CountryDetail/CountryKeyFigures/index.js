@@ -10,10 +10,10 @@ import TextInput from '../../../../vendor/react-store/components/Input/TextInput
 
 import {
     regionDetailSelector,
-    countriesStringsSelector,
     setRegionDetailsAction,
 } from '../../../../redux';
 import { iconNames } from '../../../../constants';
+import _ts from '../../../../ts';
 
 import styles from './styles.scss';
 
@@ -30,7 +30,6 @@ const propTypes = {
     }).isRequired,
     dataLoading: PropTypes.bool.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
-    countriesStrings: PropTypes.func.isRequired,
     countryId: PropTypes.number.isRequired,
 };
 
@@ -40,7 +39,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: regionDetailSelector(state, props),
-    countriesStrings: countriesStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -147,7 +145,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                 <div className={styles.sections} >
                     <div className={styles.section}>
                         <h3 className={styles.heading} >
-                            {this.props.countriesStrings('humanDevelopmentIndexLabel')}
+                            {_ts('countries', 'humanDevelopmentIndexLabel')}
                             <a
                                 href="http://www.hdr.undp.org/en/countries"
                                 target="_blank"
@@ -162,7 +160,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </h3>
                         <div className={styles.inputs} >
                             <TextInput
-                                label={this.props.countriesStrings('indexLabel')}
+                                label={_ts('countries', 'indexLabel')}
                                 type="number"
                                 step="any"
                                 min="0"
@@ -170,24 +168,24 @@ export default class CountryKeyFigures extends React.PureComponent {
                                 formname="keyFigures:index"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('geoRankLabel')}
+                                label={_ts('countries', 'geoRankLabel')}
                                 readOnly
                                 formname="keyFigures:geoRank"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('geoScoreLabel')}
+                                label={_ts('countries', 'geoScoreLabel')}
                                 readOnly
                                 formname="keyFigures:geoScore"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('rankLabel')}
+                                label={_ts('countries', 'rankLabel')}
                                 formname="keyFigures:rank"
                             />
                         </div>
                     </div>
                     <div className={styles.section}>
                         <h3 className={styles.heading} >
-                            {this.props.countriesStrings('underFiveMortalityLabel')}
+                            {_ts('countries', 'underFiveMortalityLabel')}
                             <a
                                 href="http://www.inform-index.org/"
                                 target="_blank"
@@ -202,12 +200,12 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </h3>
                         <div className={styles.inputs} >
                             <TextInput
-                                label={this.props.countriesStrings('u5mLabel')}
+                                label={_ts('countries', 'u5mLabel')}
                                 formname="keyFigures:u5m"
                                 type="number"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('geoScoreLabel')}
+                                label={_ts('countries', 'geoScoreLabel')}
                                 readOnly
                                 formname="keyFigures:geoScoreU5m"
                             />
@@ -215,7 +213,7 @@ export default class CountryKeyFigures extends React.PureComponent {
                     </div>
                     <div className={styles.section}>
                         <h3 className={styles.heading} >
-                            {this.props.countriesStrings('uprootedPeopleLabel')}
+                            {_ts('countries', 'uprootedPeopleLabel')}
                             <a
                                 href="http://www.inform-index.org/"
                                 target="_blank"
@@ -230,32 +228,32 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </h3>
                         <div className={styles.inputs} >
                             <TextInput
-                                label={this.props.countriesStrings('numberOfRefugeesLabel')}
+                                label={_ts('countries', 'numberOfRefugeesLabel')}
                                 formname="keyFigures:numberOfRefugees"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('percentageUprootedPeopleLabel')}
+                                label={_ts('countries', 'percentageUprootedPeopleLabel')}
                                 readOnly
                                 formname="keyFigures:percentageUprootedPeople"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('geoScoreLabel')}
+                                label={_ts('countries', 'geoScoreLabel')}
                                 readOnly
                                 formname="keyFigures:geoScoreUprooted"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('numberIdpLabel')}
+                                label={_ts('countries', 'numberIdpLabel')}
                                 formname="keyFigures:numberIdp"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('numberReturnedRefugeesLabel')}
+                                label={_ts('countries', 'numberReturnedRefugeesLabel')}
                                 formname="keyFigures:numberReturnedRefugees"
                             />
                         </div>
                     </div>
                     <div className={styles.section}>
                         <h3 className={styles.heading} >
-                            {this.props.countriesStrings('informScoreLabel')}
+                            {_ts('countries', 'informScoreLabel')}
                             <a
                                 href="http://www.hdr.undp.org/en/countries"
                                 target="_blank"
@@ -270,23 +268,23 @@ export default class CountryKeyFigures extends React.PureComponent {
                         </h3>
                         <div className={styles.inputs} >
                             <TextInput
-                                label={this.props.countriesStrings('riskClassLabel')}
+                                label={_ts('countries', 'riskClassLabel')}
                                 formname="keyFigures:riskClass"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('informRiskIndexLabel')}
+                                label={_ts('countries', 'informRiskIndexLabel')}
                                 formname="keyFigures:informRiskIndex"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('hazardAndExposureLabel')}
+                                label={_ts('countries', 'hazardAndExposureLabel')}
                                 formname="keyFigures:hazardAndExposure"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('vulnerabilityLabel')}
+                                label={_ts('countries', 'vulnerabilityLabel')}
                                 formname="keyFigures:vulnerability"
                             />
                             <TextInput
-                                label={this.props.countriesStrings('lackOfCopingCapacityLabel')}
+                                label={_ts('countries', 'lackOfCopingCapacityLabel')}
                                 formname="keyFigures:lackOfCopingCapacity"
                             />
                         </div>

@@ -5,7 +5,7 @@ import {
     createParamsForConnectorPatch,
     createUrlForConnector,
 } from '../../../rest';
-
+import _ts from '../../../ts';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
@@ -36,9 +36,9 @@ export default class ConnectorPatchRequest {
                 connectorId: formattedConnector.id,
             });
             notify.send({
-                title: this.props.notificationStrings('connectorTitle'),
+                title: _ts('notification', 'connectorTitle'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('connectorPatchSuccess'),
+                message: _ts('notification', 'connectorPatchSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -56,7 +56,7 @@ export default class ConnectorPatchRequest {
 
     fatal = () => {
         this.props.setConnectorError({
-            faramErrors: { $internal: [this.props.connectorStrings('connectorPatchFailure')] },
+            faramErrors: { $internal: [_ts('connector', 'connectorPatchFailure')] },
             connectorId: this.props.connectorId,
         });
     }

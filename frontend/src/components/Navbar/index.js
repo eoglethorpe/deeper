@@ -27,9 +27,8 @@ import {
     activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserProjectsSelector,
-
-    commonStringsSelector,
 } from '../../redux';
+import _ts from '../../ts';
 
 import {
     pathNames,
@@ -48,7 +47,6 @@ const mapStateToProps = state => ({
     activeCountry: activeCountryIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     userProjects: currentUserProjectsSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -72,7 +70,6 @@ const propTypes = {
     location: PropTypes.shape({
         pathname: PropTypes.string,
     }).isRequired,
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -252,10 +249,10 @@ export default class Navbar extends React.PureComponent {
                         path={logo}
                     />
                     <div className={styles.title}>
-                        {this.props.commonStrings('deepLabel')}
+                        {_ts('common', 'deepLabel')}
                     </div>
                     <span className={styles.betaLabel}>
-                        {this.props.commonStrings('betaLabel')}
+                        {_ts('common', 'betaLabel')}
                     </span>
                 </Link>
 
@@ -269,7 +266,7 @@ export default class Navbar extends React.PureComponent {
                                 labelSelector={Navbar.projectLabelSelector}
                                 onChange={this.handleProjectChange}
                                 options={userProjects}
-                                placeholder={this.props.commonStrings('selectEventPlaceholder')}
+                                placeholder={_ts('common', 'selectEventPlaceholder')}
                                 showHintAndError={false}
                                 showLabel={false}
                                 className={styles.projectSelectInput}

@@ -6,9 +6,10 @@ import {
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * props: setState, setUsersMembership, onModalClose, notificationStrings, userStrings
+ * props: setState, setUsersMembership, onModalClose
 */
 
 export default class MembershipPostRequest {
@@ -24,9 +25,9 @@ export default class MembershipPostRequest {
                 userGroupId,
             });
             notify.send({
-                title: this.props.notificationStrings('userMembershipCreate'),
+                title: _ts('notification', 'userMembershipCreate'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('userMembershipCreateSuccess'),
+                message: _ts('notification', 'userMembershipCreateSuccess'),
                 duration: notify.duration.MEDIUM,
             });
             this.props.onModalClose();
@@ -42,7 +43,7 @@ export default class MembershipPostRequest {
 
     fatal = () => {
         this.props.setState({
-            faramErrors: { $internal: [this.props.userStrings('addMemberErrorText')] },
+            faramErrors: { $internal: [_ts('user', 'addMemberErrorText')] },
         });
     }
 

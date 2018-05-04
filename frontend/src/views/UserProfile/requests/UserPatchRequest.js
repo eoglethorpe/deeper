@@ -6,6 +6,7 @@ import {
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
+import _ts from '../../../ts';
 
 export default class UserPatchRequest {
     constructor(props) {
@@ -35,9 +36,9 @@ export default class UserPatchRequest {
                         information: response,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('userProfileEdit'),
+                        title: _ts('notification', 'userProfileEdit'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('userEditSuccess'),
+                        message: _ts('notification', 'userEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.handleModalClose();
@@ -47,9 +48,9 @@ export default class UserPatchRequest {
             })
             .failure((response) => {
                 notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
+                    title: _ts('notification', 'userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditFailure'),
+                    message: _ts('notification', 'userEditFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
@@ -57,9 +58,9 @@ export default class UserPatchRequest {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
+                    title: _ts('notification', 'userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditFatal'),
+                    message: _ts('notification', 'userEditFatal'),
                     duration: notify.duration.MEDIUM,
                 });
                 this.props.setState({

@@ -1,13 +1,13 @@
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
+
 import {
     createParamsForConnectorCreate,
     alterResponseErrorToFaramError,
     urlForConnectors,
 } from '../../../rest';
-import { reverseRoute } from '../../../vendor/react-store/utils/common';
-
 import { pathNames } from '../../../constants';
-
+import _ts from '../../../ts';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
@@ -36,9 +36,9 @@ export default class ConnectorCreateRequest {
             this.props.addUserConnector({ connector });
 
             notify.send({
-                title: this.props.notificationStrings('connectorCreateTitle'),
+                title: _ts('notification', 'connectorCreateTitle'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('connectorCreateSuccess'),
+                message: _ts('notification', 'connectorCreateSuccess'),
                 duration: notify.duration.MEDIUM,
             });
             this.props.setState({
@@ -62,7 +62,7 @@ export default class ConnectorCreateRequest {
 
     fatal = () => {
         this.props.setState({
-            faramErrors: { $internal: [this.props.connectorStrings('connectorCreateFailure')] },
+            faramErrors: { $internal: [_ts('connector', 'connectorCreateFailure')] },
         });
     }
 

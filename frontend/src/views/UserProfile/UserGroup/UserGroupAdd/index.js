@@ -16,9 +16,8 @@ import LoadingAnimation from '../../../../vendor/react-store/components/View/Loa
 import {
     activeUserSelector,
     setUserGroupAction,
-    notificationStringsSelector,
-    userStringsSelector,
 } from '../../../../redux';
+import _ts from '../../../../ts';
 
 import UserGroupPostRequest from '../../requests/UserGroupPostRequest';
 
@@ -28,8 +27,6 @@ const propTypes = {
     handleModalClose: PropTypes.func.isRequired,
     setUserGroup: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -37,8 +34,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     activeUser: activeUserSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -79,7 +74,6 @@ export default class UserGroupAdd extends React.PureComponent {
         }
         const userGroupCreateRequest = new UserGroupPostRequest({
             setUserGroup: this.props.setUserGroup,
-            notificationStrings: this.props.notificationStrings,
             handleModalClose: this.props.handleModalClose,
             setState: v => this.setState(v),
         });
@@ -133,20 +127,20 @@ export default class UserGroupAdd extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors faramElement />
                 <TextInput
-                    label={this.props.userStrings('addUserGroupModalLabel')}
+                    label={_ts('user', 'addUserGroupModalLabel')}
                     faramElementName="title"
-                    placeholder={this.props.userStrings('addUserGroupModalPlaceholder')}
+                    placeholder={_ts('user', 'addUserGroupModalPlaceholder')}
                     autoFocus
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.handleFormClose}>
-                        {this.props.userStrings('modalCancel')}
+                        {_ts('user', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {this.props.userStrings('modalCreate')}
+                        {_ts('user', 'modalCreate')}
                     </PrimaryButton>
                 </div>
             </Faram>

@@ -16,9 +16,9 @@ import {
     setActiveProjectAction,
     setActiveCountryAction,
     setRouteParamsAction,
-    pageTitleStringsSelector,
 } from '../redux';
 import { pathNames } from '../constants';
+import _ts from '../ts';
 
 const propTypes = {
     match: PropTypes.shape({
@@ -40,8 +40,6 @@ const propTypes = {
     activeProjectId: PropTypes.number,
     activeCountryId: PropTypes.number,
     setRouteParams: PropTypes.func.isRequired,
-
-    pageTitleStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -52,7 +50,6 @@ const defaultProps = {
 const mapStateToProps = state => ({
     activeProjectId: activeProjectIdFromStateSelector(state),
     activeCountryId: activeCountryIdFromStateSelector(state),
-    pageTitleStrings: pageTitleStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -192,12 +189,11 @@ class RouteSynchronizer extends React.PureComponent {
     render() {
         const {
             match,
-            pageTitleStrings,
             ...otherProps
         } = this.props;
 
         const titleKey = getKeyByValue(pathNames, match.path);
-        const title = pageTitleStrings(titleKey);
+        const title = _ts('pageTitle', titleKey);
         return (
             <Fragment>
                 <Helmet>

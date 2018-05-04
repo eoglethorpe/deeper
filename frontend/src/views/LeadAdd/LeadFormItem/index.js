@@ -22,7 +22,6 @@ import {
     addLeadViewLeadChangeAction,
     addLeadViewCopyAllBelowAction,
     addLeadViewCopyAllAction,
-    leadsStringsSelector,
 } from '../../../redux';
 import {
     LEAD_TYPE,
@@ -32,6 +31,7 @@ import {
     urlForWebInfo,
     createParamsForWebInfo,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 import LeadForm from './LeadForm';
 import styles from './styles.scss';
@@ -49,14 +49,9 @@ const propTypes = {
     addLeadViewCopyAllBelow: PropTypes.func.isRequired,
     addLeadViewCopyAll: PropTypes.func.isRequired,
 
-    leadsStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
 };
-
-const mapStateToProps = state => ({
-    leadsStrings: leadsStringsSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
@@ -69,7 +64,7 @@ const APPLY_MODE = {
     allBelow: 'allBelow',
 };
 
-@connect(mapStateToProps, mapDispatchToProps, null, { withRef: true })
+@connect(undefined, mapDispatchToProps, null, { withRef: true })
 export default class LeadFormItem extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -302,7 +297,7 @@ export default class LeadFormItem extends React.PureComponent {
                                 />
                             ) : (
                                 <div className={styles.previewText}>
-                                    {this.props.leadsStrings('sourcePreview')}
+                                    {_ts('leads', 'sourcePreview')}
                                 </div>
                             )
                         }
@@ -316,13 +311,13 @@ export default class LeadFormItem extends React.PureComponent {
                                 <InternalGallery
                                     className={styles.galleryFile}
                                     galleryId={values.attachment && values.attachment.id}
-                                    notFoundMessage={this.props.leadsStrings('leadFileNotFound')}
+                                    notFoundMessage={_ts('leads', 'leadFileNotFound')}
                                     showUrl
                                 />
                             ) :
                                 <div className={styles.previewText}>
                                     <h1>
-                                        {this.props.leadsStrings('previewNotAvailable')}
+                                        {_ts('leads', 'previewNotAvailable')}
                                     </h1>
                                 </div>
                         }
@@ -341,7 +336,6 @@ export default class LeadFormItem extends React.PureComponent {
             addLeadViewLeadChange, // eslint-disable-line no-unused-vars
             addLeadViewCopyAllBelow, // eslint-disable-line no-unused-vars
             addLeadViewCopyAll, // eslint-disable-line no-unused-vars
-            leadsStrings,
             ...otherProps
         } = this.props;
 
@@ -385,8 +379,8 @@ export default class LeadFormItem extends React.PureComponent {
                             <p>
                                 {
                                     applyMode === APPLY_MODE.all
-                                        ? leadsStrings('applyToAll')
-                                        : leadsStrings('applyToAllBelow')
+                                        ? _ts('leads', 'applyToAll')
+                                        : _ts('leads', 'applyToAllBelow')
                                 }
                             </p>
                         </Confirm>

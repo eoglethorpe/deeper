@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
-import { connect } from 'react-redux';
 
 import MultiViewContainer from '../../../../vendor/react-store/components/View/MultiViewContainer';
 import FixedTabs from '../../../../vendor/react-store/components/View/FixedTabs';
@@ -10,12 +9,11 @@ import {
     LEAD_PANE_TYPE,
     leadPaneTypeMap,
 } from '../../../../entities/lead';
+import _ts from '../../../../ts';
 import SimplifiedLeadPreview from '../../../../components/SimplifiedLeadPreview';
 import LeadPreview from '../../../../components/LeadPreview';
-
 import AssistedTagging from '../../../../components/AssistedTagging';
 import ImagesGrid from '../../../../components/ImagesGrid';
-import { entryStringsSelector } from '../../../../redux';
 
 import EntriesListing from './EntriesListing';
 import styles from './styles.scss';
@@ -32,7 +30,6 @@ const propTypes = {
     onEntryDelete: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
 
-    entryStrings: PropTypes.func.isRequired,
     saveAllPending: PropTypes.bool.isRequired,
 };
 
@@ -41,11 +38,6 @@ const defaultProps = {
     widgetDisabled: false,
 };
 
-const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-});
-
-@connect(mapStateToProps, undefined)
 export default class LeftPanel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -170,21 +162,21 @@ export default class LeftPanel extends React.PureComponent {
         switch (leadPaneType) {
             case LEAD_PANE_TYPE.spreadsheet:
                 tabs = {
-                    'original-preview': this.props.entryStrings('tabularTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'original-preview': _ts('entry', 'tabularTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.image:
                 tabs = {
-                    'original-preview': this.props.entryStrings('imagesTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'original-preview': _ts('entry', 'imagesTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.text:
                 tabs = {
-                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
-                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'simplified-preview': _ts('entry', 'simplifiedTabLabel'),
+                    'assisted-tagging': _ts('entry', 'assistedTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             case LEAD_PANE_TYPE.word:
@@ -192,10 +184,10 @@ export default class LeftPanel extends React.PureComponent {
             case LEAD_PANE_TYPE.presentation:
             case LEAD_PANE_TYPE.website:
                 tabs = {
-                    'simplified-preview': this.props.entryStrings('simplifiedTabLabel'),
-                    'assisted-tagging': this.props.entryStrings('assistedTabLabel'),
-                    'original-preview': this.props.entryStrings('originalTabLabel'),
-                    'images-preview': this.props.entryStrings('imagesTabLabel'),
+                    'simplified-preview': _ts('entry', 'simplifiedTabLabel'),
+                    'assisted-tagging': _ts('entry', 'assistedTabLabel'),
+                    'original-preview': _ts('entry', 'originalTabLabel'),
+                    'images-preview': _ts('entry', 'imagesTabLabel'),
                 };
                 break;
             default:
@@ -204,7 +196,7 @@ export default class LeftPanel extends React.PureComponent {
         if (!images || images.length <= 0) {
             tabs['images-preview'] = undefined;
         }
-        tabs['entries-listing'] = this.props.entryStrings('entriesTabLabel');
+        tabs['entries-listing'] = _ts('entry', 'entriesTabLabel');
         return tabs;
     }
 
@@ -284,7 +276,7 @@ export default class LeftPanel extends React.PureComponent {
         if (!tabs) {
             return (
                 <p>
-                    {this.props.entryStrings('unrecognizedLeadMessage')}
+                    {_ts('entry', 'unrecognizedLeadMessage')}
                 </p>
             );
         }

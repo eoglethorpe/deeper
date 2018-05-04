@@ -19,10 +19,8 @@ import {
     setRegionDetailsAction,
     removeProjectRegionAction,
     addNewRegionAction,
-
-    notificationStringsSelector,
-    projectStringsSelector,
 } from '../../../../../redux';
+import _ts from '../../../../../ts';
 
 import RegionGetRequest from '../../../requests/RegionGetRequest';
 import ProjectPatchRequest from '../../../requests/ProjectPatchRequest';
@@ -51,9 +49,6 @@ const propTypes = {
     setRegionDetails: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
     onRegionClone: PropTypes.func,
-
-    notificationStrings: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -71,8 +66,6 @@ const mapStateToProps = (state, props) => ({
     activeProject: activeProjectIdFromStateSelector(state),
     projectDetails: projectDetailsSelector(state, props),
     regionDetail: regionDetailSelector(state, props),
-    notificationStrings: notificationStringsSelector(state),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -142,7 +135,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const requestForRegion = new RegionGetRequest({
             setRegionDetails: this.props.setRegionDetails,
             setState: v => this.setState(v),
-            notificationStrings: this.props.notificationStrings,
             regionDetail: this.props.regionDetail || {},
             discard,
         });
@@ -158,7 +150,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
             onRegionClone: this.props.onRegionClone,
             addNewRegion: this.props.addNewRegion,
             removeProjectRegion: this.props.removeProjectRegion,
-            notificationStrings: this.props.notificationStrings,
             projectId,
             setState: v => this.setState(v),
         });
@@ -172,8 +163,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
-            projectStrings: this.props.projectStrings,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
             projectId: this.props.activeProject,
         });
@@ -187,7 +176,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         }
         const projectPatchRequest = new ProjectPatchRequest({
             removeProjectRegion: this.props.removeProjectRegion,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.projectPatchRequest = projectPatchRequest.create(regionId, data);
@@ -234,10 +222,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     };
 
     renderCloneAndEditButton = () => {
-        const {
-            projectStrings,
-            regionDetail,
-        } = this.props;
+        const { regionDetail } = this.props;
 
         const {
             dataLoading,
@@ -245,7 +230,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         } = this.state;
 
         const isPublic = regionDetail.public;
-        const cloneAndEditButtonLabel = projectStrings('cloneEditButtonLabel');
+        const cloneAndEditButtonLabel = _ts('project', 'cloneEditButtonLabel');
 
         if (!isPublic) {
             return null;
@@ -262,10 +247,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
     }
 
     renderHeader = () => {
-        const {
-            projectStrings,
-            regionDetail,
-        } = this.props;
+        const { regionDetail } = this.props;
 
         const {
             formErrors = {},
@@ -286,7 +268,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             projectPatchPending ||
             regionDetailPatchPending;
 
-        const removeRegionButtonLabel = projectStrings('removeRegionButtonLabel');
+        const removeRegionButtonLabel = _ts('project', 'removeRegionButtonLabel');
         const CloneAndEditButton = this.renderCloneAndEditButton;
         const isPublic = regionDetail.public;
 
@@ -310,13 +292,13 @@ export default class ProjectRegionDetail extends React.PureComponent {
                                 disabled={!pristine}
                                 onClick={this.handleDiscardButtonClick}
                             >
-                                {projectStrings('discardButtonLabel')}
+                                {_ts('project', 'discardButtonLabel')}
                             </WarningButton>
                             <SuccessButton
                                 type="submit"
                                 disabled={!pristine}
                             >
-                                {projectStrings('saveButtonLabel')}
+                                {_ts('project', 'saveButtonLabel')}
                             </SuccessButton>
                         </Form>
                     }
@@ -382,7 +364,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const {
             countryId,
             projectDetails,
-            projectStrings,
         } = this.props;
         const {
             formValues = {},
@@ -401,7 +382,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             >
                 <p>
                     {
-                        projectStrings('confirmRemoveText', {
+                        _ts('project', 'confirmRemoveText', {
                             title: formValues.title,
                             projectTitle: projectDetails.title,
                         })
@@ -415,7 +396,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const {
             countryId,
             activeProject,
-            projectStrings,
         } = this.props;
 
         const {
@@ -434,7 +414,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {projectStrings('confirmCloneText', { title: formValues.title })}
+                    {_ts('project', 'confirmCloneText', { title: formValues.title })}
                 </p>
             </Confirm>
         );

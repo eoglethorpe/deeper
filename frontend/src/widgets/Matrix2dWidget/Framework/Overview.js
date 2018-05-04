@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import ColorInput from '../../../vendor/react-store/components/Input/ColorInput';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
@@ -14,18 +13,17 @@ import ModalFooter from '../../../vendor/react-store/components/View/Modal/Foote
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
-
-import { iconNames } from '../../../constants';
-
+import update from '../../../vendor/react-store/utils/immutable-update';
+import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import {
     randomString,
     getColorOnBgColor,
 } from '../../../vendor/react-store/utils/common';
 
-import update from '../../../vendor/react-store/utils/immutable-update';
-import { afStringsSelector } from '../../../redux';
-import BoundError from '../../../vendor/react-store/components/General/BoundError';
+import _ts from '../../../ts';
 import WidgetError from '../../../components/WidgetError';
+import { iconNames } from '../../../constants';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -33,7 +31,6 @@ const propTypes = {
     editAction: PropTypes.func.isRequired,
     onChange: PropTypes.func.isRequired,
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -44,14 +41,9 @@ const defaultProps = {
     },
 };
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 const emptyList = [];
 
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class Matrix2dOverview extends React.PureComponent {
     static rowKeyExtractor = d => d.id;
     static propTypes = propTypes;
@@ -491,10 +483,9 @@ export default class Matrix2dOverview extends React.PureComponent {
     }
 
     renderDimensionTypes = () => {
-        const { afStrings } = this.props;
         const dimensionTypes = [
-            afStrings('dimensionXLabel'),
-            afStrings('dimensionYLabel'),
+            _ts('af', 'dimensionXLabel'),
+            _ts('af', 'dimensionYLabel'),
         ];
 
         return (
@@ -514,8 +505,7 @@ export default class Matrix2dOverview extends React.PureComponent {
             classNames.push(styles.active);
         }
 
-        const { afStrings } = this.props;
-        const untitled = afStrings('untitledDimensionTitle');
+        const untitled = _ts('af', 'untitledDimensionTitle');
 
         return (
             <button
@@ -585,14 +575,14 @@ export default class Matrix2dOverview extends React.PureComponent {
         >
             <div className={styles.inputs}>
                 <TextInput
-                    label={this.props.afStrings('title')}
+                    label={_ts('af', 'title')}
                     value={data.title}
                     showHintAndError={false}
                     onChange={(value) => { this.handleSubdimensionInputValueChange(i, 'title', value); }}
                     autoFocus
                 />
                 <TextInput
-                    label={this.props.afStrings('tooltip')}
+                    label={_ts('af', 'tooltip')}
                     value={data.tooltip}
                     showHintAndError={false}
                     onChange={(value) => { this.handleSubdimensionInputValueChange(i, 'tooltip', value); }}
@@ -616,15 +606,13 @@ export default class Matrix2dOverview extends React.PureComponent {
             activeDimensionIndex,
         } = this.state;
 
-        const { afStrings } = this.props;
-
         const dimensionData = [data.sectors, data.dimensions];
         const dimension = dimensionData[activeDimensionTypeIndex][activeDimensionIndex];
 
         if (!dimension) {
             return (
                 <div className={styles.empty}>
-                    { afStrings('empty') }
+                    { _ts('af', 'empty') }
                 </div>
             );
         }
@@ -635,11 +623,11 @@ export default class Matrix2dOverview extends React.PureComponent {
         const showColorConditions = [false, true];
         const showColorInput = showColorConditions[activeDimensionTypeIndex];
 
-        const titleInputLabel = afStrings('title');
-        const tooltipInputLabel = afStrings('tooltip');
-        const colorInputLabel = afStrings('color');
-        const subdimensionsTitle = afStrings('subdimensions');
-        const addSubdimensionButtonTitle = afStrings('addSubdimensionButtonTitle');
+        const titleInputLabel = _ts('af', 'title');
+        const tooltipInputLabel = _ts('af', 'tooltip');
+        const colorInputLabel = _ts('af', 'color');
+        const subdimensionsTitle = _ts('af', 'subdimensions');
+        const addSubdimensionButtonTitle = _ts('af', 'addSubdimensionButtonTitle');
 
         return (
             <div className={styles.dimensionDetail}>
@@ -717,12 +705,11 @@ export default class Matrix2dOverview extends React.PureComponent {
         const DimensionList = this.renderDimensionList;
         const DimensionDetail = this.renderDimensionDetail;
 
-        const { afStrings } = this.props;
-        const editModalTitle = afStrings('editModalTitle');
-        const addDimensionButtonTitle = afStrings('addDimensionButtonTitle');
-        const titleInputLabel = afStrings('title');
-        const cancelButtonTitle = afStrings('cancelButtonTitle');
-        const saveButtonTitle = afStrings('saveButtonTitle');
+        const editModalTitle = _ts('af', 'editModalTitle');
+        const addDimensionButtonTitle = _ts('af', 'addDimensionButtonTitle');
+        const titleInputLabel = _ts('af', 'title');
+        const cancelButtonTitle = _ts('af', 'cancelButtonTitle');
+        const saveButtonTitle = _ts('af', 'saveButtonTitle');
 
         return (
             <Modal className={styles.overviewEditModal}>

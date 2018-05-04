@@ -12,10 +12,8 @@ import Form, {
 import {
     regionDetailSelector,
     setRegionDetailsAction,
-    countriesStringsSelector,
-    notificationStringsSelector,
-    commonStringsSelector,
 } from '../../redux';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
@@ -34,7 +32,6 @@ const propTypes = {
     countryId: PropTypes.number.isRequired,
     projectId: PropTypes.number,
     dataLoading: PropTypes.bool,
-    countriesStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -51,9 +48,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     regionDetail: regionDetailSelector(state, props),
-    countriesStrings: countriesStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -171,7 +165,7 @@ export default class RegionDetail extends React.PureComponent {
                 { dataLoading && <LoadingAnimation /> }
                 <header className={styles.header}>
                     <h4 className={styles.heading} >
-                        {this.props.countriesStrings('regionGeneralInfoLabel')}
+                        {_ts('countries', 'regionGeneralInfoLabel')}
                     </h4>
                 </header>
                 <NonFieldErrors
@@ -181,50 +175,50 @@ export default class RegionDetail extends React.PureComponent {
                 <div className={styles.inputContainer}>
                     <TextInput
                         formname="code"
-                        label={this.props.countriesStrings('countryCodeLabel')}
-                        placeholder={this.props.countriesStrings('countryCodePlaceholder')}
+                        label={_ts('countries', 'countryCodeLabel')}
+                        placeholder={_ts('countries', 'countryCodePlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="title"
-                        label={this.props.countriesStrings('countryNameLabel')}
-                        placeholder={this.props.countriesStrings('countryNamePlaceholder')}
+                        label={_ts('countries', 'countryNameLabel')}
+                        placeholder={_ts('countries', 'countryNamePlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:wbRegion"
-                        label={this.props.countriesStrings('wbRegionLabel')}
-                        placeholder={this.props.countriesStrings('wbRegionPlaceholer')}
+                        label={_ts('countries', 'wbRegionLabel')}
+                        placeholder={_ts('countries', 'wbRegionPlaceholer')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:wbIncomeRegion"
-                        label={this.props.countriesStrings('wbIncomeRegionLabel')}
-                        placeholder={this.props.countriesStrings('wbIncomeRegionPlaceholder')}
+                        label={_ts('countries', 'wbIncomeRegionLabel')}
+                        placeholder={_ts('countries', 'wbIncomeRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:ochaRegion"
-                        label={this.props.countriesStrings('ochaRegionLabel')}
-                        placeholder={this.props.countriesStrings('ochaRegionPlaceholder')}
+                        label={_ts('countries', 'ochaRegionLabel')}
+                        placeholder={_ts('countries', 'ochaRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:echoRegion"
-                        label={this.props.countriesStrings('echoRegionLabel')}
-                        placeholder={this.props.countriesStrings('echoRegionPlaceholder')}
+                        label={_ts('countries', 'echoRegionLabel')}
+                        placeholder={_ts('countries', 'echoRegionPlaceholder')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:unGeoRegion"
-                        label={this.props.countriesStrings('unGeoRegionLabel')}
-                        placeholder={this.props.countriesStrings('unGeoRegionPlaceholer')}
+                        label={_ts('countries', 'unGeoRegionLabel')}
+                        placeholder={_ts('countries', 'unGeoRegionPlaceholer')}
                         className={styles.textInput}
                     />
                     <TextInput
                         formname="regionalGroups:unGeoSubregion"
-                        label={this.props.countriesStrings('unGeoSubregionLabel')}
-                        placeholder={this.props.countriesStrings('unGeoSubregionPlaceholer')}
+                        label={_ts('countries', 'unGeoSubregionLabel')}
+                        placeholder={_ts('countries', 'unGeoSubregionPlaceholer')}
                         className={styles.textInput}
                     />
                 </div>

@@ -6,9 +6,10 @@ import {
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
+import _ts from '../../../ts';
 
 /*
- * props: setState, setUserGroup, handleModalClose, userStrings, notificationStrings
+ * props: setState, setUserGroup, handleModalClose
 */
 export default class UserGroupPatchRequest {
     constructor(props) {
@@ -22,9 +23,9 @@ export default class UserGroupPatchRequest {
                 userGroup: response,
             });
             notify.send({
-                title: this.props.notificationStrings('userGroupEdit'),
+                title: _ts('notification', 'userGroupEdit'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('userGroupEditSuccess'),
+                message: _ts('notification', 'userGroupEditSuccess'),
                 duration: notify.duration.MEDIUM,
             });
             this.props.handleModalClose();
@@ -40,7 +41,7 @@ export default class UserGroupPatchRequest {
 
     fatal = () => {
         this.props.setState({
-            faramErrors: { $internal: [this.props.userStrings('userGroupPatchFatal')] },
+            faramErrors: { $internal: [_ts('user', 'userGroupPatchFatal')] },
         });
     }
 

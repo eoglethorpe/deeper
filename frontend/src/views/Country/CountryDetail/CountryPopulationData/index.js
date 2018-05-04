@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../vendor/react-store/components/Action/Button/PrimaryButton';
@@ -9,21 +7,15 @@ import Form from '../../../../vendor/react-store/components/Input/Form';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 
-import { countriesStringsSelector } from '../../../../redux';
+import _ts from '../../../../ts';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    countriesStrings: PropTypes.func.isRequired,
 };
 const defaultProps = {
 };
 
-const mapStateToProps = state => ({
-    countriesStrings: countriesStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class CountryPopulationData extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -109,27 +101,27 @@ export default class CountryPopulationData extends React.PureComponent {
                     <NonFieldErrors formerror="" />
                     <div className={styles.actionButtons}>
                         <DangerButton onClick={this.handleFormCancel}>
-                            {this.props.countriesStrings('cancelButtonLabel')}
+                            {_ts('countries', 'cancelButtonLabel')}
                         </DangerButton>
                         <PrimaryButton
                             disabled={pending || !pristine}
                             type="submit"
                         >
-                            {this.props.countriesStrings('saveChangesButtonLabel')}
+                            {_ts('countries', 'saveChangesButtonLabel')}
                         </PrimaryButton>
                     </div>
                     <div className={styles.populationContainer}>
                         <TextInput
-                            label={this.props.countriesStrings('totalPopulationLabel')}
+                            label={_ts('countries', 'totalPopulationLabel')}
                             className={styles.population}
-                            placeholder={this.props.countriesStrings('totalPopulationPlaceholder')}
+                            placeholder={_ts('countries', 'totalPopulationPlaceholder')}
                             formname="population"
                         />
                         <TextInput
-                            label={this.props.countriesStrings('sourceLabel')}
+                            label={_ts('countries', 'sourceLabel')}
                             className={styles.source}
                             formname="source"
-                            placeholder={this.props.countriesStrings('sourcePlaceholder')}
+                            placeholder={_ts('countries', 'sourcePlaceholder')}
                         />
                     </div>
                 </Form>

@@ -17,9 +17,8 @@ import {
     markForDeleteEntryAction,
 
     setActiveEntryAction,
-    entryStringsSelector,
-    afStringsSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
 import { entryAccessor } from '../../../entities/entry';
 
@@ -28,8 +27,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     leadDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    entryStrings: PropTypes.func.isRequired,
-    afStrings: PropTypes.func.isRequired,
     setActiveEntry: PropTypes.func.isRequired,
     markForDeleteEntry: PropTypes.func.isRequired,
 
@@ -44,8 +41,6 @@ const propTypes = {
 
 const mapStateToProps = (state, props) => ({
     leadDetails: editEntryCurrentLeadSelector(state, props),
-    entryStrings: entryStringsSelector(state),
-    afStrings: afStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -170,7 +165,7 @@ export default class List extends React.PureComponent {
             .filter(widget => widget.tagging.listComponent)
             .map(widget => ({
                 id: widget.id,
-                title: this.props.afStrings(widget.title),
+                title: _ts('af', widget.title),
                 listComponent: widget.tagging.listComponent,
             }));
 
@@ -230,7 +225,7 @@ export default class List extends React.PureComponent {
     renderActionButtons = (item, entryId) => (
         <div className="apply-buttons">
             <AccentButton
-                title={this.props.entryStrings('applyAllButtonTitle')}
+                title={_ts('entry', 'applyAllButtonTitle')}
                 onClick={() =>
                     this.setState({
                         showApplyModal: true,
@@ -244,7 +239,7 @@ export default class List extends React.PureComponent {
                 iconName={iconNames.applyAll}
             />
             <WarningButton
-                title={this.props.entryStrings('applyAllBelowButtonTitle')}
+                title={_ts('entry', 'applyAllBelowButtonTitle')}
                 onClick={() =>
                     this.setState({
                         showApplyModal: true,
@@ -285,14 +280,14 @@ export default class List extends React.PureComponent {
                         to="#/overview"
                         replace
                     >
-                        {this.props.entryStrings('gotoOverviewButtonLabel')}
+                        {_ts('entry', 'gotoOverviewButtonLabel')}
                     </Link>
                     <SuccessButton
                         onClick={onSaveAll}
                         disabled={saveAllDisabled}
                         className={styles.saveButton}
                     >
-                        {this.props.entryStrings('saveButtonLabel')}
+                        {_ts('entry', 'saveButtonLabel')}
                     </SuccessButton>
                 </div>
             </header>
@@ -366,10 +361,7 @@ export default class List extends React.PureComponent {
     }
 
     render() {
-        const {
-            entries,
-            entryStrings,
-        } = this.props;
+        const { entries } = this.props;
         const {
             showApplyModal,
             applyMode,
@@ -390,7 +382,7 @@ export default class List extends React.PureComponent {
                     (!entries || entries.length <= 0) ? (
                         <div className={styles.noEntryWrapper}>
                             <h2>
-                                {entryStrings('noEntryFound')}
+                                {_ts('entry', 'noEntryFound')}
                             </h2>
                         </div>
                     ) : (
@@ -407,8 +399,8 @@ export default class List extends React.PureComponent {
                     <p>
                         {
                             applyMode === APPLY_MODE.all
-                                ? entryStrings('applyToAll')
-                                : entryStrings('applyToAllBelow')
+                                ? _ts('entry', 'applyToAll')
+                                : _ts('entry', 'applyToAllBelow')
                         }
                     </p>
                 </Confirm>

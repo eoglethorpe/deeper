@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import update from '../../vendor/react-store/utils/immutable-update';
 import Modal from '../../vendor/react-store/components/View/Modal';
@@ -17,7 +16,7 @@ import DangerButton from '../../vendor/react-store/components/Action/Button/Dang
 import FaramElement from '../../vendor/react-store/components/Input/Faram/FaramElement';
 
 import WidgetEmptyComponent from '../WidgetEmptyComponent';
-import { entryStringsSelector } from '../../redux';
+import _ts from '../../ts';
 
 import { iconNames } from '../../constants';
 import RegionMap from '../RegionMap';
@@ -32,7 +31,6 @@ const propTypes = {
     disabled: PropTypes.bool.isRequired,
     hideList: PropTypes.bool,
     geoOptions: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -47,12 +45,7 @@ const defaultProps = {
 const emptyList = [];
 const emptyObject = {};
 
-const mapStateToProps = state => ({
-    entryStrings: entryStringsSelector(state),
-});
-
 @FaramElement('input')
-@connect(mapStateToProps)
 export default class GeoSelection extends React.PureComponent {
     static valueKeyExtractor = d => d.key;
     static adminLevelKeySelector = d => d.title;
@@ -383,21 +376,21 @@ export default class GeoSelection extends React.PureComponent {
                                     <SelectInput
                                         hideClearButton
                                         keySelector={this.regionKeySelector}
-                                        label={this.props.entryStrings('regionSelectTitle')}
+                                        label={_ts('entry', 'regionSelectTitle')}
                                         labelSelector={this.regionLabelSelector}
                                         onChange={this.handleRegionSelection}
                                         options={regions}
                                         optionsIdentifier="region-select-options"
-                                        placeholder={this.props.entryStrings('regionSelectPlaceholder')}
+                                        placeholder={_ts('entry', 'regionSelectPlaceholder')}
                                         showHintAndError={false}
                                         value={selectedRegion}
                                     />
                                     <MultiSelectInput
-                                        label={this.props.entryStrings('locationSelectTitle')}
+                                        label={_ts('entry', 'locationSelectTitle')}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
                                         optionsIdentifier="location-select-options"
-                                        placeholder={this.props.entryStrings('locationSelectPlaceholder')}
+                                        placeholder={_ts('entry', 'locationSelectPlaceholder')}
                                         showHintAndError={false}
                                         className={styles.mapSelectionSelect}
                                         value={values[selectedRegion]}
@@ -423,10 +416,10 @@ export default class GeoSelection extends React.PureComponent {
                         </ModalBody>
                         <ModalFooter>
                             <Button onClick={this.handleModalCancelButtonClick} >
-                                {this.props.entryStrings('cancelGeoSelectionButtonLabel')}
+                                {_ts('entry', 'cancelGeoSelectionButtonLabel')}
                             </Button>
                             <PrimaryButton onClick={this.handleModalSetButtonClick} >
-                                {this.props.entryStrings('setGeoSelectionButtonLabel')}
+                                {_ts('entry', 'setGeoSelectionButtonLabel')}
                             </PrimaryButton>
                         </ModalFooter>
                     </Modal>

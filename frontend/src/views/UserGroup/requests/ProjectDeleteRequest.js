@@ -4,9 +4,10 @@ import {
     createParamsForProjectDelete,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * props: setState, unSetProject, notificationStrings
+ * props: setState, unSetProject
 */
 
 export default class ProjectDeleteRequest {
@@ -21,9 +22,9 @@ export default class ProjectDeleteRequest {
                 userId,
             });
             notify.send({
-                title: this.props.notificationStrings('userProjectDelete'),
+                title: _ts('notification', 'userProjectDelete'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('userProjectDeleteSuccess'),
+                message: _ts('notification', 'userProjectDeleteSuccess'),
                 duration: notify.duration.MEDIUM,
             });
             this.props.setState({ showDeleteProjectModal: false });
@@ -35,9 +36,9 @@ export default class ProjectDeleteRequest {
     failure = (response) => {
         console.warn('FAILURE:', response);
         notify.send({
-            title: this.props.notificationStrings('userProjectDelete'),
+            title: _ts('notification', 'userProjectDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userProjectDeleteFailure'),
+            message: _ts('notification', 'userProjectDeleteFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -45,9 +46,9 @@ export default class ProjectDeleteRequest {
     fatal = (response) => {
         console.warn('FATAL:', response);
         notify.send({
-            title: this.props.notificationStrings('userProjectDelete'),
+            title: _ts('notification', 'userProjectDelete'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userProjectDeleteFailure'),
+            message: _ts('notification', 'userProjectDeleteFailure'),
             duration: notify.duration.SLOW,
         });
     }

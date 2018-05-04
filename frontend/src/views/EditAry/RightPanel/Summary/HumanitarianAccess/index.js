@@ -6,20 +6,19 @@ import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
 
-import TabularInputs from '../TabularInputs';
-import styles from './styles.scss';
-
 import {
     priorityIssuesSelector,
     affectedLocationsSelector,
-    assessmentSummaryStringsSelector,
 } from '../../../../../redux';
+import _ts from '../../../../../ts';
+
+import TabularInputs from '../TabularInputs';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
     priorityIssues: PropTypes.arrayOf(PropTypes.object).isRequired,
     affectedLocations: PropTypes.arrayOf(PropTypes.object).isRequired,
-    assessmentSummaryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -29,7 +28,6 @@ const defaultProps = {
 const mapStateToProps = state => ({
     priorityIssues: priorityIssuesSelector(state),
     affectedLocations: affectedLocationsSelector(state),
-    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -44,23 +42,22 @@ export default class HumanitarianAccess extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { assessmentSummaryStrings } = props;
         this.rowFieldTitles = [
-            assessmentSummaryStrings('priorityIssue'),
-            assessmentSummaryStrings('affectedLocation'),
+            _ts('assessmentSummary', 'priorityIssue'),
+            _ts('assessmentSummary', 'affectedLocation'),
         ];
 
         this.columnFieldTitles = [
             '',
-            assessmentSummaryStrings('limitedAccessPopulation'),
-            assessmentSummaryStrings('restrictedAccessPopulation'),
-            assessmentSummaryStrings('humanitarianAccessPopulation'),
+            _ts('assessmentSummary', 'limitedAccessPopulation'),
+            _ts('assessmentSummary', 'restrictedAccessPopulation'),
+            _ts('assessmentSummary', 'humanitarianAccessPopulation'),
         ];
 
         this.rowSubFieldTitles = [
-            assessmentSummaryStrings('rank1Title'),
-            assessmentSummaryStrings('rank2Title'),
-            assessmentSummaryStrings('rank3Title'),
+            _ts('assessmentSummary', 'rank1Title'),
+            _ts('assessmentSummary', 'rank2Title'),
+            _ts('assessmentSummary', 'rank3Title'),
         ];
     }
 

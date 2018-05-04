@@ -17,8 +17,8 @@ import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
 import update from '../../vendor/react-store/utils/immutable-update';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import List from '../../vendor/react-store/components/View/List';
-
 import BoundError from '../../vendor/react-store/components/General/BoundError';
+
 import AppError from '../../components/AppError';
 import {
     leadFilterOptionsSelector,
@@ -34,9 +34,6 @@ import {
     addLeadViewRemoveSavedLeadsAction,
 
     addLeadViewAddLeadsAction,
-    leadsStringsSelector,
-    notificationStringsSelector,
-    commonStringsSelector,
     addLeadViewIsFilterEmptySelector,
     routeStateSelector,
 } from '../../redux';
@@ -46,6 +43,7 @@ import {
     calcLeadState,
     leadAccessor,
 } from '../../entities/lead';
+import _ts from '../../ts';
 import notify from '../../notify';
 
 import DropboxRequest from './requests/DropboxRequest';
@@ -69,9 +67,6 @@ const mapStateToProps = state => ({
     filters: addLeadViewFiltersSelector(state),
     routeState: routeStateSelector(state),
 
-    leadsStrings: leadsStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    commonStrings: commonStringsSelector(state),
     isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
 });
 
@@ -96,9 +91,6 @@ const propTypes = {
     addLeadViewLeadSave: PropTypes.func.isRequired,
     addLeadViewLeadChange: PropTypes.func.isRequired,
 
-    leadsStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    commonStrings: PropTypes.func.isRequired,
     isFilterEmpty: PropTypes.bool.isRequired,
 
     routeState: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
@@ -257,16 +249,16 @@ export default class LeadAdd extends React.PureComponent {
             .postSession((totalErrors) => {
                 if (totalErrors > 0) {
                     notify.send({
-                        title: this.props.notificationStrings('leadSave'),
+                        title: _ts('notification', 'leadSave'),
                         type: notify.type.ERROR,
-                        message: this.props.notificationStrings('leadSaveFailure', { errorCount: totalErrors }),
+                        message: _ts('notification', 'leadSaveFailure', { errorCount: totalErrors }),
                         duration: notify.duration.SLOW,
                     });
                 } else {
                     notify.send({
-                        title: this.props.notificationStrings('leadSave'),
+                        title: _ts('notification', 'leadSave'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('leadSaveSuccess'),
+                        message: _ts('notification', 'leadSaveSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 }
@@ -487,7 +479,6 @@ export default class LeadAdd extends React.PureComponent {
         const fileUploadRequest = new FileUploadRequest({
             uploadCoordinator: this.uploadCoordinator,
             addLeadViewLeadChange: this.props.addLeadViewLeadChange,
-            leadsStrings: this.props.leadsStrings,
             getLeadFromId: this.getLeadFromId,
             setState: params => this.setState(params),
             getState: name => this.state[name],
@@ -602,9 +593,9 @@ export default class LeadAdd extends React.PureComponent {
         this.props.addLeadViewLeadRemove(leadId);
 
         notify.send({
-            title: this.props.notificationStrings('leadDiscard'),
+            title: _ts('notification', 'leadDiscard'),
             type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('leadDiscardSuccess'),
+            message: _ts('notification', 'leadDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -616,9 +607,9 @@ export default class LeadAdd extends React.PureComponent {
         });
 
         notify.send({
-            title: this.props.notificationStrings('leadsDiscard'),
+            title: _ts('notification', 'leadsDiscard'),
             type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('leadsDiscardSuccess'),
+            message: _ts('notification', 'leadsDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -630,9 +621,9 @@ export default class LeadAdd extends React.PureComponent {
         });
 
         notify.send({
-            title: this.props.notificationStrings('leadsDiscard'),
+            title: _ts('notification', 'leadsDiscard'),
             type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('leadsDiscardSuccess'),
+            message: _ts('notification', 'leadsDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -644,9 +635,9 @@ export default class LeadAdd extends React.PureComponent {
         });
 
         notify.send({
-            title: this.props.notificationStrings('leadsDiscard'),
+            title: _ts('notification', 'leadsDiscard'),
             type: notify.type.SUCCESS,
-            message: this.props.notificationStrings('leadsDiscardSuccess'),
+            message: _ts('notification', 'leadsDiscardSuccess'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -733,7 +724,7 @@ export default class LeadAdd extends React.PureComponent {
             <div className={styles.addLead}>
                 <Prompt
                     when={this.isSaveEnabledForAll}
-                    message={this.props.commonStrings('youHaveUnsavedChanges')}
+                    message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 <header className={styles.header}>
                     <LeadFilter />
@@ -775,7 +766,7 @@ export default class LeadAdd extends React.PureComponent {
                         addLeadViewLeads.length === 0 ?
                             (<div className={styles.nolead}>
                                 <h2>{
-                                    this.props.leadsStrings('noLeadsText')
+                                    _ts('leads', 'noLeadsText')
                                 } </h2>
                             </div>
                             ) : (
@@ -793,7 +784,7 @@ export default class LeadAdd extends React.PureComponent {
                     <p>
                         {
                             /* TODO: different message for delete modes */
-                            this.props.leadsStrings('deleteLeadConfirmText')
+                            _ts('leads', 'deleteLeadConfirmText')
                         }
                     </p>
                 </Confirm>

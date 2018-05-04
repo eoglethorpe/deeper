@@ -6,24 +6,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import {
-    tokenSelector,
-    notificationStringsSelector,
-} from '../../redux';
+import { tokenSelector } from '../../redux';
 import { sendToken } from '../../utils/browserExtension';
-
+import _ts from '../../ts';
 import notify from '../../notify';
 
 const mapStateToProps = state => ({
     token: tokenSelector(state),
-    notificationStrings: notificationStringsSelector(state),
 });
 
 const propTypes = {
     token: PropTypes.shape({
         access: PropTypes.string,
     }).isRequired,
-    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,8 +55,8 @@ export default class Export extends React.PureComponent {
             () => {
                 notify.send({
                     type: notify.type.SUCCESS,
-                    title: this.props.notificationStrings('browserExtensionSuccessTitle'),
-                    message: this.props.notificationStrings('browserExtensionSuccessMessage'),
+                    title: _ts('notification', 'browserExtensionSuccessTitle'),
+                    message: _ts('notification', 'browserExtensionSuccessMessage'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({ pending: false });
@@ -69,8 +64,8 @@ export default class Export extends React.PureComponent {
             () => {
                 notify.send({
                     type: notify.type.ERROR,
-                    title: this.props.notificationStrings('browserExtensionFailureTitle'),
-                    message: this.props.notificationStrings('browserExtensionFailureMessage'),
+                    title: _ts('notification', 'browserExtensionFailureTitle'),
+                    message: _ts('notification', 'browserExtensionFailureMessage'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({ pending: false });

@@ -3,32 +3,27 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
+
 import {
     connectorsListSelector,
     connectorIdFromRouteSelector,
     connectorDetailsSelector,
     connectorSourceSelector,
 
-    connectorStringsSelector,
-    commonStringsSelector,
-    notificationStringsSelector,
-
     setUserConnectorDetailsAction,
 } from '../../../redux';
+import _ts from '../../../ts';
 
-import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 import ConnectorDetailsGetRequest from '../requests/ConnectorDetailsGetRequest';
-import DetailsForm from './Form';
 
+import DetailsForm from './Form';
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
     connectorId: PropTypes.number,
     connectorDetails: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    commonStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    connectorStrings: PropTypes.func.isRequired,
     setUserConnectorDetails: PropTypes.func.isRequired,
 };
 
@@ -40,11 +35,8 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    connectorStrings: connectorStringsSelector(state),
     connectorDetails: connectorDetailsSelector(state),
     connectorSource: connectorSourceSelector(state),
-    commonStrings: commonStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
     connectorsList: connectorsListSelector(state),
     connectorId: connectorIdFromRouteSelector(state),
 });
@@ -118,7 +110,6 @@ export default class ConnectorDetails extends React.PureComponent {
         const requestForConnectorDetails = new ConnectorDetailsGetRequest({
             setState: v => this.setState(v),
             setUserConnectorDetails: this.props.setUserConnectorDetails,
-            notificationStrings: this.props.notificationStrings,
             connectorDetails,
             isBeingCancelled: false,
         });
@@ -132,15 +123,12 @@ export default class ConnectorDetails extends React.PureComponent {
         } = this.state;
 
         const { faramValues: connectorDetails = {} } = this.props.connectorDetails;
-        const {
-            connectorId,
-            connectorStrings,
-        } = this.props;
+        const { connectorId } = this.props;
 
         if (requestFailure) {
             return (
                 <div className={styles.noConnectorFound} >
-                    {connectorStrings('noConnectorFoundLabel')}
+                    {_ts('connector', 'noConnectorFoundLabel')}
                 </div>
             );
         }
@@ -169,7 +157,7 @@ export default class ConnectorDetails extends React.PureComponent {
             <div className={className}>
                 <Prompt
                     when={connectorDetails.pristine === true}
-                    message={this.props.commonStrings('youHaveUnsavedChanges')}
+                    message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 {
                     connectorDataLoading ? (

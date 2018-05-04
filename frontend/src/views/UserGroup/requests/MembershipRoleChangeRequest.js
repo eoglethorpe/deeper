@@ -5,9 +5,10 @@ import {
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
- * props: setState, setUserMembership, notificationStrings
+ * props: setState, setUserMembership
 */
 
 export default class MembershipRoleChangeRequest {
@@ -23,9 +24,9 @@ export default class MembershipRoleChangeRequest {
                 userGroupId,
             });
             notify.send({
-                title: this.props.notificationStrings('userMembershipRole'),
+                title: _ts('notification', 'userMembershipRole'),
                 type: notify.type.SUCCESS,
-                message: this.props.notificationStrings('userMembershipRoleSuccess'),
+                message: _ts('notification', 'userMembershipRoleSuccess'),
                 duration: notify.duration.MEDIUM,
             });
         } catch (er) {
@@ -35,18 +36,18 @@ export default class MembershipRoleChangeRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('userMembershipRole'),
+            title: _ts('notification', 'userMembershipRole'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userMembershipRoleFailure'),
+            message: _ts('notification', 'userMembershipRoleFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('userMembershipRole'),
+            title: _ts('notification', 'userMembershipRole'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('userMembershipRoleFatal'),
+            message: _ts('notification', 'userMembershipRoleFatal'),
             duration: notify.duration.SLOW,
         });
     }

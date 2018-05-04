@@ -1,11 +1,12 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
+
 import {
     createUrlForProjectsOfUser,
     createParamsForProjects,
 } from '../../../rest';
-
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class UserProjectsGetRequest {
     constructor(props) {
@@ -27,7 +28,7 @@ export default class UserProjectsGetRequest {
 
     failure = (response) => {
         notify.send({
-            title: this.props.notificationStrings('projectsTitle'),
+            title: _ts('notification', 'projectsTitle'),
             type: notify.type.ERROR,
             message: response.error,
             duration: notify.duration.MEDIUM,
@@ -36,9 +37,9 @@ export default class UserProjectsGetRequest {
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('projectsTitle'),
+            title: _ts('notification', 'projectsTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('projectsGetFailure'),
+            message: _ts('notification', 'projectsGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }

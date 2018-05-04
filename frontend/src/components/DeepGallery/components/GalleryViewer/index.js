@@ -1,19 +1,14 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import AccentButton from '../../../../vendor/react-store/components/Action/Button/AccentButton';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
 import urlRegex from '../../../../vendor/react-store/components/Input/Form/regexForWeburl';
 
-import { iconNames } from '../../../../constants';
-import {
-    commonStringsSelector,
-    leadsStringsSelector,
-} from '../../../../redux';
 import { galleryMapping, galleryType } from '../../../../config/deepMimeTypes';
-
+import { iconNames } from '../../../../constants';
 import notify from '../../../../notify';
+import _ts from '../../../../ts';
 
 import Screenshot from '../../../Screenshot';
 import GalleryImage from '../GalleryImage';
@@ -32,9 +27,6 @@ const propTypes = {
 
     invalidUrlMessage: PropTypes.string,
     cannotPreviewUrlMessage: PropTypes.string,
-
-    leadsStrings: PropTypes.func.isRequired,
-    // commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -50,17 +42,10 @@ const defaultProps = {
     cannotPreviewUrlMessage: undefined,
 };
 
-const mapStateToProps = state => ({
-    commonStrings: commonStringsSelector(state),
-    leadsStrings: leadsStringsSelector(state),
-});
-
-
 /*
  * Document [pdf, image, docx, html] viewer handler
  * Use required document viewer according to the mime-type
 */
-@connect(mapStateToProps)
 export default class GalleryViewer extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -110,17 +95,20 @@ export default class GalleryViewer extends React.PureComponent {
     )
 
     renderErrorScreen = (url) => {
-        const { invalidUrlMessage, cannotPreviewUrlMessage, leadsStrings } = this.props;
+        const {
+            invalidUrlMessage,
+            cannotPreviewUrlMessage,
+        } = this.props;
         return (
             <div className={styles.errorUrl}>
                 {
                     GalleryViewer.isUrlValid(url) ?
                         <span className={styles.msg}>
-                            {cannotPreviewUrlMessage || leadsStrings('cannotPreviewUrl')}
+                            {cannotPreviewUrlMessage || _ts('leads', 'cannotPreviewUrl')}
                         </span>
                         :
                         <span className={styles.msg}>
-                            {invalidUrlMessage || leadsStrings('invalidUrl')}
+                            {invalidUrlMessage || _ts('leads', 'invalidUrl')}
                         </span>
                 }
             </div>

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
@@ -10,23 +9,17 @@ import PrimaryButton from '../../../vendor/react-store/components/Action/Button/
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 
-import { ceStringsSelector } from '../../../redux';
+import _ts from '../../../ts';
 
 import styles from '../styles.scss';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = { };
 
-const mapStateToProps = state => ({
-    ceStrings: ceStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class NewManualNgramModal extends React.PureComponent {
     static defaultProps = defaultProps;
     static propTypes = propTypes;
@@ -86,26 +79,26 @@ export default class NewManualNgramModal extends React.PureComponent {
             >
                 <ModalHeader
                     key="header"
-                    title={this.props.ceStrings('addNewWordModalTitle')}
+                    title={_ts('ce', 'addNewWordModalTitle')}
                 />
                 <ModalBody key="body">
                     <TextInput
                         faramElementName="word"
-                        label={this.props.ceStrings('addNewWordLabel')}
-                        placeholder={this.props.ceStrings('addNewWordPlaceholder')}
+                        label={_ts('ce', 'addNewWordLabel')}
+                        placeholder={_ts('ce', 'addNewWordPlaceholder')}
                         autoFocus
                     />
                 </ModalBody>
                 <ModalFooter key="footer">
                     <Button onClick={this.handleModalClose}>
-                        {this.props.ceStrings('modalCancel')}
+                        {_ts('ce', 'modalCancel')}
                     </Button>
                     <PrimaryButton
                         className={styles.okButton}
                         disabled={pristine}
                         type="submit"
                     >
-                        {this.props.ceStrings('modalOk')}
+                        {_ts('ce', 'modalOk')}
                     </PrimaryButton>
                 </ModalFooter>
             </Faram>

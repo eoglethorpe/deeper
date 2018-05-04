@@ -17,10 +17,8 @@ import {
 
     groupSelector,
     setUsersMembershipAction,
-
-    notificationStringsSelector,
-    userStringsSelector,
 } from '../../../../redux';
+import _ts from '../../../../ts';
 import { iconNames } from '../../../../constants';
 
 import UsersGetRequest from '../../requests/UsersGetRequest';
@@ -36,9 +34,6 @@ const propTypes = {
     users: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setUsers: PropTypes.func.isRequired,
     setUsersMembership: PropTypes.func.isRequired,
-
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -49,9 +44,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     users: usersInformationListSelector(state, props),
     userGroupDetails: groupSelector(state, props),
-
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -95,28 +87,28 @@ export default class AddUserGroupMembers extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'displayName',
-                label: this.props.userStrings('tableHeaderName'),
+                label: _ts('user', 'tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.displayName, b.displayName),
             },
             {
                 key: 'email',
-                label: this.props.userStrings('tableHeaderEmail'),
+                label: _ts('user', 'tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.email, b.email),
             },
             {
                 key: 'actions',
-                label: this.props.userStrings('tableHeaderActions'),
+                label: _ts('user', 'tableHeaderActions'),
                 order: 3,
                 modifier: (row) => {
                     const isAdmin = row.role === 'admin';
                     const title = isAdmin ? (
-                        this.props.userStrings('revokeAdminLinkTitle')
+                        _ts('user', 'revokeAdminLinkTitle')
                     ) : (
-                        this.props.userStrings('grantAdminLinkTitle')
+                        _ts('user', 'grantAdminLinkTitle')
                     );
                     return (
                         <div className="actions">
@@ -170,7 +162,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
         }
         const usersRequest = new UsersGetRequest({
             setUsers: this.props.setUsers,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.usersRequest = usersRequest.create();
@@ -185,8 +176,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
         const membershipCreateRequest = new MembershipPostRequest({
             setUsersMembership: this.props.setUsersMembership,
             onModalClose: this.props.onModalClose,
-            notificationStrings: this.props.notificationStrings,
-            userStrings: this.props.userStrings,
             setState: v => this.setState(v),
         });
         this.membershipCreateRequest = membershipCreateRequest.create(memberList, userGroupId);
@@ -281,13 +270,13 @@ export default class AddUserGroupMembers extends React.PureComponent {
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.props.onModalClose}>
-                        {this.props.userStrings('modalCancel')}
+                        {_ts('user', 'modalCancel')}
                     </DangerButton>
                     <PrimaryButton
                         disabled={pending || !pristine}
                         type="submit"
                     >
-                        {this.props.userStrings('modalSave')}
+                        {_ts('user', 'modalSave')}
                     </PrimaryButton>
                 </div>
             </Faram>

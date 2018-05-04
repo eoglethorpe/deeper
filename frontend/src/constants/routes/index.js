@@ -16,7 +16,7 @@ export const ROUTE = {
 
 export const routes = {
     // NOTE: Do not remove the immediate line
-    // 'adminPanel': {}, pageTitleStrings('adminPanel');
+    // 'adminPanel': {}, _ts('pageTitle', 'adminPanel');
 
     browserExtension: {
         order: 0,
@@ -24,7 +24,7 @@ export const routes = {
         path: '/browser-extension/',
         loader: () => import('../../views/BrowserExtension'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('browserExtension');
+    }, // _ts('pageTitle', 'browserExtension');
 
     login: {
         order: 10,
@@ -34,7 +34,7 @@ export const routes = {
         hideNavbar: true,
         loader: () => import('../../views/Login'),
         links: noLinks,
-    }, // pageTitleStrings('login');
+    }, // _ts('pageTitle', 'login');
 
     register: {
         order: 11,
@@ -44,7 +44,7 @@ export const routes = {
         loader: () => import('../../views/Register'),
         hideNavbar: true,
         links: noLinks,
-    }, // pageTitleStrings('register');
+    }, // _ts('pageTitle', 'register');
 
     passwordReset: {
         order: 12,
@@ -54,7 +54,7 @@ export const routes = {
         loader: () => import('../../views/PasswordReset'),
         hideNavbar: true,
         links: noLinks,
-    }, // pageTitleStrings('passwordReset');
+    }, // _ts('pageTitle', 'passwordReset');
 
     projects: {
         order: 20,
@@ -62,7 +62,7 @@ export const routes = {
         path: '/projects/:projectId?/',
         loader: () => import('../../views/Project'),
         links: allLinks,
-    }, // pageTitleStrings('projects');
+    }, // _ts('pageTitle', 'projects');
 
     dashboard: {
         order: 21,
@@ -70,7 +70,7 @@ export const routes = {
         path: '/projects/:projectId/dashboard/',
         loader: () => import('../../views/Dashboard'),
         links: allLinks,
-    }, // pageTitleStrings('dashboard');
+    }, // _ts('pageTitle', 'dashboard');
 
     connectors: {
         order: 22,
@@ -78,7 +78,7 @@ export const routes = {
         path: '/connectors/:connectorId?/',
         loader: () => import('../../views/Connector'),
         links: allLinks,
-    }, // pageTitleStrings('connectors');
+    }, // _ts('pageTitle', 'connectors');
 
     leads: {
         order: 30,
@@ -86,7 +86,7 @@ export const routes = {
         path: '/projects/:projectId/leads/',
         loader: () => import('../../views/Leads'),
         links: allLinks,
-    }, // pageTitleStrings('leads');
+    }, // _ts('pageTitle', 'leads');
 
     leadsViz: {
         order: 31,
@@ -94,7 +94,7 @@ export const routes = {
         path: '/projects/:projectId/leads/viz',
         loader: () => import('../../views/LeadsViz'),
         links: allLinks,
-    }, // pageTitleStrings('leadsViz');
+    }, // _ts('pageTitle', 'leadsViz');
 
     addLeads: {
         order: 32,
@@ -102,7 +102,7 @@ export const routes = {
         path: '/projects/:projectId/leads/add/',
         loader: () => import('../../views/LeadAdd'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('addLeads');
+    }, // _ts('pageTitle', 'addLeads');
 
     entries: {
         order: 40,
@@ -110,7 +110,7 @@ export const routes = {
         path: '/projects/:projectId/entries/',
         loader: () => import('../../views/Entries/'),
         links: allLinks,
-    }, // pageTitleStrings('entries');
+    }, // _ts('pageTitle', 'entries');
 
     editEntries: {
         order: 41,
@@ -118,7 +118,7 @@ export const routes = {
         path: '/projects/:projectId/leads/:leadId/edit-entries/',
         loader: () => import('../../views/EditEntry'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('editEntries');
+    }, // _ts('pageTitle', 'editEntries');
 
     arys: {
         order: 50,
@@ -126,7 +126,7 @@ export const routes = {
         path: '/projects/:projectId/arys/',
         loader: () => import('../../views/Arys/'),
         links: allLinks,
-    }, // pageTitleStrings('arys');
+    }, // _ts('pageTitle', 'arys');
 
     editAry: {
         order: 51,
@@ -134,7 +134,7 @@ export const routes = {
         path: '/projects/:projectId/leads/:leadId/edit-ary/',
         loader: () => import('../../views/EditAry'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('editAry');
+    }, // _ts('pageTitle', 'editAry');
 
     export: {
         order: 60,
@@ -142,7 +142,7 @@ export const routes = {
         path: '/projects/:projectId/export/',
         loader: () => import('../../views/Export'),
         links: allLinks,
-    }, // pageTitleStrings('export');
+    }, // _ts('pageTitle', 'export');
 
     userExports: {
         order: 61,
@@ -150,7 +150,7 @@ export const routes = {
         path: '/projects/:projectId/exports/',
         loader: () => import('../../views/UserExports'),
         links: allLinks,
-    }, // pageTitleStrings('userExports');
+    }, // _ts('pageTitle', 'userExports');
 
     countries: {
         order: 70,
@@ -158,7 +158,7 @@ export const routes = {
         path: '/countries/:countryId?/',
         loader: () => import('../../views/Country'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('countries');
+    }, // _ts('pageTitle', 'countries');
 
     userProfile: {
         order: 80,
@@ -166,7 +166,7 @@ export const routes = {
         path: '/user/:userId/',
         loader: () => import('../../views/UserProfile'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('userProfile');
+    }, // _ts('pageTitle', 'userProfile');
 
     userGroup: {
         order: 90,
@@ -174,7 +174,7 @@ export const routes = {
         path: '/user-group/:userGroupId/',
         loader: () => import('../../views/UserGroup'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('userGroup');
+    }, // _ts('pageTitle', 'userGroup');
 
     analysisFramework: {
         order: 100,
@@ -182,7 +182,7 @@ export const routes = {
         path: '/analysis-framework/:analysisFrameworkId/',
         loader: () => import('../../views/AnalysisFramework'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('analysisFramework');
+    }, // _ts('pageTitle', 'analysisFramework');
 
     categoryEditor: {
         order: 110,
@@ -190,7 +190,7 @@ export const routes = {
         path: '/category-editor/:categoryEditorId/',
         loader: () => import('../../views/CategoryEditor'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('categoryEditor');
+    }, // _ts('pageTitle', 'categoryEditor');
 
     weeklySnapshot: {
         order: 120,
@@ -198,7 +198,7 @@ export const routes = {
         path: '/weekly-snapshot/',
         loader: () => import('../../views/WeeklySnapshot'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('weeklySnapshot');
+    }, // _ts('pageTitle', 'weeklySnapshot');
 
     apiDocs: {
         order: 130,
@@ -206,7 +206,7 @@ export const routes = {
         path: '/api-docs/',
         loader: () => import('../../views/ApiDocs'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('apiDocs');
+    }, // _ts('pageTitle', 'apiDocs');
 
     homeScreen: {
         order: 140,
@@ -214,7 +214,7 @@ export const routes = {
         path: '/',
         loader: () => import('../../views/HomeScreen'),
         links: allLinks,
-    }, // pageTitleStrings('homeScreen');
+    }, // _ts('pageTitle', 'homeScreen');
 
     stringManagement: {
         order: 150,
@@ -222,7 +222,7 @@ export const routes = {
         path: '/string-management/',
         loader: () => import('../../views/StringManagement'),
         links: allLinksWithProjectDisabled,
-    }, // pageTitleStrings('stringManagement');
+    }, // _ts('pageTitle', 'stringManagement');
 
     fourHundredFour: {
         order: 990,
@@ -231,15 +231,22 @@ export const routes = {
         loader: () => import('../../views/FourHundredFour'),
         hideNavbar: true,
         links: noLinks,
-    }, // pageTitleStrings('fourHundredFour');
+    }, // _ts('pageTitle', 'fourHundredFour');
 };
 
 export const pathNames = mapObjectToObject(routes, route => route.path);
 export const validLinks = mapObjectToObject(routes, route => route.links);
 export const hideNavbar = mapObjectToObject(routes, route => !!route.hideNavbar);
-export const routesOrder = mapObjectToArray(routes, (route, key) => ({ key, order: route.order }))
+export const routesOrder = mapObjectToArray(
+    routes,
+    (route, key) => ({
+        key,
+        order: route.order,
+    }),
+)
     .sort((a, b) => a.order - b.order)
     .map(row => row.key);
+
 export const views = mapObjectToObject(
     routes,
     (route, name) => props => (

@@ -3,7 +3,7 @@ import {
     createParamsForUser,
     urlForConnectorSources,
 } from '../../../rest';
-
+import _ts from '../../../ts';
 import schema from '../../../schema';
 import notify from '../../../notify';
 
@@ -23,7 +23,7 @@ export default class ConnectorsGetRequest {
 
     failure = (response) => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: _ts('notification', 'connectorSourcesTitle'),
             type: notify.type.ERROR,
             message: response.error,
             duration: notify.duration.MEDIUM,
@@ -32,9 +32,9 @@ export default class ConnectorsGetRequest {
 
     fatal = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorSourcesTitle'),
+            title: _ts('notification', 'connectorSourcesTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorSourcesGetFailure'),
+            message: _ts('notification', 'connectorSourcesGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }

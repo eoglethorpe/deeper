@@ -7,21 +7,20 @@ import SelectInput from '../../../../../vendor/react-store/components/Input/Sele
 import TextInput from '../../../../../vendor/react-store/components/Input/TextInput';
 import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
 
-import TabularInputs from '../TabularInputs';
-import styles from './styles.scss';
-
 import {
     affectedGroupsSelector,
     specificNeedGroupsSelector,
-    assessmentSummaryStringsSelector,
 } from '../../../../../redux';
+import _ts from '../../../../../ts';
+
+import TabularInputs from '../TabularInputs';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
     sectorId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     affectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     specificNeedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    assessmentSummaryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -31,7 +30,6 @@ const defaultProps = {
 const mapStateToProps = state => ({
     affectedGroups: affectedGroupsSelector(state),
     specificNeedGroups: specificNeedGroupsSelector(state),
-    assessmentSummaryStrings: assessmentSummaryStringsSelector(state),
 });
 
 @connect(mapStateToProps)
@@ -46,24 +44,23 @@ export default class Sector extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        const { assessmentSummaryStrings } = props;
         this.rowFieldTitles = [
-            assessmentSummaryStrings('prioritySector'),
-            assessmentSummaryStrings('affectedGroup'),
-            assessmentSummaryStrings('specificNeedGroup'),
+            _ts('assessmentSummary', 'prioritySector'),
+            _ts('assessmentSummary', 'affectedGroup'),
+            _ts('assessmentSummary', 'specificNeedGroup'),
         ];
 
         this.columnFieldTitles = [
             ' ',
-            assessmentSummaryStrings('moderateAssistancePopulation'),
-            assessmentSummaryStrings('severeAssistancePopulation'),
-            assessmentSummaryStrings('assistancePopulation'),
+            _ts('assessmentSummary', 'moderateAssistancePopulation'),
+            _ts('assessmentSummary', 'severeAssistancePopulation'),
+            _ts('assessmentSummary', 'assistancePopulation'),
         ];
 
         this.rowSubFieldTitles = [
-            assessmentSummaryStrings('rank1Title'),
-            assessmentSummaryStrings('rank2Title'),
-            assessmentSummaryStrings('rank3Title'),
+            _ts('assessmentSummary', 'rank1Title'),
+            _ts('assessmentSummary', 'rank2Title'),
+            _ts('assessmentSummary', 'rank3Title'),
         ];
     }
 

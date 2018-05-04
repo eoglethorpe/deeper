@@ -1,10 +1,14 @@
 import { createSelector } from 'reselect';
 import stringFormat from 'string-format';
+import devLang from '../initial-state/dev-lang';
 
 const emptyObject = {};
 
 const selectedLanguageNameSelector = ({ lang }) => (
     lang.selectedLanguage
+);
+const fallbackLanguageNameSelector = ({ lang }) => (
+    lang.fallbackLanguage
 );
 
 const languagesSelector = ({ lang }) => (
@@ -25,6 +29,22 @@ export const selectedStringsSelector = createSelector(
 export const selectedLinksSelector = createSelector(
     selectedLanguageSelector,
     selectedLanguage => selectedLanguage.links || emptyObject,
+);
+
+const fallbackLanguageSelector = createSelector(
+    fallbackLanguageNameSelector,
+    languagesSelector,
+    (fallbackLanguage, languages) => languages[fallbackLanguage] || devLang,
+);
+
+export const fallbackStringsSelector = createSelector(
+    fallbackLanguageSelector,
+    fallbackLanguage => fallbackLanguage.strings || emptyObject,
+);
+
+export const fallbackLinksSelector = createSelector(
+    fallbackLanguageSelector,
+    fallbackLanguage => fallbackLanguage.links || emptyObject,
 );
 
 // Af page
@@ -217,14 +237,14 @@ export const linkStringsSelector = createSelector(
     selectedStringsSelector,
     selectedLinksSelector,
     usageMapSelector,
-    (strings, links, usageMaps) => {
+    (strings, links, usedMaps) => {
         // Initialize
         const finalLinks = {};
         // Calculate
         Object.keys(links).forEach((linkName) => {
             const link = getLinkFromLinks(links, linkName);
             finalLinks[linkName] = Object.keys(link).map((stringName) => {
-                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
+                const refsInCode = getStringRefsInCode(usedMaps, linkName, stringName);
                 const stringId = getStringIdFromLink(link, stringName);
                 const string = getStringFromStrings(strings, stringId);
 
@@ -238,6 +258,11 @@ export const linkStringsSelector = createSelector(
         });
         return finalLinks;
     },
+);
+
+export const linkKeysSelector = createSelector(
+    usageMapSelector,
+    usedMaps => Object.keys(usedMaps),
 );
 
 // FIXME: remove these later

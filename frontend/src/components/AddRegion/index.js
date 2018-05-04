@@ -22,12 +22,10 @@ import {
 } from '../../rest';
 import {
     addNewRegionAction,
-    countriesStringsSelector,
-    notificationStringsSelector,
-    projectStringsSelector,
 } from '../../redux';
 import notify from '../../notify';
 import schema from '../../schema';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
@@ -37,9 +35,6 @@ const propTypes = {
     onModalClose: PropTypes.func.isRequired,
     projectId: PropTypes.number,
     onRegionAdd: PropTypes.func,
-    countriesStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -48,17 +43,11 @@ const defaultProps = {
     onRegionAdd: undefined,
 };
 
-const mapStateToProps = state => ({
-    countriesStrings: countriesStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    projectStrings: projectStringsSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class AddRegion extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -139,9 +128,9 @@ export default class AddRegion extends React.PureComponent {
                         });
                     }
                     notify.send({
-                        title: this.props.notificationStrings('countryCreate'),
+                        title: _ts('notification', 'countryCreate'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('countryCreateSuccess'),
+                        message: _ts('notification', 'countryCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                 } catch (er) {
@@ -150,9 +139,9 @@ export default class AddRegion extends React.PureComponent {
             })
             .failure((response) => {
                 notify.send({
-                    title: this.props.notificationStrings('countryCreate'),
+                    title: _ts('notification', 'countryCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryCreateFailure'),
+                    message: _ts('notification', 'countryCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
@@ -160,9 +149,9 @@ export default class AddRegion extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.notificationStrings('countryCreate'),
+                    title: _ts('notification', 'countryCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('countryCreateFatal'),
+                    message: _ts('notification', 'countryCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -234,25 +223,25 @@ export default class AddRegion extends React.PureComponent {
                 { pending && <LoadingAnimation /> }
                 <NonFieldErrors faramElement />
                 <TextInput
-                    label={this.props.projectStrings('addRegionTitleLabel')}
+                    label={_ts('project', 'addRegionTitleLabel')}
                     faramElementName="title"
-                    placeholder={this.props.projectStrings('addRegionTitlePlaceholder')}
+                    placeholder={_ts('project', 'addRegionTitlePlaceholder')}
                     autoFocus
                 />
                 <TextInput
-                    label={this.props.projectStrings('addRegionCodeLabel')}
+                    label={_ts('project', 'addRegionCodeLabel')}
                     faramElementName="code"
-                    placeholder={this.props.projectStrings('addRegionCodePlaceholder')}
+                    placeholder={_ts('project', 'addRegionCodePlaceholder')}
                 />
                 <div className={styles.actionButtons}>
                     <DangerButton onClick={this.props.onModalClose}>
-                        {this.props.countriesStrings('cancelButtonLabel')}
+                        {_ts('countries', 'cancelButtonLabel')}
                     </DangerButton>
                     <PrimaryButton
                         type="submit"
                         disabled={pending || !pristine}
                     >
-                        {this.props.countriesStrings('addRegionButtonLabel')}
+                        {_ts('countries', 'addRegionButtonLabel')}
                     </PrimaryButton>
                 </div>
             </Faram>

@@ -12,11 +12,9 @@ import Modal from '../../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../../vendor/react-store/components/View/Modal/Body';
 
-import {
-    projectDetailsSelector,
-    projectStringsSelector,
-} from '../../../../redux';
+import { projectDetailsSelector } from '../../../../redux';
 import { iconNames } from '../../../../constants';
+import _ts from '../../../../ts';
 import AddRegion from '../../../../components/AddRegion';
 
 import AddExistingRegion from './AddExistingRegion';
@@ -25,7 +23,6 @@ import styles from './styles.scss';
 
 const propTypes = {
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    projectStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -33,7 +30,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     projectDetails: projectDetailsSelector(state, props),
-    projectStrings: projectStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -59,11 +55,11 @@ export default class ProjectRegions extends React.PureComponent {
         this.addRegionOptions = [
             {
                 key: 'old',
-                label: this.props.projectStrings('useExistingRegionText'),
+                label: _ts('project', 'useExistingRegionText'),
             },
             {
                 key: 'new',
-                label: this.props.projectStrings('createNewRegionText'),
+                label: _ts('project', 'createNewRegionText'),
             },
         ];
 
@@ -195,8 +191,7 @@ export default class ProjectRegions extends React.PureComponent {
             );
         }
 
-        const { projectStrings } = this.props;
-        const noRegionText = projectStrings('noRegionText');
+        const noRegionText = _ts('project', 'noRegionText');
         return (
             <div className={styles.noRegions}>
                 { noRegionText }
@@ -230,8 +225,6 @@ export default class ProjectRegions extends React.PureComponent {
     }
 
     renderAddRegionModal = () => {
-        const { projectStrings } = this.props;
-
         const {
             showAddRegionModal,
             selectedAddRegionOption,
@@ -241,7 +234,7 @@ export default class ProjectRegions extends React.PureComponent {
             return null;
         }
 
-        const title = projectStrings('addRegionModalTitle');
+        const title = _ts('project', 'addRegionModalTitle');
         const className = this.getModalClassName();
         const AddRegionForm = this.renderAddRegionForm;
 
@@ -263,7 +256,6 @@ export default class ProjectRegions extends React.PureComponent {
     }
 
     renderRegionList = () => {
-        const { projectStrings } = this.props;
         const {
             displayRegionList,
             searchInputValue,
@@ -272,9 +264,9 @@ export default class ProjectRegions extends React.PureComponent {
         const sortedRegions = [...displayRegionList]
             .sort((a, b) => compareString(a.title, b.title));
 
-        const searchPlaceholder = projectStrings('searchRegionPlaceholder');
-        const addRegionButtonLabel = projectStrings('addRegionButtonLabel');
-        const regionLabel = projectStrings('regionLabel');
+        const searchPlaceholder = _ts('project', 'searchRegionPlaceholder');
+        const addRegionButtonLabel = _ts('project', 'addRegionButtonLabel');
+        const regionLabel = _ts('project', 'regionLabel');
 
         return (
             <div className={styles.regionList}>

@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import MultiSelectInput from '../../../vendor/react-store/components/Input/MultiSelectInput';
-
-import { afStringsSelector } from '../../../redux';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
+
+import _ts from '../../../ts';
 import WidgetError from '../../../components/WidgetError';
 
-// import { updateAttribute } from './utils';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -19,7 +17,6 @@ const propTypes = {
     data: PropTypes.object, // eslint-disable-line react/forbid-prop-types
     api: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-    afStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -29,29 +26,13 @@ const defaultProps = {
 
 const emptyList = [];
 
-const mapStateToProps = state => ({
-    afStrings: afStringsSelector(state),
-});
-
 @BoundError(WidgetError)
-@connect(mapStateToProps)
 export default class Matrix2dList extends React.PureComponent {
     static rowKeyExtractor = d => d.key;
     static subsectorKeySelector = d => d.id;
     static subsectorLabelSelector = d => d.title;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
-
-    // constructor(props) {
-    //     super(props);
-    //     updateAttribute(props);
-    // }
-
-    // componentWillReceiveProps(nextProps) {
-    //     if (this.props.attribute !== nextProps.attribute) {
-    //         updateAttribute(nextProps);
-    //     }
-    // }
 
     getSelectedSectors = (data, attribute) => {
         const selectedSectors = [];
@@ -235,8 +216,8 @@ export default class Matrix2dList extends React.PureComponent {
                     options={data.sector.subsectors}
                     keySelector={Matrix2dList.subsectorKeySelector}
                     labelSelector={Matrix2dList.subsectorLabelSelector}
-                    placeholder={this.props.afStrings('subsectorsLabel')}
-                    label={this.props.afStrings('subsectorsLabel')}
+                    placeholder={_ts('af', 'subsectorsLabel')}
+                    label={_ts('af', 'subsectorsLabel')}
                     showHintAndError={false}
                     onChange={(subsectors) => {
                         this.handleSelectSubsectorChange(

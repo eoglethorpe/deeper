@@ -31,7 +31,6 @@ import {
     setUserExportAction,
 
     projectIdFromRouteSelector,
-    exportStringsSelector,
 } from '../../redux';
 import {
     pathNames,
@@ -40,6 +39,7 @@ import {
 import { leadTypeIconMap } from '../../entities/lead';
 import schema from '../../schema';
 import notify from '../../notify';
+import _ts from '../../ts';
 import ExportPreview from '../../components/ExportPreview';
 
 import styles from './styles.scss';
@@ -49,7 +49,6 @@ const propTypes = {
     setUserExports: PropTypes.func.isRequired,
     setUserExport: PropTypes.func.isRequired,
     projectId: PropTypes.number,
-    exportStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -60,7 +59,6 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     userExports: userExportsListSelector(state, props),
     projectId: projectIdFromRouteSelector(state, props),
-    exportStrings: exportStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -88,7 +86,7 @@ export default class UserExports extends React.PureComponent {
         this.exportsTableHeader = [
             {
                 key: 'mime-type',
-                label: this.props.exportStrings('documentTypeHeaderLabel'),
+                label: _ts('export', 'documentTypeHeaderLabel'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => (
@@ -109,7 +107,7 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'exportedAt',
-                label: this.props.exportStrings('exportedAtHeaderLabel'),
+                label: _ts('export', 'exportedAtHeaderLabel'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.exportedAt, b.exportedAt),
@@ -122,14 +120,14 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: this.props.exportStrings('exportTitleHeaderLabel'),
+                label: _ts('export', 'exportTitleHeaderLabel'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'pending',
-                label: this.props.exportStrings('statusHeaderLabel'),
+                label: _ts('export', 'statusHeaderLabel'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => (
@@ -138,16 +136,16 @@ export default class UserExports extends React.PureComponent {
                 ),
                 modifier: (row) => {
                     if (row.pending) {
-                        return this.props.exportStrings('pendingStatusLabel');
+                        return _ts('export', 'pendingStatusLabel');
                     } else if (!row.file) {
-                        return this.props.exportStrings('errorStatusLabel');
+                        return _ts('export', 'errorStatusLabel');
                     }
-                    return this.props.exportStrings('completedStatusLabel');
+                    return _ts('export', 'completedStatusLabel');
                 },
             },
             {
                 key: 'type',
-                label: this.props.exportStrings('exportTypeHeaderLabel'),
+                label: _ts('export', 'exportTypeHeaderLabel'),
                 order: 5,
                 sortable: true,
                 comparator: (a, b) => (
@@ -156,7 +154,7 @@ export default class UserExports extends React.PureComponent {
             },
             {
                 key: 'file',
-                label: this.props.exportStrings('exportDownloadHeaderLabel'),
+                label: _ts('export', 'exportDownloadHeaderLabel'),
                 order: 6,
                 modifier: (row) => {
                     if (row.pending) {
@@ -273,7 +271,7 @@ export default class UserExports extends React.PureComponent {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.props.exportStrings('userExportsTitle'),
+                    title: _ts('export', 'userExportsTitle'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -281,9 +279,9 @@ export default class UserExports extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.exportStrings('userExportsTitle'),
+                    title: _ts('export', 'userExportsTitle'),
                     type: notify.type.ERROR,
-                    message: this.props.exportStrings('userExportsFataMessage'),
+                    message: _ts('export', 'userExportsFataMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -316,7 +314,7 @@ export default class UserExports extends React.PureComponent {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.props.exportStrings('userExportsTitle'),
+                    title: _ts('export', 'userExportsTitle'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -324,9 +322,9 @@ export default class UserExports extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.exportStrings('userExportsTitle'),
+                    title: _ts('export', 'userExportsTitle'),
                     type: notify.type.ERROR,
-                    message: this.props.exportStrings('userExportsFataMessage'),
+                    message: _ts('export', 'userExportsFataMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -346,13 +344,13 @@ export default class UserExports extends React.PureComponent {
             <div className={styles.userExports}>
                 <header className={styles.header}>
                     <h2>
-                        {this.props.exportStrings('userExportsHeader')}
+                        {_ts('export', 'userExportsHeader')}
                     </h2>
                     <Link
                         className={styles.exportLink}
                         to={reverseRoute(pathNames.export, { projectId })}
                     >
-                        {this.props.exportStrings('goBackToExportLabel')}
+                        {_ts('export', 'goBackToExportLabel')}
                     </Link>
                 </header>
                 <div className={styles.mainContainer}>

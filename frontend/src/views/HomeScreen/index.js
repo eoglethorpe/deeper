@@ -5,19 +5,17 @@ import { connect } from 'react-redux';
 import { Redirect, Link } from 'react-router-dom';
 
 import { reverseRoute } from '../../vendor/react-store/utils/common';
-
-import logo from '../../resources/img/deep-logo.svg';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
-import AppError from '../../components/AppError';
-import {
-    pathNames,
-} from '../../constants';
+
 import {
     activeProjectIdFromStateSelector,
     activeUserSelector,
     currentUserProjectsSelector,
-    homescreenStringsSelector,
 } from '../../redux';
+import AppError from '../../components/AppError';
+import { pathNames } from '../../constants';
+import _ts from '../../ts';
+import logo from '../../resources/img/deep-logo.svg';
 
 import styles from './styles.scss';
 
@@ -26,7 +24,6 @@ const mapStateToProps = state => ({
     activeProject: activeProjectIdFromStateSelector(state),
     activeUser: activeUserSelector(state),
     currentUserProjects: currentUserProjectsSelector(state),
-    homescreenStrings: homescreenStringsSelector(state),
 });
 
 const propTypes = {
@@ -36,7 +33,6 @@ const propTypes = {
     activeUser: PropTypes.shape({
         userId: PropTypes.number,
     }),
-    homescreenStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -84,17 +80,17 @@ export default class HomeScreen extends React.PureComponent {
                 />
                 <p>
                     <span className={styles.welcomeMessage}>
-                        {this.props.homescreenStrings('welcomeText')}
-                        <strong>{this.props.homescreenStrings('deepLabel')}</strong>
+                        {_ts('homescreen', 'welcomeText')}
+                        <strong>{_ts('homescreen', 'deepLabel')}</strong>
                         <br />
                     </span>
-                    {this.props.homescreenStrings('message1')}
+                    {_ts('homescreen', 'message1')}
                     <br />
-                    {this.props.homescreenStrings('message2')}
+                    {_ts('homescreen', 'message2')}
                     <br />
                 </p>
                 <Link to={linkToProfile}>
-                    {this.props.homescreenStrings('goToProfile')}
+                    {_ts('homescreen', 'goToProfile')}
                 </Link>
             </div>
         );

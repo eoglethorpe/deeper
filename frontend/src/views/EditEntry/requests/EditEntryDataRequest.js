@@ -9,6 +9,7 @@ import {
     getApplicableAndModifyingDiffCount,
 } from '../../../entities/entry';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 // import schema from '../../../schema';
 
 export default class LeadRequest {
@@ -83,8 +84,8 @@ export default class LeadRequest {
                 }
                 notify.send({
                     type: notify.type.WARNING,
-                    title: this.notificationStrings('entryUpdate'),
-                    message: this.notificationStrings('entryUpdateOverridden'),
+                    title: _ts('notification', 'entryUpdate'),
+                    message: _ts('notification', 'entryUpdateOverridden'),
                     duration: notify.duration.SLOW,
                 });
 

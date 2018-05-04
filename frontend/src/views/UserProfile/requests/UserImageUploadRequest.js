@@ -4,6 +4,7 @@ import {
     createParamsForFileUpload,
 } from '../../../rest';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 export default class UserImageUploadRequest {
     constructor(props) {
@@ -27,18 +28,18 @@ export default class UserImageUploadRequest {
             .failure((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
+                    title: _ts('notification', 'userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditImageUploadFailure'),
+                    message: _ts('notification', 'userEditImageUploadFailure'),
                     duration: notify.duration.SLOW,
                 });
             })
             .fatal((response) => {
                 console.warn('Failure', response);
                 notify.send({
-                    title: this.props.notificationStrings('userProfileEdit'),
+                    title: _ts('notification', 'userProfileEdit'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('userEditImageUploadFailure'),
+                    message: _ts('notification', 'userEditImageUploadFailure'),
                     duration: notify.duration.SLOW,
                 });
             })

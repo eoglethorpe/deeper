@@ -14,7 +14,7 @@ import {
     iconNames,
     pathNames,
 } from '../../../constants';
-import { pageTitleStringsSelector } from '../../../redux';
+import _ts from '../../../ts';
 
 import Cloak from '../../Cloak';
 import styles from './styles.scss';
@@ -26,7 +26,6 @@ const propTypes = {
     projectId: PropTypes.number,
     countryId: PropTypes.number,
     className: PropTypes.string,
-    pageTitleStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -36,12 +35,7 @@ const defaultProps = {
     links: [],
 };
 
-const mapStateToProps = state => ({
-    pageTitleStrings: pageTitleStringsSelector(state),
-});
-
 @withRouter
-@connect(mapStateToProps)
 export default class NavMenu extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -165,7 +159,7 @@ export default class NavMenu extends React.PureComponent {
                             className={className}
                             exact
                         >
-                            { this.props.pageTitleStrings(key) }
+                            { _ts('pageTitle', key) }
                         </NavLink>
                     )
                 }

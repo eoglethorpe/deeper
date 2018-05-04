@@ -28,13 +28,10 @@ import {
     urlForAdminLevels,
     urlForUpload,
 } from '../../rest';
-import {
-    addAdminLevelForRegionAction,
-    countriesStringsSelector,
-    notificationStringsSelector,
-} from '../../redux';
+import { addAdminLevelForRegionAction } from '../../redux';
 import schema from '../../schema';
 import { iconNames } from '../../constants';
+import _ts from '../../ts';
 
 import notify from '../../notify';
 import styles from './styles.scss';
@@ -56,8 +53,6 @@ const propTypes = {
     }),
     onClose: PropTypes.func.isRequired,
     addAdminLevelForRegion: PropTypes.func.isRequired,
-    countriesStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -65,16 +60,11 @@ const defaultProps = {
     countryId: undefined,
 };
 
-const mapStateToProps = state => ({
-    countriesStrings: countriesStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-});
-
 const mapDispatchToProps = dispatch => ({
     addAdminLevelForRegion: params => dispatch(addAdminLevelForRegionAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class EditAdminLevel extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -148,9 +138,9 @@ export default class EditAdminLevel extends React.PureComponent {
                         regionId: data.region,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('adminLevelEdit'),
+                        title: _ts('notification', 'adminLevelEdit'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('adminLevelEditSuccess'),
+                        message: _ts('notification', 'adminLevelEditSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onClose();
@@ -190,9 +180,9 @@ export default class EditAdminLevel extends React.PureComponent {
                         regionId: data.region,
                     });
                     notify.send({
-                        title: this.props.notificationStrings('adminLevelCreate'),
+                        title: _ts('notification', 'adminLevelCreate'),
                         type: notify.type.SUCCESS,
-                        message: this.props.notificationStrings('adminLevelCreateSuccess'),
+                        message: _ts('notification', 'adminLevelCreateSuccess'),
                         duration: notify.duration.MEDIUM,
                     });
                     this.props.onClose();
@@ -203,9 +193,9 @@ export default class EditAdminLevel extends React.PureComponent {
             .failure((response) => {
                 // FIXME: no need to notify with farams
                 notify.send({
-                    title: this.props.notificationStrings('adminLevelCreate'),
+                    title: _ts('notification', 'adminLevelCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelCreateFailure'),
+                    message: _ts('notification', 'adminLevelCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
                 const faramErrors = alterResponseErrorToFaramError(response.errors);
@@ -214,9 +204,9 @@ export default class EditAdminLevel extends React.PureComponent {
             .fatal(() => {
                 // FIXME: no need to notify with farams
                 notify.send({
-                    title: this.props.notificationStrings('adminLevelCreate'),
+                    title: _ts('notification', 'adminLevelCreate'),
                     type: notify.type.ERROR,
-                    message: this.props.notificationStrings('adminLevelCreateFatal'),
+                    message: _ts('notification', 'adminLevelCreateFatal'),
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
@@ -267,9 +257,9 @@ export default class EditAdminLevel extends React.PureComponent {
     handleGeoFileInputChange = (files, { invalidFiles }) => {
         if (invalidFiles > 0) {
             notify.send({
-                title: this.props.notificationStrings('fileSelection'),
+                title: _ts('notification', 'fileSelection'),
                 type: notify.type.WARNING,
-                message: this.props.notificationStrings('invalidFileSelection'),
+                message: _ts('notification', 'invalidFileSelection'),
                 duration: notify.duration.SLOW,
             });
         }
@@ -337,8 +327,8 @@ export default class EditAdminLevel extends React.PureComponent {
                     <div className={styles.adminLevelDetails} >
                         <TextInput
                             faramElementName="level"
-                            label={this.props.countriesStrings('adminLevelLabel')}
-                            placeholder={this.props.countriesStrings('adminLevelPlaceholder')}
+                            label={_ts('countries', 'adminLevelLabel')}
+                            placeholder={_ts('countries', 'adminLevelPlaceholder')}
                             className={styles.textInput}
                             type="number"
                             min={0}
@@ -346,32 +336,32 @@ export default class EditAdminLevel extends React.PureComponent {
                         />
                         <TextInput
                             faramElementName="title"
-                            label={this.props.countriesStrings('adminLevelNameLabel')}
-                            placeholder={this.props.countriesStrings('adminLevelNamePlaceholder')}
+                            label={_ts('countries', 'adminLevelNameLabel')}
+                            placeholder={_ts('countries', 'adminLevelNamePlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
                             faramElementName="nameProp"
-                            label={this.props.countriesStrings('namePropertyLabel')}
-                            placeholder={this.props.countriesStrings('namePropertyPlaceholder')}
+                            label={_ts('countries', 'namePropertyLabel')}
+                            placeholder={_ts('countries', 'namePropertyPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
                             faramElementName="codeProp"
-                            label={this.props.countriesStrings('pcodePropertyLabel')}
-                            placeholder={this.props.countriesStrings('pcodePropertyPlaceholder')}
+                            label={_ts('countries', 'pcodePropertyLabel')}
+                            placeholder={_ts('countries', 'pcodePropertyPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
                             faramElementName="parentNameProp"
-                            label={this.props.countriesStrings('parentNamePropLabel')}
-                            placeholder={this.props.countriesStrings('parentNamePropPlaceholder')}
+                            label={_ts('countries', 'parentNamePropLabel')}
+                            placeholder={_ts('countries', 'parentNamePropPlaceholder')}
                             className={styles.textInput}
                         />
                         <TextInput
                             faramElementName="parentCodeProp"
-                            label={this.props.countriesStrings('parentCodePropLabel')}
-                            placeholder={this.props.countriesStrings('parentCodePropPlaceholder')}
+                            label={_ts('countries', 'parentCodePropLabel')}
+                            placeholder={_ts('countries', 'parentCodePropPlaceholder')}
                             className={styles.textInput}
                         />
                         <SelectInput
@@ -381,15 +371,15 @@ export default class EditAdminLevel extends React.PureComponent {
                             optionsIdentifier="select-input-inside-modal"
                             showHintAndError={false}
                             faramElementName="parent"
-                            label={this.props.countriesStrings('parentAdminLevelLabel')}
-                            placeholder={this.props.countriesStrings('parentAdminLevelPlaceholder')}
+                            label={_ts('countries', 'parentAdminLevelLabel')}
+                            placeholder={_ts('countries', 'parentAdminLevelPlaceholder')}
                             className={styles.selectInput}
                         />
                         {
                             faramValues.geoShapeFile ? (
                                 <div className={styles.currentUpload}>
                                     <p>
-                                        {this.props.countriesStrings('geoFileLabel')}
+                                        {_ts('countries', 'geoFileLabel')}
                                     </p>
                                     <InternalGallery
                                         onlyFileName
@@ -398,7 +388,7 @@ export default class EditAdminLevel extends React.PureComponent {
                                 </div>
                             ) : (
                                 <p className={styles.noFileUpload}>
-                                    {this.props.countriesStrings('noFileUploadedLabel')}
+                                    {_ts('countries', 'noFileUploadedLabel')}
                                 </p>
                             )
                         }
@@ -413,25 +403,25 @@ export default class EditAdminLevel extends React.PureComponent {
                             >
                                 <span className={styles.load}>
                                     <i className={iconNames.uploadFa} />
-                                    {this.props.countriesStrings('loadGeoShapeFile')}
+                                    {_ts('countries', 'loadGeoShapeFile')}
                                 </span>
                             </FileInput>
                             <span
                                 className={iconNames.help}
-                                title={this.props.countriesStrings('geoshapeTooltip')}
+                                title={_ts('countries', 'geoshapeTooltip')}
                             />
                             <HiddenInput faramElementName="geoShapeFile" />
                         </div>
                         <div className={styles.rightContainer}>
                             <DangerButton onClick={onClose}>
-                                {this.props.countriesStrings('cancelButtonLabel')}
+                                {_ts('countries', 'cancelButtonLabel')}
                             </DangerButton>
                             <PrimaryButton
                                 className={styles.saveBtn}
                                 type="submit"
                                 disabled={pending || pristine}
                             >
-                                {this.props.countriesStrings('saveChangesButtonLabel')}
+                                {_ts('countries', 'saveChangesButtonLabel')}
                             </PrimaryButton>
                         </div>
                     </div>

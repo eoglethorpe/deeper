@@ -7,7 +7,6 @@ import {
 } from 'react-router-dom';
 
 import BoundError from '../../vendor/react-store/components/General/BoundError';
-import AppError from '../../components/AppError';
 import {
     isTruthy,
     checkVersion,
@@ -45,10 +44,6 @@ import {
 
     ceIdFromRouteSelector,
     activeProjectIdFromStateSelector,
-
-    ceStringsSelector,
-    notificationStringsSelector,
-    commonStringsSelector,
 } from '../../redux';
 import {
     createUrlForCategoryEditor,
@@ -62,14 +57,8 @@ import {
 } from '../../constants';
 import schema from '../../schema';
 import notify from '../../notify';
-
-/*
-DocumentPanel
-    DocumentNGram
-    DcoumentSelect
-SubcategoryPropertyPanel
-    NGram
-*/
+import _ts from '../../ts';
+import AppError from '../../components/AppError';
 
 import DocumentPanel from './DocumentPanel';
 import NewCategoryModal from './NewCategoryModal';
@@ -90,10 +79,6 @@ const mapStateToProps = (state, props) => ({
 
     categoryEditorId: ceIdFromRouteSelector(state, props),
     projectId: activeProjectIdFromStateSelector(state, props),
-
-    ceStrings: ceStringsSelector(state),
-    notificationStrings: notificationStringsSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -130,10 +115,6 @@ const propTypes = {
     categoryEditorId: PropTypes.number.isRequired,
 
     projectId: PropTypes.number.isRequired,
-
-    ceStrings: PropTypes.func.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -211,8 +192,8 @@ export default class CategoryEditor extends React.PureComponent {
                     if (isValueOverriden) {
                         notify.send({
                             type: notify.type.WARNING,
-                            title: this.props.notificationStrings('ceUpdate'),
-                            message: this.props.notificationStrings('ceUpdateOverridden'),
+                            title: _ts('notification', 'ceUpdate'),
+                            message: _ts('notification', 'ceUpdateOverridden'),
                             duration: notify.duration.SLOW,
                         });
                     }
@@ -304,8 +285,8 @@ export default class CategoryEditor extends React.PureComponent {
         } catch (ex) {
             notify.send({
                 type: notify.type.WARNING,
-                title: this.props.notificationStrings('invalidDropSource'),
-                message: this.props.notificationStrings('validDropAlert'),
+                title: _ts('notification', 'invalidDropSource'),
+                message: _ts('notification', 'validDropAlert'),
             });
         }
     }
@@ -335,7 +316,7 @@ export default class CategoryEditor extends React.PureComponent {
     handleRemoveCategory = () => {
         const { activeCategoryId, categories } = this.props;
         const activeCategory = categories.find(cat => cat.id === activeCategoryId);
-        const confirmText = this.props.ceStrings('confirmTextDeleteCategory', {
+        const confirmText = _ts('ce', 'confirmTextDeleteCategory', {
             category: activeCategory.title,
         });
 
@@ -538,7 +519,7 @@ export default class CategoryEditor extends React.PureComponent {
                 { pending && <LoadingAnimation large /> }
                 <Prompt
                     when={!categoryEditorViewPristine}
-                    message={this.props.commonStrings('youHaveUnsavedChanges')}
+                    message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 <div className={styles.left}>
                     <DocumentPanel projectId={projectId} />
@@ -553,7 +534,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 disabled={categoryEditorViewPristine || pending}
                                 onClick={this.handleCategoryEditorSaveButtonClick}
                             >
-                                {this.props.ceStrings('saveCeButtonLabel')}
+                                {_ts('ce', 'saveCeButtonLabel')}
                             </SuccessButton>
                             <Link
                                 disabled={categoryEditorViewPristine || pending}
@@ -561,16 +542,16 @@ export default class CategoryEditor extends React.PureComponent {
                                 to={`${reverseRoute(pathNames.projects, { projectId })}#/category-editor`}
                                 replace
                             >
-                                {this.props.ceStrings('exitButtonLabel')}
+                                {_ts('ce', 'exitButtonLabel')}
                             </Link>
                         </div>
                         <div className={styles.actionBtn}>
                             <SelectInput
-                                label={this.props.ceStrings('headerCategoryLabel')}
+                                label={_ts('ce', 'headerCategoryLabel')}
                                 className={styles.categorySelect}
                                 options={categories}
                                 onChange={this.handleCategorySelectChange}
-                                placeholder={this.props.ceStrings('selectCategoryPlaceholder')}
+                                placeholder={_ts('ce', 'selectCategoryPlaceholder')}
                                 showHintAndError={false}
                                 value={activeCategoryId}
                                 keySelector={d => d.id}
@@ -583,7 +564,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 onClick={this.handleNewCategory}
                                 disabled={pending}
                                 iconName={iconNames.add}
-                                title={this.props.ceStrings('addCategoryTooltip')}
+                                title={_ts('ce', 'addCategoryTooltip')}
                             />
                             { isTruthy(activeCategoryId) &&
                                 [
@@ -593,7 +574,7 @@ export default class CategoryEditor extends React.PureComponent {
                                         onClick={this.handleEditCategory}
                                         disabled={pending}
                                         iconName={iconNames.edit}
-                                        title={this.props.ceStrings('editCategoryTooltip')}
+                                        title={_ts('ce', 'editCategoryTooltip')}
                                     />,
                                     <DangerButton
                                         key="remove"
@@ -601,7 +582,7 @@ export default class CategoryEditor extends React.PureComponent {
                                         onClick={this.handleRemoveCategory}
                                         disabled={pending}
                                         iconName={iconNames.delete}
-                                        title={this.props.ceStrings('deleteCategoryTooltip')}
+                                        title={_ts('ce', 'deleteCategoryTooltip')}
                                     />,
                                 ]
                             }
@@ -614,7 +595,7 @@ export default class CategoryEditor extends React.PureComponent {
                                     this.renderSubcategoryColumns()
                                 ) : (
                                     <p className={styles.empty}>
-                                        {this.props.ceStrings('nothingHereText')}
+                                        {_ts('ce', 'nothingHereText')}
                                     </p>
                                 )
                             }

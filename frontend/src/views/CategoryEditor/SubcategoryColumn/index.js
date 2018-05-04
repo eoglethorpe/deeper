@@ -1,12 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import AccentButton from '../../../vendor/react-store/components/Action/Button/AccentButton';
 import ListView from '../../../vendor/react-store/components/View/List/ListView';
 
+import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
-import { ceStringsSelector } from '../../../redux';
 
 import styles from '../styles.scss';
 
@@ -27,7 +26,6 @@ const propTypes = {
 
     isLastColumn: PropTypes.bool,
     title: PropTypes.string,
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -37,11 +35,6 @@ const defaultProps = {
     isLastColumn: false,
 };
 
-const mapStateToProps = state => ({
-    ceStrings: ceStringsSelector(state),
-});
-
-@connect(mapStateToProps)
 export default class SubcategoryColumn extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -162,7 +155,7 @@ export default class SubcategoryColumn extends React.PureComponent {
     render() {
         const {
             subcategories,
-            title = this.props.ceStrings('titleLabel'),
+            title = _ts('ce', 'titleLabel'),
         } = this.props;
 
         return (
@@ -173,7 +166,7 @@ export default class SubcategoryColumn extends React.PureComponent {
                     </h4>
                     <AccentButton
                         onClick={this.handleNewSubcategoryButtonClick}
-                        title={this.props.ceStrings('addSubcategory')}
+                        title={_ts('ce', 'addSubcategory')}
                         iconName={iconNames.add}
                         transparent
                     />

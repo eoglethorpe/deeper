@@ -26,10 +26,10 @@ import {
 import {
     userGalleryFilesSelector,
     setUserGalleryFilesAction,
-    commonStringsSelector,
 } from '../../redux';
 import { iconNames } from '../../constants';
 import { leadTypeIconMap } from '../../entities/lead';
+import _ts from '../../ts';
 
 import styles from './styles.scss';
 
@@ -41,7 +41,6 @@ const propTypes = {
     galleryFiles: PropTypes.arrayOf(
         PropTypes.shape({}),
     ),
-    commonStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -51,7 +50,6 @@ const defaultProps = {
 
 const mapStateToProps = state => ({
     galleryFiles: userGalleryFilesSelector(state),
-    commonStrings: commonStringsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -73,13 +71,13 @@ export default class DgSelect extends React.PureComponent {
         this.galleryFilesHeader = [
             {
                 key: 'actions',
-                label: this.props.commonStrings('tableHeaderSelect'),
+                label: _ts('common', 'tableHeaderSelect'),
                 order: 1,
                 modifier: row => this.renderCheckbox(row),
             },
             {
                 key: 'mimeType',
-                label: this.props.commonStrings('tableHeaderType'),
+                label: _ts('common', 'tableHeaderType'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.mimeType, b.mimeType),
@@ -87,14 +85,14 @@ export default class DgSelect extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: this.props.commonStrings('tableHeaderName'),
+                label: _ts('common', 'tableHeaderName'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareString(a.title, b.title),
             },
             {
                 key: 'createdAt',
-                label: this.props.commonStrings('tableHeaderDateCreated'),
+                label: _ts('common', 'tableHeaderDateCreated'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.createdAt, b.createdAt),
@@ -255,8 +253,7 @@ export default class DgSelect extends React.PureComponent {
 
     renderCheckbox = row => (
         <AccentButton
-            // FIXME: use strings
-            title={row.selected ? 'Unselect' : 'Select'}
+            title={row.selected ? _ts('common', 'unselect') : _ts('common', 'select')}
             onClick={() => this.handleFileSelection(row)}
             smallVerticalPadding
             transparent
@@ -288,9 +285,9 @@ export default class DgSelect extends React.PureComponent {
                 rightComponent={
                     <SearchInput
                         onChange={this.handleSearchInputChange}
-                        placeholder={this.props.commonStrings('searchGalleryPlaceholder')}
+                        placeholder={_ts('common', 'searchGalleryPlaceholder')}
                         className={styles.searchInput}
-                        label={this.props.commonStrings('searchGalleryLabel')}
+                        label={_ts('common', 'searchGalleryLabel')}
                         value={searchInputValue}
                         showLabel={false}
                         showHintAndError={false}
@@ -314,13 +311,13 @@ export default class DgSelect extends React.PureComponent {
                 <Button
                     onClick={this.onClose}
                 >
-                    {this.props.commonStrings('cancelButtonLabel')}
+                    {_ts('common', 'cancelButtonLabel')}
                 </Button>
                 <PrimaryButton
                     onClick={this.onAdd}
                     disabled={pending}
                 >
-                    {this.props.commonStrings('addButtonLabel')}
+                    {_ts('common', 'addButtonLabel')}
                 </PrimaryButton>
             </ModalFooter>,
         ]);

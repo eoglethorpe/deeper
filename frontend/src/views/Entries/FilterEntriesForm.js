@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import { isObjectEmpty } from '../../vendor/react-store/utils/common';
-import TextInput from '../../vendor/react-store/components/Input/TextInput';
 import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import RangeFilter from '../../vendor/react-store/components/Input/RangeFilter';
@@ -24,7 +23,6 @@ import {
     setEntryFilterOptionsAction,
     setGeoOptionsAction,
     geoOptionsForProjectSelector,
-    entryStringsSelector,
 } from '../../redux';
 import {
     createUrlForGeoOptions,
@@ -37,6 +35,7 @@ import {
 } from '../../rest';
 import schema from '../../schema';
 import notify from '../../notify';
+import _ts from '../../ts';
 import GeoSelection from '../../components/GeoSelection';
 
 const mapStateToProps = (state, props) => ({
@@ -45,7 +44,6 @@ const mapStateToProps = (state, props) => ({
     filters: filtersForProjectSelector(state, props),
     projectDetails: projectDetailsSelector(state, props),
     entryFilterOptions: entryFilterOptionsForProjectSelector(state, props),
-    entryStrings: entryStringsSelector(state),
     geoOptions: geoOptionsForProjectSelector(state, props),
 });
 
@@ -72,8 +70,6 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     entryFilterOptions: PropTypes.object.isRequired,
     setEntryFilterOptions: PropTypes.func.isRequired,
-
-    entryStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -168,7 +164,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     .errors
                     .join(' ');
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
                     message,
                     duration: notify.duration.MEDIUM,
@@ -176,9 +172,9 @@ export default class FilterEntriesForm extends React.PureComponent {
             })
             .fatal(() => {
                 notify.send({
-                    title: this.props.entryStrings('entriesTabLabel'),
+                    title: _ts('entry', 'entriesTabLabel'),
                     type: notify.type.ERROR,
-                    message: this.props.entryStrings('geoOptionsFatalMessage'),
+                    message: _ts('entry', 'geoOptionsFatalMessage'),
                     duration: notify.duration.MEDIUM,
                 });
             })
@@ -337,9 +333,9 @@ export default class FilterEntriesForm extends React.PureComponent {
                 <SearchInput
                     className="entries-filter"
                     key="search"
-                    label={this.props.entryStrings('searchFilterLabel')}
+                    label={_ts('entry', 'searchFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('search', value); }}
-                    placeholder={this.props.entryStrings('searchFilterPlaceholder')}
+                    placeholder={_ts('entry', 'searchFilterPlaceholder')}
                     showHintAndError={false}
                     value={filters.search}
                     disabled={this.props.pending}
@@ -350,7 +346,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     keySelector={FilterEntriesForm.optionKeySelector}
                     labelSelector={FilterEntriesForm.optionLabelSelector}
                     options={createdBy}
-                    label={this.props.entryStrings('createdByFilterLabel')}
+                    label={_ts('entry', 'createdByFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('created_by', value); }}
                     showHintAndError={false}
                     value={filters.created_by || emptyList}
@@ -359,7 +355,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                 <DateFilter
                     className="entries-filter"
                     key="created-at"
-                    label={this.props.entryStrings('createdAtFilterLabel')}
+                    label={_ts('entry', 'createdAtFilterLabel')}
                     onChange={(value) => { this.handleFilterChange('created_at', value); }}
                     showHintAndError={false}
                     value={filters.created_at}
@@ -373,7 +369,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                             onClick={this.handleApplyFilter}
                             disabled={pending || pristine}
                         >
-                            {this.props.entryStrings('applyFilterButtonLabel')}
+                            {_ts('entry', 'applyFilterButtonLabel')}
                         </Button>
                     )
                 }
@@ -382,7 +378,7 @@ export default class FilterEntriesForm extends React.PureComponent {
                     onClick={this.handleClearFilter}
                     disabled={pending || isFilterEmpty}
                 >
-                    {this.props.entryStrings('clearFilterButtonLabel')}
+                    {_ts('entry', 'clearFilterButtonLabel')}
                 </DangerButton>
             </div>
         );

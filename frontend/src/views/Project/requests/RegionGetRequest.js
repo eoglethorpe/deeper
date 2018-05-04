@@ -6,6 +6,7 @@ import {
 
 import schema from '../../../schema';
 import notify from '../../../notify';
+import _ts from '../../../ts';
 
 /*
  * setState, setRegionDetails
@@ -21,7 +22,6 @@ export default class RegionGetRequest {
             regionDetail,
             discard,
             setRegionDetails,
-            notificationStrings,
         } = this.props;
 
         try {
@@ -46,8 +46,8 @@ export default class RegionGetRequest {
             if (regionDetail.pristine && !discard) {
                 notify.send({
                     type: notify.type.WARNING,
-                    title: notificationStrings('regionUpdate'),
-                    message: notificationStrings('regionUpdateOverridden'),
+                    title: _ts('notification', 'regionUpdate'),
+                    message: _ts('notification', 'regionUpdateOverridden'),
                     duration: notify.duration.SLOW,
                 });
             }

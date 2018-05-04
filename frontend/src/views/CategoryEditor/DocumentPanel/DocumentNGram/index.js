@@ -8,17 +8,14 @@ import {
 } from '../../../../vendor/react-store/utils/common';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
 
-import {
-    categoryEditorNgramsSelector,
-    ceStringsSelector,
-} from '../../../../redux';
+import _ts from '../../../../ts';
+import { categoryEditorNgramsSelector } from '../../../../redux';
 
 import styles from '../../styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
     ngrams: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
-    ceStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -27,7 +24,6 @@ const defaultProps = {
 
 const mapStateToProps = (state, props) => ({
     ngrams: categoryEditorNgramsSelector(state, props),
-    ceStrings: ceStringsSelector(state),
 });
 
 
@@ -126,7 +122,7 @@ export default class DocumentNGram extends React.PureComponent {
                 />
                 <div className={styles.ngramSelects}>
                     <h4 className={styles.heading}>
-                        {this.props.ceStrings('numberOfWordsLabel')}
+                        {_ts('ce', 'numberOfWordsLabel')}
                     </h4>
                     <ListView
                         className={styles.ngramSelectList}

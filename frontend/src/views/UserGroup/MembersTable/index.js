@@ -21,9 +21,8 @@ import {
     unSetMembershipAction,
     setUsersMembershipAction,
     setUserMembershipAction,
-    notificationStringsSelector,
-    userStringsSelector,
 } from '../../../redux';
+import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
 
 import MembershipRoleChangeRequest from '../requests/MembershipRoleChangeRequest';
@@ -42,18 +41,11 @@ const propTypes = {
     setUserMembership: PropTypes.func.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     isCurrentUserAdmin: PropTypes.bool.isRequired,
-    notificationStrings: PropTypes.func.isRequired,
-    userStrings: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
     className: '',
 };
-
-const mapStateToProps = state => ({
-    notificationStrings: notificationStringsSelector(state),
-    userStrings: userStringsSelector(state),
-});
 
 const mapDispatchToProps = dispatch => ({
     unSetMembership: params => dispatch(unSetMembershipAction(params)),
@@ -61,7 +53,7 @@ const mapDispatchToProps = dispatch => ({
     setUserMembership: params => dispatch(setUserMembershipAction(params)),
 });
 
-@connect(mapStateToProps, mapDispatchToProps)
+@connect(undefined, mapDispatchToProps)
 export default class MembersTable extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -83,28 +75,28 @@ export default class MembersTable extends React.PureComponent {
         this.memberHeaders = [
             {
                 key: 'memberName',
-                label: this.props.userStrings('tableHeaderName'),
+                label: _ts('user', 'tableHeaderName'),
                 order: 1,
                 sortable: true,
                 comparator: (a, b) => compareString(a.memberName, b.memberName),
             },
             {
                 key: 'memberEmail',
-                label: this.props.userStrings('tableHeaderEmail'),
+                label: _ts('user', 'tableHeaderEmail'),
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => compareString(a.memberEmail, b.memberEmail),
             },
             {
                 key: 'role',
-                label: this.props.userStrings('tableHeaderRights'),
+                label: _ts('user', 'tableHeaderRights'),
                 order: 3,
                 sortable: true,
                 comparator: (a, b) => compareString(a.role, b.role),
             },
             {
                 key: 'joinedAt',
-                label: this.props.userStrings('tableHeaderJoinedAt'),
+                label: _ts('user', 'tableHeaderJoinedAt'),
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareDate(a.joinedAt, b.jointedAt),
@@ -112,7 +104,7 @@ export default class MembersTable extends React.PureComponent {
             },
             {
                 key: 'actions',
-                label: this.props.userStrings('tableHeaderActions'),
+                label: _ts('user', 'tableHeaderActions'),
                 order: 5,
                 modifier: row => (
                     <ActionButtons
@@ -149,7 +141,6 @@ export default class MembersTable extends React.PureComponent {
         const { userGroupId } = this.props;
         const membershipRoleChangeRequest = new MembershipRoleChangeRequest({
             setUserMembership: this.props.setUserMembership,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.membershipRoleChangeRequest = membershipRoleChangeRequest.create(
@@ -165,7 +156,6 @@ export default class MembersTable extends React.PureComponent {
         const userGroupId = this.props.userGroupId;
         const membershipDeleteRequest = new MembershipDeleteRequest({
             unSetMembership: this.props.unSetMembership,
-            notificationStrings: this.props.notificationStrings,
             setState: v => this.setState(v),
         });
         this.membershipDeleteRequest = membershipDeleteRequest.create(
@@ -186,7 +176,7 @@ export default class MembersTable extends React.PureComponent {
     }
 
     handleDeleteMemberClick = (row) => {
-        const confirmText = this.props.userStrings('confirmTextRemoveMember', { memberName: row.memberName });
+        const confirmText = _ts('user', 'confirmTextRemoveMember', { memberName: row.memberName });
 
         this.setState({
             confirmText,
@@ -216,8 +206,8 @@ export default class MembersTable extends React.PureComponent {
 
     handleToggleMemberRoleClick = (member) => {
         const confirmText = member.role === 'admin'
-            ? this.props.userStrings('confirmTextRevokeAdmin', { memberName: member.memberName })
-            : this.props.userStrings('confirmTextGrantAdmin', { memberName: member.memberName });
+            ? _ts('user', 'confirmTextRevokeAdmin', { memberName: member.memberName })
+            : _ts('user', 'confirmTextGrantAdmin', { memberName: member.memberName });
 
         this.setState({
             toggleRoleConfirmShow: true,
@@ -255,11 +245,11 @@ export default class MembersTable extends React.PureComponent {
                 { actionPending && <LoadingAnimation /> }
                 <div className={styles.header}>
                     <h2>
-                        {this.props.userStrings('tableHeaderMembers')}
+                        {_ts('user', 'tableHeaderMembers')}
                     </h2>
                     <div className={styles.pusher} />
                     <SearchInput
-                        placeholder={this.props.userStrings('placeholderSearch')}
+                        placeholder={_ts('user', 'placeholderSearch')}
                         onChange={this.handleSearchMemberChange}
                         value={searchMemberInputValue}
                         className={styles.searchInput}
@@ -271,7 +261,7 @@ export default class MembersTable extends React.PureComponent {
                         <PrimaryButton
                             onClick={this.handleAddMemberClick}
                         >
-                            {this.props.userStrings('addMemberButtonLabel')}
+                            {_ts('user', 'addMemberButtonLabel')}
                         </PrimaryButton>
                     }
                 </div>
@@ -301,7 +291,7 @@ export default class MembersTable extends React.PureComponent {
                         onClose={this.handleAddMemberModalClose}
                     >
                         <ModalHeader
-                            title={this.props.userStrings('addMemberButtonLabel')}
+                            title={_ts('user', 'addMemberButtonLabel')}
                             rightComponent={
                                 <PrimaryButton
                                     onClick={this.handleAddMemberModalClose}

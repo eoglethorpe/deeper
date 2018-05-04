@@ -5,9 +5,10 @@ import {
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
+import _ts from '../../../ts';
 
 /*
- * props: setState, setUsers, notificationStrings
+ * props: setState, setUsers
 */
 export default class UsersGetRequest {
     constructor(props) {
@@ -30,9 +31,9 @@ export default class UsersGetRequest {
     failure = (response) => {
         console.warn('FAILURE:', response);
         notify.send({
-            title: this.props.notificationStrings('userMembershipCreate'),
+            title: _ts('notification', 'userMembershipCreate'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('usersPullFailure'),
+            message: _ts('notification', 'usersPullFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -40,9 +41,9 @@ export default class UsersGetRequest {
     fatal = (response) => {
         console.warn('FATAL:', response);
         notify.send({
-            title: this.props.notificationStrings('userMembershipCreate'),
+            title: _ts('notification', 'userMembershipCreate'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('usersPullFailure'),
+            message: _ts('notification', 'usersPullFailure'),
             duration: notify.duration.SLOW,
         });
     }
