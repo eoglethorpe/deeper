@@ -18,7 +18,7 @@ import {
     transformResponseErrorToFormError,
     createParamsForProjectPatch,
     createUrlForProject,
-    createParamsForUser,
+    createParamsForGet,
     createUrlForUsers,
 } from '../../../../rest';
 import {
@@ -282,7 +282,7 @@ export default class ProjectGeneral extends React.PureComponent {
         const usersFields = ['display_name', 'email', 'id'];
         const usersRequest = new FgRestBuilder()
             .url(createUrlForUsers(usersFields))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {

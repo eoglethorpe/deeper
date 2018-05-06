@@ -2,7 +2,7 @@ import { BgRestBuilder } from '../../../vendor/react-store/utils/rest';
 
 import schema from '../../../schema';
 import {
-    createParamsForProjects,
+    createParamsForGet,
     urlForProjects,
 } from '../../../rest';
 
@@ -20,7 +20,7 @@ export default class ProjectGet extends AbstractTask {
     createProjectsRequest = (store) => {
         const projectsRequest = new BgRestBuilder()
             .url(urlForProjects)
-            .params(() => createParamsForProjects())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsMiniGetResponse');
@@ -35,14 +35,6 @@ export default class ProjectGet extends AbstractTask {
                 } catch (er) {
                     console.error(er);
                 }
-            })
-            .failure((response) => {
-                console.info('FAILURE:', response);
-                // TODO: IMP logout and send to login screen
-            })
-            .fatal((response) => {
-                console.info('FATAL:', response);
-                // TODO: IMP user couldn't be verfied screen
             })
             .build();
         return projectsRequest;

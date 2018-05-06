@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForProjectAryTemplate,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -19,7 +19,7 @@ export default class AryTemplateRequest {
     create = (projectId) => {
         const request = new FgRestBuilder()
             .url(createUrlForProjectAryTemplate(projectId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => { this.setState({ pendingAryTemplate: true, noTemplate: false }); })
             .success((response) => {
                 try {

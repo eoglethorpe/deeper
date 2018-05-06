@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForProjectsOfUser,
-    createParamsForProjects,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -13,7 +13,7 @@ export default class UserProjectsGetRequest {
     create = (userId) => {
         const projectsRequest = new FgRestBuilder()
             .url(createUrlForProjectsOfUser(userId))
-            .params(() => createParamsForProjects())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectsGetResponse');

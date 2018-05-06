@@ -2,6 +2,7 @@ import SiloTasksManager from '../../utils/SiloTasksManager';
 
 import TokenRefresher from './tasks/TokenRefresher';
 import ProjectGet from './tasks/ProjectGet';
+import PreferencesGet from './tasks/PreferencesGet';
 
 export const START_SILO_BACKGROUND_TASKS = 'siloBgTasks/START';
 export const STOP_SILO_BACKGROUND_TASKS = 'siloBgTasks/STOP';
@@ -17,8 +18,9 @@ export const stopSiloBackgroundTasksAction = () => ({
 
 
 const siloBackgroundTasks = (store) => {
-    const tokenRefresher = new TokenRefresher(store);
     const projectGetter = new ProjectGet(store);
+    const preferencesGetter = new PreferencesGet(store);
+    const tokenRefresher = new TokenRefresher(store);
 
     const siloBackgroundTaskManager = new SiloTasksManager('background');
     siloBackgroundTaskManager.addTask(tokenRefresher);
@@ -35,11 +37,13 @@ const siloBackgroundTasks = (store) => {
                     });
 
                 projectGetter.start();
+                preferencesGetter.start();
                 break;
             case STOP_SILO_BACKGROUND_TASKS:
                 siloBackgroundTaskManager.stop();
 
                 projectGetter.stop();
+                preferencesGetter.stop();
                 break;
             default:
         }

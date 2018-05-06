@@ -5,7 +5,7 @@ import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    createParamsForGenericGet,
+    createParamsForGet,
     createParamsForFileExtractionTrigger,
     createUrlForSimplifiedFilePreview,
     urlForFileExtractionTrigger,
@@ -131,7 +131,7 @@ export default class SimplifiedFilePreview extends React.PureComponent {
     createPreviewRequest = (previewId, onLoad) => (
         new FgRestBuilder()
             .url(createUrlForSimplifiedFilePreview(previewId))
-            .params(createParamsForGenericGet())
+            .params(createParamsForGet)
             .maxPollAttempts(200)
             .pollTime(2000)
             .shouldPoll(response => !response.extracted)

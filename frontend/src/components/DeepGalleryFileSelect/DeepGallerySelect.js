@@ -21,7 +21,7 @@ import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 
 import {
     createUrlForGalleryFiles,
-    createHeaderForGalleryFile,
+    createParamsForGet,
 } from '../../rest';
 import {
     userGalleryFilesSelector,
@@ -173,7 +173,7 @@ export default class DgSelect extends React.PureComponent {
     createRequestForUserGalleryFiles = (params) => {
         const userGalleryFilesRequest = new FgRestBuilder()
             .url(createUrlForGalleryFiles(params))
-            .params(createHeaderForGalleryFile())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({
                     pending: true,

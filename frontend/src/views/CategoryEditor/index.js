@@ -47,7 +47,7 @@ import {
 } from '../../redux';
 import {
     createUrlForCategoryEditor,
-    createParamsForUser,
+    createParamsForGet,
     createParamsForCeViewPatch,
     transformResponseErrorToFormError,
 } from '../../rest';
@@ -172,7 +172,7 @@ export default class CategoryEditor extends React.PureComponent {
     createCeRequest = (categoryEditorId) => {
         const cesRequest = new FgRestBuilder()
             .url(createUrlForCategoryEditor(categoryEditorId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {

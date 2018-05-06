@@ -1,6 +1,5 @@
 import {
     DELETE,
-    GET,
     POST,
     PUT,
     commonHeaderForPost,
@@ -25,11 +24,6 @@ export const createUrlForArysOfProject = params => (
 export const createUrlForAryFilterOptions = projectId => (
     `${wsEndpoint}/assessment-options/?${p({ project: projectId })}`
 );
-
-export const commonParamsForGET = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
 
 /* Ary fields: lead*, metadata, methodology  */
 export const createParamsForAryCreate = data => ({

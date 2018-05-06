@@ -1,4 +1,4 @@
-import { wsEndpoint, GET, POST, DELETE, PATCH, commonHeaderForPost, p } from '../config/rest';
+import { wsEndpoint, POST, DELETE, PATCH, commonHeaderForPost, p } from '../config/rest';
 
 export const urlForUserMembership = `${wsEndpoint}/group-memberships/`;
 
@@ -12,11 +12,6 @@ export const createUrlForUserGroupsOfUser = userId => (
 );
 
 export const urlForUserGroups = `${wsEndpoint}/user-groups/`;
-
-export const createParamsForUserGroups = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
 
 export const createParamsForUserGroupsCreate = ({ title }) => ({
     method: POST,

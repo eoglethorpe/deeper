@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlEditEntryGet,
-    createParamsForEditEntryGet,
+    createParamsForGet,
 } from '../../../rest';
 import {
     calcEntriesDiff,
@@ -41,7 +41,7 @@ export default class LeadRequest {
     create = (leadId) => {
         const request = new FgRestBuilder()
             .url(createUrlEditEntryGet(leadId))
-            .params(() => createParamsForEditEntryGet())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pendingEditEntryData: true }))
             .postLoad(() => this.setState({ pendingEditEntryData: false }))
             .success((response) => {

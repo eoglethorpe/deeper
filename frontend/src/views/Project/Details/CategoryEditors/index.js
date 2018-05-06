@@ -15,7 +15,7 @@ import ModalBody from '../../../../vendor/react-store/components/View/Modal/Body
 
 import {
     urlForCategoryEditors,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../../rest';
 import {
     categoryEditorListSelector,
@@ -128,7 +128,7 @@ export default class ProjectCategoryEditor extends React.PureComponent {
     createCesRequest = () => {
         const cesRequest = new FgRestBuilder()
             .url(urlForCategoryEditors)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {

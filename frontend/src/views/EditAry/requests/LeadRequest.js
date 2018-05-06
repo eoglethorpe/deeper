@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForLead,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -14,7 +14,7 @@ export default class LeadRequest {
     create = (leadId) => {
         const leadRequest = new FgRestBuilder()
             .url(createUrlForLead(leadId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pendingLead: true }))
             .postLoad(() => this.setState({ pendingLead: false }))
             .success((response) => {

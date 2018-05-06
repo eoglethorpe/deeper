@@ -39,7 +39,7 @@ import {
 import {
     createUrlForFilteredEntries,
 
-    createParamsForUser,
+    createParamsForGet,
     createParamsForFilteredEntries,
     createUrlForAnalysisFramework,
     createUrlForProject,
@@ -287,7 +287,7 @@ export default class Entries extends React.PureComponent {
     createRequestForProject = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({
                     pendingAf: true,
@@ -352,7 +352,7 @@ export default class Entries extends React.PureComponent {
         );
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .delay(0)
             .preLoad(() => {
                 this.setState({ pendingAf: true });

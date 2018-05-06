@@ -26,9 +26,8 @@ import {
 } from '../../redux';
 import {
     createUrlForGeoOptions,
-    createParamsForGeoOptionsGET,
 
-    createParamsForUser,
+    createParamsForGet,
     createUrlForEntryFilterOptions,
 
     transformResponseErrorToFormError,
@@ -143,7 +142,7 @@ export default class FilterEntriesForm extends React.PureComponent {
     createGeoOptionsRequest = (projectId) => {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))
-            .params(() => createParamsForGeoOptionsGET())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ geoSelectionEnable: false }))
             .success((response) => {
                 try {
@@ -197,7 +196,7 @@ export default class FilterEntriesForm extends React.PureComponent {
 
         const entryFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 // FIXME: use this
                 this.setState({ loadingEntryFilters: true });

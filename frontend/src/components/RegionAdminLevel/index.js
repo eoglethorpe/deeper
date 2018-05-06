@@ -14,7 +14,7 @@ import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAn
 
 import {
     createUrlForAdminLevelsForRegion,
-    createParamsForAdminLevelsForRegionGET,
+    createParamsForGet,
     createParamsForAdminLevelDelete,
     createUrlForAdminLevel,
 } from '../../rest';
@@ -152,7 +152,7 @@ export default class RegionAdminLevel extends React.PureComponent {
         const urlForAdminLevelsForRegion = createUrlForAdminLevelsForRegion(regionId);
         const requestForAdminLevelsForRegion = new BgRestBuilder()
             .url(urlForAdminLevelsForRegion)
-            .params(() => createParamsForAdminLevelsForRegionGET())
+            .params(createParamsForGet)
             .preLoad(() => {})
             .postLoad(() => {})
             .success((response) => {

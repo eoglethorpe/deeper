@@ -15,7 +15,7 @@ import DateFilter from '../../vendor/react-store/components/Input/DateFilter';
 import MultiSelectInput from '../../vendor/react-store/components/Input/MultiSelectInput';
 
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForLeadFilterOptions,
 } from '../../rest';
 import {
@@ -141,7 +141,7 @@ export default class FilterLeadsForm extends React.PureComponent {
 
         const leadFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({ loadingLeadFilters: true });
             })

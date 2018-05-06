@@ -16,7 +16,7 @@ import ModalBody from '../../../../vendor/react-store/components/View/Modal/Body
 
 import {
     urlForAnalysisFrameworks,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../../rest';
 import {
     analysisFrameworkListSelector,
@@ -130,7 +130,7 @@ export default class ProjectAnalysisFramework extends React.PureComponent {
     createAfsRequest = () => {
         const afsRequest = new FgRestBuilder()
             .url(urlForAnalysisFrameworks)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {

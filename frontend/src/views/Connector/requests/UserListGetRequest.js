@@ -1,6 +1,6 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForUsers,
 } from '../../../rest';
 
@@ -45,7 +45,7 @@ export default class ConnectorsGetRequest {
         const usersFields = ['display_name', 'email', 'id'];
         const userListGetRequest = new FgRestBuilder()
             .url(createUrlForUsers(usersFields))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ userDataLoading: true }); })
             .postLoad(() => { this.props.setState({ userDataLoading: false }); })
             .success(this.success)

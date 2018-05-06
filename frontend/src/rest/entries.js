@@ -1,6 +1,5 @@
 import {
     wsEndpoint,
-    GET,
     POST,
     PUT,
     DELETE,
@@ -20,12 +19,6 @@ export const createUrlForEntryEdit = entryId => (
 export const createUrlForEntries = projectId => (
     `${wsEndpoint}/entries/?${p({ project: projectId })}`
 );
-
-export const createParamsForEntry = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
-
 
 // TODO: move this somewhere else
 const ONE_DAY = 24 * 60 * 60 * 1000;
@@ -71,10 +64,6 @@ export const createParamsForEntryEdit = data => ({
 export const createUrlForEntriesOfLead = leadId => (
     `${wsEndpoint}/entries/?${p({ lead: leadId })}`
 );
-export const createParamsForEntriesOfLead = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
 
 export const createUrlForDeleteEntry = entryId => (
     `${wsEndpoint}/entries/${entryId}/`
@@ -87,7 +76,3 @@ export const createParamsForDeleteEntry = () => ({
 export const createUrlEditEntryGet = leadId => (
     `${wsEndpoint}/edit-entries-data/${leadId}/`
 );
-export const createParamsForEditEntryGet = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});

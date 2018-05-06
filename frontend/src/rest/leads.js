@@ -1,6 +1,5 @@
 import {
     wsEndpoint,
-    GET,
     POST,
     PUT,
     PATCH,
@@ -38,11 +37,6 @@ export const createParamsForLeadPatch = data => ({
 
 export const createParamsForLeadDelete = () => ({
     method: DELETE,
-    headers: commonHeaderForPost,
-});
-
-export const createParamsForGenericGet = () => ({
-    method: GET,
     headers: commonHeaderForPost,
 });
 

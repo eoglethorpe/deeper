@@ -7,7 +7,7 @@ import Button from '../../vendor/react-store/components/Action/Button';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    createParamsForAdminLevelsForRegionGET,
+    createParamsForGet,
     createUrlForAdminLevelsForRegion,
     createUrlForGeoAreasLoadTrigger,
     createUrlForGeoJsonMap,
@@ -94,7 +94,7 @@ export default class RegionMap extends React.PureComponent {
     createTriggerRequest = regionId => (
         new FgRestBuilder()
             .url(createUrlForGeoAreasLoadTrigger(regionId))
-            .params(createParamsForAdminLevelsForRegionGET())
+            .params(createParamsForGet)
             .success(() => {
                 console.log(`Triggered geo areas loading task for ${regionId}`);
                 if (this.adminLevelsRequest) {
@@ -121,7 +121,7 @@ export default class RegionMap extends React.PureComponent {
     createAdminLevelsRequest = regionId => (
         new FgRestBuilder()
             .url(createUrlForAdminLevelsForRegion(regionId))
-            .params(createParamsForAdminLevelsForRegionGET())
+            .params(createParamsForGet)
             .maxPollAttempts(200)
             .pollTime(2000)
             .shouldPoll(response => (
@@ -212,14 +212,14 @@ export default class RegionMap extends React.PureComponent {
     }
 
     loadGeoJsons() {
+        // FIXME: use coordinator
         const { adminLevels } = this.state;
-        const params = createParamsForAdminLevelsForRegionGET();
         adminLevels.forEach((adminLevel) => {
             {
                 const url = createUrlForGeoJsonMap(adminLevel.id);
                 const request = new FgRestBuilder()
                     .url(url)
-                    .params(params)
+                    .params(createParamsForGet)
                     .preLoad(() => {
                         this.setState({
                             adminLevelPending: {
@@ -261,7 +261,7 @@ export default class RegionMap extends React.PureComponent {
                 const url = createUrlForGeoJsonBounds(adminLevel.id);
                 const request = new FgRestBuilder()
                     .url(url)
-                    .params(params)
+                    .params(createParamsForGet)
                     .success((response) => {
                         // FIXME: write schema
                         const bounds = response.bounds;

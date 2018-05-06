@@ -4,7 +4,7 @@ import schema from '../../../schema';
 import { getFiltersForRequest } from '../../../entities/lead';
 import {
     createUrlForArysOfProject,
-    commonParamsForGET,
+    commonParamsForGet,
     transformResponseErrorToFormError,
 } from '../../../rest';
 
@@ -36,7 +36,7 @@ export default class ArysGetRequest {
 
         const arysRequest = new FgRestBuilder()
             .url(urlForProjectArys)
-            .params(() => commonParamsForGET())
+            .params(() => commonParamsForGet())
             .preLoad(() => {
                 this.setState({ loadingArys: true });
             })

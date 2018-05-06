@@ -10,10 +10,10 @@ const tokenSchema = [];
         fields: {
             userId: { type: 'uint', required: 'true' },
             tokenType: { type: 'string', required: 'true' },
-            username: { type: 'string', required: 'true' },
-            displayName: { type: 'string', required: 'true' },
             exp: { type: 'uint', required: 'true' },
-            isSuperuser: { type: 'boolean', required: true },
+            // username: { type: 'string', required: 'true' },
+            // displayName: { type: 'string', required: 'true' },
+            // isSuperuser: { type: 'boolean', required: true },
         },
     };
     tokenSchema.push({ name, schema });

@@ -3,7 +3,7 @@ import notify from '../../../notify';
 import schema from '../../../schema';
 import { getFiltersForRequest } from '../../../entities/lead';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForLeadsOfProject,
     transformResponseErrorToFormError,
 } from '../../../rest';
@@ -35,7 +35,7 @@ export default class LeadsRequest {
 
         const leadRequest = new FgRestBuilder()
             .url(urlForProjectLeads)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({ loadingLeads: true });
             })
