@@ -1,4 +1,5 @@
 import localforage from 'localforage';
+<<<<<<< HEAD
 import { createTransform } from 'redux-persist';
 
 const myTransform = createTransform(
@@ -19,7 +20,7 @@ const myTransform = createTransform(
 );
 
 const storeConfig = {
-    blacklist: ['notify', 'route', 'lang', 'app'],
+    blacklist: ['notify', 'route', 'app'],
     key: 'deeper',
     version: 1,
     storage: localforage,

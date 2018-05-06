@@ -3,12 +3,16 @@ import devLang from '../initial-state/dev-lang';
 import { groupList } from '../../vendor/react-store/utils/common';
 
 const emptyObject = {};
+const emptyArray = [];
 
-const selectedLanguageNameSelector = ({ lang }) => (
-    lang.selectedLanguage
+export const selectedLanguageNameSelector = ({ lang }) => (
+    lang.selectedLanguage || '$devLang'
 );
-const fallbackLanguageNameSelector = ({ lang }) => (
-    lang.fallbackLanguage
+export const fallbackLanguageNameSelector = ({ lang }) => (
+    lang.fallbackLanguage || '$devLang'
+);
+export const availableLanguagesSelector = ({ lang }) => (
+    lang.availableLanguages || emptyArray
 );
 
 const languagesSelector = ({ lang }) => (
@@ -18,7 +22,11 @@ const languagesSelector = ({ lang }) => (
 const selectedLanguageSelector = createSelector(
     selectedLanguageNameSelector,
     languagesSelector,
-    (selectedLanguage, languages) => languages[selectedLanguage] || devLang,
+    (selectedLanguage, languages) => (
+        selectedLanguage === '$devLang'
+            ? devLang
+            : languages[selectedLanguage] || emptyObject
+    ),
 );
 
 export const selectedStringsSelector = createSelector(
@@ -34,7 +42,11 @@ export const selectedLinksSelector = createSelector(
 const fallbackLanguageSelector = createSelector(
     fallbackLanguageNameSelector,
     languagesSelector,
-    (fallbackLanguage, languages) => languages[fallbackLanguage] || devLang,
+    (fallbackLanguage, languages) => (
+        fallbackLanguage === '$devLang'
+            ? devLang
+            : languages[fallbackLanguage] || emptyObject
+    ),
 );
 
 export const fallbackStringsSelector = createSelector(
@@ -222,7 +234,7 @@ export const problemsWithStringsSelector = createSelector(
 
         return groupList(
             problems,
-            problem => problem.linkCollectionName || '$common',
+            problem => problem.linkCollectionName || '$all',
         );
     },
 );

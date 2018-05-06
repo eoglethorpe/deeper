@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -11,11 +11,17 @@ import {
 } from '../../vendor/react-store/utils/common';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Table from '../../vendor/react-store/components/View/Table';
+import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import {
     allStringsSelector,
     linkStringsSelector,
     problemsWithStringsSelector,
     linkKeysSelector,
+    availableLanguagesSelector,
+    selectedLanguageNameSelector,
+    fallbackLanguageNameSelector,
+    setSelectedLanguageAction,
+    setFallbackLanguageAction,
 } from '../../redux';
 
 import styles from './styles.scss';
@@ -29,6 +35,13 @@ const propTypes = {
     problemsWithStrings: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     linkKeys: PropTypes.array.isRequired,
+
+    selectedLanguageName: PropTypes.string.isRequired,
+    fallbackLanguageName: PropTypes.string.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    availableLanguages: PropTypes.array.isRequired,
+    setSelectedLanguage: PropTypes.func.isRequired,
+    setFallbackLanguage: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -39,11 +52,19 @@ const mapStateToProps = state => ({
     linkStrings: linkStringsSelector(state),
     problemsWithStrings: problemsWithStringsSelector(state),
     linkKeys: linkKeysSelector(state),
+    availableLanguages: availableLanguagesSelector(state),
+    selectedLanguageName: selectedLanguageNameSelector(state),
+    fallbackLanguageName: fallbackLanguageNameSelector(state),
+});
+
+const mapDispatchToProps = dispatch => ({
+    setSelectedLanguage: params => dispatch(setSelectedLanguageAction(params)),
+    setFallbackLanguage: params => dispatch(setFallbackLanguageAction(params)),
 });
 
 const emptyArray = [];
 
-@connect(mapStateToProps)
+@connect(mapStateToProps, mapDispatchToProps)
 export default class StringManagement extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -161,11 +182,33 @@ export default class StringManagement extends React.PureComponent {
                 <h2 className={styles.heading}>
                     String Management
                 </h2>
+                <SelectInput
+                    hideClearButton
+                    keySelector={v => v.code}
+                    labelSelector={v => v.name}
+                    onChange={this.props.setSelectedLanguage}
+                    options={this.props.availableLanguages}
+                    value={this.props.selectedLanguageName}
+                    label="Language"
+                    placeholder="DevLang"
+                    showHintAndError={false}
+                />
+                <SelectInput
+                    hideClearButton
+                    keySelector={v => v.code}
+                    labelSelector={v => v.name}
+                    onChange={this.props.setFallbackLanguage}
+                    options={this.props.availableLanguages}
+                    value={this.props.fallbackLanguageName}
+                    label="Fallback Language"
+                    placeholder="DevLang"
+                    showHintAndError={false}
+                />
                 <button
                     className={`${styles.sidebarButton} ${linkName === undefined ? styles.active : ''}`}
                     onClick={() => { this.setState({ linkName: undefined }); }}
                 >
-                    { (this.props.problemsWithStrings.$common || emptyArray).length } ALL
+                    { (this.props.problemsWithStrings.$all || emptyArray).length } ALL
                 </button>
                 { linkKeys.map(name => (
                     <button
@@ -211,19 +254,21 @@ export default class StringManagement extends React.PureComponent {
         const { linkName } = this.state;
         const { problemsWithStrings } = this.props;
 
-        const problems = problemsWithStrings[linkName || '$common'] || emptyArray;
+        const problems = problemsWithStrings[linkName || '$all'] || emptyArray;
 
         return (
             <div className={styles.stringPanel}>
                 <LeftPane />
                 <div className={styles.stringDetail}>
                     { linkName ? <LinksTable /> : <StringsTable /> }
-                    <ListView
-                        className={styles.sidebarRight}
-                        data={problems}
-                        modifier={this.renderError}
-                        keyExtractor={StringManagement.keyExtractor}
-                    />
+                    { problems.length > 0 &&
+                        <ListView
+                            className={styles.sidebarRight}
+                            data={problems}
+                            modifier={this.renderError}
+                            keyExtractor={StringManagement.keyExtractor}
+                        />
+                    }
                 </div>
             </div>
         );
