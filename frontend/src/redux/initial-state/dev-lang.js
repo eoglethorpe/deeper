@@ -1057,6 +1057,7 @@ const initialDevLangState = {
             humanitarianAccessTitle: 9019,
         },
         leads: {
+            selectLabel: 643,
             fileUploadFailText: 7501,
             filterDateCreated: 2,
             filterDatePublished: 3,

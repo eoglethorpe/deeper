@@ -14,7 +14,6 @@ import { caseInsensitiveSubmatch } from '../../../vendor/react-store/utils/commo
 import ConnectorsGetRequest from '../requests/ConnectorsGetRequest';
 
 import {
-    leadsStringsSelector,
     addLeadViewConnectorsListSelector,
     projectIdFromRouteSelector,
 
@@ -23,11 +22,11 @@ import {
 
 import { iconNames } from '../../../constants';
 import ConnectorContent from './Content';
+import _ts from '../../../ts';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    leadsStrings: PropTypes.func.isRequired,
     onModalClose: PropTypes.func.isRequired,
     connectorsList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setConnectorsOfProject: PropTypes.func.isRequired,
@@ -38,7 +37,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = state => ({
-    leadsStrings: leadsStringsSelector(state),
     projectId: projectIdFromRouteSelector(state),
     connectorsList: addLeadViewConnectorsListSelector(state),
 });
@@ -149,7 +147,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
                 <header className={styles.header}>
                     <SearchInput
                         onChange={this.handleSearchInputChange}
-                        placeholder={this.props.leadsStrings('searchConnectorPlaceholder')}
+                        placeholder={_ts('leads', 'searchConnectorPlaceholder')}
                         className={styles.searchInput}
                         value={searchInputValue}
                         showLabel={false}
@@ -170,13 +168,12 @@ export default class ConnectorSelectModal extends React.PureComponent {
         const { selectedConnector } = this.state;
         const {
             connectorsList,
-            leadsStrings,
         } = this.props;
 
         if (connectorsList.length <= 0) {
             return (
                 <div className={styles.empty}>
-                    { leadsStrings('noConnectorsLabel') }
+                    { _ts('leads', 'noConnectorsLabel') }
                 </div>
             );
         }
@@ -191,7 +188,6 @@ export default class ConnectorSelectModal extends React.PureComponent {
     }
 
     render() {
-        const { leadsStrings } = this.props;
         const { dataLoading } = this.state;
 
         const Sidebar = this.renderSidebar;
@@ -200,7 +196,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
         return (
             <Modal className={styles.modal} >
                 <ModalHeader
-                    title={leadsStrings('connectorsLabel')}
+                    title={_ts('leads', 'connectorsLabel')}
                     rightComponent={
                         <PrimaryButton
                             onClick={this.handleConnectorSelectModalClose}

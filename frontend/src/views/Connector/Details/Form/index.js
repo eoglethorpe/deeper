@@ -369,7 +369,7 @@ export default class ConnectorDetailsForm extends React.PureComponent {
         }
         const paramFields = {};
         connectorSource.options.forEach((o) => {
-            const validation = [requiredCondition];
+            const validation = [];
             if (o.fieldType === 'url') {
                 validation.push(urlCondition);
             }

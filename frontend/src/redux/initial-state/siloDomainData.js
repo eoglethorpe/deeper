@@ -62,6 +62,21 @@ const initialSiloDomainData = {
                 },
             },
         },
+        connectorsLeads: {
+            7: [
+                {
+                    key: 1123123,
+                    title: 'A dog jumped',
+                    website: 'https://dog.jump',
+                    isSelected: false,
+                },
+                {
+                    key: 11123,
+                    title: 'A dog jumped',
+                    website: 'https://dog.jump',
+                },
+            ],
+        },
     },
 
     // i specifies project

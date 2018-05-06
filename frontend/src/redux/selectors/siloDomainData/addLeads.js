@@ -69,6 +69,11 @@ const addLeadViewConnectorsSelector = createSelector(
     addLeadView => addLeadView.connectorsList || emptyObject,
 );
 
+const addLeadViewConnectorsLeadsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.connectorsLeads || emptyObject,
+);
+
 const addLeadViewConnectorsForProjectSelector = createSelector(
     addLeadViewConnectorsSelector,
     projectIdFromRoute,
@@ -84,4 +89,10 @@ export const addLeadViewConnectorSelector = createSelector(
     addLeadViewConnectorsForProjectSelector,
     connectorIdFromRoute,
     (connectors, connectorId) => connectors[connectorId] || emptyObject,
+);
+
+export const addLeadViewConnectorLeadsSelector = createSelector(
+    addLeadViewConnectorsLeadsSelector,
+    connectorIdFromRoute,
+    (connectorsLeads, connectorId) => connectorsLeads[connectorId] || emptyList,
 );

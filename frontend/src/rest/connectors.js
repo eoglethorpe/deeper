@@ -7,6 +7,7 @@ import {
 
 export const urlForConnectors = `${wsEndpoint}/connectors/?fields=id,title,version_id,source,created_at,modified_at`;
 export const createUrlForConnector = connectorId => `${wsEndpoint}/connectors/${connectorId}/`;
+export const createUrlForConnectorleads = connectorId => `${wsEndpoint}/connectors/${connectorId}/leads/`;
 export const urlForConnectorSources = `${wsEndpoint}/connector-sources/`;
 
 export const createUrlForConnectorsOfProject = projectId => `${urlForConnectors}&project=${projectId}`;
