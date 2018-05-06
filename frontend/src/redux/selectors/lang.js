@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
-import stringFormat from 'string-format';
 import devLang from '../initial-state/dev-lang';
+import { groupList } from '../../vendor/react-store/utils/common';
 
 const emptyObject = {};
 
@@ -18,7 +18,7 @@ const languagesSelector = ({ lang }) => (
 const selectedLanguageSelector = createSelector(
     selectedLanguageNameSelector,
     languagesSelector,
-    (selectedLanguage, languages) => languages[selectedLanguage] || emptyObject,
+    (selectedLanguage, languages) => languages[selectedLanguage] || devLang,
 );
 
 export const selectedStringsSelector = createSelector(
@@ -49,22 +49,22 @@ export const fallbackLinksSelector = createSelector(
 
 // Af page
 
-const getStringRefsInCode = (usageMap, linkName, stringName) => (
-    (usageMap[linkName] && usageMap[linkName][stringName])
-        ? usageMap[linkName][stringName].length
+const getStringRefsInCode = (usageMap, linkCollectionName, stringName) => (
+    (usageMap[linkCollectionName] && usageMap[linkCollectionName][stringName])
+        ? usageMap[linkCollectionName][stringName].length
         : 0
 );
-const getLinkFromLinks = (links = {}, linkName) => (
+const getLinkCollectionFromLinks = (links = {}, linkName) => (
     links[linkName] || {}
 );
-const getLinkFromUsageMap = (usageMaps = {}, linkName) => (
+const getLinkCollectionFromUsageMap = (usageMaps = {}, linkName) => (
     usageMaps[linkName] || {}
 );
-const getStringIdFromLink = (link = {}, stringName) => (
-    link[stringName]
+const getStringNameFromLinkCollection = (linkCollection = {}, linkName) => (
+    linkCollection[linkName]
 );
-const getStringFromStrings = (strings = {}, stringId) => (
-    strings[stringId]
+const getStringFromStrings = (strings = {}, stringName) => (
+    strings[stringName]
 );
 
 const usageMapSelector = () => {
@@ -87,16 +87,16 @@ const duplicatedStringsSelector = createSelector(
         const duplicatedStrings = {};
 
         const memory = {};
-        Object.keys(strings).forEach((stringId) => {
-            const value = getStringFromStrings(strings, stringId).toLowerCase();
+        Object.keys(strings).forEach((stringName) => {
+            const value = getStringFromStrings(strings, stringName).toLowerCase();
             // first encountered string id with this value
-            const firstEncounteredStringId = memory[value];
-            if (firstEncounteredStringId) {
+            const firstEncounteredStringName = memory[value];
+            if (firstEncounteredStringName) {
                 // set id of first encountered string
-                duplicatedStrings[stringId] = firstEncounteredStringId;
+                duplicatedStrings[stringName] = firstEncounteredStringName;
             } else {
                 // memorize to identify duplicates
-                memory[value] = stringId;
+                memory[value] = stringName;
             }
         });
 
@@ -109,24 +109,24 @@ const referenceCountOfStringsSelector = createSelector(
     selectedLinksSelector,
     usageMapSelector,
     (strings, links, usageMaps) => {
-        // Initialize reference count
-        const stringsReferenceCount = {};
-        Object.keys(strings).forEach((stringId) => {
-            stringsReferenceCount[stringId] = 0;
+        // Initialize reference count for string
+        const stringReferenceCount = {};
+        Object.keys(strings).forEach((stringName) => {
+            stringReferenceCount[stringName] = 0;
         });
-        // Calculate reference count
-        Object.keys(links).forEach((linkName) => {
-            const link = getLinkFromLinks(links, linkName);
-            Object.keys(link).forEach((stringName) => {
-                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
-                const stringId = getStringIdFromLink(link, stringName);
-                const string = getStringFromStrings(strings, stringId);
-                if (stringId && string) {
-                    stringsReferenceCount[stringId] += refsInCode;
+        // Calculate reference count for string
+        Object.keys(links).forEach((linkCollectionName) => {
+            const linkCollection = getLinkCollectionFromLinks(links, linkCollectionName);
+            Object.keys(linkCollection).forEach((linkName) => {
+                const refsInCode = getStringRefsInCode(usageMaps, linkCollectionName, linkName);
+                const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
+                const string = getStringFromStrings(strings, stringName);
+                if (stringName !== undefined && string !== undefined) {
+                    stringReferenceCount[stringName] += refsInCode;
                 }
             });
         });
-        return stringsReferenceCount;
+        return stringReferenceCount;
     },
 );
 
@@ -137,25 +137,25 @@ export const problemsWithStringsSelector = createSelector(
     (strings, links, usageMaps) => {
         const problems = [];
 
-        const stringIdReferenced = Object.keys(strings).reduce(
+        // Identify strings not linked by any linkCollection
+        const stringNameReferenced = Object.keys(strings).reduce(
             (acc, val) => {
                 acc[val] = false;
                 return acc;
             },
             {},
         );
-        Object.keys(links).forEach((linkName) => {
-            const link = getLinkFromLinks(links, linkName);
-            Object.keys(link).forEach((stringName) => {
-                // Identify bad references in link (not available in strings)
-                const stringId = getStringIdFromLink(link, stringName);
-                if (stringId) {
-                    stringIdReferenced[stringId] = true;
+        Object.keys(links).forEach((linkCollectionName) => {
+            const linkCollection = getLinkCollectionFromLinks(links, linkCollectionName);
+            Object.keys(linkCollection).forEach((linkName) => {
+                const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
+                if (stringName !== undefined) {
+                    stringNameReferenced[stringName] = true;
                 }
             });
         });
-        Object.keys(stringIdReferenced).forEach((key) => {
-            if (!stringIdReferenced[key]) {
+        Object.keys(stringNameReferenced).forEach((key) => {
+            if (!stringNameReferenced[key]) {
                 problems.push({
                     key: problems.length,
                     type: 'warning',
@@ -165,54 +165,65 @@ export const problemsWithStringsSelector = createSelector(
             }
         });
 
-        Object.keys(links).forEach((linkName) => {
-            const link = getLinkFromLinks(links, linkName);
-            Object.keys(link).forEach((stringName) => {
-                // Identify unused references in link (not referenced in code)
-                const refsInCode = getStringRefsInCode(usageMaps, linkName, stringName);
+        // Identify unused links
+        // Identify links not referencing a valid string
+        Object.keys(links).forEach((linkCollectionName) => {
+            const linkCollection = getLinkCollectionFromLinks(links, linkCollectionName);
+            Object.keys(linkCollection).forEach((linkName) => {
+                // identify unused links
+                const refsInCode = getStringRefsInCode(usageMaps, linkCollectionName, linkName);
                 if (refsInCode <= 0) {
                     problems.push({
                         key: problems.length,
                         type: 'warning',
-                        title: 'Unused string',
-                        description: `${linkName}:${stringName}`,
+                        title: 'Unused link',
+                        linkCollectionName,
+                        description: `${linkCollectionName}:${linkName}`,
                     });
                 }
 
-                // Identify bad references in link (not available in strings)
-                const stringId = getStringIdFromLink(link, stringName);
-                const string = getStringFromStrings(strings, stringId);
-                if (!stringId || !string) {
+                // identify bad links
+                const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
+                const string = getStringFromStrings(strings, stringName);
+                if (stringName === undefined || string === undefined) {
                     problems.push({
                         key: problems.length,
                         type: 'error',
-                        title: 'Undefined value for string',
-                        description: `${linkName}:${stringName}`,
+                        title: 'Bad link',
+                        linkCollectionName,
+                        description: `${linkCollectionName}:${linkName}`,
                     });
                 }
             });
         });
 
         // Identify bad-references of string in code
-        Object.keys(usageMaps).forEach((linkName) => {
-            const linkFromUsage = getLinkFromUsageMap(usageMaps, linkName);
-            const link = getLinkFromLinks(links, linkName);
-            Object.keys(linkFromUsage).forEach((stringName) => {
+        Object.keys(usageMaps).forEach((linkCollectionName) => {
+            const linkCollectionFromUsage = getLinkCollectionFromUsageMap(
+                usageMaps,
+                linkCollectionName,
+            );
+            const linkCollection = getLinkCollectionFromLinks(links, linkCollectionName);
+            Object.keys(linkCollectionFromUsage).forEach((linkName) => {
                 // Identify bad references in link (not available in links or strings)
-                const stringId = getStringIdFromLink(link, stringName);
-                const string = getStringFromStrings(strings, stringId);
-                if (!stringId || !string) {
+                const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
+                const string = getStringFromStrings(strings, stringName);
+                if (!stringName || !string) {
                     problems.push({
                         key: problems.length,
                         type: 'error',
-                        title: 'Undefined value for string',
-                        description: `${linkName}:${stringName}`,
+                        title: 'Undefined link',
+                        linkCollectionName,
+                        description: `${linkCollectionName}:${linkName}`,
                     });
                 }
             });
         });
 
-        return problems;
+        return groupList(
+            problems,
+            problem => problem.linkCollectionName || '$common',
+        );
     },
 );
 
@@ -238,20 +249,18 @@ export const linkStringsSelector = createSelector(
     selectedLinksSelector,
     usageMapSelector,
     (strings, links, usedMaps) => {
-        // Initialize
         const finalLinks = {};
-        // Calculate
-        Object.keys(links).forEach((linkName) => {
-            const link = getLinkFromLinks(links, linkName);
-            finalLinks[linkName] = Object.keys(link).map((stringName) => {
-                const refsInCode = getStringRefsInCode(usedMaps, linkName, stringName);
-                const stringId = getStringIdFromLink(link, stringName);
-                const string = getStringFromStrings(strings, stringId);
+        Object.keys(links).forEach((linkCollectionName) => {
+            const linkCollection = getLinkCollectionFromLinks(links, linkCollectionName);
+            finalLinks[linkCollectionName] = Object.keys(linkCollection).map((linkName) => {
+                const refsInCode = getStringRefsInCode(usedMaps, linkCollectionName, linkName);
+                const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
+                const string = getStringFromStrings(strings, stringName);
 
                 return {
-                    name: stringName,
+                    name: linkName,
                     value: string,
-                    valueId: stringId,
+                    valueId: stringName,
                     referenceCount: refsInCode,
                 };
             });
@@ -264,43 +273,3 @@ export const linkKeysSelector = createSelector(
     usageMapSelector,
     usedMaps => Object.keys(usedMaps),
 );
-
-// FIXME: remove these later
-
-const createSelectorForLink = name => createSelector(
-    selectedLinksSelector,
-    selectedStringsSelector,
-    (selectedLinks, selectedStrings) => (identifier, params) => {
-        const namedLinkStrings = selectedLinks[name] || emptyObject;
-        const id = namedLinkStrings[identifier];
-        if (!id || !selectedStrings[id]) {
-            console.warn(`String not found for ${name}:${identifier}`);
-            return `{${name}:${identifier}}`;
-        }
-        if (params) {
-            return stringFormat(selectedStrings[id], params);
-        }
-        return selectedStrings[id];
-    },
-);
-export const afStringsSelector = createSelectorForLink('af');
-export const apiStringsSelector = createSelectorForLink('api');
-export const aryStringsSelector = createSelectorForLink('ary');
-export const ceStringsSelector = createSelectorForLink('ce');
-export const commonStringsSelector = createSelectorForLink('common');
-export const countriesStringsSelector = createSelectorForLink('countries');
-export const entryStringsSelector = createSelectorForLink('entry');
-export const exportStringsSelector = createSelectorForLink('export');
-export const fourHundredFourStringsSelector = createSelectorForLink('fourHundredFour');
-export const homescreenStringsSelector = createSelectorForLink('homescreen');
-export const leadsStringsSelector = createSelectorForLink('leads');
-export const arysStringsSelector = createSelectorForLink('arys');
-export const loginStringsSelector = createSelectorForLink('login');
-export const notificationStringsSelector = createSelectorForLink('notification');
-export const projectStringsSelector = createSelectorForLink('project');
-export const connectorStringsSelector = createSelectorForLink('connector');
-export const userStringsSelector = createSelectorForLink('user');
-export const pageTitleStringsSelector = createSelectorForLink('pageTitle');
-export const assessmentMetadataStringsSelector = createSelectorForLink('assessmentMetadata');
-export const assessmentMethodologyStringsSelector = createSelectorForLink('assessmentMethodology');
-export const assessmentSummaryStringsSelector = createSelectorForLink('assessmentSummary');

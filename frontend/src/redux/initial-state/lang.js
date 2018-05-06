@@ -1,5 +1,5 @@
 const initialLangState = {
-    selectedLanguage: 'np',
+    selectedLanguage: undefined,
     fallbackLanguage: undefined,
     languages: {
         np: {
