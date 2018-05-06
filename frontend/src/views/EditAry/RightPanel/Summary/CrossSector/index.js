@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
-import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
+import HierarchicalMultiSelectInput from '../../../../../vendor/react-store/components/Input/HierarchicalMultiSelectInput';
 
 import {
     editArySelectedSectorsSelector,
@@ -94,22 +94,22 @@ export default class CrossSector extends React.PureComponent {
 
         if (row === 0) {
             return (
-                <OrganigramSelectInput
+                <HierarchicalMultiSelectInput
                     faramElementName={`priority-sector-${subRow}-${column}`}
                     showHintAndError={false}
-                    data={prioritySectors}
-                    idSelector={CrossSector.nodeIdSelector}
+                    options={prioritySectors}
+                    keySelector={CrossSector.nodeIdSelector}
                     labelSelector={CrossSector.nodeLabelSelector}
                     childrenSelector={CrossSector.nodeChildrenSelector}
                 />
             );
         } else if (row === 1) {
             return (
-                <OrganigramSelectInput
+                <HierarchicalMultiSelectInput
                     faramElementName={`affected-group-${subRow}-${column}`}
                     showHintAndError={false}
-                    data={affectedGroups}
-                    idSelector={CrossSector.nodeIdSelector}
+                    options={affectedGroups}
+                    keySelector={CrossSector.nodeIdSelector}
                     labelSelector={CrossSector.nodeLabelSelector}
                     childrenSelector={CrossSector.nodeChildrenSelector}
                 />

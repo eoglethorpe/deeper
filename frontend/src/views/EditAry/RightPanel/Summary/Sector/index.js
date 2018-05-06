@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import FaramGroup from '../../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import SelectInput from '../../../../../vendor/react-store/components/Input/SelectInput';
 import TextInput from '../../../../../vendor/react-store/components/Input/TextInput';
-import OrganigramSelectInput from '../../../../../components/OrganigramSelectInput';
+import HierarchicalMultiSelectInput from '../../../../../vendor/react-store/components/Input/HierarchicalMultiSelectInput';
 
 import {
     affectedGroupsSelector,
@@ -90,11 +90,11 @@ export default class Sector extends React.PureComponent {
             );
         } else if (row === 1) {
             return (
-                <OrganigramSelectInput
+                <HierarchicalMultiSelectInput
                     faramElementName={`affected-group-${subRow}-${column}`}
                     showHintAndError={false}
-                    data={affectedGroups}
-                    idSelector={Sector.nodeIdSelector}
+                    options={affectedGroups}
+                    keySelector={Sector.nodeIdSelector}
                     labelSelector={Sector.nodeLabelSelector}
                     childrenSelector={Sector.nodeChildrenSelector}
                 />
