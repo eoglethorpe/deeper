@@ -34,7 +34,7 @@ import _ts from '../../ts';
 import styles from './styles.scss';
 
 const propTypes = {
-    params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    projects: PropTypes.arrayOf(PropTypes.number),
     onClose: PropTypes.func.isRequired,
 
     setUserGalleryFiles: PropTypes.func.isRequired,
@@ -44,7 +44,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    params: {},
+    projects: undefined,
     galleryFiles: [],
 };
 
@@ -122,17 +122,21 @@ export default class DgSelect extends React.PureComponent {
             this.userGalleryFilesRequest.stop();
         }
 
-        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(this.props.params);
+        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+            projects: this.props.projects,
+        });
         this.userGalleryFilesRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.params !== this.props.params) {
+        if (nextProps.projectId !== this.props.projectId) {
             if (this.userGalleryFilesRequest) {
                 this.userGalleryFilesRequest.stop();
             }
 
-            this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(nextProps.params);
+            this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+                projects: nextProps.projects,
+            });
             this.userGalleryFilesRequest.start();
         }
     }
@@ -208,6 +212,10 @@ export default class DgSelect extends React.PureComponent {
             })
             .build();
         return userGalleryFilesRequest;
+    }
+
+    handleUploadButton = () => {
+        console.warn('uploading');
     }
 
     handleFileSelection = (file) => {
@@ -308,9 +316,10 @@ export default class DgSelect extends React.PureComponent {
                 />
             </ModalBody>,
             <ModalFooter key="footer">
-                <Button
-                    onClick={this.onClose}
-                >
+                <Button onClick={this.handleUploadButton} >
+                    {_ts('common', 'uploadFileButtonLabel')}
+                </Button>
+                <Button onClick={this.onClose} >
                     {_ts('common', 'cancelButtonLabel')}
                 </Button>
                 <PrimaryButton
