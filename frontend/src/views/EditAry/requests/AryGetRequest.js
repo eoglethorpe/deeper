@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import { checkVersion } from '../../../vendor/react-store/utils/common';
 import {
     createUrlForLeadAry,
-    commonParamsForGet,
+    createParamsForGet,
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
@@ -22,7 +22,7 @@ export default class AryGetRequest {
     create = (id) => { // id is lead id
         const aryPutRequest = new FgRestBuilder()
             .url(createUrlForLeadAry(id))
-            .params(commonParamsForGet())
+            .params(createParamsForGet)
             .preLoad(() => { this.setState({ pendingAry: true }); })
             .postLoad(() => { this.setState({ pendingAry: false }); })
             .success((response) => {

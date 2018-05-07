@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import schema from '../../../../schema';
 import {
     createUrlForAryFilterOptions,
-    commonParamsForGet,
+    createParamsForGet,
 } from '../../../../rest';
 
 export default class AryFilterOptionsGetRequest {
@@ -20,7 +20,7 @@ export default class AryFilterOptionsGetRequest {
 
         const aryFilterOptionsRequest = new FgRestBuilder()
             .url(urlForProjectFilterOptions)
-            .params(() => commonParamsForGet())
+            .params(createParamsForGet)
             .preLoad(() => {
                 // FIXME: use this
                 this.setState({ loadingAryFilters: true });

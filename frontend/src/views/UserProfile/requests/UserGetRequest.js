@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUser,
-    commonParamsForGet,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -14,7 +14,7 @@ export default class UserGetResponse {
         const urlForUser = createUrlForUser(userId);
         const userRequest = new FgRestBuilder()
             .url(urlForUser)
-            .params(() => commonParamsForGet())
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ pending: true }); })
             .postLoad(() => { this.props.setState({ pending: false }); })
             .success((response) => {
