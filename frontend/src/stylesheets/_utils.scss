@@ -134,6 +134,10 @@ $radius-button-border: 2px;
         @include shadow-button-active;
         transform: translateY(1px);
     }
+
+    &:hover {
+        background-color: get-hover-color($background-color);
+    }
 }
 
 %transparent-button-like-link {

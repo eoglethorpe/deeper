@@ -8,6 +8,8 @@ import {
     compareDate,
 } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
+import { UploadBuilder } from '../../vendor/react-store/utils/upload';
+import FileInput from '../../vendor/react-store/components/Input/FileInput';
 import Table from '../../vendor/react-store/components/View/Table';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
@@ -22,6 +24,10 @@ import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import {
     createUrlForGalleryFiles,
     createParamsForGet,
+
+    urlForUpload,
+    createParamsForFileUpload,
+    transformAndCombineResponseErrors,
 } from '../../rest';
 import {
     userGalleryFilesSelector,
@@ -129,7 +135,7 @@ export default class DgSelect extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.projectId !== this.props.projectId) {
+        if (nextProps.projects !== this.props.projects) {
             if (this.userGalleryFilesRequest) {
                 this.userGalleryFilesRequest.stop();
             }
@@ -144,6 +150,9 @@ export default class DgSelect extends React.PureComponent {
     componentWillUnmount() {
         if (this.userGalleryFilesRequest) {
             this.userGalleryFilesRequest.stop();
+        }
+        if (this.uploader) {
+            this.uploader.stop();
         }
     }
 
@@ -214,8 +223,48 @@ export default class DgSelect extends React.PureComponent {
         return userGalleryFilesRequest;
     }
 
-    handleUploadButton = () => {
-        console.warn('uploading');
+    handleUploadButton = (files) => {
+        const file = files[0];
+
+        this.setState({
+            pending: true,
+        });
+
+        if (this.uploader) {
+            this.uploader.stop();
+        }
+
+        this.uploader = new UploadBuilder()
+            .file(file)
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload({
+                projects: this.props.projects,
+            }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                this.setState({
+                    selected: [...this.state.selected, response.id],
+                });
+
+                if (this.userGalleryFilesRequest) {
+                    this.userGalleryFilesRequest.stop();
+                }
+
+                this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+                    projects: this.props.projects,
+                });
+                this.userGalleryFilesRequest.start();
+            })
+            .failure((response) => {
+                const message = transformAndCombineResponseErrors(response.errors);
+                console.error(message);
+            })
+            .fatal(() => {
+                console.error('Couldn\t upload file');
+            })
+            .build();
+
+        this.uploader.start();
     }
 
     handleFileSelection = (file) => {
@@ -316,10 +365,15 @@ export default class DgSelect extends React.PureComponent {
                 />
             </ModalBody>,
             <ModalFooter key="footer">
-                <Button onClick={this.handleUploadButton} >
+                <FileInput
+                    className={styles.fileInput}
+                    onChange={this.handleUploadButton}
+                    value=""
+                    showStatus={false}
+                >
                     {_ts('common', 'uploadFileButtonLabel')}
-                </Button>
-                <Button onClick={this.onClose} >
+                </FileInput>
+                <Button onClick={this.onClose}>
                     {_ts('common', 'cancelButtonLabel')}
                 </Button>
                 <PrimaryButton
