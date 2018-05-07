@@ -24,11 +24,8 @@ test('should log in user', () => {
             refresh: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsInRva2VuVHlwZSI6InJlZnJlc2gifQ.BlX4J4VIMXREIyO-fPBrMj1hswGIu79gZmGpbbE2PTE',
         },
         activeUser: {
-            displayName: 'John Doe',
             exp: 1513769951,
-            isSuperuser: false,
             userId: 1,
-            username: 'johndoe@test.com',
         },
     };
     expect(authReducers[LOGIN_ACTION](state, action)).toEqual(after);
