@@ -1,93 +1,192 @@
 @import '../../stylesheets/base';
 
-$width-sidebar: 320px;
+$width-left-pane: 240px;
+$width-error-pane: 320px;
 
 .string-panel {
-    @extend %main-content;
     display: flex;
+    height: 100%;
 
-    .sidebar {
+    .left-pane {
+        @include background-color($color-foreground-alt);
         display: flex;
         position: relative;
-        flex-basis: 16%;
+        flex-basis: $width-left-pane;
         flex-direction: column;
-        border-right: $width-separator-thin solid $color-separator;
-        background-color: $color-foreground-alt;
-        min-width: $width-sidebar;
-        overflow-y: auto;
+        flex-shrink: 0;
+        margin: -$spacing-small $spacing-small (-$spacing-small) (-$spacing-small);
+        border-right: $width-separator-thin solid $color-separator-alt;
 
-        .heading {
+        .header {
+            flex-shrink: 0;
             border-bottom: $width-separator-thin solid $color-separator;
-            background-color: $color-foreground;
-            padding: $spacing-medium;
+            padding: $spacing-small;
         }
 
-        .sidebar-button {
-            outline: none;
-            border: 0;
-            border-bottom: $width-separator-thin solid $color-separator;
-            border-left: $width-separator-thick solid transparent;
-            background-color: $color-foreground-alt;
-            cursor: pointer;
-            padding: $spacing-medium;
-            text-align: left;
-
-            &.active {
-                border-left: $width-separator-thick solid $color-accent;
-            }
+        .links {
+            flex-grow: 1;
+            font-family: $font-family-monospace;
         }
     }
 
-    .string-detail {
-        @include shadow-medium;
+    .right-pane {
+        @extend %main-content;
+        @include background-color($color-background-alt);
         display: flex;
+        flex-direction: column;
         flex-grow: 1;
 
-        .content {
+        >.header {
+            @include background-color($color-foreground);
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            padding: $spacing-small 0;
+
+            .inputs {
+                display: flex;
+                flex-grow: 1;
+
+                .input {
+                    padding: 0 $spacing-small;
+                }
+            }
+
+            .action-buttons {
+                flex-shrink: 0;
+                padding: 0 $spacing-small;
+
+                button {
+                    margin-left: $spacing-small;
+                }
+            }
+        }
+
+        >.content {
             display: flex;
             position: relative;
             flex-grow: 1;
-            background-color: darken($color-foreground, 1%);
-            overflow-y: auto;
-        }
 
-        .sidebar-right {
-            display: flex;
-            position: relative;
-            flex-basis: 24%;
-            flex-direction: column;
-            border-right: $width-separator-thin solid $color-separator;
-            background-color: $color-foreground-alt;
-            min-width: $width-sidebar;
-            overflow-y: auto;
+            .scroll-wrapper {
+                flex-grow: 1;
+                background-color: $color-background-row;
+                overflow-x: auto;
+                overflow-y: scroll;
 
-            .msgbox {
-                border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-small;
+                .stringsTable {
+                    $width-id-column: 72px;
+                    $width-refs-column: 64px;
+                    $width-duplicates-column: 108px;
+                    $width-string-column: calc(100% - #{$width-id-column - $width-refs-column - $width-duplicates-column});
 
-                .title {
-                    font-weight: bold;
-                }
+                    :global {
+                        .headers {
+                            .id {
+                                width: $width-id-column;
+                            }
 
-                &.error {
-                    .title {
-                        color: $color-danger;
+                            .refs {
+                                width: $width-refs-column;
+                            }
+
+                            .duplicates {
+                                width: $width-duplicates-column;
+                            }
+                            
+                            .string {
+                                width: $width-string-column;
+                            }
+                        }
+
+                        .body {
+                            .id,
+                            .refs,
+                            .duplicates {
+                                font-family: $font-family-monospace;
+                            }
+                        }
                     }
                 }
 
-                &.warning {
+                .linksTable {
+                    $width-id-column: 36%;
+                    $width-refs-column: 64px;
+                    $width-string-id-column: 108px;
+                    $width-string-column: calc(100% - #{$width-id-column} - #{$width-refs-column - $width-string-id-column});
+
+                    :global {
+                        .headers {
+                            .id {
+                                width: $width-id-column;
+                            }
+
+                            .stringId {
+                                width: $width-string-id-column;
+                            }
+
+                            .refs {
+                                width: $width-refs-column;
+                            }
+
+                            .string {
+                                width: 70%;
+                            }
+                        }
+
+                        .body {
+                            .id,
+                            .stringId,
+                            .refs {
+                                font-family: $font-family-monospace;
+                            }
+                        }
+                    }
+                }
+            }
+
+            %error-pane {
+                flex-basis: $width-error-pane;
+                flex-shrink: 0;
+                border-top: $width-separator-thin solid $color-separator;
+                border-left: $width-separator-thin solid $color-separator;
+            }
+
+            .no-problems {
+                @extend %error-pane;
+                height: auto;
+            }
+
+            .problems {
+                @extend %error-pane;
+                overflow-y: auto;
+
+                .problem {
                     .title {
-                        color: $color-warning;
+                        position: sticky;
+                        top: 0;
+                        padding: $spacing-small;
+                        font-weight: $font-weight-bold;
+                    }
+
+                    &.error {
+                        .title {
+                            @include background-color($color-danger);
+                        }
+                    }
+
+                    &.warning {
+                        .title {
+                            @include background-color($color-warning);
+                        }
                     }
                 }
 
-                .description {
-                    font-family: monospace;
+                .instances {
+                    font-family: $font-family-monospace;
                 }
             }
         }
     }
-
 }
 
 

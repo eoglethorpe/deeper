@@ -11,6 +11,10 @@ import {
 } from '../../vendor/react-store/utils/common';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Table from '../../vendor/react-store/components/View/Table';
+import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
+import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
+import VerticalTabs from '../../vendor/react-store/components/View/VerticalTabs';
+import Message from '../../vendor/react-store/components/View/Message';
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
 import {
     allStringsSelector,
@@ -63,6 +67,12 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const emptyArray = [];
+const problemKeys = [
+    'badLink',
+    'undefinedLink',
+    'unusedLinks',
+    'unusedStrings',
+];
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class StringManagement extends React.PureComponent {
@@ -76,10 +86,10 @@ export default class StringManagement extends React.PureComponent {
         super(props);
 
         this.state = {
-            linkName: undefined,
+            linkName: '$all',
         };
 
-        this.headers = [
+        this.stringsTableHeader = [
             {
                 key: 'id',
                 label: 'Id',
@@ -88,188 +98,288 @@ export default class StringManagement extends React.PureComponent {
                 comparator: (a, b) => compareStringAsNumber(a.id, b.id),
             },
             {
-                key: 'value',
+                key: 'string',
                 label: 'String',
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (
-                    compareStringByWordCount(a.value, b.value) ||
-                    compareString(a.value, b.value)
+                    compareStringByWordCount(a.string, b.string) ||
+                    compareString(a.string, b.string)
                 ),
             },
             {
-                key: 'referenceCount',
+                key: 'refs',
                 label: 'Refs',
                 order: 3,
                 sortable: true,
-                comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
+                comparator: (a, b) => compareNumber(a.refs, b.refs),
             },
             {
-                key: 'duplicated',
-                label: 'Duplicated',
+                key: 'duplicates',
+                label: 'Duplicates',
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => (
-                    compareBoolean(!!a.duplicated, !!b.duplicated, -1) ||
-                    compareStringByWordCount(a.value, b.value) ||
-                    compareString(a.value, b.value)
+                    compareBoolean(!!a.duplicates, !!b.duplicates, -1) ||
+                    compareStringByWordCount(a.string, b.string) ||
+                    compareString(a.string, b.string)
                 ),
-                modifier: a => (a.duplicated ? a.duplicated : '-'),
+                modifier: a => (a.duplicates ? a.duplicates : '-'),
             },
         ];
-        this.defaultSort = {
-            key: 'value',
+
+        this.stringsTableDefaultSort = {
+            key: 'string',
             order: 'asc',
         };
 
-        this.headers2 = [
+        this.linksTableHeader = [
             {
-                key: 'name',
+                key: 'id',
                 label: 'Id',
                 order: 1,
                 sortable: true,
-                comparator: (a, b) => compareString(a.name, b.name),
+                comparator: (a, b) => compareString(a.id, b.id),
             },
             {
-                key: 'value',
+                key: 'string',
                 label: 'String',
                 order: 2,
                 sortable: true,
                 comparator: (a, b) => (
-                    compareStringByWordCount(a.value, b.value) ||
-                    compareString(a.value, b.value)
+                    compareStringByWordCount(a.string, b.string) ||
+                    compareString(a.string, b.string)
                 ),
             },
             {
-                key: 'valueId',
+                key: 'stringId',
                 label: 'String Id',
                 order: 3,
                 sortable: false,
             },
             {
-                key: 'referenceCount',
+                key: 'refs',
                 label: 'Refs',
                 order: 4,
                 sortable: true,
-                comparator: (a, b) => compareNumber(a.referenceCount, b.referenceCount),
+                comparator: (a, b) => compareNumber(a.refs, b.refs),
             },
         ];
-        this.defaultSort2 = {
-            key: 'name',
+
+        this.linksTableDefaultSort = {
+            key: 'id',
             order: 'asc',
         };
     }
 
-    renderError = (key, err) => (
-        <div
-            key={err.key}
-            className={`${styles.msgbox} ${styles[err.type]}`}
-        >
-            <div className={styles.title}>
-                {err.title}
-            </div>
-            <div className={styles.description}>
-                {err.description}
-            </div>
-        </div>
-    )
-
     renderLeftPane = () => {
         const { linkName } = this.state;
         const { linkKeys } = this.props;
+
+        // TODO: move to appropriate place
+        const linkNames = linkKeys.reduce(
+            (acc, b) => {
+                acc[b] = b;
+                return acc;
+            },
+            { $all: 'all' },
+        );
         return (
-            <div className={styles.sidebar}>
-                <h2 className={styles.heading}>
-                    String Management
-                </h2>
-                <SelectInput
-                    hideClearButton
-                    keySelector={v => v.code}
-                    labelSelector={v => v.name}
-                    onChange={this.props.setSelectedLanguage}
-                    options={this.props.availableLanguages}
-                    value={this.props.selectedLanguageName}
-                    label="Language"
-                    placeholder="DevLang"
-                    showHintAndError={false}
+            <div className={styles.leftPane}>
+                <header className={styles.header}>
+                    <h2>Strings</h2>
+                </header>
+                <VerticalTabs
+                    className={styles.links}
+                    tabs={linkNames}
+                    active={linkName}
+                    onClick={(name) => { this.setState({ linkName: name }); }}
                 />
-                <SelectInput
-                    hideClearButton
-                    keySelector={v => v.code}
-                    labelSelector={v => v.name}
-                    onChange={this.props.setFallbackLanguage}
-                    options={this.props.availableLanguages}
-                    value={this.props.fallbackLanguageName}
-                    label="Fallback Language"
-                    placeholder="DevLang"
-                    showHintAndError={false}
-                />
-                <button
-                    className={`${styles.sidebarButton} ${linkName === undefined ? styles.active : ''}`}
-                    onClick={() => { this.setState({ linkName: undefined }); }}
-                >
-                    { (this.props.problemsWithStrings.$all || emptyArray).length } ALL
-                </button>
-                { linkKeys.map(name => (
-                    <button
-                        key={name}
-                        className={`${styles.sidebarButton} ${linkName === name ? styles.active : ''}`}
-                        onClick={() => { this.setState({ linkName: name }); }}
-                        type="button"
-                    >
-                        { (this.props.problemsWithStrings[name] || emptyArray).length } { name }
-                    </button>
-                )) }
             </div>
         );
     }
 
-    renderStringsTable = () => (
-        <div className={styles.content}>
-            <Table
-                data={this.props.allStrings}
-                headers={this.headers}
-                keyExtractor={StringManagement.keyExtractor}
-                defaultSort={this.defaultSort}
-            />
-        </div>
-    )
+    renderStringsTable = () => {
+        const { linkName } = this.state;
 
-    renderLinksTable = () => (
-        <div className={styles.content} >
+        if (linkName !== '$all') {
+            return null;
+        }
+
+        const { allStrings } = this.props;
+
+        return (
             <Table
-                data={this.props.linkStrings[this.state.linkName] || emptyArray}
-                headers={this.headers2}
-                keyExtractor={StringManagement.keyExtractor2}
-                defaultSort={this.defaultSort2}
+                className={styles.stringsTable}
+                data={allStrings}
+                headers={this.stringsTableHeader}
+                keyExtractor={StringManagement.keyExtractor}
+                defaultSort={this.stringsTableDefaultSort}
             />
-        </div>
-    )
+        );
+    }
+
+    renderLinksTable = () => {
+        const { linkName } = this.state;
+
+        if (linkName === '$all') {
+            return null;
+        }
+
+        const { linkStrings } = this.props;
+        const data = linkStrings[linkName] || emptyArray;
+
+        return (
+            <Table
+                className={styles.linksTable}
+                data={data}
+                headers={this.linksTableHeader}
+                keyExtractor={StringManagement.keyExtractor2}
+                defaultSort={this.linksTableDefaultSort}
+            />
+        );
+    }
+
+    renderProblem = (k, data) => {
+        const { linkName } = this.state;
+        const { problemsWithStrings } = this.props;
+        const problems = problemsWithStrings[linkName];
+        const currentProblem = problems[data];
+
+        if (!currentProblem || currentProblem.instances.length === 0) {
+            return null;
+        }
+
+        const className = `
+            ${styles.problem}
+            ${styles[currentProblem.type]}
+        `;
+
+        return (
+            <div
+                className={className}
+                key={data}
+            >
+                <h4 className={styles.title}>
+                    {currentProblem.title}
+                </h4>
+                <ListView
+                    className={styles.instances}
+                    data={currentProblem.instances}
+                />
+            </div>
+        );
+    }
+
+    renderProblems = () => {
+        const { linkName } = this.state;
+        const { problemsWithStrings } = this.props;
+        const problemValues = Object.values(problemsWithStrings[linkName]);
+        let anyProblem = false;
+
+        problemValues.forEach((problem) => {
+            if (problem.instances.length > 0) {
+                anyProblem = true;
+                return false;
+            }
+
+            return true;
+        });
+
+        if (!anyProblem) {
+            return (
+                <Message className={styles.noProblems}>
+                    Everything looks good
+                </Message>
+            );
+        }
+
+        return (
+            <ListView
+                className={styles.problems}
+                data={problemKeys}
+                modifier={this.renderProblem}
+            />
+        );
+    }
+
+    renderRightPane = () => {
+        const StringsTable = this.renderStringsTable;
+        const LinksTable = this.renderLinksTable;
+        const Problems = this.renderProblems;
+
+        const keySelector = d => d.code;
+        const labelSelector = d => d.name;
+
+        const {
+            setSelectedLanguage,
+            availableLanguages,
+            selectedLanguageName,
+            setFallbackLanguage,
+            fallbackLanguageName,
+        } = this.props;
+
+        return (
+            <div className={styles.rightPane}>
+                <header className={styles.header}>
+                    <div className={styles.inputs}>
+                        <SelectInput
+                            className={styles.input}
+                            hideClearButton
+                            keySelector={keySelector}
+                            labelSelector={labelSelector}
+                            onChange={setSelectedLanguage}
+                            options={availableLanguages}
+                            value={selectedLanguageName}
+                            label="Language"
+                            placeholder="DevLang"
+                            showHintAndError={false}
+                        />
+                        <SelectInput
+                            className={styles.input}
+                            hideClearButton
+                            keySelector={keySelector}
+                            labelSelector={labelSelector}
+                            onChange={setFallbackLanguage}
+                            options={availableLanguages}
+                            value={fallbackLanguageName}
+                            label="Fallback Language"
+                            placeholder="DevLang"
+                            showHintAndError={false}
+                        />
+                    </div>
+                    <div className={styles.actionButtons}>
+                        <DangerButton
+                            disabled
+                        >
+                            Discard
+                        </DangerButton>
+                        <SuccessButton
+                            disabled
+                        >
+                            Save
+                        </SuccessButton>
+                    </div>
+                </header>
+                <div className={styles.content}>
+                    <div className={styles.scrollWrapper}>
+                        <LinksTable />
+                        <StringsTable />
+                    </div>
+                    <Problems />
+                </div>
+            </div>
+        );
+    }
 
     render() {
         const LeftPane = this.renderLeftPane;
-        const StringsTable = this.renderStringsTable;
-        const LinksTable = this.renderLinksTable;
-
-        const { linkName } = this.state;
-        const { problemsWithStrings } = this.props;
-
-        const problems = problemsWithStrings[linkName || '$all'] || emptyArray;
+        const RightPane = this.renderRightPane;
 
         return (
             <div className={styles.stringPanel}>
                 <LeftPane />
-                <div className={styles.stringDetail}>
-                    { linkName ? <LinksTable /> : <StringsTable /> }
-                    { problems.length > 0 &&
-                        <ListView
-                            className={styles.sidebarRight}
-                            data={problems}
-                            modifier={this.renderError}
-                            keyExtractor={StringManagement.keyExtractor}
-                        />
-                    }
-                </div>
+                <RightPane />
             </div>
         );
     }
