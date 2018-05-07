@@ -1092,6 +1092,7 @@ const initialDevLangState = {
             removeCurrentButtonTitle: 5551,
             removeAllButtonTitle: 5552,
             removeAllFilteredButtonTitle: 5553,
+            saveButtonTitle: 25,
             removeButtonTitle: 419,
             cannotPreviewUrl: 28,
             invalidUrl: 30,

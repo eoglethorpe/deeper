@@ -18,13 +18,11 @@ export default class FormSaveRequest {
             formCoordinator,
             addLeadViewLeadChange,
             addLeadViewLeadSave,
-            getLeadFromId,
             setLeadRests,
         } = params;
         this.formCoordinator = formCoordinator;
         this.addLeadViewLeadSave = addLeadViewLeadSave;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
-        this.getLeadFromId = getLeadFromId;
         this.setLeadRests = setLeadRests;
     }
 

@@ -15,6 +15,13 @@ import FormattedDate from '../../../vendor/react-store/components/View/Formatted
 import {
     addLeadViewAddLeadsAction,
     activeProjectIdFromStateSelector,
+
+    addLeadViewLeadChangeAction,
+
+    addLeadViewSetLeadUploadsAction,
+    addLeadViewSetLeadDriveRestsAction,
+    addLeadViewSetLeadDropboxRestsAction,
+    addLeadViewLeadsSelector,
 } from '../../../redux';
 import DropboxChooser from '../../../components/DropboxChooser';
 import GooglePicker from '../../../components/GooglePicker';
@@ -22,13 +29,16 @@ import ConnectorSelectModal from '../ConnectorSelectModal';
 import notify from '../../../notify';
 import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
-import { LEAD_TYPE } from '../../../entities/lead';
+import { LEAD_TYPE, leadAccessor } from '../../../entities/lead';
 import { dropboxAppKey } from '../../../config/dropbox';
 import {
     googleDriveClientId,
     googleDriveDeveloperKey,
 } from '../../../config/google-drive';
 
+import DropboxRequest from '../requests/DropboxRequest';
+import FileUploadRequest from '../requests/FileUploadRequest';
+import GoogleDriveRequest from '../requests/GoogleDriveRequest';
 import styles from './styles.scss';
 
 const supportedGoogleDriveMimeTypes = [
@@ -54,17 +64,34 @@ const defaultProps = {
 const propTypes = {
     addLeads: PropTypes.func.isRequired,
     activeProject: PropTypes.number.isRequired,
-    onFileSelect: PropTypes.func.isRequired,
-    onGoogleDriveSelect: PropTypes.func.isRequired,
-    onDropboxSelect: PropTypes.func.isRequired,
+
+    addLeadViewLeadChange: PropTypes.func.isRequired,
+
+    setLeadUploads: PropTypes.func.isRequired,
+    setLeadDriveRests: PropTypes.func.isRequired,
+    setLeadDropboxRests: PropTypes.func.isRequired,
+
+    // eslint-disable-next-line react/forbid-prop-types
+    uploadCoordinator: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    driveUploadCoordinator: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    dropboxUploadCoordinator: PropTypes.object.isRequired,
+
+    addLeadViewLeads: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const mapStateToProps = state => ({
     activeProject: activeProjectIdFromStateSelector(state),
+    addLeadViewLeads: addLeadViewLeadsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
+    addLeadViewLeadChange: params => dispatch(addLeadViewLeadChangeAction(params)),
+    setLeadUploads: params => dispatch(addLeadViewSetLeadUploadsAction(params)),
+    setLeadDriveRests: params => dispatch(addLeadViewSetLeadDriveRestsAction(params)),
+    setLeadDropboxRests: params => dispatch(addLeadViewSetLeadDropboxRestsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -83,6 +110,10 @@ export default class LeadButtons extends React.PureComponent {
         // NOTE: google drive access token is received at start
         this.googleDriveAccessToken = undefined;
     }
+
+    getLeadFromId = id => (
+        this.props.addLeadViewLeads.find(l => id === leadAccessor.getKey(l))
+    )
 
     handleLeadAddFromGoogleDrive = (response) => {
         const { docs, action } = response;
@@ -118,8 +149,27 @@ export default class LeadButtons extends React.PureComponent {
             });
         });
 
+        // ADD LEADS
         this.props.addLeads(newLeads);
-        this.props.onGoogleDriveSelect(uploads);
+
+        // CREATE REQUEST
+        const googleDriveRequest = new GoogleDriveRequest({
+            driveUploadCoordinator: this.props.driveUploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setLeadDriveRests: this.props.setLeadDriveRests,
+        });
+        uploads.forEach((upload) => {
+            const request = googleDriveRequest.create(upload);
+            this.props.driveUploadCoordinator.add(upload.leadId, request);
+        });
+        this.props.driveUploadCoordinator.start();
+
+        // SET STATE
+        this.props.setLeadDriveRests({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: true,
+        });
     }
 
     handleLeadAddFromDropbox = (response) => {
@@ -153,8 +203,28 @@ export default class LeadButtons extends React.PureComponent {
             });
         });
 
+        // ADD LEADS
         this.props.addLeads(newLeads);
-        this.props.onDropboxSelect(uploads);
+
+        // CREATE REQUEST
+        const dropboxRequest = new DropboxRequest({
+            dropboxUploadCoordinator: this.props.dropboxUploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setLeadDropboxRests: this.props.setLeadDropboxRests,
+        });
+
+        uploads.forEach((upload) => {
+            const request = dropboxRequest.create(upload);
+            this.props.dropboxUploadCoordinator.add(upload.leadId, request);
+        });
+        this.props.dropboxUploadCoordinator.start();
+
+        // SET STATE
+        this.props.setLeadDropboxRests({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: true,
+        });
 
         this.setState({ dropboxDisabled: false });
     }
@@ -199,8 +269,27 @@ export default class LeadButtons extends React.PureComponent {
             });
         });
 
+        // ADD LEADS
         this.props.addLeads(newLeads);
-        this.props.onFileSelect(uploads);
+
+        // CREATE REQUEST
+        const fileUploadRequest = new FileUploadRequest({
+            uploadCoordinator: this.props.uploadCoordinator,
+            addLeadViewLeadChange: this.props.addLeadViewLeadChange,
+            getLeadFromId: this.getLeadFromId,
+            setLeadUploads: this.props.setLeadUploads,
+        });
+        uploads.forEach((upload) => {
+            const request = fileUploadRequest.create(upload);
+            this.props.uploadCoordinator.add(upload.leadId, request);
+        });
+        this.props.uploadCoordinator.start();
+
+        // SET STATE
+        this.props.setLeadUploads({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: 0,
+        });
     }
 
     handleLeadAddFromWebsite = () => {
@@ -216,6 +305,27 @@ export default class LeadButtons extends React.PureComponent {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
                 project: activeProject,
                 sourceType: LEAD_TYPE.website,
+            },
+
+            pristine: false,
+        });
+
+        this.props.addLeads(newLeads);
+    }
+
+    handleLeadAddFromText = () => {
+        const { activeProject } = this.props;
+        const newLeads = [];
+
+        const uid = randomString();
+        const newLeadId = `lead-${uid}`;
+
+        newLeads.push({
+            id: newLeadId,
+            faramValues: {
+                title: `Lead ${(new Date()).toLocaleTimeString()}`,
+                project: activeProject,
+                sourceType: LEAD_TYPE.text,
             },
 
             pristine: false,
@@ -247,27 +357,6 @@ export default class LeadButtons extends React.PureComponent {
 
         this.props.addLeads(newLeads);
         this.handleConnectorSelectModalClose();
-    }
-
-    handleLeadAddFromText = () => {
-        const { activeProject } = this.props;
-        const newLeads = [];
-
-        const uid = randomString();
-        const newLeadId = `lead-${uid}`;
-
-        newLeads.push({
-            id: newLeadId,
-            faramValues: {
-                title: `Lead ${(new Date()).toLocaleTimeString()}`,
-                project: activeProject,
-                sourceType: LEAD_TYPE.text,
-            },
-
-            pristine: false,
-        });
-
-        this.props.addLeads(newLeads);
     }
 
     handleGoogleDriveOnAuthenticated = (accessToken) => {

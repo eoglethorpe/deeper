@@ -1,5 +1,4 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
 import { leadAccessor } from '../../../entities/lead';
 

@@ -10,6 +10,8 @@ const myTransform = createTransform(
             leadUploads: undefined,
             leadDriveRests: undefined,
             leadDropboxRests: undefined,
+
+            removeModal: undefined,
         },
     }),
     undefined,

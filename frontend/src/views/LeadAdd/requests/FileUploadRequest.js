@@ -1,5 +1,4 @@
 import { UploadBuilder } from '../../../vendor/react-store/utils/upload';
-import update from '../../../vendor/react-store/utils/immutable-update';
 import { leadAccessor } from '../../../entities/lead';
 
 import {

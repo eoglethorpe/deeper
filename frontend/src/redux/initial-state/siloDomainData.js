@@ -35,6 +35,11 @@ const initialSiloDomainData = {
         leadUploads: {},
         leadDriveRests: {},
         leadDropboxRests: {},
+        removeModalState: {
+            show: true,
+            mode: DELETE_MODE.single,
+            leadId: 12,
+        },
         */
         connectorsList: {
             /*
