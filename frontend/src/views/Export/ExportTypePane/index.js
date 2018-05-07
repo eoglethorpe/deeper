@@ -1,17 +1,17 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import Checkbox from '../../vendor/react-store/components/Input/Checkbox';
-import TreeSelection from '../../vendor/react-store/components/Input/TreeSelection';
-import List from '../../vendor/react-store/components/View/List';
+import Checkbox from '../../../vendor/react-store/components/Input/Checkbox';
+import TreeSelection from '../../../vendor/react-store/components/Input/TreeSelection';
+import List from '../../../vendor/react-store/components/View/List';
 
-import { iconNames } from '../../constants';
-import _ts from '../../ts';
+import { iconNames } from '../../../constants';
+import _ts from '../../../ts';
 
-import wordIcon from '../../resources/img/word.svg';
-import excelIcon from '../../resources/img/excel.svg';
-import pdfIcon from '../../resources/img/pdf.svg';
-import jsonIcon from '../../resources/img/json.svg';
+import wordIcon from '../../../resources/img/word.svg';
+import excelIcon from '../../../resources/img/excel.svg';
+import pdfIcon from '../../../resources/img/pdf.svg';
+import jsonIcon from '../../../resources/img/json.svg';
 
 import styles from './styles.scss';
 

@@ -1,0 +1,63 @@
+@import '../../../../stylesheets/base';
+
+%ngram-selects {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-top: $width-separator-medium solid $color-separator;
+    background-color: $color-foreground;
+
+    .heading {
+        padding: $spacing-small $spacing-medium;
+    }
+
+    .ngram-select-list {
+        padding: $spacing-small $spacing-medium;
+
+        .ngram-select {
+            outline: 0;
+            border: 0;
+            background-color: transparent;
+            cursor: pointer;
+            padding: $spacing-small $spacing-medium;
+            font-family: inherit;
+
+            &.active {
+                @include background-color($color-accent);
+            }
+        }
+    }
+}
+
+.ngrams-tab {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    background-color: $color-foreground-alt;
+
+    .ngram-selects {
+        @extend %ngram-selects;
+    }
+
+    .ngram-list {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .ngram {
+            display: flex;
+            flex-shrink: 0;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-medium;
+
+            .title {
+                flex-grow: 1;
+            }
+
+            .strength {
+                flex-shrink: 0;
+            }
+        }
+    }
+}

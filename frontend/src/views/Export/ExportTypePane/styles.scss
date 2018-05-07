@@ -1,3 +1,5 @@
+@import '../../../stylesheets/base';
+
 .export-types {
     display: flex;
     flex-basis: 20%;
@@ -58,38 +60,6 @@
                 font-size: $font-size-large;
             }
 
-        }
-
-        .decoupled-box {
-            display: flex;
-            cursor: pointer;
-
-            .help-box {
-                position: relative;
-                width: 20px;
-
-                i {
-                    color: $color-warning;
-                    font-size: $font-size-large;
-                }
-            }
-
-            .box {
-                display: flex;
-                position: absolute;
-                flex-wrap: wrap;
-                transform: translateY(25%) translateX(50%);
-                z-index: 1111;
-                border: $width-separator-thin solid $color-accent;
-                background-color: $color-foreground-alt;
-                padding: $spacing-medium;
-                width: 400px;
-
-                span {
-                    margin-top: $spacing-small;
-                    font-style: italic;
-                }
-            }
         }
     }
 }

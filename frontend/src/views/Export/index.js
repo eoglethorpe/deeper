@@ -439,6 +439,7 @@ export default class Export extends React.PureComponent {
                 <ExportHeader
                     projectId={projectId}
                     entriesFilters={entriesFilters}
+                    className={styles.header}
                     activeExportTypeKey={activeExportTypeKey}
                     selectedLeads={selectedLeads}
                     reportStructure={reportStructure}

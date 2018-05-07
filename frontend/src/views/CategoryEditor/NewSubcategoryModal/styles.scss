@@ -1,0 +1,13 @@
+@import '../../../stylesheets/modal';
+
+%modal {
+    width: 320px;
+
+    .ok-button {
+        min-width: 72px;
+    }
+}
+
+.new-subcategory-modal {
+    @extend %modal;
+}

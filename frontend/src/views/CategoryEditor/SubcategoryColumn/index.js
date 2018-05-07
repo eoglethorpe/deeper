@@ -7,9 +7,10 @@ import ListView from '../../../vendor/react-store/components/View/List/ListView'
 import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     level: PropTypes.number.isRequired,
     selectedSubcategoryId: PropTypes.string,
 
@@ -29,6 +30,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     subcategories: [],
     title: undefined,
     selectedSubcategoryId: undefined,
@@ -156,10 +158,11 @@ export default class SubcategoryColumn extends React.PureComponent {
         const {
             subcategories,
             title = _ts('ce', 'titleLabel'),
+            className,
         } = this.props;
 
         return (
-            <div className={styles.column} >
+            <div className={`${className} ${styles.column}`} >
                 <header className={styles.header}>
                     <h4 className={styles.heading} >
                         {title}

@@ -1,0 +1,92 @@
+@import '../../../stylesheets/base';
+
+.column {
+    display: flex;
+    flex-basis: calc(100% / 3);
+    flex-direction: column;
+    flex-shrink: 0;
+    border-right: $width-separator-medium solid $color-separator;
+
+    %button {
+        outline: 0;
+        border: 0;
+        background-color: transparent;
+        cursor: pointer;
+        padding: $spacing-medium;
+        color: $color-text;
+        font-family: inherit;
+        font-size: inherit;
+    }
+
+    .header {
+        display: flex;
+        align-items: center;
+        flex-shrink: 0;
+        justify-content: space-between;
+        border-bottom: $width-separator-medium solid $color-separator;
+
+        .heading {
+            padding: $spacing-medium;
+            color: $color-text;
+            font-weight: $font-weight-bold;
+        }
+
+        button {
+            @extend %button;
+            text-transform: uppercase;
+            color: $color-accent;
+        }
+    }
+
+    .sub-category-list {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .sub-category {
+            @extend %button;
+            display: flex;
+            border-bottom: $width-separator-thin solid $color-separator;
+            padding: $spacing-small;
+            width: 100%;
+            text-align: left;
+
+            .title {
+                flex-grow: 1;
+                border: $width-separator-medium solid transparent;
+                padding: $spacing-small;
+                color: $color-text;
+                pointer-events: none;
+            }
+
+            .number {
+                flex-shrink: 0;
+                padding: $spacing-extra-small $spacing-small;
+                pointer-events: none;
+            }
+
+            &.selected {
+                background-color: $color-background-selected;
+            }
+
+            &.active {
+                @include background-color($color-accent);
+
+                .title {
+                    color: inherit;
+                }
+            }
+
+            &.drag-enter {
+                .title {
+                    border: $width-separator-medium dashed $color-separator-alt;
+                }
+
+                &.active {
+                    .title {
+                        border: $width-separator-medium dashed get-text-color($color-accent);
+                    }
+                }
+            }
+        }
+    }
+}

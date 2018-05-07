@@ -14,14 +14,7 @@
         }
     }
 
-    .name,
-    .description {
+    .name {
         width: 100%;
-    }
-
-    .description {
-        :global .input {
-            resize: none;
-        }
     }
 }

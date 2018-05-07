@@ -6,14 +6,16 @@ import DangerButton from '../../../../vendor/react-store/components/Action/Butto
 
 import { iconNames } from '../../../../constants';
 
-import styles from '../../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     keywords: PropTypes.arrayOf(PropTypes.string),
     onDelete: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
+    className: '',
     keywords: [],
 };
 
@@ -43,11 +45,14 @@ export default class NGram extends React.PureComponent {
     )
 
     render() {
-        const { keywords } = this.props;
+        const {
+            keywords,
+            className,
+        } = this.props;
 
         return (
             <ListView
-                className={styles.ngram}
+                className={`${styles.ngram} ${className}`}
                 data={keywords}
                 modifier={this.renderKeyword}
                 keyExtractor={this.keyExtractorForKeyword}

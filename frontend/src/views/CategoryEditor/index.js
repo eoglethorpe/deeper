@@ -21,7 +21,6 @@ import PrimaryButton from '../../vendor/react-store/components/Action/Button/Pri
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
 import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
-import Modal from '../../vendor/react-store/components/View/Modal';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 
 import {
@@ -310,8 +309,6 @@ export default class CategoryEditor extends React.PureComponent {
         });
     }
 
-    noop = () => {}
-
     // ADDTION HELPERS
     handleRemoveCategory = () => {
         const { activeCategoryId, categories } = this.props;
@@ -465,6 +462,7 @@ export default class CategoryEditor extends React.PureComponent {
                     key={selected}
                     level={i}
                     isLastColumn={isLastColumn}
+                    className={styles.column}
                     selectedSubcategoryId={selected}
                     subcategories={currentSubcategories}
                     title={currentSubcategoryTitle}
@@ -482,6 +480,7 @@ export default class CategoryEditor extends React.PureComponent {
                 <SubcategoryColumn
                     level={selectedSubcategories.length}
                     key="empty"
+                    className={styles.column}
                     subcategories={currentSubcategories}
                     title={currentSubcategoryTitle}
                     onNewSubcategory={this.handleNewSubcategory}
@@ -522,7 +521,10 @@ export default class CategoryEditor extends React.PureComponent {
                     message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 <div className={styles.left}>
-                    <DocumentPanel projectId={projectId} />
+                    <DocumentPanel
+                        projectId={projectId}
+                        className={styles.documentPanel}
+                    />
                 </div>
                 <div className={styles.right}>
                     <header className={styles.header}>
@@ -545,7 +547,7 @@ export default class CategoryEditor extends React.PureComponent {
                                 {_ts('ce', 'exitButtonLabel')}
                             </Link>
                         </div>
-                        <div className={styles.actionBtn}>
+                        <div className={styles.actionButtons}>
                             <SelectInput
                                 label={_ts('ce', 'headerCategoryLabel')}
                                 className={styles.categorySelect}
@@ -606,50 +608,30 @@ export default class CategoryEditor extends React.PureComponent {
                     </div>
                 </div>
                 { showNewCategoryModal &&
-                    <Modal
-                        className={styles.newCategoryModal}
-                        onClose={this.noop}
-                    >
-                        <NewCategoryModal
-                            onSubmit={this.handleNewCategoryModalSubmit}
-                            onClose={this.handleNewCategoryModalClose}
-                        />
-                    </Modal>
+                    <NewCategoryModal
+                        onSubmit={this.handleNewCategoryModalSubmit}
+                        onClose={this.handleNewCategoryModalClose}
+                    />
                 }
                 { showEditCategoryModal &&
-                    <Modal
-                        className={styles.editCategoryModal}
-                        onClose={this.noop}
-                    >
-                        <NewCategoryModal
-                            editMode
-                            initialValue={activeCategory}
-                            onSubmit={this.handleEditCategoryModalSubmit}
-                            onClose={this.handleEditCategoryModalClose}
-                        />
-                    </Modal>
+                    <NewCategoryModal
+                        editMode
+                        initialValue={activeCategory}
+                        onSubmit={this.handleEditCategoryModalSubmit}
+                        onClose={this.handleEditCategoryModalClose}
+                    />
                 }
                 { showNewSubcategoryModal &&
-                    <Modal
-                        className={styles.newSubcategoryModal}
-                        onClose={this.noop}
-                    >
-                        <NewSubcategoryModal
-                            onSubmit={this.handleNewSubcategoryModalSubmit}
-                            onClose={this.handleNewSubcategoryModalClose}
-                        />
-                    </Modal>
+                    <NewSubcategoryModal
+                        onSubmit={this.handleNewSubcategoryModalSubmit}
+                        onClose={this.handleNewSubcategoryModalClose}
+                    />
                 }
                 { showNewManualNGramModal &&
-                    <Modal
-                        className={styles.newManualNgramModal}
-                        onClose={this.noop}
-                    >
-                        <NewManualNgramModal
-                            onSubmit={this.handleNewManualNgramModalSubmit}
-                            onClose={this.handleNewManualNgramModalClose}
-                        />
-                    </Modal>
+                    <NewManualNgramModal
+                        onSubmit={this.handleNewManualNgramModalSubmit}
+                        onClose={this.handleNewManualNgramModalClose}
+                    />
                 }
                 <Confirm
                     onClose={this.handleRemoveCategoryClose}

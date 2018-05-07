@@ -1,0 +1,22 @@
+@import '../../../stylesheets/base';
+
+.header {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    justify-content: space-between;
+    border-bottom: $width-separator-thin solid $color-separator;
+    background-color: $color-foreground;
+    padding: $spacing-small $spacing-medium-alt;
+
+    .action-buttons {
+        .button {
+            margin-left: $spacing-small;
+        }
+
+        .link {
+            @extend %button-like-link;
+            margin-left: $spacing-small;
+        }
+    }
+}
