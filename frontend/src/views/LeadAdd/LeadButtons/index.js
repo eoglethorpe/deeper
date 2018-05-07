@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { randomString } from '../../../vendor/react-store/utils/common';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import FileInput from '../../../vendor/react-store/components/Input/FileInput';
+import FormattedDate from '../../../vendor/react-store/components/View/FormattedDate';
 
 import {
     addLeadViewAddLeadsAction,
@@ -17,6 +18,7 @@ import {
 } from '../../../redux';
 import DropboxChooser from '../../../components/DropboxChooser';
 import GooglePicker from '../../../components/GooglePicker';
+import ConnectorSelectModal from '../ConnectorSelectModal';
 import notify from '../../../notify';
 import _ts from '../../../ts';
 import { iconNames } from '../../../constants';
@@ -74,7 +76,10 @@ export default class LeadButtons extends React.PureComponent {
         super(props);
         // NOTE: dropbox button must be manullay disabled and enabled unlike
         // google-drive which creates an overlay and disables everything in bg
-        this.state = { dropboxDisabled: false };
+        this.state = {
+            dropboxDisabled: false,
+            connectorSelectModalShow: false,
+        };
         // NOTE: google drive access token is received at start
         this.googleDriveAccessToken = undefined;
     }
@@ -205,7 +210,7 @@ export default class LeadButtons extends React.PureComponent {
         const uid = randomString();
         const newLeadId = `lead-${uid}`;
 
-        newLeads.unshift({
+        newLeads.push({
             id: newLeadId,
             faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
@@ -219,6 +224,31 @@ export default class LeadButtons extends React.PureComponent {
         this.props.addLeads(newLeads);
     }
 
+    handleLeadAddFromConnectors = (selectedLeads) => {
+        const { activeProject } = this.props;
+        const newLeads = [];
+
+        selectedLeads.forEach((l) => {
+            const newLeadId = `lead-${l.key}`;
+            newLeads.push({
+                id: newLeadId,
+                faramValues: {
+                    title: l.title,
+                    website: l.website,
+                    url: l.url,
+                    publishedOn: FormattedDate.format(new Date(l.publishedOn), 'yyyy-MM-dd'),
+                    source: l.source,
+                    sourceType: LEAD_TYPE.website,
+                    project: activeProject,
+                },
+                pristine: false,
+            });
+        });
+
+        this.props.addLeads(newLeads);
+        this.handleConnectorSelectModalClose();
+    }
+
     handleLeadAddFromText = () => {
         const { activeProject } = this.props;
         const newLeads = [];
@@ -226,7 +256,7 @@ export default class LeadButtons extends React.PureComponent {
         const uid = randomString();
         const newLeadId = `lead-${uid}`;
 
-        newLeads.unshift({
+        newLeads.push({
             id: newLeadId,
             faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
@@ -259,8 +289,15 @@ export default class LeadButtons extends React.PureComponent {
 
     handleDropboxChooserCancel = () => this.setState({ dropboxDisabled: false });
 
+    handleConnectorSelectButtonClick = () => this.setState({ connectorSelectModalShow: true });
+
+    handleConnectorSelectModalClose = () => this.setState({ connectorSelectModalShow: false });
+
     render() {
-        const { dropboxDisabled } = this.state;
+        const {
+            dropboxDisabled,
+            connectorSelectModalShow,
+        } = this.state;
 
         return (
             <div className={styles.addLeadButtons}>
@@ -329,6 +366,22 @@ export default class LeadButtons extends React.PureComponent {
                         {_ts('leads', 'textLabel')}
                     </p>
                 </Button>
+                <Button
+                    className={styles.addLeadBtn}
+                    transparent
+                    onClick={this.handleConnectorSelectButtonClick}
+                >
+                    <span className={iconNames.link} />
+                    <p>
+                        {_ts('leads', 'connectorsLabel')}
+                    </p>
+                </Button>
+                {connectorSelectModalShow &&
+                    <ConnectorSelectModal
+                        onModalClose={this.handleConnectorSelectModalClose}
+                        onLeadsSelect={this.handleLeadAddFromConnectors}
+                    />
+                }
             </div>
         );
     }

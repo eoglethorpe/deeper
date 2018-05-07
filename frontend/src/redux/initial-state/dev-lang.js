@@ -555,6 +555,7 @@ const initialDevLangState = {
         1003: 'Error while trying to save region detail.',
         1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
         251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
+        252: 'We couldn\'t find any connectors associated to this project',
 
         1005: 'Edit entries',
         9000: 'Priority issue',
@@ -600,6 +601,7 @@ const initialDevLangState = {
         9036: 'Drag and drop data collection techniques here',
         9037: 'Drag and drop sampling (site and respondent selection) here',
         9038: 'Drag and drop limitations here',
+        9919: 'Select',
 
         1100: 'Connectors',
         1101: 'Search Connectors',
@@ -1056,6 +1058,9 @@ const initialDevLangState = {
             humanitarianAccessTitle: 9019,
         },
         leads: {
+            selectLabel: 643,
+            modalCancelLabel: 61,
+            modalSelectLabel: 9919,
             fileUploadFailText: 7501,
             filterDateCreated: 2,
             filterDatePublished: 3,
@@ -1095,6 +1100,8 @@ const initialDevLangState = {
             dropboxLabel: 36,
             localDiskLabel: 37,
             textLabel: 20,
+            connectorsLabel: 1100,
+
             projectLabel: 31,
             titleLabel: 13,
             publisherLabel: 5,
@@ -1131,6 +1138,7 @@ const initialDevLangState = {
             leadDelete: 191,
             removeAllCompletedButtonTitle: 360,
             noLeadsText: 8501,
+            searchConnectorPlaceholder: 1101,
         },
         login: {
             welcomeToText: 803,

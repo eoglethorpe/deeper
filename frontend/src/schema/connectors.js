@@ -64,6 +64,7 @@ const connectorsSchema = [];
     };
     connectorsSchema.push({ name, schema });
 }
+
 {
     const name = 'connectorSources';
     const schema = {
@@ -74,6 +75,40 @@ const connectorsSchema = [];
         fields: {
             count: { type: 'uint', required: true },
             results: { type: 'array.connectorSource', required: true },
+        },
+    };
+    connectorsSchema.push({ name, schema });
+}
+
+{
+    const name = 'connectorLead';
+    const schema = {
+        doc: {
+            name: 'Connector Lead',
+            description: 'Different leads from connector',
+        },
+        fields: {
+            title: { type: 'string' },
+            website: { type: 'string' },
+            url: { type: 'string' },
+            publishedOn: { type: 'string' },
+            sourceType: { type: 'string' },
+            source: { type: 'string' },
+        },
+    };
+    connectorsSchema.push({ name, schema });
+}
+
+{
+    const name = 'connectorLeads';
+    const schema = {
+        doc: {
+            name: 'Connector Leads Get Response',
+            description: 'Response for GET /connectors/{id}/leads/',
+        },
+        fields: {
+            count: { type: 'uint', required: true },
+            results: { type: 'array.connectorLead', required: true },
         },
     };
     connectorsSchema.push({ name, schema });

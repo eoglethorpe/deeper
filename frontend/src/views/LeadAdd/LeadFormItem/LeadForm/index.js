@@ -173,7 +173,7 @@ export default class LeadForm extends React.PureComponent {
         this.schema = LeadForm.getSchemaForLead(leadType);
     }
 
-    componentWillMount() {
+    componentDidMount() {
         LeadForm.setDefaultValues(this.props);
     }
 
