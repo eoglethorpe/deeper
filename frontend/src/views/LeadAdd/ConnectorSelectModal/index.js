@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
 
+import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
 import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
@@ -55,7 +56,8 @@ export default class ConnectorSelectModal extends React.PureComponent {
 
     constructor(props) {
         super(props);
-        const displayConnectorsList = props.connectorsList || emptyList;
+        const { connectorsList = emptyList } = props;
+        const displayConnectorsList = connectorsList;
         const selectedConnector = displayConnectorsList.length > 0 ?
             displayConnectorsList[0].id : 0;
 
@@ -66,6 +68,8 @@ export default class ConnectorSelectModal extends React.PureComponent {
             displayConnectorsList,
             selectedConnector,
         };
+
+        this.views = this.getContentViews(connectorsList);
     }
 
     componentWillMount() {
@@ -75,11 +79,13 @@ export default class ConnectorSelectModal extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const { connectorsList } = nextProps;
+        const { connectorsList: newConnectorsList } = nextProps;
+        const { connectorsList: oldConnectorsList } = this.props;
         const { searchInputValue } = this.state;
 
-        if (this.props.connectorsList !== connectorsList) {
-            const displayConnectorsList = connectorsList.filter(
+        if (newConnectorsList !== oldConnectorsList) {
+            this.views = this.getContentViews(newConnectorsList);
+            const displayConnectorsList = newConnectorsList.filter(
                 c => caseInsensitiveSubmatch(c.title, searchInputValue),
             );
             this.setState({ displayConnectorsList });
@@ -90,6 +96,28 @@ export default class ConnectorSelectModal extends React.PureComponent {
         if (this.requestForConnectors) {
             this.requestForConnectors.stop();
         }
+    }
+
+    getContentViews = (connectors) => {
+        const views = {};
+        connectors.forEach((c) => {
+            const view = {
+                component: () => {
+                    const { selectedConnector } = this.state;
+                    return (
+                        <ConnectorContent
+                            connectorId={selectedConnector}
+                            className={styles.content}
+                        />
+                    );
+                },
+                mount: true,
+                lazyMount: true,
+                wrapContainer: true,
+            };
+            views[c.id] = view;
+        });
+        return views;
     }
 
     startConnectorsRequest = (projectId) => {
@@ -179,10 +207,10 @@ export default class ConnectorSelectModal extends React.PureComponent {
         }
 
         return (
-            <ConnectorContent
-                key={selectedConnector}
-                connectorId={selectedConnector}
-                className={styles.content}
+            <MultiViewContainer
+                active={selectedConnector}
+                views={this.views}
+                containerClassName={styles.content}
             />
         );
     }

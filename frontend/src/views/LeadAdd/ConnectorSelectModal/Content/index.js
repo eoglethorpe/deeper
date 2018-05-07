@@ -7,7 +7,6 @@ import Table from '../../../../vendor/react-store/components/View/Table';
 import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 import Checkbox from '../../../../vendor/react-store/components/Input/Checkbox';
 import {
-    addLeadViewConnectorSelector,
     addLeadViewConnectorLeadsSelector,
 
     addLeadViewSetConnectorLeadsAction,
@@ -19,7 +18,6 @@ import ConnectorLeadsGetRequest from '../../requests/ConnectorLeadsGetRequest';
 import styles from './styles.scss';
 
 const propTypes = {
-    connectorDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     connectorLeads: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     connectorId: PropTypes.number.isRequired,
     setConnectorLeads: PropTypes.func.isRequired,
@@ -33,7 +31,6 @@ const defaultProps = {
 };
 
 const mapStateToProps = (state, props) => ({
-    connectorDetails: addLeadViewConnectorSelector(state, props),
     connectorLeads: addLeadViewConnectorLeadsSelector(state, props),
 });
 
@@ -90,7 +87,6 @@ export default class ConnectorContent extends React.PureComponent {
                 ),
             },
         ];
-        console.warn(props.connectorLeads);
     }
 
     componentWillMount() {
@@ -119,7 +115,6 @@ export default class ConnectorContent extends React.PureComponent {
 
     render() {
         const {
-            connectorDetails,
             connectorLeads = [],
             className,
         } = this.props;
