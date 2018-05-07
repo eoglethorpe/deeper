@@ -35,8 +35,6 @@ export const LA__LEAD_REMOVE = 'siloDomainData/LA__LEAD_REMOVE';
 export const LA__LEAD_REMOVE_SAVED = 'siloDomainData/LA__LEAD_REMOVE_SAVED';
 
 export const LA__SET_CONNECTORS = 'siloDomainData/LA__SET_CONNECTORS';
-export const LA__SET_CONNECTOR_LEADS = 'siloDomainData/LA__SET_CONNECTOR_LEADS';
-export const LA__SET_CONNECTOR_LEAD_SELECTION = 'siloDomainData/LA__SET_CONNECTOR_LEAD_SELECTION';
 
 // ACTION-CREATOR
 
@@ -111,20 +109,6 @@ export const addLeadViewSetConnectorsAction = ({ connectors, projectId }) => ({
     connectors,
     projectId,
 });
-
-export const addLeadViewSetConnectorLeadsAction = ({ connectorLeads, connectorId }) => ({
-    type: LA__SET_CONNECTOR_LEADS,
-    connectorLeads,
-    connectorId,
-});
-
-export const setConnectorLeadSelectionAction = ({ key, isSelected, connectorId }) => ({
-    type: LA__SET_CONNECTOR_LEAD_SELECTION,
-    key,
-    isSelected,
-    connectorId,
-});
-
 
 // NOTE: if leadIndices is not defined, iterates over all leads
 const setErrorForLeads = (state, leadIndices) => {
@@ -464,51 +448,6 @@ const addLeadViewSetConnectors = (state, action) => {
     return update(state, settings);
 };
 
-const addLeadViewSetConnectorLeads = (state, action) => {
-    const {
-        connectorLeads,
-        connectorId,
-    } = action;
-
-    const settings = {
-        addLeadView: {
-            connectorsLeads: { $auto: {
-                [connectorId]: { $set: connectorLeads },
-            } },
-        },
-    };
-    return update(state, settings);
-};
-
-const setConnectorLeadSelection = (state, action) => {
-    const { addLeadView: { connectorsLeads } } = state;
-    const {
-        key,
-        isSelected,
-        connectorId,
-    } = action;
-
-    console.warn(connectorsLeads, action);
-    const index = connectorsLeads[connectorId].findIndex(l => l.key === key);
-
-    if (index === -1) {
-        return null;
-    }
-
-    const settings = {
-        addLeadView: {
-            connectorsLeads: { $auto: {
-                [connectorId]: {
-                    [index]: { $auto: {
-                        isSelected: { $set: isSelected },
-                    } },
-                },
-            } },
-        },
-    };
-    return update(state, settings);
-};
-
 // REDUCER MAP
 
 const reducers = {
@@ -525,7 +464,5 @@ const reducers = {
     [LA__COPY_ALL_BELOW]: addLeadViewCopyAll('below'),
     [LA__LEAD_REMOVE_SAVED]: addLeadViewRemoveSavedLeads,
     [LA__SET_CONNECTORS]: addLeadViewSetConnectors,
-    [LA__SET_CONNECTOR_LEADS]: addLeadViewSetConnectorLeads,
-    [LA__SET_CONNECTOR_LEAD_SELECTION]: setConnectorLeadSelection,
 };
 export default reducers;

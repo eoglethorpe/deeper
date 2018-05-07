@@ -12,7 +12,8 @@ import LoadingAnimation from '../../../../src/vendor/react-store/components/View
 import ListItem from '../../../../src/vendor/react-store/components/View/List/ListItem';
 import SearchInput from '../../../vendor/react-store/components/Input/SearchInput';
 import { caseInsensitiveSubmatch } from '../../../vendor/react-store/utils/common';
-import ConnectorsGetRequest from '../requests/ConnectorsGetRequest';
+import update from '../../../vendor/react-store/utils/immutable-update';
+import { iconNames } from '../../../constants';
 
 import {
     addLeadViewConnectorsListSelector,
@@ -21,7 +22,7 @@ import {
     addLeadViewSetConnectorsAction,
 } from '../../../redux';
 
-import { iconNames } from '../../../constants';
+import ConnectorsGetRequest from '../requests/ConnectorsGetRequest';
 import ConnectorContent from './Content';
 import _ts from '../../../ts';
 
@@ -47,6 +48,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const emptyList = [];
+const emptyObject = {};
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorSelectModal extends React.PureComponent {
@@ -67,6 +69,8 @@ export default class ConnectorSelectModal extends React.PureComponent {
             dataLoading: true,
             displayConnectorsList,
             selectedConnector,
+            selectedLeads: emptyList,
+            connectorsLeads: emptyObject,
         };
 
         this.views = this.getContentViews(connectorsList);
@@ -103,11 +107,17 @@ export default class ConnectorSelectModal extends React.PureComponent {
         connectors.forEach((c) => {
             const view = {
                 component: () => {
-                    const { selectedConnector } = this.state;
+                    const {
+                        selectedConnector,
+                        connectorsLeads,
+                    } = this.state;
                     return (
                         <ConnectorContent
                             connectorId={selectedConnector}
+                            connectorLeads={connectorsLeads[selectedConnector]}
                             className={styles.content}
+                            setConnectorLeads={this.setConnectorLeads}
+                            setConnectorLeadSelection={this.setConnectorLeadSelection}
                         />
                     );
                 },
@@ -118,6 +128,55 @@ export default class ConnectorSelectModal extends React.PureComponent {
             views[c.id] = view;
         });
         return views;
+    }
+
+    setConnectorLeads = ({ connectorLeads, connectorId }) => {
+        const settings = {
+            connectorsLeads: { $auto: {
+                [connectorId]: { $set: connectorLeads },
+            } },
+        };
+        this.setState(update(this.state, settings));
+    }
+
+    setConnectorLeadSelection = ({ key, isSelected, connectorId }) => {
+        const {
+            connectorsLeads,
+            selectedLeads,
+        } = this.state;
+        const connectorLeadIndex = connectorsLeads[connectorId].findIndex(l => l.key === key);
+        const selectedLeadsIndex = selectedLeads.findIndex(l => l.key === key);
+
+        const lead = connectorsLeads[connectorId][connectorLeadIndex];
+        let settings = {};
+        if (selectedLeadsIndex === -1) {
+            settings = {
+                connectorsLeads: { $auto: {
+                    [connectorId]: {
+                        [connectorLeadIndex]: { $auto: {
+                            isSelected: { $set: isSelected },
+                        } },
+                    },
+                } },
+                selectedLeads: { $autoArray: {
+                    $push: [lead],
+                } },
+            };
+        } else {
+            settings = {
+                connectorsLeads: { $auto: {
+                    [connectorId]: {
+                        [connectorLeadIndex]: { $auto: {
+                            isSelected: { $set: isSelected },
+                        } },
+                    },
+                } },
+                selectedLeads: { $autoArray: {
+                    $splice: [[selectedLeadsIndex, 1]],
+                } },
+            };
+        }
+        this.setState(update(this.state, settings));
     }
 
     startConnectorsRequest = (projectId) => {

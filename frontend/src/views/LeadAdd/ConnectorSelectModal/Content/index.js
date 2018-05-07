@@ -6,12 +6,6 @@ import LoadingAnimation from '../../../../../src/vendor/react-store/components/V
 import Table from '../../../../vendor/react-store/components/View/Table';
 import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 import Checkbox from '../../../../vendor/react-store/components/Input/Checkbox';
-import {
-    addLeadViewConnectorLeadsSelector,
-
-    addLeadViewSetConnectorLeadsAction,
-    setConnectorLeadSelectionAction,
-} from '../../../../redux';
 import _ts from '../../../../ts';
 
 import ConnectorLeadsGetRequest from '../../requests/ConnectorLeadsGetRequest';
@@ -30,16 +24,6 @@ const defaultProps = {
     connectorLeads: [],
 };
 
-const mapStateToProps = (state, props) => ({
-    connectorLeads: addLeadViewConnectorLeadsSelector(state, props),
-});
-
-const mapDispatchToProps = dispatch => ({
-    setConnectorLeads: params => dispatch(addLeadViewSetConnectorLeadsAction(params)),
-    setConnectorLeadSelection: params => dispatch(setConnectorLeadSelectionAction(params)),
-});
-
-@connect(mapStateToProps, mapDispatchToProps)
 export default class ConnectorContent extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
