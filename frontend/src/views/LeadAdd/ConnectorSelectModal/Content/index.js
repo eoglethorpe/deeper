@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { connect } from 'react-redux';
 
 import LoadingAnimation from '../../../../../src/vendor/react-store/components/View/LoadingAnimation';
 import Table from '../../../../vendor/react-store/components/View/Table';
@@ -44,7 +43,8 @@ export default class ConnectorContent extends React.PureComponent {
                 modifier: row => (
                     <Checkbox
                         key="checkbox"
-                        label={_ts('export', 'selectLabel')}
+                        label=""
+                        className={styles.checkbox}
                         value={row.isSelected}
                         onChange={() => this.props.setConnectorLeadSelection({
                             key: row.key,
@@ -66,7 +66,7 @@ export default class ConnectorContent extends React.PureComponent {
                 modifier: row => (
                     <FormattedDate
                         date={row.publishedOn}
-                        mode="dd-MM-yyyy hh:mm"
+                        mode="dd-MM-yyyy"
                     />
                 ),
             },
@@ -109,6 +109,7 @@ export default class ConnectorContent extends React.PureComponent {
             <div className={classNames} >
                 { connectorLeadsLoading && <LoadingAnimation large /> }
                 <Table
+                    className={styles.table}
                     data={connectorLeads}
                     headers={this.connectorLeadsHeader}
                     keyExtractor={ConnectorContent.leadKeySelector}

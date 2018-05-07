@@ -3,5 +3,22 @@
 .connector-content {
     display: flex;
     position: relative;
-    font-size: $font-size-large;
+    height: 100%;
+    overflow-y: auto;
+
+    .table {
+        :global {
+            .selected {
+                width: 56px;
+            }
+
+            .publishedOn {
+                width: 108px;
+            }
+        }
+    }
+
+    .checkbox {
+        justify-content: center;
+    }
 }

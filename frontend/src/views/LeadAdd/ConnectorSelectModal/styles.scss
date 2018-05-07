@@ -9,41 +9,60 @@ $width-connectors-list: 240px;
     .modal-body {
         display: flex;
         position: relative;
+        flex-direction: column;
         padding: 0;
 
-        .sidebar {
-            flex-basis: $width-connectors-list;
-            flex-shrink: 0;
-            border-right: $width-separator-thin solid $color-separator;
+        .main {
+            display: flex;
+            flex-grow: 1;
 
-            .header {
-                @include background-color($color-background-header);
+            .sidebar {
                 display: flex;
-                align-items: center;
+                flex-basis: $width-connectors-list;
+                flex-direction: column;
                 flex-shrink: 0;
-                flex-wrap: wrap;
-                border-bottom: $width-separator-thin solid $color-separator;
-                padding: $spacing-small;
+                border-right: $width-separator-thin solid $color-separator;
 
-                .search-input {
-                    flex-basis: 100%;
+                .header {
+                    @include background-color($color-background-header);
+                    display: flex;
+                    align-items: center;
+                    flex-shrink: 0;
+                    flex-wrap: wrap;
+                    border-bottom: $width-separator-thin solid $color-separator;
+                    padding: $spacing-small;
+
+                    .search-input {
+                        flex-basis: 100%;
+                    }
+                }
+                .connectors-list {
+                    flex-grow: 1;
+                    overflow-y: auto;
                 }
             }
-            .connectors-list {
+
+            .content {
                 flex-grow: 1;
-                overflow-y: auto;
+            }
+
+            .empty {
+                display: flex;
+                align-items: center;
+                flex-grow: 1;
+                justify-content: center;
             }
         }
 
-        .content {
-            flex-grow: 1;
-        }
-
-        .empty {
+        .footer {
             display: flex;
-            align-items: center;
-            flex-grow: 1;
-            justify-content: center;
+            justify-content: flex-end;
+            border-top: $width-separator-thin solid $color-separator;
+            padding: $spacing-small $spacing-medium-alt;
+
+            button {
+                margin-left: $spacing-small;
+            }
         }
     }
 }

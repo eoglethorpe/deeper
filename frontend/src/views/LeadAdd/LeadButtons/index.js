@@ -10,6 +10,7 @@ import { connect } from 'react-redux';
 import { randomString } from '../../../vendor/react-store/utils/common';
 import Button from '../../../vendor/react-store/components/Action/Button';
 import FileInput from '../../../vendor/react-store/components/Input/FileInput';
+import FormattedDate from '../../../vendor/react-store/components/View/FormattedDate';
 
 import {
     addLeadViewAddLeadsAction,
@@ -77,7 +78,7 @@ export default class LeadButtons extends React.PureComponent {
         // google-drive which creates an overlay and disables everything in bg
         this.state = {
             dropboxDisabled: false,
-            connectorSelectModalShow: true,
+            connectorSelectModalShow: false,
         };
         // NOTE: google drive access token is received at start
         this.googleDriveAccessToken = undefined;
@@ -209,7 +210,7 @@ export default class LeadButtons extends React.PureComponent {
         const uid = randomString();
         const newLeadId = `lead-${uid}`;
 
-        newLeads.unshift({
+        newLeads.push({
             id: newLeadId,
             faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
@@ -223,6 +224,31 @@ export default class LeadButtons extends React.PureComponent {
         this.props.addLeads(newLeads);
     }
 
+    handleLeadAddFromConnectors = (selectedLeads) => {
+        const { activeProject } = this.props;
+        const newLeads = [];
+
+        selectedLeads.forEach((l) => {
+            const newLeadId = `lead-${l.key}`;
+            newLeads.push({
+                id: newLeadId,
+                faramValues: {
+                    title: l.title,
+                    website: l.website,
+                    url: l.url,
+                    publishedOn: FormattedDate.format(new Date(l.publishedOn), 'yyyy-MM-dd'),
+                    source: l.source,
+                    sourceType: LEAD_TYPE.website,
+                    project: activeProject,
+                },
+                pristine: false,
+            });
+        });
+
+        this.props.addLeads(newLeads);
+        this.handleConnectorSelectModalClose();
+    }
+
     handleLeadAddFromText = () => {
         const { activeProject } = this.props;
         const newLeads = [];
@@ -230,7 +256,7 @@ export default class LeadButtons extends React.PureComponent {
         const uid = randomString();
         const newLeadId = `lead-${uid}`;
 
-        newLeads.unshift({
+        newLeads.push({
             id: newLeadId,
             faramValues: {
                 title: `Lead ${(new Date()).toLocaleTimeString()}`,
@@ -353,6 +379,7 @@ export default class LeadButtons extends React.PureComponent {
                 {connectorSelectModalShow &&
                     <ConnectorSelectModal
                         onModalClose={this.handleConnectorSelectModalClose}
+                        onLeadsSelect={this.handleLeadAddFromConnectors}
                     />
                 }
             </div>

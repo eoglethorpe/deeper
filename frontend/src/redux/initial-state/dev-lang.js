@@ -601,6 +601,7 @@ const initialDevLangState = {
         9036: 'Drag and drop data collection techniques here',
         9037: 'Drag and drop sampling (site and respondent selection) here',
         9038: 'Drag and drop limitations here',
+        9919: 'Select',
 
         1100: 'Connectors',
         1101: 'Search Connectors',
@@ -1058,6 +1059,8 @@ const initialDevLangState = {
         },
         leads: {
             selectLabel: 643,
+            modalCancelLabel: 61,
+            modalSelectLabel: 9919,
             fileUploadFailText: 7501,
             filterDateCreated: 2,
             filterDatePublished: 3,

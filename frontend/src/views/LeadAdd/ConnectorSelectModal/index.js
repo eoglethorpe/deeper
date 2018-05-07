@@ -7,6 +7,7 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
+import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import ListView from '../../../../src/vendor/react-store/components/View/List/ListView';
 import LoadingAnimation from '../../../../src/vendor/react-store/components/View/LoadingAnimation';
 import ListItem from '../../../../src/vendor/react-store/components/View/List/ListItem';
@@ -33,6 +34,7 @@ const propTypes = {
     connectorsList: PropTypes.array.isRequired, // eslint-disable-line react/forbid-prop-types
     setConnectorsOfProject: PropTypes.func.isRequired,
     projectId: PropTypes.number.isRequired,
+    onLeadsSelect: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -65,7 +67,6 @@ export default class ConnectorSelectModal extends React.PureComponent {
 
         this.state = {
             searchInputValue: '',
-            showAddConnectorModal: false,
             dataLoading: true,
             displayConnectorsList,
             selectedConnector,
@@ -148,34 +149,26 @@ export default class ConnectorSelectModal extends React.PureComponent {
         const selectedLeadsIndex = selectedLeads.findIndex(l => l.key === key);
 
         const lead = connectorsLeads[connectorId][connectorLeadIndex];
-        let settings = {};
+        const settings = {
+            connectorsLeads: { $auto: {
+                [connectorId]: {
+                    [connectorLeadIndex]: { $auto: {
+                        isSelected: { $set: isSelected },
+                    } },
+                },
+            } },
+        };
+
         if (selectedLeadsIndex === -1) {
-            settings = {
-                connectorsLeads: { $auto: {
-                    [connectorId]: {
-                        [connectorLeadIndex]: { $auto: {
-                            isSelected: { $set: isSelected },
-                        } },
-                    },
-                } },
-                selectedLeads: { $autoArray: {
-                    $push: [lead],
-                } },
-            };
+            settings.selectedLeads = { $autoArray: {
+                $push: [lead],
+            } };
         } else {
-            settings = {
-                connectorsLeads: { $auto: {
-                    [connectorId]: {
-                        [connectorLeadIndex]: { $auto: {
-                            isSelected: { $set: isSelected },
-                        } },
-                    },
-                } },
-                selectedLeads: { $autoArray: {
-                    $splice: [[selectedLeadsIndex, 1]],
-                } },
-            };
+            settings.selectedLeads = { $autoArray: {
+                $splice: [[selectedLeadsIndex, 1]],
+            } };
         }
+
         this.setState(update(this.state, settings));
     }
 
@@ -203,6 +196,10 @@ export default class ConnectorSelectModal extends React.PureComponent {
     };
 
     handleConnectorSelectModalClose = () => this.props.onModalClose();
+
+    handleLeadsSelect = () => {
+        this.props.onLeadsSelect(this.state.selectedLeads);
+    }
 
     handleConnectorClick = (selectedConnector) => {
         this.setState({ selectedConnector });
@@ -295,8 +292,22 @@ export default class ConnectorSelectModal extends React.PureComponent {
                 />
                 <ModalBody className={styles.modalBody} >
                     { dataLoading && <LoadingAnimation large /> }
-                    <Sidebar />
-                    <Content />
+                    <div className={styles.main} >
+                        <Sidebar />
+                        <Content />
+                    </div>
+                    <div className={styles.footer} >
+                        <DangerButton
+                            onClick={this.handleConnectorSelectModalClose}
+                        >
+                            {_ts('leads', 'modalCancelLabel')}
+                        </DangerButton>
+                        <PrimaryButton
+                            onClick={this.handleLeadsSelect}
+                        >
+                            {_ts('leads', 'modalSelectLabel')}
+                        </PrimaryButton>
+                    </div>
                 </ModalBody>
             </Modal>
         );
