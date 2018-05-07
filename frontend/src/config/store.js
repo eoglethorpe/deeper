@@ -1,13 +1,27 @@
 import localforage from 'localforage';
-// import localStorage from 'redux-persist/lib/storage';
+import { createTransform } from 'redux-persist';
+
+const myTransform = createTransform(
+    inboundState => ({
+        ...inboundState,
+        addLeadView: {
+            ...inboundState.addLeadView,
+            leadRests: undefined,
+            leadUploads: undefined,
+            leadDriveRests: undefined,
+            leadDropboxRests: undefined,
+        },
+    }),
+    undefined,
+    { whitelist: ['siloDomainData'] },
+);
 
 const storeConfig = {
-    // blacklist: ['domainData', 'siloDomainData'],
     blacklist: ['notify', 'route', 'lang', 'app'],
     key: 'deeper',
     version: 1,
-    // storage: localStorage,
     storage: localforage,
+    transforms: [myTransform],
 };
 
 export const reducersToSync = [

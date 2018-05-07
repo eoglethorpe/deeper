@@ -13,21 +13,15 @@ const initialSiloDomainData = {
         leads: [
             /*
             {
-                data: {
-                    id: 'lead-1',
-                    type: 'text', // dropbox, file, website, text
-                    serverId: undefined,
+                id: 'lead-1',
+                serverId: undefined,
+                faramValues: {
+                    title: 'Lead #1',
+                    source: 'TV',
+                    project: 1,
                 },
-                form: {
-                    values: {
-                        title: 'Lead #1',
-                        source: 'TV',
-                        project: 1,
-                    },
-                    errors: [],
-                    fieldErrors: {
-                        title: 'Title is not defined',
-                    },
+                faramErrors: {
+                    title: 'Title is not defined',
                 },
                 uiState: {
                     error: true,
@@ -36,6 +30,12 @@ const initialSiloDomainData = {
             },
             */
         ],
+        /*
+        leadRests: {},
+        leadUploads: {},
+        leadDriveRests: {},
+        leadDropboxRests: {},
+        */
         connectorsList: {
             /*
             1: {

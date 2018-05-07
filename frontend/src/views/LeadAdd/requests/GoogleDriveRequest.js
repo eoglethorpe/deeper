@@ -14,13 +14,13 @@ export default class GoogleDriveUploadRequest {
             driveUploadCoordinator,
             addLeadViewLeadChange,
             getLeadFromId,
-            setState,
+            setLeadDriveRests,
         } = params;
 
         this.driveUploadCoordinator = driveUploadCoordinator;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.getLeadFromId = getLeadFromId;
-        this.setState = setState;
+        this.setLeadDriveRests = setLeadDriveRests;
     }
 
     create = ({ leadId, title, accessToken, fileId, mimeType }) => {
@@ -51,15 +51,9 @@ export default class GoogleDriveUploadRequest {
                 uiState: { pristine: false, serverError: false },
             });
 
-            // FOR UPLAOD
-            this.setState((state) => {
-                const uploadSettings = {
-                    [leadId]: { $auto: {
-                        pending: { $set: undefined },
-                    } },
-                };
-                const leadDriveRests = update(state.leadDriveRests, uploadSettings);
-                return { leadDriveRests };
+            this.setLeadDriveRests({
+                leadIds: [leadId],
+                value: undefined,
             });
 
             this.driveUploadCoordinator.notifyComplete(leadId);

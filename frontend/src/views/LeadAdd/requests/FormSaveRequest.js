@@ -1,5 +1,4 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
 
 import {
@@ -20,13 +19,13 @@ export default class FormSaveRequest {
             addLeadViewLeadChange,
             addLeadViewLeadSave,
             getLeadFromId,
-            setState,
+            setLeadRests,
         } = params;
         this.formCoordinator = formCoordinator;
         this.addLeadViewLeadSave = addLeadViewLeadSave;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.getLeadFromId = getLeadFromId;
-        this.setState = setState;
+        this.setLeadRests = setLeadRests;
     }
 
     create = (lead, newValues) => {
@@ -57,28 +56,16 @@ export default class FormSaveRequest {
     }
 
     handleLeadSavePreLoad = leadId => () => {
-        // FOR REST
-        this.setState((state) => {
-            const restSettings = {
-                [leadId]: { $auto: {
-                    pending: { $set: true },
-                } },
-            };
-            const leadRests = update(state.leadRests, restSettings);
-            return { leadRests };
+        this.setLeadRests({
+            leadIds: [leadId],
+            value: true,
         });
     }
 
     handleLeadSavePostLoad = leadId => () => {
-        // FOR REST
-        this.setState((state) => {
-            const restSettings = {
-                [leadId]: { $auto: {
-                    pending: { $set: false },
-                } },
-            };
-            const leadRests = update(state.leadRests, restSettings);
-            return { leadRests };
+        this.setLeadRests({
+            leadIds: [leadId],
+            value: false,
         });
     }
 

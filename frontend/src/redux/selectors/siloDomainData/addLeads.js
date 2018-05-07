@@ -29,6 +29,23 @@ export const addLeadViewActiveLeadIdSelector = createSelector(
     addLeadView => addLeadView.activeLeadId,
 );
 
+export const addLeadViewLeadRestsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.leadRests || emptyObject,
+);
+export const addLeadViewLeadUploadsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.leadUploads || emptyObject,
+);
+export const addLeadViewLeadDriveRestsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.leadDriveRests || emptyObject,
+);
+export const addLeadViewLeadDropboxRestsSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.leadDropboxRests || emptyObject,
+);
+
 export const addLeadViewLeadsSelector = createSelector(
     addLeadViewSelector,
     addLeadView => addLeadView.leads || emptyList,

@@ -14,28 +14,36 @@ import {
     randomString,
 } from '../../vendor/react-store/utils/common';
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
-import update from '../../vendor/react-store/utils/immutable-update';
 import Confirm from '../../vendor/react-store/components/View/Modal/Confirm';
 import List from '../../vendor/react-store/components/View/List';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 
 import AppError from '../../components/AppError';
 import {
+    routeStateSelector,
     leadFilterOptionsSelector,
 
     addLeadViewActiveLeadIdSelector,
     addLeadViewActiveLeadSelector,
     addLeadViewLeadsSelector,
+    addLeadViewIsFilterEmptySelector,
     addLeadViewFiltersSelector,
 
+    addLeadViewAddLeadsAction,
     addLeadViewLeadChangeAction,
     addLeadViewLeadSaveAction,
     addLeadViewLeadRemoveAction,
     addLeadViewRemoveSavedLeadsAction,
 
-    addLeadViewAddLeadsAction,
-    addLeadViewIsFilterEmptySelector,
-    routeStateSelector,
+    addLeadViewLeadRestsSelector,
+    addLeadViewLeadUploadsSelector,
+    addLeadViewLeadDriveRestsSelector,
+    addLeadViewLeadDropboxRestsSelector,
+
+    addLeadViewSetLeadRestsAction,
+    addLeadViewSetLeadUploadsAction,
+    addLeadViewSetLeadDriveRestsAction,
+    addLeadViewSetLeadDropboxRestsAction,
 } from '../../redux';
 import {
     LEAD_FILTER_STATUS,
@@ -60,14 +68,20 @@ import LeadFormItem from './LeadFormItem';
 import styles from './styles.scss';
 
 const mapStateToProps = state => ({
+    routeState: routeStateSelector(state),
+    leadFilterOptions: leadFilterOptionsSelector(state),
+
     activeLeadId: addLeadViewActiveLeadIdSelector(state),
     activeLead: addLeadViewActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
-    leadFilterOptions: leadFilterOptionsSelector(state),
     filters: addLeadViewFiltersSelector(state),
-    routeState: routeStateSelector(state),
 
     isFilterEmpty: addLeadViewIsFilterEmptySelector(state),
+
+    leadRests: addLeadViewLeadRestsSelector(state),
+    leadUploads: addLeadViewLeadUploadsSelector(state),
+    leadDriveRests: addLeadViewLeadDriveRestsSelector(state),
+    leadDropboxRests: addLeadViewLeadDropboxRestsSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -75,8 +89,12 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadSave: params => dispatch(addLeadViewLeadSaveAction(params)),
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
     addLeadViewRemoveSavedLeads: params => dispatch(addLeadViewRemoveSavedLeadsAction(params)),
-
     addLeads: leads => dispatch(addLeadViewAddLeadsAction(leads)),
+
+    setLeadRests: params => dispatch(addLeadViewSetLeadRestsAction(params)),
+    setLeadUploads: params => dispatch(addLeadViewSetLeadUploadsAction(params)),
+    setLeadDriveRests: params => dispatch(addLeadViewSetLeadDriveRestsAction(params)),
+    setLeadDropboxRests: params => dispatch(addLeadViewSetLeadDropboxRestsAction(params)),
 });
 
 const propTypes = {
@@ -106,6 +124,14 @@ const propTypes = {
         path: PropTypes.string,
     }).isRequired,
 
+    leadRests: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadUploads: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadDriveRests: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    leadDropboxRests: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    setLeadRests: PropTypes.func.isRequired,
+    setLeadUploads: PropTypes.func.isRequired,
+    setLeadDriveRests: PropTypes.func.isRequired,
+    setLeadDropboxRests: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -126,10 +152,9 @@ export default class LeadAdd extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    static calcGlobalUiState = (
-        { leadUploads, leadRests, leadDriveRests, leadDropboxRests },
-        { addLeadViewLeads },
-    ) => (addLeadViewLeads.reduce(
+    static calcGlobalUiState = ({
+        leadUploads, leadRests, leadDriveRests, leadDropboxRests, addLeadViewLeads,
+    }) => (addLeadViewLeads.reduce(
         (acc, lead) => {
             const leadId = leadAccessor.getKey(lead);
             const serverError = leadAccessor.hasServerError(lead);
@@ -219,12 +244,7 @@ export default class LeadAdd extends React.PureComponent {
         super(props);
 
         this.state = {
-            leadUploads: {},
-            leadRests: {},
-            leadDriveRests: {},
-            leadDropboxRests: {},
             pendingSubmitAll: false,
-
             showRemoveLeadModal: false,
         };
 
@@ -292,7 +312,7 @@ export default class LeadAdd extends React.PureComponent {
         }
 
         this.setAllLeadKeys(this.props.addLeadViewLeads);
-        this.setGlobalUiState(this.state, this.props);
+        this.setGlobalUiState(this.props);
         this.setFilteredLeadKeys(this.props.addLeadViewLeads, this.props.filters);
         this.setCompletedLeadKeys(this.props.addLeadViewLeads);
         this.setButtonStates(this.props.isFilterEmpty);
@@ -307,13 +327,13 @@ export default class LeadAdd extends React.PureComponent {
 
         let globalStateChanged = false;
         if (
-            this.state.leadUploads !== nextState.leadUploads ||
-            this.state.leadRests !== nextState.leadRests ||
-            this.state.leadDriveRests !== nextState.leadDriveRests ||
-            this.state.leadDropboxRests !== nextState.leadDropboxRests ||
+            this.props.leadUploads !== nextProps.leadUploads ||
+            this.props.leadRests !== nextProps.leadRests ||
+            this.props.leadDriveRests !== nextProps.leadDriveRests ||
+            this.props.leadDropboxRests !== nextProps.leadDropboxRests ||
             this.props.addLeadViewLeads !== nextProps.addLeadViewLeads
         ) {
-            this.setGlobalUiState(nextState, nextProps);
+            this.setGlobalUiState(nextProps);
             globalStateChanged = true;
         }
 
@@ -354,8 +374,8 @@ export default class LeadAdd extends React.PureComponent {
         this.allLeadsKeys = addLeadViewLeads.map(leadAccessor.getKey);
     }
 
-    setGlobalUiState = (nextState, nextProps) => {
-        this.globalUiState = LeadAdd.calcGlobalUiState(nextState, nextProps);
+    setGlobalUiState = (nextProps) => {
+        this.globalUiState = LeadAdd.calcGlobalUiState(nextProps);
     }
 
     setFilteredLeadKeys = (addLeadViewLeads, filters) => {
@@ -419,29 +439,18 @@ export default class LeadAdd extends React.PureComponent {
             driveUploadCoordinator: this.driveUploadCoordinator,
             addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             getLeadFromId: this.getLeadFromId,
-            setState: params => this.setState(params),
+            setLeadDriveRests: this.props.setLeadDriveRests,
         });
-
         uploads.forEach((upload) => {
             const request = googleDriveRequest.create(upload);
             this.driveUploadCoordinator.add(upload.leadId, request);
         });
         this.driveUploadCoordinator.start();
 
-
         // UPLOAD
-        const uploadSettings = uploads.reduce(
-            (acc, upload) => {
-                acc[upload.leadId] = { $auto: {
-                    pending: { $set: true },
-                } };
-                return acc;
-            },
-            {},
-        );
-        this.setState((state) => {
-            const leadDriveRests = update(state.leadDriveRests, uploadSettings);
-            return { leadDriveRests };
+        this.props.setLeadDriveRests({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: true,
         });
     }
 
@@ -450,7 +459,7 @@ export default class LeadAdd extends React.PureComponent {
             dropboxUploadCoordinator: this.dropboxUploadCoordinator,
             addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             getLeadFromId: this.getLeadFromId,
-            setState: params => this.setState(params),
+            setLeadDropboxRests: this.props.setLeadDropboxRests,
         });
 
         uploads.forEach((upload) => {
@@ -460,18 +469,9 @@ export default class LeadAdd extends React.PureComponent {
         this.dropboxUploadCoordinator.start();
 
         // UPLOAD
-        const uploadSettings = uploads.reduce(
-            (acc, upload) => {
-                acc[upload.leadId] = { $auto: {
-                    pending: { $set: true },
-                } };
-                return acc;
-            },
-            {},
-        );
-        this.setState((state) => {
-            const leadDropboxRests = update(state.leadDropboxRests, uploadSettings);
-            return { leadDropboxRests };
+        this.props.setLeadDropboxRests({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: true,
         });
     }
 
@@ -480,8 +480,7 @@ export default class LeadAdd extends React.PureComponent {
             uploadCoordinator: this.uploadCoordinator,
             addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             getLeadFromId: this.getLeadFromId,
-            setState: params => this.setState(params),
-            getState: name => this.state[name],
+            setLeadUploads: this.props.setLeadUploads,
         });
 
         uploads.forEach((upload) => {
@@ -491,31 +490,21 @@ export default class LeadAdd extends React.PureComponent {
         this.uploadCoordinator.start();
 
         // UPLOAD
-        const uploadSettings = uploads.reduce(
-            (acc, upload) => {
-                acc[upload.leadId] = { $auto: {
-                    progress: { $set: 0 },
-                } };
-                return acc;
-            },
-            {},
-        );
-        this.setState((state) => {
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+        this.props.setLeadUploads({
+            leadIds: uploads.map(upload => upload.leadId),
+            value: 0,
         });
     }
 
     // HANDLE FORM
 
     handleFormSubmitSuccess = (lead, newValues) => {
-        // FIXME: show notifiy if individual save
         const formSaveRequest = new FormSaveRequest({
             formCoordinator: this.formCoordinator,
             addLeadViewLeadSave: this.props.addLeadViewLeadSave,
             addLeadViewLeadChange: this.props.addLeadViewLeadChange,
             getLeadFromId: this.getLeadFromId,
-            setState: params => this.setState(params),
+            setLeadRests: this.props.setLeadRests,
         });
         const request = formSaveRequest.create(lead, newValues);
         return request;
@@ -704,11 +693,11 @@ export default class LeadAdd extends React.PureComponent {
 
     render() {
         const {
-            leadUploads,
             showRemoveLeadModal,
             pendingSubmitAll,
         } = this.state;
         const {
+            leadUploads,
             activeLead,
             activeLeadId,
             addLeadViewLeads,
