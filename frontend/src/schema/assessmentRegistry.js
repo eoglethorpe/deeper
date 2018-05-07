@@ -1,11 +1,11 @@
 const assessmentRegistrySchema = [];
 
 {
-    const name = 'aryTemplateMetadataFieldOption';
+    const name = 'aryTemplateFieldOption';
     const schema = {
         doc: {
-            name: 'Ary Template Metadata Field',
-            description: 'Ary Template Metadata Field',
+            name: 'Ary Template Field',
+            description: 'Ary Template Field',
         },
         fields: {
             label: { type: 'string' },
@@ -15,31 +15,32 @@ const assessmentRegistrySchema = [];
     assessmentRegistrySchema.push({ name, schema });
 }
 {
-    const name = 'aryTemplateMetadataField';
+    const name = 'aryTemplateField';
     const schema = {
         doc: {
-            name: 'Ary Template Metadata Field',
-            description: 'Ary Template Metadata Field',
+            name: 'Ary Template Field',
+            description: 'Ary Template Field',
         },
         fields: {
             id: { type: 'uint', required: true },
+            tooltip: { type: 'string' },
             fieldType: { type: 'string' },
-            options: { type: 'array.aryTemplateMetadataFieldOption', required: true },
+            options: { type: 'array.aryTemplateFieldOption', required: true },
             title: { type: 'string' },
         },
     };
     assessmentRegistrySchema.push({ name, schema });
 }
 {
-    const name = 'aryTemplateMetadata';
+    const name = 'aryTemplateFieldGroup';
     const schema = {
         doc: {
-            name: 'Ary Template Metadata',
-            description: 'Ary Template Metadata',
+            name: 'Ary Template Field Group',
+            description: 'Ary Template Field Group',
         },
         fields: {
             id: { type: 'uint', required: true },
-            fields: { type: 'array.aryTemplateMetadataField', required: true },
+            fields: { type: 'array.aryTemplateField', required: true },
             title: { type: 'string' },
         },
     };
@@ -56,8 +57,8 @@ const assessmentRegistrySchema = [];
         fields: {
             versionId: { type: 'uint', required: false },
             title: { type: 'string' },
-            metadataGroups: { type: 'array.aryTemplateMetadata', required: true },
-            methodologyGroups: { type: 'array', required: true },
+            metadataGroups: { type: 'array.aryTemplateFieldGroup', required: true },
+            methodologyGroups: { type: 'array.aryTemplateFieldGroup', required: true },
             sectors: { type: 'array', required: true },
             focuses: { type: 'array', required: true },
             affectedGroups: { type: 'array', required: true },

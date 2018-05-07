@@ -21,6 +21,7 @@ export const renderWidget = (k, data) => {
         options,
         placeholder,
         title,
+        tooltip,
     } = data;
 
     const id = String(key);
@@ -30,6 +31,7 @@ export const renderWidget = (k, data) => {
         label: title,
         options,
         placeholder,
+        title: tooltip,
     };
     const typeSpecificProps = {
         number: {
