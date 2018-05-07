@@ -6,7 +6,7 @@ import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import { iconNames } from '../../../../constants';
 import {
     createUrlForWebsiteFetch,
-    createParamsForGenericGet,
+    createParamsForGet,
 } from '../../../../rest';
 import _ts from '../../../../ts';
 
@@ -83,7 +83,7 @@ export default class ExternalGallery extends React.PureComponent {
             .url(createUrlForWebsiteFetch(url))
             .preLoad(() => { this.setState({ pending: true }); })
             .postLoad(() => { this.setState({ pending: false }); })
-            .params(createParamsForGenericGet())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     // FIXME: write schema

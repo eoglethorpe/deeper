@@ -21,7 +21,7 @@ import {
     createUrlForProject,
     createUrlForAnalysisFramework,
 
-    createParamsForUser,
+    createParamsForGet,
     createUrlForLeadsOfProject,
 
     transformResponseErrorToFormError,
@@ -229,7 +229,7 @@ export default class Export extends React.PureComponent {
     createRequestForProject = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({ pendingAf: true });
             })
@@ -283,7 +283,7 @@ export default class Export extends React.PureComponent {
         );
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .delay(0)
             .preLoad(() => {
                 this.setState({ pendingAf: true });
@@ -335,7 +335,7 @@ export default class Export extends React.PureComponent {
 
         const leadRequest = new FgRestBuilder()
             .url(urlForProjectLeads)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({ pendingLeads: true });
             })

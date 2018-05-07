@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import { checkVersion } from '../../../vendor/react-store/utils/common';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForConnector,
 } from '../../../rest';
 import _ts from '../../../ts';
@@ -88,7 +88,7 @@ export default class ConnectorDetailsGetRequest {
     create = (connectorId) => {
         const connectorDetailsRequest = new FgRestBuilder()
             .url(createUrlForConnector(connectorId))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ connectorDataLoading: true }); })
             .postLoad(() => { this.props.setState({ connectorDataLoading: false }); })
             .success(this.success)

@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUserGroup,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -39,7 +39,7 @@ export default class UserGroupGetRequest {
     create = (id) => {
         const userGroupRequest = new FgRestBuilder()
             .url(createUrlForUserGroup(id))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ pending: true }); })
             .postLoad(() => { this.props.setState({ pending: false }); })
             .success(this.success)

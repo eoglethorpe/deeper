@@ -5,7 +5,7 @@ import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 
 import {
     createUrlForGalleryFile,
-    createHeaderForGalleryFile,
+    createParamsForGet,
 } from '../../../../rest';
 import { iconNames } from '../../../../constants';
 import _ts from '../../../../ts';
@@ -77,7 +77,7 @@ export default class InternalGallery extends React.PureComponent {
     createRequestForGalleryFile = (galleryId) => {
         const galleryFileRequest = new FgRestBuilder()
             .url(createUrlForGalleryFile(galleryId))
-            .params(createHeaderForGalleryFile())
+            .params(createParamsForGet)
             .preLoad(() => { this.setState({ pending: true, notFound: true }); })
             .postLoad(() => { this.setState({ pending: false }); })
             .success((response) => {

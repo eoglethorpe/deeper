@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUsers,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import notify from '../../../notify';
 import schema from '../../../schema';
@@ -51,7 +51,7 @@ export default class UsersGetRequest {
     create = () => {
         const usersRequest = new FgRestBuilder()
             .url(createUrlForUsers([this.usersFields]))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => this.props.setState({ pending: true }))
             .postLoad(() => this.props.setState({ pending: false }))
             .success(this.success)

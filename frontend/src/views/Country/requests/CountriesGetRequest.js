@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     urlForRegions,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -35,7 +35,7 @@ export default class CountriesGetRequest {
     create = () => {
         const countriesRequest = new FgRestBuilder()
             .url(urlForRegions)
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .success(this.success)
             .failure(this.failure)
             .fatal(this.fatal)

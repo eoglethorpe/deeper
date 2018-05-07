@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../../../vendor/react-store/utils/rest';
 import {
     createUrlForEntriesOfLead,
-    createParamsForEntriesOfLead,
+    createParamsForGet,
 } from '../../../../../rest';
 
 import schema from '../../../../../schema';
@@ -19,7 +19,7 @@ export default class EntriesRequest {
     create = (leadId) => {
         const entriesRequest = new FgRestBuilder()
             .url(createUrlForEntriesOfLead(leadId))
-            .params(createParamsForEntriesOfLead)
+            .params(createParamsForGet)
             .preLoad(() => {
                 this.setState({ pendingEntries: true });
             })

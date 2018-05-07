@@ -21,7 +21,7 @@ const projectSchema = [];
             startDate: { type: 'string' }, // date
             endDate: { type: 'string' }, // date
             role: { type: 'string', required: true },
-            extra: { type: 'projectsExtra', required: false },
+            // extra: { type: 'projectsExtra', required: false },
         },
     };
     projectSchema.push({ name, schema });
@@ -89,18 +89,6 @@ const projectSchema = [];
 }
 
 {
-    const name = 'projectsExtra';
-    const schema = {
-        doc: {
-            name: 'Extra fields for projects Get Response',
-        },
-        fields: {
-            lastActiveProject: { type: 'uint' },
-        },
-    };
-    projectSchema.push({ name, schema });
-}
-{
     const name = 'projectsMiniGetResponse';
     const schema = {
         doc: {
@@ -112,7 +100,7 @@ const projectSchema = [];
             next: { type: 'string' },
             previous: { type: 'string' },
             results: { type: 'array.projectMini', required: true },
-            extra: { type: 'projectsExtra', required: true },
+            // extra: { type: 'projectsExtra', required: true },
         },
     };
     projectSchema.push({ name, schema });
@@ -129,7 +117,7 @@ const projectSchema = [];
             next: { type: 'string' },
             previous: { type: 'string' },
             results: { type: 'array.project', required: true },
-            extra: { type: 'projectsExtra', required: true },
+            // extra: { type: 'projectsExtra', required: true },
         },
     };
     projectSchema.push({ name, schema });

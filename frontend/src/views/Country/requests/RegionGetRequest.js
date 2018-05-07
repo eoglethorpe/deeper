@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForRegionWithField,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -71,7 +71,7 @@ export default class RegionGetRequest {
 
         const regionRequest = new FgRestBuilder()
             .url(urlForRegionForRegionalGroups)
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ dataLoading: true }); })
             .postLoad(() => { this.props.setState({ dataLoading: false }); })
             .success(this.success(regionId))

@@ -1,4 +1,11 @@
-import { wsEndpoint, GET, POST, PATCH, DELETE, commonHeaderForPost, p } from '../config/rest';
+import {
+    wsEndpoint,
+    POST,
+    PATCH,
+    DELETE,
+    commonHeaderForPost,
+    p,
+} from '../config/rest';
 
 export const createUrlForProject = projectId => `${wsEndpoint}/projects/${projectId}/`;
 export const createUrlForProjectOptions = projectId => `${wsEndpoint}/project-options/?${p({ project: projectId })}`;
@@ -19,16 +26,6 @@ export const urlForProjectCreate = `${wsEndpoint}/projects/`;
 export const urlForProjectMembership = `${wsEndpoint}/project-memberships/`;
 export const createUrlForUserProjectMembership = membershipId =>
     `${wsEndpoint}/project-memberships/${membershipId}/`;
-
-export const createParamsForProjects = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
-
-export const createParamsForProjectOptions = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
 
 export const createParamsForProjectPatch = data => ({
     method: PATCH,

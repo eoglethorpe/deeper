@@ -1,4 +1,11 @@
-import { wsEndpoint, GET, POST, PATCH, DELETE, p, commonHeaderForPost } from '../config/rest';
+import {
+    wsEndpoint,
+    POST,
+    PATCH,
+    DELETE,
+    p,
+    commonHeaderForPost,
+} from '../config/rest';
 
 export const urlForRegionCreate = `${wsEndpoint}/regions/`;
 export const urlForAdminLevels = `${wsEndpoint}/admin-levels/`;
@@ -19,16 +26,6 @@ export const createUrlForRegionWithField = (regionId, fields) => {
     }
     return `${wsEndpoint}/regions/${regionId}/`;
 };
-
-export const createParamsForAdminLevelsForRegionGET = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
-
-export const createParamsForGeoOptionsGET = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
-});
 
 export const createParamsForAdminLevelsForRegionPOST = data => ({
     method: POST,

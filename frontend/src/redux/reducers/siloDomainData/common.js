@@ -1,5 +1,4 @@
 import update from '../../../vendor/react-store/utils/immutable-update';
-import { isFalsy, isTruthy } from '../../../vendor/react-store/utils/common';
 
 import { LOGOUT_ACTION } from '../../reducers/auth';
 import { SET_USER_PROJECTS } from '../../reducers/domainData/projects';
@@ -29,15 +28,10 @@ const getIdFromProject = project => project.id;
 
 const logout = () => initialSiloDomainData;
 
-// NOTE: Only set new active project in this reducer
+// NOTE: Only sets new active project id in this reducer
 const setUserProjects = (state, action) => {
-    const { activeProject } = state;
-    const { projects, extra = {} } = action;
-
-    let activeProjectId = activeProject;
-    if (isFalsy(activeProjectId) && isTruthy(extra.lastActiveProject)) {
-        activeProjectId = extra.lastActiveProject;
-    }
+    const { activeProject: activeProjectId } = state;
+    const { projects } = action;
 
     // if projects, try to find purano else naya
     let newActiveProjectId;

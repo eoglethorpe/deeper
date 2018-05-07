@@ -1,5 +1,4 @@
 import {
-    GET,
     POST,
     wsEndpoint,
     commonHeaderForPost,
@@ -41,11 +40,6 @@ export const createHeaderForDropboxUpload = ({ title, fileUrl }) => ({
         title,
         fileUrl,
     }),
-});
-
-export const createHeaderForGalleryFile = () => ({
-    method: GET,
-    headers: commonHeaderForPost,
 });
 
 export const createUrlForGalleryFiles = (params = {}) => (

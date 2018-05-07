@@ -5,7 +5,7 @@ import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    createParamsForGenericGet,
+    createParamsForGet,
     createUrlForExport,
 } from '../../rest';
 import _ts from '../../ts';
@@ -76,7 +76,7 @@ export default class ExportPreview extends React.PureComponent {
     createPreviewRequest = exportId => (
         new FgRestBuilder()
             .url(createUrlForExport(exportId))
-            .params(createParamsForGenericGet)
+            .params(createParamsForGet)
             .maxPollAttempts(200)
             .pollTime(2000)
             .shouldPoll(response => response.pending)

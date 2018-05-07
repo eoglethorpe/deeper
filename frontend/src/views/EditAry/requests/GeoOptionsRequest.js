@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForGeoOptions,
-    createParamsForGeoOptionsGET,
+    createParamsForGet,
     transformResponseErrorToFormError,
 } from '../../../rest';
 import schema from '../../../schema';
@@ -18,7 +18,7 @@ export default class GeoOptionsRequest {
     create = (projectId) => {
         const geoOptionsRequest = new FgRestBuilder()
             .url(createUrlForGeoOptions(projectId))
-            .params(() => createParamsForGeoOptionsGET())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pendingGeo: true }))
             .postLoad(() => this.setState({ pendingGeo: false }))
             .success((response) => {

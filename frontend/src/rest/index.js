@@ -1,3 +1,5 @@
+import { GET, commonHeaderForGet } from '../config/rest';
+
 export * from './docs';
 export * from './file';
 export * from './leadFilterOptions';
@@ -15,6 +17,11 @@ export * from './analysisFramework';
 export * from './assessmentRegistry';
 export * from './categoryEditor';
 export * from './export';
+
+export const createParamsForGet = () => ({
+    method: GET,
+    headers: commonHeaderForGet,
+});
 
 export const transformResponseErrorToFormError = (errors) => {
     const { nonFieldErrors = [], ...formFieldErrorList } = errors;

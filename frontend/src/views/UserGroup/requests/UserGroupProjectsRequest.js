@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForUserGroupProjects,
-    createParamsForUser,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 
@@ -37,7 +37,7 @@ export default class UserGroupProjectsRequest {
         const urlForUserGroupProjects = createUrlForUserGroupProjects(id);
         const userGroupRequest = new FgRestBuilder()
             .url(urlForUserGroupProjects)
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .success(this.success)
             .failure(this.failure)
             .fatal(this.fatal)

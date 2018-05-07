@@ -6,7 +6,7 @@ import { isFalsy } from '../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    createParamsForGenericGet,
+    createParamsForGet,
     createUrlForLeadExtractionTrigger,
     createUrlForSimplifiedLeadPreview,
 } from '../../rest';
@@ -148,7 +148,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     createTriggerRequest = (leadId, onLoad) => (
         new FgRestBuilder()
             .url(createUrlForLeadExtractionTrigger(leadId))
-            .params(createParamsForGenericGet())
+            .params(createParamsForGet)
             .success(() => {
                 console.log(`Triggered lead extraction for ${leadId}`);
                 this.previewRequest.stop();
@@ -173,7 +173,7 @@ export default class SimplifiedLeadPreview extends React.PureComponent {
     createPreviewRequest = (leadId, onLoad) => (
         new FgRestBuilder()
             .url(createUrlForSimplifiedLeadPreview(leadId))
-            .params(createParamsForGenericGet())
+            .params(createParamsForGet)
             .maxPollAttempts(200)
             .pollTime(2000)
             .shouldPoll(response => (

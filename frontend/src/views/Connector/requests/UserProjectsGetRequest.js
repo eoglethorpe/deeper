@@ -2,7 +2,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 
 import {
     createUrlForProjectsOfUser,
-    createParamsForProjects,
+    createParamsForGet,
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -47,7 +47,7 @@ export default class UserProjectsGetRequest {
     create = (userId) => {
         const projectsRequest = new FgRestBuilder()
             .url(createUrlForProjectsOfUser(userId))
-            .params(() => createParamsForProjects())
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ projectDataLoading: true }); })
             .postLoad(() => { this.props.setState({ projectDataLoading: false }); })
             .success(() => this.success(userId))

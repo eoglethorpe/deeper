@@ -3,7 +3,11 @@ import thunk from 'redux-thunk';
 import logger from './redux/middlewares/logger';
 import siloBackgroundTasks from './redux/middlewares/siloBackgroundTasks';
 import { sendToken } from './utils/browserExtension';
-import { commonHeaderForPost, authorizationHeaderForPost } from './config/rest';
+import {
+    commonHeaderForPost,
+    commonHeaderForGet,
+    authorizationHeaderForPost,
+} from './config/rest';
 import { createActionSyncMiddleware } from './vendor/react-store/utils/redux-sync.js';
 
 import reducer from './redux/reducers';
@@ -51,9 +55,11 @@ if (process.env.NODE_ENV !== 'test') {
         if (prevAccess !== currentAccess) {
             if (currentAccess) {
                 commonHeaderForPost.Authorization = `Bearer ${currentAccess}`;
+                commonHeaderForGet.Authorization = `Bearer ${currentAccess}`;
                 authorizationHeaderForPost.Authorization = `Bearer ${currentAccess}`;
             } else {
                 commonHeaderForPost.Authorization = undefined;
+                commonHeaderForGet.Authorization = `Bearer ${currentAccess}`;
                 authorizationHeaderForPost.Authorization = undefined;
             }
         }

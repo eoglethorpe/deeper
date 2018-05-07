@@ -37,3 +37,7 @@ export const commonHeaderForPost = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
 };
+export const commonHeaderForGet = {
+    Accept: 'application/json',
+    'Content-Type': 'application/json',
+};

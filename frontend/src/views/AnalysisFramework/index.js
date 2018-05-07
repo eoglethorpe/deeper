@@ -10,7 +10,7 @@ import { checkVersion } from '../../vendor/react-store/utils/common';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createParamsForAnalysisFrameworkEdit,
     createUrlForAnalysisFramework,
 } from '../../rest';
@@ -109,7 +109,7 @@ export default class AnalysisFramework extends React.PureComponent {
         );
         const analysisFrameworkRequest = new FgRestBuilder()
             .url(urlForAnalysisFramework)
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');

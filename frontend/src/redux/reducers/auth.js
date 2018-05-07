@@ -13,6 +13,7 @@ export const LOGIN_ACTION = 'auth/LOGIN';
 export const LOGOUT_ACTION = 'auth/LOGOUT';
 export const AUTHENTICATE_ACTION = 'auth/AUTHENTICATE_ACTION';
 export const SET_ACCESS_TOKEN_ACTION = 'auth/SET_ACCESS_TOKEN';
+export const SET_USER_PREFERENCES = 'auth/SET_USER_PREFERENCES';
 
 // ACTION-CREATOR
 
@@ -35,6 +36,11 @@ export const setAccessTokenAction = access => ({
     access,
 });
 
+export const setUserPreferencesAction = userPreferences => ({
+    type: SET_USER_PREFERENCES,
+    userPreferences,
+});
+
 // HELPER
 
 const decodeAccessToken = (access) => {
@@ -43,9 +49,6 @@ const decodeAccessToken = (access) => {
         schema.validate(decodedToken, 'accessToken');
         return {
             userId: decodedToken.userId,
-            username: decodedToken.username,
-            displayName: decodedToken.displayName,
-            isSuperuser: decodedToken.isSuperuser,
             exp: decodedToken.exp,
         };
     } catch (ex) {
@@ -60,10 +63,12 @@ const login = (state, action) => {
     const { access, refresh } = action;
     const decodedToken = decodeAccessToken(access);
     const settings = {
-        token: { $set: {
-            access,
-            refresh,
-        } },
+        token: {
+            $set: {
+                access,
+                refresh,
+            },
+        },
         activeUser: { $set: decodedToken },
     };
     return update(state, settings);
@@ -82,10 +87,18 @@ const setAccessToken = (state, action) => {
     const { access } = action;
     const decodedToken = decodeAccessToken(access);
     const settings = {
-        token: { $merge: {
-            access,
-        } },
-        activeUser: { $set: decodedToken },
+        token: {
+            access: { $set: access },
+        },
+        activeUser: { $merge: decodedToken },
+    };
+    return update(state, settings);
+};
+
+const setUserPreferences = (state, action) => {
+    const { userPreferences } = action;
+    const settings = {
+        activeUser: { $merge: userPreferences },
     };
     return update(state, settings);
 };
@@ -95,6 +108,7 @@ export const authReducers = {
     [AUTHENTICATE_ACTION]: authenticate,
     [LOGOUT_ACTION]: logout,
     [SET_ACCESS_TOKEN_ACTION]: setAccessToken,
+    [SET_USER_PREFERENCES]: setUserPreferences,
 };
 
 const authReducer = createReducerWithMap(authReducers, initialAuthState);

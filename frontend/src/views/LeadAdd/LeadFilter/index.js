@@ -23,7 +23,7 @@ import {
     setLeadFilterOptionsAction,
 } from '../../../redux';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForLeadFilterOptions,
 } from '../../../rest';
 import {
@@ -109,7 +109,7 @@ export default class LeadFilter extends React.PureComponent {
     createRequestForProjectLeadFilterOptions = (activeProject) => {
         const leadFilterOptionsRequest = new BgRestBuilder()
             .url(createUrlForLeadFilterOptions(activeProject))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectLeadFilterOptions');

@@ -8,9 +8,8 @@ import MultiViewContainer from '../../../vendor/react-store/components/View/Mult
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
 
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForProject,
-    createParamsForProjectOptions,
     createUrlForProjectOptions,
 } from '../../../rest';
 import {
@@ -178,7 +177,7 @@ export default class ProjectDetails extends React.PureComponent {
     createProjectRequest = (projectId) => {
         const projectRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
-            .params(() => createParamsForUser())
+            .params(createParamsForGet)
             .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
@@ -201,7 +200,7 @@ export default class ProjectDetails extends React.PureComponent {
     createProjectOptionsRequest = (projectId) => {
         const projectOptionsRequest = new FgRestBuilder()
             .url(createUrlForProjectOptions(projectId))
-            .params(() => createParamsForProjectOptions())
+            .params(createParamsForGet)
             .success((response) => {
                 try {
                     schema.validate(response, 'projectOptionsGetResponse');

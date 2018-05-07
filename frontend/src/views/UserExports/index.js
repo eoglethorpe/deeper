@@ -20,7 +20,7 @@ import BoundError from '../../vendor/react-store/components/General/BoundError';
 import AppError from '../../components/AppError';
 import {
     createUrlForExport,
-    createParamsForUserExportsGET,
+    createParamsForUserGet,
     createUrlForExportsOfProject,
 
     transformResponseErrorToFormError,
@@ -247,7 +247,7 @@ export default class UserExports extends React.PureComponent {
     createUserExportsRequest = (projectId) => {
         const userExportsRequest = new FgRestBuilder()
             .url(createUrlForExportsOfProject(projectId))
-            .params(() => createParamsForUserExportsGET())
+            .params(() => createParamsForUserGet())
             .preLoad(() => {
                 this.setState({ pendingExports: true });
             })
@@ -292,7 +292,7 @@ export default class UserExports extends React.PureComponent {
     createExportPollRequest = (exportId) => {
         const userExportsRequest = new FgRestBuilder()
             .url(createUrlForExport(exportId))
-            .params(() => createParamsForUserExportsGET())
+            .params(() => createParamsForUserGet())
             .pollTime(2000)
             .maxPollAttempts(200)
             .shouldPoll(response => response.pending === true)

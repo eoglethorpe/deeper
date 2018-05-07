@@ -8,7 +8,7 @@ const userSchema = [];
     const schema = {
         doc: {
             name: 'User Small',
-            description: 'Data for Small User Information',
+            description: 'Small Data for user',
         },
         fields: {
             displayName: { type: 'string', required: true },
@@ -25,7 +25,6 @@ const userSchema = [];
             name: 'User',
             description: 'Data for user',
         },
-        extends: 'user-s',
         fields: {
             displayName: { type: 'string', required: true },
             displayPicture: { type: 'uint' }, // id
@@ -35,12 +34,31 @@ const userSchema = [];
             lastName: { type: 'string', required: true },
             organization: { type: 'string', required: true },
             username: { type: 'string', required: true },
-            lastActiveProject: { type: 'uint' },
+            // lastActiveProject: { type: 'uint' },
             loginAttempts: { type: 'number' },
         },
     };
     userSchema.push({ name, schema });
 }
+{
+    const name = 'userPreferences';
+    const schema = {
+        doc: {
+            name: 'User Preferences',
+            description: 'Preferences for user',
+        },
+        fields: {
+            diplayPicture: { type: 'uint' },
+            displayName: { type: 'string', required: true },
+            email: { type: 'string', required: true },
+            isSuperuser: { type: 'boolean', required: true },
+            lastActiveProject: { type: 'uint' },
+            username: { type: 'string', required: true },
+        },
+    };
+    userSchema.push({ name, schema });
+}
+
 
 {
     const name = 'userCreateResponse';
