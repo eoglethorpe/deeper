@@ -63,7 +63,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
         const { connectorsList = emptyList } = props;
         const displayConnectorsList = connectorsList;
         const selectedConnector = displayConnectorsList.length > 0 ?
-            displayConnectorsList[0].id : 0;
+            displayConnectorsList[0].id : undefined;
 
         this.state = {
             searchInputValue: '',

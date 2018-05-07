@@ -37,6 +37,7 @@ const initialSiloDomainData = {
             */
         ],
         connectorsList: {
+            /*
             1: {
                 1: {
                     id: 1,
@@ -61,21 +62,7 @@ const initialSiloDomainData = {
                     title: 'Daily Bugle',
                 },
             },
-        },
-        connectorsLeads: {
-            7: [
-                {
-                    key: 1123123,
-                    title: 'A dog jumped',
-                    website: 'https://dog.jump',
-                    isSelected: false,
-                },
-                {
-                    key: 11123,
-                    title: 'A dog jumped',
-                    website: 'https://dog.jump',
-                },
-            ],
+            */
         },
     },
 
