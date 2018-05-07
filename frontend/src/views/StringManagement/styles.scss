@@ -77,7 +77,7 @@ $width-error-pane: 320px;
                     $width-id-column: 72px;
                     $width-refs-column: 64px;
                     $width-duplicates-column: 108px;
-                    $width-string-column: calc(100% - #{$width-id-column - $width-refs-column - $width-duplicates-column});
+                    $width-string-column: calc(100% - #{$width-id-column + $width-refs-column + $width-duplicates-column});
 
                     :global {
                         .headers {
@@ -109,10 +109,10 @@ $width-error-pane: 320px;
                 }
 
                 .linksTable {
-                    $width-id-column: 36%;
+                    $width-id-column: 40%;
                     $width-refs-column: 64px;
                     $width-string-id-column: 108px;
-                    $width-string-column: calc(100% - #{$width-id-column} - #{$width-refs-column - $width-string-id-column});
+                    $width-string-column: calc(100% - #{$width-id-column} - #{$width-refs-column + $width-string-id-column});
 
                     :global {
                         .headers {
@@ -129,7 +129,7 @@ $width-error-pane: 320px;
                             }
 
                             .string {
-                                width: 70%;
+                                width: $width-string-column;
                             }
                         }
 
