@@ -50,9 +50,10 @@ const propTypes = {
     addLeadViewCopyAllBelow: PropTypes.func.isRequired,
     addLeadViewCopyAll: PropTypes.func.isRequired,
 
-    hidePreview: PropTypes.bool.isRequired,
+    hidePreview: PropTypes.bool,
 };
 const defaultProps = {
+    hidePreview: false,
 };
 
 const mapStateToProps = state => ({

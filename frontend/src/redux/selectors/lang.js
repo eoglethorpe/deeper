@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import devLang from '../initial-state/dev-lang';
-import { groupList } from '../../vendor/react-store/utils/common';
 
 const emptyObject = {};
 const emptyArray = [];

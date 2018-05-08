@@ -42,6 +42,7 @@ import styles from './styles.scss';
 
 const defaultProps = {
     activeLeadId: undefined,
+    hidePreview: false,
 };
 
 const propTypes = {
@@ -72,7 +73,7 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     leadFormRefs: PropTypes.object.isRequired,
 
-    hidePreview: PropTypes.bool.isRequired,
+    hidePreview: PropTypes.bool,
     setPreview: PropTypes.func.isRequired,
 };
 
