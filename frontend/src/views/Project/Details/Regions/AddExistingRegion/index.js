@@ -257,7 +257,6 @@ export default class AddExistingRegion extends React.PureComponent {
                     className={styles.tabularSelect}
                     blackList={regionsBlackList}
                     options={regionOptions}
-                    optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddExistingRegion.optionLabelSelector}
                     keySelector={AddExistingRegion.optionKeySelector}
                     tableHeaders={this.regionsHeader}

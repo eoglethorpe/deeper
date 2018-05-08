@@ -263,7 +263,6 @@ export default class AddUserGroupMembers extends React.PureComponent {
                     className={styles.tabularSelect}
                     blackList={membersBlackList}
                     options={usersWithRole}
-                    optionsIdentifier="select-input-inside-modal"
                     labelSelector={AddUserGroupMembers.optionLabelSelector}
                     keySelector={AddUserGroupMembers.optionKeySelector}
                     tableHeaders={this.memberHeaders}
