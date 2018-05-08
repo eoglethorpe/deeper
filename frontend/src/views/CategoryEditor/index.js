@@ -541,7 +541,7 @@ export default class CategoryEditor extends React.PureComponent {
                             <Link
                                 disabled={categoryEditorViewPristine || pending}
                                 className={styles.linkToPp}
-                                to={`${reverseRoute(pathNames.projects, { projectId })}#/category-editor`}
+                                to={`${reverseRoute(pathNames.projects, { projectId })}#/categoryEditors`}
                                 replace
                             >
                                 {_ts('ce', 'exitButtonLabel')}

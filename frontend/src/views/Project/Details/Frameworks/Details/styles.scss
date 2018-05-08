@@ -23,6 +23,7 @@ $height-header: 39px;
 
             .edit-framework-link {
                 @include button-like-link($color-warning);
+                margin-left: $spacing-small;
             }
         }
     }

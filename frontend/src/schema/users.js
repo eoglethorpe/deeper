@@ -48,7 +48,7 @@ const userSchema = [];
             description: 'Preferences for user',
         },
         fields: {
-            diplayPicture: { type: 'uint' },
+            displayPicture: { type: 'uint' },
             displayName: { type: 'string', required: true },
             email: { type: 'string', required: true },
             isSuperuser: { type: 'boolean', required: true },

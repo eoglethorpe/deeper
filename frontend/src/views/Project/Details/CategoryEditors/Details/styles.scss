@@ -24,6 +24,7 @@ $height-header: 39px;
 
             .edit-category-editor-link {
                 @include button-like-link($color-warning);
+                margin-left: $spacing-small;
             }
         }
     }

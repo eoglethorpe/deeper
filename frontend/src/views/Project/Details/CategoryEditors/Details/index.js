@@ -230,19 +230,6 @@ export default class ProjectCeDetail extends React.PureComponent {
         this.setState({ pristine: false });
     };
 
-    handleCeEditClick = () => {
-        const {
-            categoryEditorId,
-            mainHistory,
-        } = this.props;
-
-        const params = {
-            categoryEditorId,
-        };
-
-        mainHistory.push(reverseRoute(pathNames.categoryEditor, params));
-    }
-
     renderUseCeButton = () => {
         const {
             categoryEditorId,

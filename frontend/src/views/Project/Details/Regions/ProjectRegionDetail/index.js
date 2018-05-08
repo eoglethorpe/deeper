@@ -319,9 +319,6 @@ export default class ProjectRegionDetail extends React.PureComponent {
             activeProject,
             regionDetail,
         } = this.props;
-        const {
-            formValues = {},
-        } = this.props.regionDetail;
         const { dataLoading } = this.state;
 
         const isEditable = regionDetail.public !== undefined && !regionDetail.public;
