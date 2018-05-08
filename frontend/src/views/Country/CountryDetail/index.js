@@ -42,9 +42,9 @@ const propTypes = {
         title: PropTypes.string,
     }).isRequired,
     regionDetail: PropTypes.shape({
-        formValues: PropTypes.object,
+        faramValues: PropTypes.object,
         formFieldErrors: PropTypes.object,
-        formErrors: PropTypes.object,
+        faramErrors: PropTypes.object,
         pristine: PropTypes.bool,
     }),
     unSetRegion: PropTypes.func.isRequired,
@@ -58,9 +58,9 @@ const propTypes = {
 const defaultProps = {
     className: '',
     regionDetail: {
-        formValues: {},
+        faramValues: {},
         formFieldErrors: {},
-        formErrors: {},
+        faramErrors: {},
         pristine: false,
     },
     title: '',
@@ -255,11 +255,11 @@ export default class CountryDetail extends React.PureComponent {
         this.regionDetailPatchRequest.start();
     }
 
-    failureCallback = (formFieldErrors, formErrors) => {
+    failureCallback = (formFieldErrors, faramErrors) => {
         const regionDetails = {
-            formValues: { ...this.props.regionDetail.formValues },
+            faramValues: { ...this.props.regionDetail.faramValues },
             formFieldErrors: { ...formFieldErrors },
-            formErrors: { ...formErrors },
+            faramErrors: { ...faramErrors },
             pristine: true,
         };
         this.props.setRegionDetails({
@@ -272,11 +272,11 @@ export default class CountryDetail extends React.PureComponent {
         this.startRequestForRegionDetailPatch(this.props.countryId, values);
     };
 
-    handleFaramChange = (formValues, formFieldErrors, formErrors) => {
+    handleFaramChange = (faramValues, formFieldErrors, faramErrors) => {
         const regionDetails = {
-            formValues,
+            faramValues,
             formFieldErrors,
-            formErrors,
+            faramErrors,
             pristine: true,
         };
 
@@ -314,9 +314,9 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            formErrors = {},
+            faramErrors = {},
             formFieldErrors = {},
-            formValues = {},
+            faramValues = {},
             pristine = false,
         } = this.props.regionDetail;
 
@@ -324,7 +324,7 @@ export default class CountryDetail extends React.PureComponent {
             <header className={styles.header} >
                 <div className={styles.topContainer} >
                     <h3 className={styles.heading} >
-                        {formValues.title}
+                        {faramValues.title}
                     </h3>
                     <div className={styles.rightContainer} >
                         {
@@ -382,8 +382,8 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            formErrors = {},
-            formValues = {},
+            faramErrors = {},
+            faramValues = {},
             pristine = false,
         } = this.props.regionDetail;
 
@@ -411,8 +411,8 @@ export default class CountryDetail extends React.PureComponent {
                         onValidationFailure={this.handleValidationFailure}
                         onValidationSuccess={this.handleValidationSuccess}
                         schema={this.schema}
-                        value={formValues}
-                        error={formErrors}
+                        value={faramValues}
+                        error={faramErrors}
                         disabled={loading}
                     >
                         { loading &&

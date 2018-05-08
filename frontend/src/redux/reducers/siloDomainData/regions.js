@@ -22,7 +22,7 @@ const setRegionDetails = (state, action) => {
     const settings = {
         regions: { $auto: {
             [regionId]: { $auto: {
-                $merge: regionDetails,
+                $set: regionDetails,
             } },
         } },
     };
@@ -37,7 +37,7 @@ const addNewRegion = (state, action) => {
                 id: { $set: regionDetail.id },
                 versionId: { $set: regionDetail.versionId },
                 public: { $set: regionDetail.public },
-                formValues: { $auto: {
+                faramValues: { $auto: {
                     $merge: regionDetail,
                 } },
             } },
