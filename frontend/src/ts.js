@@ -1,4 +1,5 @@
 import stringFormat from 'string-format';
+import devLang from './redux/initial-state/dev-lang';
 
 import {
     selectedLinksSelector,
@@ -20,15 +21,19 @@ const _ts = (namespace, identifier, params) => {
 
     const selectedStrings = selectedStringsSelector(state);
     const selectedLinks = selectedLinksSelector(state);
-
-    const fallbackStrings = fallbackStringsSelector(state);
-    const fallbackLinks = fallbackLinksSelector(state);
-
     let str = getString(selectedStrings, selectedLinks, namespace, identifier);
+
+    // If string is not in selected language, get from fallback language
     if (!str) {
+        const fallbackStrings = fallbackStringsSelector(state);
+        const fallbackLinks = fallbackLinksSelector(state);
         str = getString(fallbackStrings, fallbackLinks, namespace, identifier);
     }
-
+    // If string is not in fallback language, get from dev language
+    if (!str) {
+        str = getString(devLang.strings, devLang.links, namespace, identifier);
+    }
+    // If string is not in dev language, show identifiers
     if (!str) {
         str = `{${namespace}:${identifier}}`;
     } else if (params) {

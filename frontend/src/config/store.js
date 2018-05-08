@@ -19,7 +19,7 @@ const myTransform = createTransform(
 );
 
 const storeConfig = {
-    blacklist: ['notify', 'route', 'lang', 'app'],
+    blacklist: ['notify', 'route', 'app'],
     key: 'deeper',
     version: 1,
     storage: localforage,

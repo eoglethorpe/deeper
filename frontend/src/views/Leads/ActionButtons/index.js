@@ -100,28 +100,24 @@ export default class ActionButtons extends React.PureComponent {
 
         return (
             <Fragment>
-                {
-                    row.status === 'pending' &&
-                    <SuccessButton
-                        tabIndex="-1"
-                        title={_ts('leads', 'markAsProcessedTitle')}
-                        iconName={iconNames.check}
-                        onClick={() => onMarkProcessed(row)}
-                        smallVerticalPadding
-                        transparent
-                    />
-                }
-                {
-                    row.status === 'processed' &&
-                    <WarningButton
-                        tabIndex="-1"
-                        title={_ts('leads', 'markAsPendingTitle')}
-                        iconName={iconNames.undo}
-                        onClick={() => onMarkPending(row)}
-                        smallVerticalPadding
-                        transparent
-                    />
-                }
+                <SuccessButton
+                    tabIndex="-1"
+                    title={_ts('leads', 'markAsProcessedTitle')}
+                    iconName={iconNames.check}
+                    onClick={() => onMarkProcessed(row)}
+                    smallVerticalPadding
+                    transparent
+                    disabled={row.status !== 'pending'}
+                />
+                <WarningButton
+                    tabIndex="-1"
+                    title={_ts('leads', 'markAsPendingTitle')}
+                    iconName={iconNames.undo}
+                    onClick={() => onMarkPending(row)}
+                    smallVerticalPadding
+                    transparent
+                    disabled={row.status !== 'processed'}
+                />
                 <Button
                     tabIndex="-1"
                     title={_ts('leads', 'searchSimilarLeadButtonTitle')}

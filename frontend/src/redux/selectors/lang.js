@@ -3,12 +3,16 @@ import devLang from '../initial-state/dev-lang';
 import { groupList } from '../../vendor/react-store/utils/common';
 
 const emptyObject = {};
+const emptyArray = [];
 
-const selectedLanguageNameSelector = ({ lang }) => (
-    lang.selectedLanguage
+export const selectedLanguageNameSelector = ({ lang }) => (
+    lang.selectedLanguage || '$devLang'
 );
-const fallbackLanguageNameSelector = ({ lang }) => (
-    lang.fallbackLanguage
+export const fallbackLanguageNameSelector = ({ lang }) => (
+    lang.fallbackLanguage || '$devLang'
+);
+export const availableLanguagesSelector = ({ lang }) => (
+    lang.availableLanguages || emptyArray
 );
 
 const languagesSelector = ({ lang }) => (
@@ -18,7 +22,11 @@ const languagesSelector = ({ lang }) => (
 const selectedLanguageSelector = createSelector(
     selectedLanguageNameSelector,
     languagesSelector,
-    (selectedLanguage, languages) => languages[selectedLanguage] || devLang,
+    (selectedLanguage, languages) => (
+        selectedLanguage === '$devLang'
+            ? devLang
+            : languages[selectedLanguage] || emptyObject
+    ),
 );
 
 export const selectedStringsSelector = createSelector(
@@ -34,7 +42,11 @@ export const selectedLinksSelector = createSelector(
 const fallbackLanguageSelector = createSelector(
     fallbackLanguageNameSelector,
     languagesSelector,
-    (fallbackLanguage, languages) => languages[fallbackLanguage] || devLang,
+    (fallbackLanguage, languages) => (
+        fallbackLanguage === '$devLang'
+            ? devLang
+            : languages[fallbackLanguage] || emptyObject
+    ),
 );
 
 export const fallbackStringsSelector = createSelector(
@@ -135,7 +147,38 @@ export const problemsWithStringsSelector = createSelector(
     selectedLinksSelector,
     usageMapSelector,
     (strings, links, usageMaps) => {
-        const problems = [];
+        // Initialize new problems
+        const newProblems = Object.keys(usageMaps).reduce(
+            (acc, key) => {
+                acc[key] = {
+                    badLink: {
+                        title: 'Bad link',
+                        type: 'error',
+                        instances: [],
+                    },
+                    undefinedLink: {
+                        title: 'Undefined link',
+                        type: 'error',
+                        instances: [],
+                    },
+                    unusedLinks: {
+                        title: 'Unused link',
+                        type: 'warning',
+                        instances: [],
+                    },
+                };
+                return acc;
+            },
+            {
+                $all: {
+                    unusedStrings: {
+                        title: 'Unused string',
+                        type: 'warning',
+                        instances: [],
+                    },
+                },
+            },
+        );
 
         // Identify strings not linked by any linkCollection
         const stringNameReferenced = Object.keys(strings).reduce(
@@ -154,14 +197,10 @@ export const problemsWithStringsSelector = createSelector(
                 }
             });
         });
+
         Object.keys(stringNameReferenced).forEach((key) => {
             if (!stringNameReferenced[key]) {
-                problems.push({
-                    key: problems.length,
-                    type: 'warning',
-                    title: 'Unused string',
-                    description: `${key}: ${strings[key]}`,
-                });
+                newProblems.$all.unusedStrings.instances.push(`${key}: ${strings[key]}`);
             }
         });
 
@@ -173,26 +212,14 @@ export const problemsWithStringsSelector = createSelector(
                 // identify unused links
                 const refsInCode = getStringRefsInCode(usageMaps, linkCollectionName, linkName);
                 if (refsInCode <= 0) {
-                    problems.push({
-                        key: problems.length,
-                        type: 'warning',
-                        title: 'Unused link',
-                        linkCollectionName,
-                        description: `${linkCollectionName}:${linkName}`,
-                    });
+                    newProblems[linkCollectionName].unusedLinks.instances.push(linkName);
                 }
 
                 // identify bad links
                 const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
                 const string = getStringFromStrings(strings, stringName);
                 if (stringName === undefined || string === undefined) {
-                    problems.push({
-                        key: problems.length,
-                        type: 'error',
-                        title: 'Bad link',
-                        linkCollectionName,
-                        description: `${linkCollectionName}:${linkName}`,
-                    });
+                    newProblems[linkCollectionName].badLink.instances.push(linkName);
                 }
             });
         });
@@ -209,21 +236,11 @@ export const problemsWithStringsSelector = createSelector(
                 const stringName = getStringNameFromLinkCollection(linkCollection, linkName);
                 const string = getStringFromStrings(strings, stringName);
                 if (!stringName || !string) {
-                    problems.push({
-                        key: problems.length,
-                        type: 'error',
-                        title: 'Undefined link',
-                        linkCollectionName,
-                        description: `${linkCollectionName}:${linkName}`,
-                    });
+                    newProblems[linkCollectionName].undefinedLink.instances.push(linkName);
                 }
             });
         });
-
-        return groupList(
-            problems,
-            problem => problem.linkCollectionName || '$common',
-        );
+        return newProblems;
     },
 );
 
@@ -235,9 +252,9 @@ export const allStringsSelector = createSelector(
         Object.keys(strings).reduce(
             (acc, id) => acc.concat({
                 id,
-                value: strings[id],
-                referenceCount: stringsReferenceCount[id],
-                duplicated: duplicatedStrings[id],
+                string: strings[id],
+                refs: stringsReferenceCount[id],
+                duplicates: duplicatedStrings[id],
             }),
             [],
         )
@@ -258,10 +275,10 @@ export const linkStringsSelector = createSelector(
                 const string = getStringFromStrings(strings, stringName);
 
                 return {
-                    name: linkName,
-                    value: string,
-                    valueId: stringName,
-                    referenceCount: refsInCode,
+                    id: linkName,
+                    string,
+                    stringId: stringName,
+                    refs: refsInCode,
                 };
             });
         });
@@ -270,6 +287,11 @@ export const linkStringsSelector = createSelector(
 );
 
 export const linkKeysSelector = createSelector(
+    usageMapSelector,
+    usedMaps => Object.keys(usedMaps),
+);
+
+export const linkNamesSelector = createSelector(
     usageMapSelector,
     usedMaps => Object.keys(usedMaps),
 );
