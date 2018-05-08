@@ -174,7 +174,6 @@ export default class LeadFilter extends React.PureComponent {
                     options={leadStatusFilterOptions}
                     placeholder={_ts('leads', 'placeholderAny')}
                     value={filters.status}
-                    optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadStatusFilterChange}
                     showHintAndError={false}
                 />
@@ -184,7 +183,6 @@ export default class LeadFilter extends React.PureComponent {
                     options={leadTypeOptions}
                     placeholder={_ts('leads', 'placeholderAny')}
                     value={filters.type}
-                    optionsIdentifier="lead-list-filter-options"
                     onChange={this.handleLeadTypeFilterChange}
                     showHintAndError={false}
                 />

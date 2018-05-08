@@ -167,7 +167,6 @@ export default class ProjectGeneralForm extends React.PureComponent {
                         className={styles.members}
                         options={memberOptions}
                         label={_ts('project', 'projectMembersLabel')}
-                        optionsIdentifier="select-input-inside-modal"
                         labelSelector={ProjectGeneralForm.memberOptionLabelSelector}
                         keySelector={ProjectGeneralForm.memberOptionKeySelector}
                         tableHeaders={memberHeaders}

@@ -16,7 +16,7 @@ import DeepGalleryFileSelect from '../../../../components/DeepGalleryFileSelect'
 import { iconNames } from '../../../../constants';
 import _ts from '../../../../ts';
 
-import styles from '../../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

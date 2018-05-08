@@ -2,24 +2,25 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import { reverseRoute } from '../../vendor/react-store/utils/common';
-import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
-import Button from '../../vendor/react-store/components/Action/Button';
-import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
+import { reverseRoute } from '../../../vendor/react-store/utils/common';
+import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
+import Button from '../../../vendor/react-store/components/Action/Button';
+import PrimaryButton from '../../../vendor/react-store/components/Action/Button/PrimaryButton';
 
 import {
     urlForExportTrigger,
     createParamsForExportTrigger,
-} from '../../rest';
-import { pathNames } from '../../constants';
-import _ts from '../../ts';
-import notify from '../../notify';
+} from '../../../rest';
+import { pathNames } from '../../../constants';
+import _ts from '../../../ts';
+import notify from '../../../notify';
 
 import styles from './styles.scss';
 
 const emptyList = [];
 
 const propTypes = {
+    className: PropTypes.string,
     reportStructure: PropTypes.array, // eslint-disable-line react/forbid-prop-types
     activeExportTypeKey: PropTypes.string.isRequired,
     decoupledEntries: PropTypes.bool.isRequired,
@@ -31,6 +32,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
     reportStructure: undefined,
     selectedLeads: {},
     entriesFilters: {},
@@ -123,11 +125,15 @@ export default class ExportHeader extends React.PureComponent {
     }
 
     render() {
-        const { projectId } = this.props;
+        const {
+            projectId,
+            className,
+        } = this.props;
 
+        const classNames = `${styles.header} ${className}`;
 
         return (
-            <header className={styles.header}>
+            <header className={classNames}>
                 <h2>
                     {_ts('export', 'headerExport')}
                 </h2>

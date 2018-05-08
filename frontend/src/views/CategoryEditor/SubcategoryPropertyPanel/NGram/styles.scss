@@ -1,0 +1,21 @@
+@import '../../../../stylesheets/base';
+
+.ngram {
+    flex-grow: 1;
+    overflow-y: auto;
+
+    .keyword {
+        display: flex;
+        align-items: center;
+        border-bottom: $width-separator-thin solid $color-separator;
+        padding: $spacing-small $spacing-medium;
+
+        .title {
+            flex-grow: 1;
+        }
+
+        .action-buttons {
+            flex-shrink: 0;
+        }
+    }
+}

@@ -6,7 +6,7 @@ import {
     Link,
 } from 'react-router-dom';
 
-
+import { InternalGallery } from '../../../components/DeepGallery';
 import { reverseRoute } from '../../../vendor/react-store/utils/common';
 import List from '../../../vendor/react-store/components/View/List';
 import DropdownMenu from '../../../vendor/react-store/components/Action/DropdownMenu';
@@ -136,7 +136,12 @@ export default class Navdrop extends React.PureComponent {
         return (
             <DropdownMenu
                 className={className}
-                iconName={iconNames.person}
+                leftComponent={activeUser.displayPicture &&
+                    <InternalGallery
+                        className={styles.displayPicture}
+                        galleryId={activeUser.displayPicture}
+                    />
+                }
                 title={userName}
             >
                 <DropdownGroup>

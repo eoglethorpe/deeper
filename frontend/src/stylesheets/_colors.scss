@@ -138,6 +138,10 @@ $color-background-overlay-light: rgba(255, 255, 255, .77);
 $color-background-overlay-dark: rgba(0, 0, 0, .7);
 $color-background-overlay: get-color($color-background-overlay-light, $color-background-overlay-dark);
 
+$color-background-overlay-opaque-light: rgba(255, 255, 255, 1);
+$color-background-overlay-opaque-dark: rgba(0, 0, 0, 1);
+$color-background-overlay-opaque: get-color($color-background-overlay-opaque-light, $color-background-overlay-opaque-dark);
+
 $color-background-modal-light: rgba(0, 0, 0, .77);
 $color-background-modal-dark: rgba(0, 0, 0, .77);
 $color-background-modal: get-color($color-background-modal-light, $color-background-modal-dark);

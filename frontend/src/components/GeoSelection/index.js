@@ -380,7 +380,6 @@ export default class GeoSelection extends React.PureComponent {
                                         labelSelector={this.regionLabelSelector}
                                         onChange={this.handleRegionSelection}
                                         options={regions}
-                                        optionsIdentifier="region-select-options"
                                         placeholder={_ts('entry', 'regionSelectPlaceholder')}
                                         showHintAndError={false}
                                         value={selectedRegion}
@@ -389,7 +388,6 @@ export default class GeoSelection extends React.PureComponent {
                                         label={_ts('entry', 'locationSelectTitle')}
                                         onChange={this.handleLocationSelection}
                                         options={locations[selectedRegion]}
-                                        optionsIdentifier="location-select-options"
                                         placeholder={_ts('entry', 'locationSelectPlaceholder')}
                                         showHintAndError={false}
                                         className={styles.mapSelectionSelect}

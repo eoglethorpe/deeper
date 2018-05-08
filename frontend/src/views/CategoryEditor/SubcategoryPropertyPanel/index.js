@@ -19,7 +19,7 @@ import {
     ceIdFromRouteSelector,
 } from '../../../redux';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 import NGram from './NGram';
 
 const propTypes = {
@@ -214,9 +214,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
         const keywords = ngrams[ngramKeys[selectedNGramIndex]];
 
         return (
-            <div
-                className={styles.propertyPanel}
-            >
+            <div className={styles.propertyPanel} >
                 <header className={styles.header} >
                     <h3 className={styles.heading} >
                         {_ts('ce', 'subCategoryDetailsText')}
@@ -262,6 +260,7 @@ export default class SubcategoryPropertyPanel extends React.PureComponent {
                     {
                         (ngramKeys.length > 0) ? (
                             <NGram
+                                className={styles.ngram}
                                 keywords={keywords}
                                 onDelete={this.handleDelete}
                             />

@@ -1,0 +1,63 @@
+@import '../../../stylesheets/base';
+@import '../../../stylesheets/tabs';
+
+%tab {
+    flex-grow: 1;
+    outline: 0;
+    border: 0;
+    border-bottom: $width-separator-medium solid $color-separator;
+    background-color: transparent;
+    cursor: pointer;
+    padding: $spacing-small $spacing-medium;
+    color: $color-text;
+    font-family: inherit;
+    font-size: inherit;
+
+    &.active {
+        border-bottom-color: $color-accent;
+        color: $color-accent;
+    }
+}
+
+.document-panel {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border-right: $width-separator-medium solid $color-separator;
+
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: space-between;
+
+        .tab-header {
+            @extend %tab;
+            padding: $spacing-medium;
+            text-transform: uppercase;
+        }
+    }
+
+    .content {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        flex-grow: 1;
+
+        .tab-content {
+            display: none;
+
+            &.active {
+                display: flex;
+                flex-grow: 1;
+            }
+        }
+
+        .document-tab {
+            flex-grow: 1;
+        }
+
+        .ngrams-tab {
+            flex-grow: 1;
+        }
+    }
+}

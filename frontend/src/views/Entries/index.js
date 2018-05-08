@@ -444,7 +444,6 @@ export default class Entries extends React.PureComponent {
                 style={{ height: maxHeight }}
             >
                 <GridLayout
-                    className={styles.gridLayout}
                     modifier={this.renderItemView}
                     items={gridItems[data.id] || emptyList}
                     viewOnly

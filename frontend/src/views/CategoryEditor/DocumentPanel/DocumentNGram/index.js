@@ -11,7 +11,7 @@ import ListView from '../../../../vendor/react-store/components/View/List/ListVi
 import _ts from '../../../../ts';
 import { categoryEditorNgramsSelector } from '../../../../redux';
 
-import styles from '../../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,

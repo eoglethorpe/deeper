@@ -289,7 +289,6 @@ export default class CountryDetail extends React.PureComponent {
         const {
             countryDetail,
             activeUser,
-            regionDetail,
         } = this.props;
 
         const {
@@ -303,7 +302,7 @@ export default class CountryDetail extends React.PureComponent {
             <header className={styles.header} >
                 <div className={styles.topContainer} >
                     <h3 className={styles.heading} >
-                        {regionDetail.title}
+                        {formValues.title}
                     </h3>
                     <div className={styles.rightContainer} >
                         {
@@ -348,6 +347,7 @@ export default class CountryDetail extends React.PureComponent {
                 </div>
                 <FixedTabs
                     useHash
+                    className={styles.bottomContainer}
                     replaceHistory
                     tabs={this.routes}
                     defaultHash={this.defaultHash}
@@ -359,6 +359,7 @@ export default class CountryDetail extends React.PureComponent {
     render() {
         const {
             deletePending,
+            dataLoading,
         } = this.state;
 
         const {
@@ -372,6 +373,7 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props.regionDetail;
 
         const HeaderWithTabs = this.renderHeader;
+        const loading = deletePending || dataLoading;
 
         return (
             <Fragment>
@@ -389,7 +391,12 @@ export default class CountryDetail extends React.PureComponent {
                     }
                 />
                 <div className={`${className} ${styles.countryDetail}`}>
-                    { deletePending && <LoadingAnimation large /> }
+                    { loading &&
+                        <LoadingAnimation
+                            className={styles.loadingAnimation}
+                            large
+                        />
+                    }
                     { !activeUser.isSuperuser ? (
                         <div className={styles.detailsNoEdit}>
                             <RegionDetailView

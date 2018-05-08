@@ -19,7 +19,7 @@ import SimplifiedFilePreview from '../../../components/SimplifiedFilePreview';
 import DocumentNGram from './DocumentNGram';
 import DocumentSelect from './DocumentSelect';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     projectId: PropTypes.number.isRequired,
@@ -202,7 +202,10 @@ export default class DocumentPanel extends React.PureComponent {
                 <div className={styles.content}>
                     { pending && <LoadingAnimation /> }
                     <div className={`${styles.tabContent} ${this.getTabContentClassName(0)}`}>
-                        <DocumentSelect projectId={projectId} />
+                        <DocumentSelect
+                            projectId={projectId}
+                            className={styles.documentTab}
+                        />
                     </div>
                     <div className={`${styles.tabContent} ${this.getTabContentClassName(1)}`}>
                         <SimplifiedFilePreview
@@ -214,7 +217,7 @@ export default class DocumentPanel extends React.PureComponent {
                         />
                     </div>
                     <div className={`${styles.tabContent} ${this.getTabContentClassName(2)}`}>
-                        <DocumentNGram />
+                        <DocumentNGram className={styles.ngramsTab} />
                     </div>
                 </div>
             </div>

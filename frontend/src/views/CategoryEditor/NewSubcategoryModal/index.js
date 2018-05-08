@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
@@ -11,7 +12,7 @@ import Faram, { requiredCondition } from '../../../vendor/react-store/components
 
 import _ts from '../../../ts';
 
-import styles from '../styles.scss';
+import styles from './styles.scss';
 
 const propTypes = {
     onClose: PropTypes.func.isRequired,
@@ -75,44 +76,48 @@ export default class NewSubcategoryModal extends React.PureComponent {
         } = this.state;
 
         return (
-            <Faram
-                onChange={this.handleFaramChange}
-                onValidationFailure={this.handleFaramValidationFailure}
-                onValidationSuccess={this.handleFaramValidationSuccess}
-                schema={schema}
-                value={faramValues}
-                error={faramErrors}
+            <Modal
+                className={styles.newSubcategoryModal}
             >
-                <ModalHeader
-                    key="header"
-                    title={_ts('ce', 'addNewSubCategoryModalTitle')}
-                />
-                <ModalBody key="body">
-                    <TextInput
-                        faramElementName="title"
-                        label={_ts('ce', 'addSubCategoryTitleLabel')}
-                        placeholder={_ts('ce', 'addSubCategoryTitlePlaceholder')}
-                        autoFocus
+                <Faram
+                    onChange={this.handleFaramChange}
+                    onValidationFailure={this.handleFaramValidationFailure}
+                    onValidationSuccess={this.handleFaramValidationSuccess}
+                    schema={schema}
+                    value={faramValues}
+                    error={faramErrors}
+                >
+                    <ModalHeader
+                        key="header"
+                        title={_ts('ce', 'addNewSubCategoryModalTitle')}
                     />
-                    <TextInput
-                        faramElementName="description"
-                        label={_ts('ce', 'addSubCategoryDescriptionLabel')}
-                        placeholder={_ts('ce', 'addSubCategoryDescriptionPlaceholder')}
-                    />
-                </ModalBody>
-                <ModalFooter key="footer">
-                    <Button onClick={this.handleModalClose}>
-                        {_ts('ce', 'modalCancel')}
-                    </Button>
-                    <PrimaryButton
-                        className={styles.okButton}
-                        disabled={pristine}
-                        type="submit"
-                    >
-                        {_ts('ce', 'modalOk')}
-                    </PrimaryButton>
-                </ModalFooter>
-            </Faram>
+                    <ModalBody key="body">
+                        <TextInput
+                            faramElementName="title"
+                            label={_ts('ce', 'addSubCategoryTitleLabel')}
+                            placeholder={_ts('ce', 'addSubCategoryTitlePlaceholder')}
+                            autoFocus
+                        />
+                        <TextInput
+                            faramElementName="description"
+                            label={_ts('ce', 'addSubCategoryDescriptionLabel')}
+                            placeholder={_ts('ce', 'addSubCategoryDescriptionPlaceholder')}
+                        />
+                    </ModalBody>
+                    <ModalFooter key="footer">
+                        <Button onClick={this.handleModalClose}>
+                            {_ts('ce', 'modalCancel')}
+                        </Button>
+                        <PrimaryButton
+                            className={styles.okButton}
+                            disabled={pristine}
+                            type="submit"
+                        >
+                            {_ts('ce', 'modalOk')}
+                        </PrimaryButton>
+                    </ModalFooter>
+                </Faram>
+            </Modal>
         );
     }
 }

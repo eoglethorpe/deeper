@@ -7,53 +7,6 @@
     display: flex;
     position: relative;
 
-    %tab {
-        flex-grow: 1;
-        outline: 0;
-        border: 0;
-        border-bottom: $width-separator-medium solid $color-separator;
-        background-color: transparent;
-        cursor: pointer;
-        padding: $spacing-small $spacing-medium;
-        color: $color-text;
-        font-family: inherit;
-        font-size: inherit;
-
-        &.active {
-            border-bottom-color: $color-accent;
-            color: $color-accent;
-        }
-    }
-
-    %ngram-selects {
-        display: flex;
-        align-items: center;
-        flex-shrink: 0;
-        border-top: $width-separator-medium solid $color-separator;
-        background-color: $color-foreground;
-
-        .heading {
-            padding: $spacing-small $spacing-medium;
-        }
-
-        .ngram-select-list {
-            padding: $spacing-small $spacing-medium;
-
-            .ngram-select {
-                outline: 0;
-                border: 0;
-                background-color: transparent;
-                cursor: pointer;
-                padding: $spacing-small $spacing-medium;
-                font-family: inherit;
-
-                &.active {
-                    @include background-color($color-accent);
-                }
-            }
-        }
-    }
-
     .left {
         display: flex;
         flex-basis: 24%;
@@ -62,119 +15,7 @@
         width: 24%;
 
         .document-panel {
-            display: flex;
-            flex-direction: column;
             flex-grow: 1;
-            border-right: $width-separator-medium solid $color-separator;
-
-            .header {
-                display: flex;
-                flex-shrink: 0;
-                justify-content: space-between;
-
-                .tab-header {
-                    @extend %tab;
-                    padding: $spacing-medium;
-                    text-transform: uppercase;
-                }
-            }
-
-            .content {
-                display: flex;
-                position: relative;
-                flex-direction: column;
-                flex-grow: 1;
-
-                .tab-content {
-                    display: none;
-
-                    &.active {
-                        display: flex;
-                        flex-grow: 1;
-                    }
-                }
-
-                .document-tab {
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
-
-                    .file-list-view {
-                        display: flex;
-                        flex-direction: column;
-                        flex-grow: 1;
-                        overflow-y: auto;
-
-                        .file-list-item {
-                            display: flex;
-                            align-items: center;
-                            flex-shrink: 0;
-                            justify-content: space-between;
-                            border-bottom: $width-separator-thin solid $color-separator;
-                            padding: $spacing-small;
-
-                            .title {
-                                flex-grow: 1;
-                            }
-
-                            .icon {
-                                flex-shrink: 0;
-                            }
-                        }
-                    }
-
-                    .bottom-bar {
-                        display: flex;
-                        flex-shrink: 0;
-                        justify-content: flex-end;
-                        border-top: $width-separator-thin solid $color-separator;
-                        background-color: $color-foreground-alt;
-                        padding: $spacing-medium-alt $spacing-small;
-
-                        .button {
-                            margin-left: $spacing-small;
-                        }
-                    }
-                }
-
-                .simplified-tab {
-                    flex-grow: 1;
-                    padding: $spacing-medium;
-                    width: 100%;
-                    overflow-y: auto;
-                    text-align: justify;
-                }
-
-                .ngrams-tab {
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
-                    background-color: $color-foreground-alt;
-
-                    .ngram-selects {
-                        @extend %ngram-selects;
-                    }
-
-                    .ngram-list {
-                        flex-grow: 1;
-                        overflow-y: auto;
-
-                        .ngram {
-                            display: flex;
-                            border-bottom: $width-separator-thin solid $color-separator;
-                            padding: $spacing-medium;
-
-                            .title {
-                                flex-grow: 1;
-                            }
-
-                            .strength {
-                                flex-shrink: 0;
-                            }
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -212,8 +53,7 @@
                 }
             }
 
-
-            .action-btn {
+            .action-buttons {
                 display: flex;
                 align-items: flex-end;
                 flex-basis: 100%;
@@ -223,7 +63,7 @@
                     flex-basis: 23%;
                     margin-right: $spacing-medium;
 
-                    .input {
+                    input {
                         text-transform: uppercase;
                     }
                 }
@@ -249,167 +89,8 @@
                 overflow-x: auto;
 
                 .column {
-                    display: flex;
-                    flex-basis: calc(100% / 3);
-                    flex-direction: column;
                     flex-shrink: 0;
-                    border-right: $width-separator-medium solid $color-separator;
-
-                    %button {
-                        outline: 0;
-                        border: 0;
-                        background-color: transparent;
-                        cursor: pointer;
-                        padding: $spacing-medium;
-                        color: $color-text;
-                        font-family: inherit;
-                        font-size: inherit;
-                    }
-
-                    .header {
-                        display: flex;
-                        align-items: center;
-                        flex-shrink: 0;
-                        justify-content: space-between;
-                        border-bottom: $width-separator-medium solid $color-separator;
-
-                        .heading {
-                            padding: $spacing-medium;
-                            color: $color-text;
-                            font-weight: $font-weight-bold;
-                        }
-
-                        button {
-                            @extend %button;
-                            text-transform: uppercase;
-                            color: $color-accent;
-                        }
-                    }
-
-                    .sub-category-list {
-                        flex-grow: 1;
-                        overflow-y: auto;
-
-                        .sub-category {
-                            @extend %button;
-                            display: flex;
-                            border-bottom: $width-separator-thin solid $color-separator;
-                            padding: $spacing-small;
-                            width: 100%;
-                            text-align: left;
-
-                            .title {
-                                flex-grow: 1;
-                                border: $width-separator-medium solid transparent;
-                                padding: $spacing-small;
-                                color: $color-text;
-                                pointer-events: none;
-                            }
-
-                            .number {
-                                flex-shrink: 0;
-                                padding: $spacing-extra-small $spacing-small;
-                                pointer-events: none;
-                            }
-
-                            &.selected {
-                                background-color: $color-background-selected;
-                            }
-
-                            &.active {
-                                @include background-color($color-accent);
-
-                                .title {
-                                    color: inherit;
-                                }
-                            }
-
-                            &.drag-enter {
-                                .title {
-                                    border: $width-separator-medium dashed $color-separator-alt;
-                                }
-
-                                &.active {
-                                    .title {
-                                        border: $width-separator-medium dashed get-text-color($color-accent);
-                                    }
-                                }
-                            }
-                        }
-                    }
                 }
-            }
-
-            .property-panel {
-                display: flex;
-                flex-basis: 30%;
-                flex-direction: column;
-                border-left: $width-separator-medium solid $color-separator;
-                background-color: $color-foreground;
-
-                .header {
-                    display: flex;
-                    align-items: center;
-                    flex-shrink: 0;
-                    justify-content: space-between;
-                    border-bottom: $width-separator-medium solid $color-separator;
-                    padding: $spacing-small 0;
-
-                    .heading {
-                        padding: 0 $spacing-medium;
-                    }
-
-                    .action-buttons {
-                        padding: 0 $spacing-medium;
-                    }
-                }
-
-                .properties {
-                    flex-shrink: 0;
-                    padding: $spacing-medium;
-
-                    textarea {
-                        resize: none;
-                    }
-
-                }
-
-                .ngrams {
-                    display: flex;
-                    flex-direction: column;
-                    flex-grow: 1;
-
-                    .ngram-selects {
-                        @extend %ngram-selects;
-                    }
-
-                    .ngram {
-                        flex-grow: 1;
-                        overflow-y: auto;
-
-                        .keyword {
-                            display: flex;
-                            align-items: center;
-                            border-bottom: $width-separator-thin solid $color-separator;
-                            padding: $spacing-small $spacing-medium;
-
-                            .title {
-                                flex-grow: 1;
-                            }
-
-                            .action-buttons {
-                                flex-shrink: 0;
-                            }
-                        }
-                    }
-
-                    > .action-buttons {
-                        flex-shrink: 0;
-                        padding: $spacing-small;
-                        text-align: right;
-                    }
-                }
-
             }
         }
 
@@ -421,28 +102,4 @@
             color: $color-text-disabled;
         }
     }
-}
-
-%modal {
-    width: 320px;
-
-    .ok-button {
-        min-width: 72px;
-    }
-}
-
-.new-category-modal {
-    @extend %modal;
-}
-
-.edit-category-modal {
-    @extend %modal;
-}
-
-.new-subcategory-modal {
-    @extend %modal;
-}
-
-.new-manual-ngram-modal {
-    @extend %modal;
 }

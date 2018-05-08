@@ -21,7 +21,6 @@ $color-grid-item-border: $color-separator;
         }
     }
 
-
     .content {
         border: $width-separator-thin solid $color-grid-item-border;
         height: calc(100% - #{$height-grid-item-header});
