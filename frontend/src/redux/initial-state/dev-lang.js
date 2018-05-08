@@ -636,6 +636,8 @@ const initialDevLangState = {
         1124: 'Remove project',
         1125: 'Error while fetching projects of current user',
         1126: 'Error while trying to save project.',
+        1127: 'Error while trying to create new category editor.',
+        1128: 'Error while trying to create new framework.',
     },
     links: {
         af: {
@@ -1347,6 +1349,8 @@ const initialDevLangState = {
         },
         project: {
             projectSaveFailure: 1126,
+            categoryEditorCreateFailure: 1127,
+            frameworkCreateFailure: 1128,
             headerProjects: 173,
             addProjectButtonLabel: 301,
             searchProjectPlaceholder: 302,

@@ -8,12 +8,12 @@ import TextInput from '../../../../../vendor/react-store/components/Input/TextIn
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
-import Form, {
+import Faram, {
     requiredCondition,
-} from '../../../../../vendor/react-store/components/Input/Form';
+} from '../../../../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForAfCreate,
     urlForAfCreate,
 } from '../../../../../rest';
@@ -49,9 +49,8 @@ export default class AddAnalysisFramework extends React.PureComponent {
         super(props);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues: {},
+            faramErrors: {},
+            faramValues: {},
             pending: false,
             pristine: false,
         };
@@ -75,12 +74,8 @@ export default class AddAnalysisFramework extends React.PureComponent {
         const afCreateRequest = new FgRestBuilder()
             .url(urlForAfCreate)
             .params(() => createParamsForAfCreate({ project: projectId, title }))
-            .preLoad(() => {
-                this.setState({ pending: true });
-            })
-            .postLoad(() => {
-                this.setState({ pending: false });
-            })
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'analysisFramework');
@@ -106,14 +101,8 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     message: _ts('notification', 'afCreateFailure'),
                     duration: notify.duration.SLOW,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -123,72 +112,61 @@ export default class AddAnalysisFramework extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save region.'] },
+                    faramErrors: { $internal: [_ts('project', 'frameworkCreateFailure')] },
                 });
             })
             .build();
         return afCreateRequest;
     }
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    // faram RELATED
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (data) => {
-        // Stop old post request
+    handleValidationSuccess = (data) => {
         if (this.afCreateRequest) {
             this.afCreateRequest.stop();
         }
 
-        // Create new post request
         this.afCreateRequest = this.createRequestForAfCreate(data);
         this.afCreateRequest.start();
     };
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pending,
             pristine,
         } = this.state;
 
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         return (
-            <Form
+            <Faram
                 className={`${className} ${styles.addAnalysisFrameworkForm}`}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleValidationFailure}
+                onValidationSuccess={this.handleValidationSuccess}
                 schema={this.schema}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
-                onSubmit={this.handleSubmit}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
-                value={formValues}
+                value={faramValues}
+                error={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors formerror="" />
+                <NonFieldErrors faramElement />
                 <TextInput
                     label={_ts('project', 'addAfTitleLabel')}
-                    formname="title"
+                    faramElementName="title"
                     placeholder={_ts('project', 'addAfTitlePlaceholder')}
                     autoFocus
                 />
@@ -203,7 +181,7 @@ export default class AddAnalysisFramework extends React.PureComponent {
                         {_ts('project', 'modalAdd')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

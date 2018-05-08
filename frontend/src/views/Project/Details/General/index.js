@@ -13,9 +13,19 @@ import FormattedDate from '../../../../vendor/react-store/components/View/Format
 import DangerButton from '../../../../vendor/react-store/components/Action/Button/DangerButton';
 import { FgRestBuilder } from '../../../../vendor/react-store/utils/rest';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
+import SuccessButton from '../../../../vendor/react-store/components/Action/Button/SuccessButton';
+import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
+import TextInput from '../../../../vendor/react-store/components/Input/TextInput';
+import SelectInputWithList from '../../../../vendor/react-store/components/Input/SelectInputWithList';
+import TabularSelectInput from '../../../../vendor/react-store/components/Input/TabularSelectInput';
+import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
+import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
+import Faram, {
+    requiredCondition,
+} from '../../../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForProjectPatch,
     createUrlForProject,
     createParamsForGet,
@@ -40,7 +50,6 @@ import {
     iconNames,
 } from '../../../../constants';
 
-import ProjectGeneralForm from './Form';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -77,6 +86,12 @@ export default class ProjectGeneral extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
+    static optionLabelSelector = (d = {}) => d.value;
+    static optionKeySelector = (d = {}) => d.key;
+
+    static memberOptionLabelSelector = (d = {}) => d.name;
+    static memberOptionKeySelector = (d = {}) => d.id;
+
     constructor(props) {
         super(props);
 
@@ -86,7 +101,7 @@ export default class ProjectGeneral extends React.PureComponent {
             users,
         } = props;
 
-        const formValues = {
+        const faramValues = {
             ...projectDetails,
             memberships: (projectDetails.memberships || emptyList).map(m => ({
                 ...m,
@@ -102,9 +117,8 @@ export default class ProjectGeneral extends React.PureComponent {
         const memberOptions = this.getMemberOptions(users, projectDetails.memberships);
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues,
+            faramErrors: {},
+            faramValues,
             memberOptions,
 
             regionOptions: projectOptions.regions || emptyList,
@@ -180,6 +194,18 @@ export default class ProjectGeneral extends React.PureComponent {
                 },
             },
         ];
+
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+                startDate: [],
+                endDate: [],
+                description: [],
+                regions: [],
+                userGroups: [],
+                memberships: [],
+            },
+        };
     }
 
     componentWillMount() {
@@ -199,7 +225,7 @@ export default class ProjectGeneral extends React.PureComponent {
         } = nextProps;
 
         if (nextProps !== this.props) {
-            const formValues = {
+            const faramValues = {
                 ...projectDetails,
                 regions: (projectDetails.regions || emptyList).map(region => region.id),
                 memberships: (projectDetails.memberships || emptyList).map(m => ({
@@ -214,7 +240,7 @@ export default class ProjectGeneral extends React.PureComponent {
             const memberOptions = this.getMemberOptions(users, projectDetails.memberships);
             this.setState({
                 memberOptions,
-                formValues,
+                faramValues,
                 regionOptions: projectOptions.regions || emptyList,
                 userGroupsOptions: projectOptions.userGroups || emptyList,
             });
@@ -328,14 +354,8 @@ export default class ProjectGeneral extends React.PureComponent {
                     message: _ts('notification', 'projectDetailsFailure'),
                     duration: notify.duration.SLOW,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -345,35 +365,33 @@ export default class ProjectGeneral extends React.PureComponent {
                     duration: notify.duration.SLOW,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save project.'] },
+                    faramErrors: { $internal: [_ts('project', 'projectSaveFailure')] },
                 });
             })
             .build();
         return projectPatchRequest;
     };
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    // Faram RELATED
+    handleFaramChange = (values, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues: values,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
+    handleValidationFailure = (faramErrors) => {
         this.setState({
-            formFieldErrors,
-            formErrors,
+            faramErrors,
             pristine: false,
         });
     };
 
-    handleFormCancel = () => {
+    handleFaramCancel = () => {
         const { projectDetails } = this.props;
 
-        const formValues = {
+        const faramValues = {
             ...projectDetails,
             regions: (projectDetails.regions || emptyList).map(region => region.id),
             memberships: (projectDetails.memberships || emptyList).map(m => ({
@@ -387,15 +405,14 @@ export default class ProjectGeneral extends React.PureComponent {
         };
 
         this.setState({
-            formValues,
+            faramValues,
             pristine: false,
             pending: false,
-            formErrors: {},
-            formFieldErrors: {},
+            faramErrors: {},
         });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         const { projectId } = this.props;
 
         const regions = values.regions.map(region => ({ id: region }));
@@ -425,8 +442,8 @@ export default class ProjectGeneral extends React.PureComponent {
     };
 
     handleToggleMemberRoleClick = (member) => {
-        const { formValues } = this.state;
-        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
+        const { faramValues } = this.state;
+        const index = (faramValues.memberships || emptyList).findIndex(m => m.id === member.id);
         if (index !== -1) {
             const settings = {
                 memberships: {
@@ -438,9 +455,9 @@ export default class ProjectGeneral extends React.PureComponent {
                 },
             };
 
-            const newFormValues = update(formValues, settings);
+            const newFaramValues = update(faramValues, settings);
             this.setState({
-                formValues: newFormValues,
+                faramValues: newFaramValues,
                 pristine: true,
             });
         }
@@ -454,8 +471,8 @@ export default class ProjectGeneral extends React.PureComponent {
     }
 
     handleDeleteMemberClick = (member) => {
-        const { formValues } = this.state;
-        const index = (formValues.memberships || emptyList).findIndex(m => m.id === member.id);
+        const { faramValues } = this.state;
+        const index = (faramValues.memberships || emptyList).findIndex(m => m.id === member.id);
         if (index !== -1) {
             const settings = {
                 memberships: {
@@ -463,9 +480,9 @@ export default class ProjectGeneral extends React.PureComponent {
                 },
             };
 
-            const newFormValues = update(formValues, settings);
+            const newFaramValues = update(faramValues, settings);
             this.setState({
-                formValues: newFormValues,
+                faramValues: newFaramValues,
                 pristine: true,
             });
         }
@@ -473,9 +490,8 @@ export default class ProjectGeneral extends React.PureComponent {
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
             pristine,
             pending,
             actionPending,
@@ -484,30 +500,97 @@ export default class ProjectGeneral extends React.PureComponent {
             userGroupsOptions,
         } = this.state;
 
-        const {
-            className,
-        } = this.props;
+        const { className } = this.props;
 
         return (
-            <div className={`${className} ${styles.projectGeneral}`}>
+            <Faram
+                className={`${className} ${styles.projectGeneral}`}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleValidationFailure}
+                onValidationSuccess={this.handleValidationSuccess}
+                schema={this.schema}
+                value={faramValues}
+                error={faramErrors}
+                disabled={pending}
+            >
                 {actionPending && <LoadingAnimation large />}
-                <ProjectGeneralForm
-                    formValues={formValues}
-                    regionOptions={regionOptions}
-                    userGroupsOptions={userGroupsOptions}
-                    memberOptions={memberOptions}
-                    formErrors={formErrors}
-                    formFieldErrors={formFieldErrors}
-                    changeCallback={this.changeCallback}
-                    failureCallback={this.failureCallback}
-                    handleFormCancel={this.handleFormCancel}
-                    successCallback={this.successCallback}
-                    memberHeaders={this.memberHeaders}
-                    className={styles.projectGeneralForm}
-                    pristine={pristine}
-                    pending={pending}
+                { pending && <LoadingAnimation /> }
+                <div className={styles.actionButtons}>
+                    <DangerButton
+                        onClick={this.handleFaramCancel}
+                        disabled={pending || !pristine}
+                    >
+                        {_ts('project', 'modalRevert')}
+                    </DangerButton>
+                    <SuccessButton
+                        disabled={pending || !pristine}
+                        type="submit"
+                    >
+                        {_ts('project', 'modalSave')}
+                    </SuccessButton>
+                </div>
+                <NonFieldErrors faramElement />
+                <div className={styles.inputsContainer}>
+                    <TextInput
+                        label={_ts('project', 'projectNameLabel')}
+                        faramElementName="title"
+                        placeholder={_ts('project', 'projectNamePlaceholder')}
+                        className={styles.name}
+                    />
+                    <DateInput
+                        label={_ts('project', 'projectStartDateLabel')}
+                        faramElementName="startDate"
+                        placeholder={_ts('project', 'projectStartDatePlaceholder')}
+                        className={styles.startDate}
+                    />
+                    <DateInput
+                        label={_ts('project', 'projectEndDateLabel')}
+                        faramElementName="endDate"
+                        placeholder={_ts('project', 'projectEndDatePlaceholder')}
+                        className={styles.endDate}
+                    />
+                </div>
+                <TextArea
+                    label={_ts('project', 'projectDescriptionLabel')}
+                    faramElementName="description"
+                    placeholder={_ts('project', 'projectDescriptionPlaceholder')}
+                    className={styles.description}
+                    rows={3}
                 />
-            </div>
+                <div className={styles.selectsContainer}>
+                    <SelectInputWithList
+                        label={_ts('project', 'projectRegionLabel')}
+                        faramElementName="regions"
+                        placeholder={_ts('project', 'projectRegionPlaceholder')}
+                        className={styles.regions}
+                        options={regionOptions}
+                        labelSelector={ProjectGeneral.optionLabelSelector}
+                        keySelector={ProjectGeneral.optionKeySelector}
+                        hideSelectAllButton
+                    />
+                    <SelectInputWithList
+                        label={_ts('project', 'projectUserGroupLabel')}
+                        faramElementName="userGroups"
+                        placeholder={_ts('project', 'projectUserGroupPlaceholder')}
+                        className={styles.userGroups}
+                        options={userGroupsOptions}
+                        labelSelector={ProjectGeneral.optionLabelSelector}
+                        keySelector={ProjectGeneral.optionKeySelector}
+                        hideSelectAllButton
+                    />
+                    <TabularSelectInput
+                        faramElementName="memberships"
+                        className={styles.members}
+                        options={memberOptions}
+                        label={_ts('project', 'projectMembersLabel')}
+                        labelSelector={ProjectGeneral.memberOptionLabelSelector}
+                        keySelector={ProjectGeneral.memberOptionKeySelector}
+                        tableHeaders={this.memberHeaders}
+                        hideRemoveFromListButton
+                        hideSelectAllButton
+                    />
+                </div>
+            </Faram>
         );
     }
 }
