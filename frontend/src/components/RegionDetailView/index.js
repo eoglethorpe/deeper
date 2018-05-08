@@ -35,16 +35,15 @@ export default class RegionDetailView extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        // FIXME: use strings
         this.regionDetailMeta = {
-            title: 'Name',
-            code: 'Code',
-            wbRegion: 'WB Region',
-            wbIncomeRegion: 'WB Income Region',
-            ochaRegion: 'OCHA Region',
-            echoRegion: 'ECHO Region',
-            unGeoRegion: 'UN Geographical Region',
-            unGeoSubRegion: 'UN Geographical Sub Region',
+            title: _ts('countries', 'countryNameLabel'),
+            code: _ts('countries', 'countryCodeLabel'),
+            wbRegion: _ts('countries', 'wbRegionLabel'),
+            wbIncomeRegion: _ts('countries', 'wbIncomeRegionLabel'),
+            ochaRegion: _ts('countries', 'ochaRegionLabel'),
+            echoRegion: _ts('countries', 'echoRegionLabel'),
+            unGeoRegion: _ts('countries', 'unGeoRegionLabel'),
+            unGeoSubRegion: _ts('countries', 'unGeoSubRegion'),
         };
     }
 

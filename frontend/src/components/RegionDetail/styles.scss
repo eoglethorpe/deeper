@@ -3,6 +3,7 @@
 .region-detail-form {
     display: flex;
     position: relative;
+    justify-content: flex-start;
     flex-direction: column;
 
     .header {
@@ -16,10 +17,6 @@
         .heading {
             flex-grow: 1;
         }
-    }
-
-    .non-field-errors {
-        flex-shrink: 0;
     }
 
     .input-container {

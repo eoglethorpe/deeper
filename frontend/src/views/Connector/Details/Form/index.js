@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
-import Faram, {
-    requiredCondition,
-    urlCondition,
-} from '../../../../vendor/react-store/components/Input/Faram';
 import {
     compareString,
     compareDate,
 } from '../../../../vendor/react-store/utils/common';
 import update from '../../../../vendor/react-store/utils/immutable-update';
+import Faram, {
+    requiredCondition,
+    urlCondition,
+} from '../../../../vendor/react-store/components/Input/Faram';
 import FaramGroup from '../../../../vendor/react-store/components/Input/Faram/FaramGroup';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TextInput from '../../../../vendor/react-store/components/Input/TextInput';

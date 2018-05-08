@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
@@ -10,16 +11,14 @@ import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
-import Form, {
-    requiredCondition,
-} from '../../../vendor/react-store/components/Input/Form';
-
 import {
     countryDetailSelector,
     regionDetailSelector,
     unSetRegionAction,
     activeUserSelector,
     setRegionDetailsAction,
+    changeRegionDetailsAction,
+    setRegionDetailsErrorsAction,
     routeUrlSelector,
 } from '../../../redux';
 import _ts from '../../../ts';
@@ -45,15 +44,16 @@ const propTypes = {
         title: PropTypes.string,
     }).isRequired,
     regionDetail: PropTypes.shape({
-        formValues: PropTypes.object,
-        formFieldErrors: PropTypes.object,
-        formErrors: PropTypes.object,
+        faramValues: PropTypes.object,
+        faramErrors: PropTypes.object,
         pristine: PropTypes.bool,
     }),
     unSetRegion: PropTypes.func.isRequired,
     countryId: PropTypes.number.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setRegionDetails: PropTypes.func.isRequired,
+    changeRegionDetails: PropTypes.func.isRequired,
+    setRegionDetailsErrors: PropTypes.func.isRequired,
 
     routeUrl: PropTypes.string.isRequired,
 };
@@ -61,9 +61,8 @@ const propTypes = {
 const defaultProps = {
     className: '',
     regionDetail: {
-        formValues: {},
-        formFieldErrors: {},
-        formErrors: {},
+        faramValues: {},
+        faramErrors: {},
         pristine: false,
     },
     title: '',
@@ -79,6 +78,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     unSetRegion: params => dispatch(unSetRegionAction(params)),
     setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    changeRegionDetails: params => dispatch(changeRegionDetailsAction(params)),
+    setRegionDetailsErrors: params => dispatch(setRegionDetailsErrorsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -252,27 +253,31 @@ export default class CountryDetail extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
+            setRegionDetailsErrors: this.props.setRegionDetailsErrors,
+            regionId: this.props.countryId,
             setState: v => this.setState(v),
         });
         this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
         this.regionDetailPatchRequest.start();
     }
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        const regionDetails = {
-            formValues: { ...this.props.regionDetail.formValues },
-            formFieldErrors: { ...formFieldErrors },
-            formErrors: { ...formErrors },
-            pristine: true,
-        };
-        this.props.setRegionDetails({
-            regionDetails,
+    handleValidationFailure = (faramErrors) => {
+        this.props.setRegionDetailsErrors({
+            faramErrors,
             regionId: this.props.countryId,
         });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         this.startRequestForRegionDetailPatch(this.props.countryId, values);
+    };
+
+    handleFaramChange = (faramValues, faramErrors) => {
+        this.props.changeRegionDetails({
+            faramValues,
+            faramErrors,
+            regionId: this.props.countryId,
+        });
     };
 
     deleteActiveCountry = (confirm) => {
@@ -292,9 +297,7 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            formErrors = {},
-            formFieldErrors = {},
-            formValues = {},
+            faramValues = {},
             pristine = false,
         } = this.props.regionDetail;
 
@@ -302,7 +305,7 @@ export default class CountryDetail extends React.PureComponent {
             <header className={styles.header} >
                 <div className={styles.topContainer} >
                     <h3 className={styles.heading} >
-                        {formValues.title}
+                        {faramValues.title}
                     </h3>
                     <div className={styles.rightContainer} >
                         {
@@ -311,27 +314,18 @@ export default class CountryDetail extends React.PureComponent {
                                 <DangerButton onClick={this.handleDeleteButtonClick}>
                                     {_ts('countries', 'deleteCountryButtonLabel')}
                                 </DangerButton>
-                                <Form
-                                    failureCallback={this.failureCallback}
-                                    successCallback={this.successCallback}
-                                    schema={this.schema}
-                                    fieldErrors={formFieldErrors}
-                                    formErrors={formErrors}
-                                    value={formValues}
+                                <WarningButton
+                                    disabled={!pristine}
+                                    onClick={this.handleDiscardButtonClick}
                                 >
-                                    <WarningButton
-                                        disabled={!pristine}
-                                        onClick={this.handleDiscardButtonClick}
-                                    >
-                                        {_ts('countries', 'discardButtonLabel')}
-                                    </WarningButton>
-                                    <SuccessButton
-                                        type="submit"
-                                        disabled={!pristine}
-                                    >
-                                        {_ts('countries', 'saveButtonLabel')}
-                                    </SuccessButton>
-                                </Form>
+                                    {_ts('countries', 'discardButtonLabel')}
+                                </WarningButton>
+                                <SuccessButton
+                                    type="submit"
+                                    disabled={!pristine}
+                                >
+                                    {_ts('countries', 'saveButtonLabel')}
+                                </SuccessButton>
                             </Fragment>
                         }
                         <Confirm
@@ -360,6 +354,7 @@ export default class CountryDetail extends React.PureComponent {
         const {
             deletePending,
             dataLoading,
+            patchPending,
         } = this.state;
 
         const {
@@ -369,11 +364,13 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            pristine,
+            faramErrors = {},
+            faramValues = {},
+            pristine = false,
         } = this.props.regionDetail;
 
         const HeaderWithTabs = this.renderHeader;
-        const loading = deletePending || dataLoading;
+        const loading = patchPending || deletePending || dataLoading;
 
         return (
             <Fragment>
@@ -390,7 +387,16 @@ export default class CountryDetail extends React.PureComponent {
                         }
                     }
                 />
-                <div className={`${className} ${styles.countryDetail}`}>
+                <Faram
+                    className={`${className} ${styles.countryDetail}`}
+                    onChange={this.handleFaramChange}
+                    onValidationFailure={this.handleValidationFailure}
+                    onValidationSuccess={this.handleValidationSuccess}
+                    schema={this.schema}
+                    value={faramValues}
+                    error={faramErrors}
+                    disabled={loading}
+                >
                     { loading &&
                         <LoadingAnimation
                             className={styles.loadingAnimation}
@@ -416,7 +422,7 @@ export default class CountryDetail extends React.PureComponent {
                             />
                         </Fragment>
                     )}
-                </div>
+                </Faram>
             </Fragment>
         );
     }

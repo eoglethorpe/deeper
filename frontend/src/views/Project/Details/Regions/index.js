@@ -185,6 +185,7 @@ export default class ProjectRegions extends React.PureComponent {
                     <ProjectRegionDetail
                         key={selectedRegion}
                         countryId={selectedRegion}
+                        projectId={projectDetails.id}
                         onRegionClone={this.handleRegionClone}
                     />
                 </div>

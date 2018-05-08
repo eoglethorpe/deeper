@@ -2,7 +2,8 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createUrlForRegion,
     createParamsForRegionPatch,
-    transformResponseErrorToFormError,
+
+    alterResponseErrorToFaramError,
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -20,9 +21,11 @@ export default class RegionDetailPatchRequest {
         try {
             schema.validate(response, 'regionPatchResponse');
             const regionDetails = {
-                formValues: response,
-                formErrors: {},
-                formFieldErrors: {},
+                id: response.id,
+                public: response.public,
+                versionId: response.versionId,
+                faramValues: { ...response },
+                faramErrors: {},
                 pristine: false,
             };
             this.props.setRegionDetails({
@@ -41,22 +44,18 @@ export default class RegionDetailPatchRequest {
         }
     }
 
-    failure = (response) => {
-        const {
-            formFieldErrors,
-            formErrors,
-        } = transformResponseErrorToFormError(response.errors);
-        this.props.setState({
-            formFieldErrors,
-            formErrors,
-            pending: false,
+    failure = regionId => (response) => {
+        const faramErrors = alterResponseErrorToFaramError(response.errors);
+        this.props.setRegionDetailsErrors({
+            faramErrors,
+            regionId,
         });
     }
 
-    fatal = () => {
-        this.props.setState({
-            formErrors: { errors: [_ts('countries', 'regionPatchErrorText')] },
-            pending: false,
+    fatal = regionId => () => {
+        this.props.setRegionDetailsErrors({
+            faramErrors: { $internal: [_ts('countries', 'regionPatchErrorText')] },
+            regionId,
         });
     }
 
@@ -67,8 +66,8 @@ export default class RegionDetailPatchRequest {
             .preLoad(() => { this.props.setState({ regionDetailPatchPending: true }); })
             .postLoad(() => { this.props.setState({ regionDetailPatchPending: false }); })
             .success(this.success(regionId))
-            .failure(this.failure)
-            .fatal(this.fatal)
+            .failure(this.failure(regionId))
+            .fatal(this.fatal(regionId))
             .build();
         return regionDetailPatchRequest;
     }

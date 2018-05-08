@@ -514,15 +514,15 @@ const initialSiloDomainData = {
         // index is regionId
         /*
         1: {
-            formValues: {
+            faramValues: {
                 id: 1,
                 code: 'NPL',
                 title: 'Nepal',
                 regionalGroups: {},
                 keyFigures: {},
             },
-            formErrors: {},
-            formFieldErrors: {},
+            faramErrors: {},
+            hasErrors: false,
             pristine: false,
         },
         */
