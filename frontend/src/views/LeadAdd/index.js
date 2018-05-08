@@ -31,6 +31,7 @@ import {
     addLeadViewLeadSaveAction,
     addLeadViewRemoveSavedLeadsAction,
     addLeadViewSetLeadRestsAction,
+    addLeadViewButtonStatesSelector,
 } from '../../redux';
 import { leadAccessor } from '../../entities/lead';
 import _ts from '../../ts';
@@ -53,6 +54,7 @@ const mapStateToProps = state => ({
     hasActiveLead: addLeadViewHasActiveLeadSelector(state),
     addLeadViewLeads: addLeadViewLeadsSelector(state),
     leadStates: addLeadViewLeadStatesSelector(state),
+    buttonStates: addLeadViewButtonStatesSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -85,6 +87,7 @@ const propTypes = {
 
     setLeadRests: PropTypes.func.isRequired,
     leadStates: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
+    buttonStates: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 const defaultProps = {
@@ -236,14 +239,15 @@ export default class LeadAdd extends React.PureComponent {
         const {
             hasActiveLead,
             addLeadViewLeads,
+            buttonStates,
         } = this.props;
-
+        const { isSaveEnabledForAll } = buttonStates;
         const { pendingSubmitAll } = this.state;
 
         return (
             <div className={styles.addLead}>
                 <Prompt
-                    when={this.isSaveEnabledForAll}
+                    when={isSaveEnabledForAll}
                     message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 <header className={styles.header}>
