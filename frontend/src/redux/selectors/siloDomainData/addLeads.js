@@ -73,6 +73,11 @@ const isSomeRemoveEnabled = (list, leadStates) => (
 
 const addLeadViewSelector = ({ siloDomainData }) => siloDomainData.addLeadView;
 
+export const addLeadViewHidePreviewSelector = createSelector(
+    addLeadViewSelector,
+    addLeadView => addLeadView.hidePreview,
+);
+
 export const addLeadViewFiltersSelector = createSelector(
     addLeadViewSelector,
     addLeadView => addLeadView.filters || emptyObject,

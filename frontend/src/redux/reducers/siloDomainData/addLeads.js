@@ -44,6 +44,12 @@ export const LA__SET_LEAD_UPLOADS = 'siloDomainData/LA__SET_LEAD_UPLOADS';
 export const LA__SET_LEAD_DRIVE_REST = 'siloDomainData/LA__SET_LEAD_DRIVE_REST';
 export const LA__SET_LEAD_DROPBOX_REST = 'siloDomainData/LA__SET_LEAD_DROPBOX_REST';
 
+export const LA__SET_PREVIEW = 'siloDomainData/LA__SET_PREVIEW';
+
+export const addLeadViewSetPreviewAction = value => ({
+    type: LA__SET_PREVIEW,
+    value,
+});
 
 export const addLeadViewSetRemoveModalStateAction = ({ show, mode, leadId }) => ({
     type: LA__SET_REMOVE_MODAL_STATE,
@@ -535,6 +541,16 @@ const addLeadViewUnsetRemoveModalState = (state) => {
     return update(state, settings);
 };
 
+const addLeadViewSetPreview = (state, action) => {
+    const { value } = action;
+    const settings = {
+        addLeadView: {
+            hidePreview: { $set: value },
+        },
+    };
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -557,5 +573,6 @@ const reducers = {
     [LA__SET_LEAD_DROPBOX_REST]: addLeadViewSetTransient('leadDropboxRests', 'pending'),
     [LA__SET_REMOVE_MODAL_STATE]: addLeadViewSetRemoveModalState,
     [LA__UNSET_REMOVE_MODAL_STATE]: addLeadViewUnsetRemoveModalState,
+    [LA__SET_PREVIEW]: addLeadViewSetPreview,
 };
 export default reducers;

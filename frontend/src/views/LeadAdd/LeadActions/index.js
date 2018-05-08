@@ -8,6 +8,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import Button from '../../../vendor/react-store/components/Action/Button';
+import Checkbox from '../../../vendor/react-store/components/Input/Checkbox';
 import DropdownMenu from '../../../vendor/react-store/components/Action/DropdownMenu';
 import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 
@@ -30,9 +31,14 @@ import {
     addLeadViewSetRemoveModalStateAction,
     addLeadViewUnsetRemoveModalStateAction,
     addLeadViewRemoveModalStateSelector,
+
+    addLeadViewHidePreviewSelector,
+    addLeadViewSetPreviewAction,
 } from '../../../redux';
 
 import styles from './styles.scss';
+
+// 5544735
 
 const defaultProps = {
     activeLeadId: undefined,
@@ -65,6 +71,9 @@ const propTypes = {
     formCoordinator: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
     leadFormRefs: PropTypes.object.isRequired,
+
+    hidePreview: PropTypes.bool.isRequired,
+    setPreview: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = state => ({
@@ -78,6 +87,7 @@ const mapStateToProps = state => ({
     filteredLeadKeys: addLeadViewFilteredLeadKeysSelector(state),
     completedLeadKeys: addLeadViewCompletedLeadKeysSelector(state),
     removeModalState: addLeadViewRemoveModalStateSelector(state),
+    hidePreview: addLeadViewHidePreviewSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -87,6 +97,7 @@ const mapDispatchToProps = dispatch => ({
     addLeadViewLeadRemove: params => dispatch(addLeadViewLeadRemoveAction(params)),
     setRemoveModalState: params => dispatch(addLeadViewSetRemoveModalStateAction(params)),
     unsetRemoveModalState: params => dispatch(addLeadViewUnsetRemoveModalStateAction(params)),
+    setPreview: params => dispatch(addLeadViewSetPreviewAction(params)),
 });
 
 export const DELETE_MODE = {
@@ -271,18 +282,23 @@ export default class LeadFilter extends React.PureComponent {
 
         return (
             <div className={styles.actionButtons}>
+                <Checkbox
+                    value={!this.props.hidePreview}
+                    onChange={() => this.props.setPreview(!this.props.hidePreview)}
+                    label={_ts('addLeads', 'showLeadPreviewLabel')}
+                />
                 <div className={styles.movementButtons}>
                     <Button
                         disabled={!addLeadViewCanPrev}
                         onClick={this.handlePrevButtonClick}
                         iconName={iconNames.prev}
-                        title={_ts('leads', 'previousButtonLabel')}
+                        title={_ts('addLeads', 'previousButtonLabel')}
                     />
                     <Button
                         disabled={!addLeadViewCanNext}
                         onClick={this.handleNextButtonClick}
                         iconName={iconNames.next}
-                        title={_ts('leads', 'nextButtonLabel')}
+                        title={_ts('addLeads', 'nextButtonLabel')}
                     />
                 </div>
                 <Confirm
@@ -292,69 +308,76 @@ export default class LeadFilter extends React.PureComponent {
                     <p>
                         {
                             /* TODO: different message for delete modes */
-                            _ts('leads', 'deleteLeadConfirmText')
+                            _ts('addLeads', 'deleteLeadConfirmText')
                         }
                     </p>
                 </Confirm>
                 <DropdownMenu
                     iconName={iconNames.delete}
                     className={styles.removeButtons}
-                    title={_ts('leads', 'removeButtonTitle')}
+                    title={_ts('addLeads', 'removeButtonTitle')}
                 >
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleRemoveButtonClick}
                         disabled={isRemoveDisabledForActive}
+                        type="button"
                     >
-                        {_ts('leads', 'removeCurrentButtonTitle')}
+                        {_ts('addLeads', 'removeCurrentButtonTitle')}
                     </button>
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleFilteredRemoveButtonClick}
                         disabled={!isRemoveEnabledForFiltered}
+                        type="button"
                     >
-                        {_ts('leads', 'removeAllFilteredButtonTitle')}
+                        {_ts('addLeads', 'removeAllFilteredButtonTitle')}
                     </button>
                     <button
                         className={styles.dropdownButton}
                         disabled={!isRemoveEnabledForCompleted}
                         onClick={this.handleSavedRemoveButtonClick}
+                        type="button"
                     >
-                        {_ts('leads', 'removeAllCompletedButtonTitle')}
+                        {_ts('addLeads', 'removeAllCompletedButtonTitle')}
                     </button>
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleBulkRemoveButtonClick}
                         disabled={!isRemoveEnabledForAll}
+                        type="button"
                     >
-                        {_ts('leads', 'removeAllButtonTitle')}
+                        {_ts('addLeads', 'removeAllButtonTitle')}
                     </button>
                 </DropdownMenu>
                 <DropdownMenu
                     iconName={iconNames.save}
                     className={styles.saveButtons}
-                    title={_ts('leads', 'saveButtonTitle')}
+                    title={_ts('addLeads', 'saveButtonTitle')}
                 >
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleSaveButtonClick}
                         disabled={isSaveDisabledForActive}
+                        type="button"
                     >
-                        {_ts('leads', 'saveCurrentButtonTitle')}
+                        {_ts('addLeads', 'saveCurrentButtonTitle')}
                     </button>
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleFilteredSaveButtonClick}
                         disabled={pendingSubmitAll || !isSaveEnabledForFiltered}
+                        type="button"
                     >
-                        {_ts('leads', 'saveAllFilteredButtonTitle')}
+                        {_ts('addLeads', 'saveAllFilteredButtonTitle')}
                     </button>
                     <button
                         className={styles.dropdownButton}
                         onClick={this.handleBulkSaveButtonClick}
                         disabled={pendingSubmitAll || !isSaveEnabledForAll}
+                        type="button"
                     >
-                        {_ts('leads', 'saveAllButtonTitle')}
+                        {_ts('addLeads', 'saveAllButtonTitle')}
                     </button>
                 </DropdownMenu>
             </div>

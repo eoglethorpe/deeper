@@ -231,7 +231,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
                 <header className={styles.header}>
                     <SearchInput
                         onChange={this.handleSearchInputChange}
-                        placeholder={_ts('leads', 'searchConnectorPlaceholder')}
+                        placeholder={_ts('addLeads', 'searchConnectorPlaceholder')}
                         className={styles.searchInput}
                         value={searchInputValue}
                         showLabel={false}
@@ -257,7 +257,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
         if (connectorsList.length <= 0) {
             return (
                 <div className={styles.empty}>
-                    { _ts('leads', 'noConnectorsLabel') }
+                    { _ts('addLeads', 'noConnectorsLabel') }
                 </div>
             );
         }
@@ -280,7 +280,7 @@ export default class ConnectorSelectModal extends React.PureComponent {
         return (
             <Modal className={styles.modal} >
                 <ModalHeader
-                    title={_ts('leads', 'connectorsLabel')}
+                    title={_ts('addLeads', 'connectorsLabel')}
                     rightComponent={
                         <PrimaryButton
                             onClick={this.handleConnectorSelectModalClose}
@@ -300,12 +300,12 @@ export default class ConnectorSelectModal extends React.PureComponent {
                         <DangerButton
                             onClick={this.handleConnectorSelectModalClose}
                         >
-                            {_ts('leads', 'modalCancelLabel')}
+                            {_ts('addLeads', 'modalCancelLabel')}
                         </DangerButton>
                         <PrimaryButton
                             onClick={this.handleLeadsSelect}
                         >
-                            {_ts('leads', 'modalSelectLabel')}
+                            {_ts('addLeads', 'modalSelectLabel')}
                         </PrimaryButton>
                     </div>
                 </ModalBody>

@@ -249,16 +249,16 @@ export default class LeadForm extends React.PureComponent {
                         >
                             <TextInput
                                 faramElementName="url"
-                                label={_ts('leads', 'urlLabel')}
-                                placeholder={_ts('leads', 'urlPlaceholderLabel')}
+                                label={_ts('addLeads', 'urlLabel')}
+                                placeholder={_ts('addLeads', 'urlPlaceholderLabel')}
                                 autoFocus
                             />
                         </ExtractThis>,
                         <TextInput
                             faramElementName="website"
                             key="website"
-                            label={_ts('leads', 'websiteLabel')}
-                            placeholder={_ts('leads', 'urlPlaceholderLabel')}
+                            label={_ts('addLeads', 'websiteLabel')}
+                            placeholder={_ts('addLeads', 'urlPlaceholderLabel')}
                             className={styles.website}
                         />,
                     ]
@@ -267,8 +267,8 @@ export default class LeadForm extends React.PureComponent {
                     type === LEAD_TYPE.text &&
                         <TextArea
                             faramElementName="text"
-                            label={_ts('leads', 'textLabel')}
-                            placeholder={_ts('leads', 'textareaPlaceholderLabel')}
+                            label={_ts('addLeads', 'textLabel')}
+                            placeholder={_ts('addLeads', 'textareaPlaceholderLabel')}
                             rows="3"
                             className={styles.text}
                             autoFocus
@@ -280,10 +280,10 @@ export default class LeadForm extends React.PureComponent {
                     formoverrides={['disabled']}
                     faramElementName="project"
                     keySelector={LeadForm.keySelector}
-                    label={_ts('leads', 'projectLabel')}
+                    label={_ts('addLeads', 'projectLabel')}
                     labelSelector={LeadForm.labelSelector}
                     options={leadOptions.project}
-                    placeholder={_ts('leads', 'projectPlaceholderLabel')}
+                    placeholder={_ts('addLeads', 'projectPlaceholderLabel')}
                     showHintAndError
                     showLabel
                     className={styles.project}
@@ -294,8 +294,8 @@ export default class LeadForm extends React.PureComponent {
                 <TextInput
                     className={styles.title}
                     faramElementName="title"
-                    label={_ts('leads', 'titleLabel')}
-                    placeholder={_ts('leads', 'titlePlaceHolderLabel')}
+                    label={_ts('addLeads', 'titleLabel')}
+                    placeholder={_ts('addLeads', 'titlePlaceHolderLabel')}
                 />
 
                 <ApplyAll
@@ -307,8 +307,8 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <TextInput
                         faramElementName="source"
-                        label={_ts('leads', 'publisherLabel')}
-                        placeholder={_ts('leads', 'publisherPlaceHolderLabel')}
+                        label={_ts('addLeads', 'publisherLabel')}
+                        placeholder={_ts('addLeads', 'publisherPlaceHolderLabel')}
                     />
                 </ApplyAll>
                 <ApplyAll
@@ -321,10 +321,10 @@ export default class LeadForm extends React.PureComponent {
                     <SelectInput
                         faramElementName="confidentiality"
                         keySelector={LeadForm.keySelector}
-                        label={_ts('leads', 'confidentialityLabel')}
+                        label={_ts('addLeads', 'confidentialityLabel')}
                         labelSelector={LeadForm.labelSelector}
                         options={leadOptions.confidentiality}
-                        placeholder={_ts('leads', 'selectInputPlaceholderLabel')}
+                        placeholder={_ts('addLeads', 'selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
                     />
@@ -340,10 +340,10 @@ export default class LeadForm extends React.PureComponent {
                     <MultiSelectInput
                         faramElementName="assignee"
                         keySelector={LeadForm.keySelector}
-                        label={_ts('leads', 'assigneeLabel')}
+                        label={_ts('addLeads', 'assigneeLabel')}
                         labelSelector={LeadForm.labelSelector}
                         options={leadOptions.assignee}
-                        placeholder={_ts('leads', 'selectInputPlaceholderLabel')}
+                        placeholder={_ts('addLeads', 'selectInputPlaceholderLabel')}
                         showHintAndError
                         showLabel
                     />
@@ -358,8 +358,8 @@ export default class LeadForm extends React.PureComponent {
                 >
                     <DateInput
                         faramElementName="publishedOn"
-                        label={_ts('leads', 'datePublishedLabel')}
-                        placeholder={_ts('leads', 'datePublishedPlaceholderLabel')}
+                        label={_ts('addLeads', 'datePublishedLabel')}
+                        placeholder={_ts('addLeads', 'datePublishedPlaceholderLabel')}
                     />
                 </ApplyAll>
                 {

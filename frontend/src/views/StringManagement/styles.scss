@@ -3,6 +3,8 @@
 $width-left-pane: 240px;
 $width-error-pane: 320px;
 
+$radius-border-medium: 3px;
+
 .string-panel {
     display: flex;
     height: 100%;
@@ -25,7 +27,30 @@ $width-error-pane: 320px;
 
         .links {
             flex-grow: 1;
-            font-family: $font-family-monospace;
+
+            .item {
+                display: flex;
+                align-items: center;
+                font-family: $font-family-monospace;
+
+                .title {
+                    flex-grow: 1;
+                }
+
+                .badge {
+                    flex-shrink: 0;
+                    padding: 0 $spacing-extra-small-alt;
+                    font-size: $font-size-small;
+
+                    &.error {
+                        @include background-color($color-danger);
+                    }
+
+                    &.warning {
+                        @include background-color($color-warning);
+                    }
+                }
+            }
         }
     }
 

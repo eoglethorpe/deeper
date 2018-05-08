@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -20,6 +20,7 @@ import {
     allStringsSelector,
     linkStringsSelector,
     problemsWithStringsSelector,
+    problemCountsWithStringsSelector,
     linkKeysSelector,
     availableLanguagesSelector,
     selectedLanguageNameSelector,
@@ -38,6 +39,8 @@ const propTypes = {
     // eslint-disable-next-line react/forbid-prop-types
     problemsWithStrings: PropTypes.object.isRequired,
     // eslint-disable-next-line react/forbid-prop-types
+    problemCountsWithStrings: PropTypes.object.isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
     linkKeys: PropTypes.array.isRequired,
 
     selectedLanguageName: PropTypes.string.isRequired,
@@ -55,6 +58,7 @@ const mapStateToProps = state => ({
     allStrings: allStringsSelector(state),
     linkStrings: linkStringsSelector(state),
     problemsWithStrings: problemsWithStringsSelector(state),
+    problemCountsWithStrings: problemCountsWithStringsSelector(state),
     linkKeys: linkKeysSelector(state),
     availableLanguages: availableLanguagesSelector(state),
     selectedLanguageName: selectedLanguageNameSelector(state),
@@ -184,16 +188,43 @@ export default class StringManagement extends React.PureComponent {
             },
             { $all: 'all' },
         );
+
         return (
             <div className={styles.leftPane}>
                 <header className={styles.header}>
-                    <h2>Strings</h2>
+                    <h2>
+                        Strings
+                    </h2>
                 </header>
                 <VerticalTabs
                     className={styles.links}
                     tabs={linkNames}
                     active={linkName}
                     onClick={(name) => { this.setState({ linkName: name }); }}
+                    modifier={(data) => {
+                        const {
+                            warningCount,
+                            errorCount,
+                        } = this.props.problemCountsWithStrings[data];
+
+                        return (
+                            <div className={styles.item}>
+                                <span className={styles.title}>
+                                    {data}
+                                </span>
+                                { warningCount > 0 &&
+                                    <span className={`${styles.badge} ${styles.warning}`}>
+                                        {warningCount}
+                                    </span>
+                                }
+                                { errorCount > 0 &&
+                                    <span className={`${styles.badge} ${styles.error}`}>
+                                        {errorCount}
+                                    </span>
+                                }
+                            </div>
+                        );
+                    }}
                 />
             </div>
         );
@@ -273,20 +304,10 @@ export default class StringManagement extends React.PureComponent {
 
     renderProblems = () => {
         const { linkName } = this.state;
-        const { problemsWithStrings } = this.props;
-        const problemValues = Object.values(problemsWithStrings[linkName]);
-        let anyProblem = false;
+        const { problemCountsWithStrings } = this.props;
+        const { errorCount, warningCount } = problemCountsWithStrings[linkName];
 
-        problemValues.forEach((problem) => {
-            if (problem.instances.length > 0) {
-                anyProblem = true;
-                return false;
-            }
-
-            return true;
-        });
-
-        if (!anyProblem) {
+        if (errorCount + warningCount <= 0) {
             return (
                 <Message className={styles.noProblems}>
                     Everything looks good

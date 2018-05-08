@@ -577,13 +577,10 @@ export default class Leads extends React.PureComponent {
                 case ACTION.delete:
                     return _ts('leads', 'leadDeleteConfirmText');
                 case ACTION.markAsPending:
-                    // 'Do you want to mark the lead as pending?'
                     return _ts('leads', 'leadMarkPendingConfirmText');
                 case ACTION.markAsProcessed:
-                    // 'Do you want to mark the lead as processed?'
                     return _ts('leads', 'leadMarkProcessedConfirmText');
                 default:
-                    // 'Are you sure?'
                     return _ts('leads', 'leadConfirmText');
             }
         };
