@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
@@ -8,15 +8,17 @@ import SuccessButton from '../../../../../vendor/react-store/components/Action/B
 import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
-import Form, {
+import Faram, {
     requiredCondition,
-} from '../../../../../vendor/react-store/components/Input/Form';
+} from '../../../../../vendor/react-store/components/Input/Faram';
 
 import {
     activeProjectIdFromStateSelector,
     regionDetailSelector,
     projectDetailsSelector,
     setRegionDetailsAction,
+    changeRegionDetailsAction,
+    setRegionDetailsErrorsAction,
     removeProjectRegionAction,
     addNewRegionAction,
 } from '../../../../../redux';
@@ -38,15 +40,17 @@ const propTypes = {
     activeProject: PropTypes.number,
     projectDetails: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     countryId: PropTypes.number.isRequired,
+    projectId: PropTypes.number.isRequired,
     regionDetail: PropTypes.shape({
         id: PropTypes.number,
-        formValues: PropTypes.object,
-        formFieldErrors: PropTypes.object,
-        formErrors: PropTypes.object,
+        faramValues: PropTypes.object,
+        faramErrors: PropTypes.object,
         pristine: PropTypes.bool,
     }),
     addNewRegion: PropTypes.func.isRequired,
     setRegionDetails: PropTypes.func.isRequired,
+    changeRegionDetails: PropTypes.func.isRequired,
+    setRegionDetailsErrors: PropTypes.func.isRequired,
     removeProjectRegion: PropTypes.func.isRequired,
     onRegionClone: PropTypes.func,
 };
@@ -55,9 +59,8 @@ const defaultProps = {
     activeProject: undefined,
     onRegionClone: undefined,
     regionDetail: {
-        formValues: {},
-        formErrors: {},
-        formFieldErrors: {},
+        faramValues: {},
+        faramErrors: {},
         pristine: false,
     },
 };
@@ -71,6 +74,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     addNewRegion: params => dispatch(addNewRegionAction(params)),
     setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    changeRegionDetails: params => dispatch(changeRegionDetailsAction(params)),
+    setRegionDetailsErrors: params => dispatch(setRegionDetailsErrorsAction(params)),
     removeProjectRegion: params => dispatch(removeProjectRegionAction(params)),
     dispatch,
 });
@@ -163,6 +168,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
+            setRegionDetailsErrors: this.props.setRegionDetailsErrors,
             setState: v => this.setState(v),
             projectId: this.props.activeProject,
         });
@@ -217,8 +223,24 @@ export default class ProjectRegionDetail extends React.PureComponent {
         this.setState({ showCloneAndEditConfirm: true });
     }
 
-    successCallback = (values) => {
+    handleValidationFailure = (faramErrors) => {
+        this.props.setRegionDetailsErrors({
+            faramErrors,
+            regionId: this.props.regionDetail.id,
+        });
+    };
+
+    handleValidationSuccess = (values) => {
         this.startRequestForRegionDetailPatch(this.props.regionDetail.id, values);
+    };
+
+    handleFaramChange = (faramValues, faramErrors) => {
+        this.props.changeRegionDetails({
+            faramValues,
+            faramErrors,
+            regionId: this.props.regionDetail.id,
+            projectId: this.props.projectId,
+        });
     };
 
     renderCloneAndEditButton = () => {
@@ -250,9 +272,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const { regionDetail } = this.props;
 
         const {
-            formErrors = {},
-            formFieldErrors = {},
-            formValues = {},
+            faramValues = {},
             pristine = false,
         } = this.props.regionDetail;
 
@@ -275,19 +295,12 @@ export default class ProjectRegionDetail extends React.PureComponent {
         return (
             <header className={styles.header}>
                 <h2>
-                    {formValues.title}
+                    {faramValues.title}
                 </h2>
                 <div className={styles.actionButtons}>
                     <CloneAndEditButton />
                     {!isPublic &&
-                        <Form
-                            failureCallback={this.failureCallback}
-                            successCallback={this.successCallback}
-                            schema={this.schema}
-                            fieldErrors={formFieldErrors}
-                            formErrors={formErrors}
-                            value={formValues}
-                        >
+                        <Fragment>
                             <WarningButton
                                 disabled={!pristine}
                                 onClick={this.handleDiscardButtonClick}
@@ -300,7 +313,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                             >
                                 {_ts('project', 'saveButtonLabel')}
                             </SuccessButton>
-                        </Form>
+                        </Fragment>
                     }
                     <DangerButton
                         disabled={pending}
@@ -363,7 +376,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
             projectDetails,
         } = this.props;
         const {
-            formValues = {},
+            faramValues = {},
         } = this.props.regionDetail;
         const { showDeleteConfirm } = this.state;
 
@@ -380,7 +393,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 <p>
                     {
                         _ts('project', 'confirmRemoveText', {
-                            title: formValues.title,
+                            title: faramValues.title,
                             projectTitle: projectDetails.title,
                         })
                     }
@@ -396,7 +409,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            formValues = {},
+            faramValues = {},
         } = this.props.regionDetail;
 
         const { showCloneAndEditConfirm } = this.state;
@@ -411,7 +424,7 @@ export default class ProjectRegionDetail extends React.PureComponent {
                 }
             >
                 <p>
-                    {_ts('project', 'confirmCloneText', { title: formValues.title })}
+                    {_ts('project', 'confirmCloneText', { title: faramValues.title })}
                 </p>
             </Confirm>
         );
@@ -429,18 +442,32 @@ export default class ProjectRegionDetail extends React.PureComponent {
         const DeleteRegionConfirm = this.renderDeleteRegionConfirm;
         const CloneAndEditRegionConfirm = this.renderCloneAndEditRegionConfirm;
 
-        const pending = projectPatchPending ||
+        const {
+            faramErrors = {},
+            faramValues = {},
+        } = this.props.regionDetail;
+
+        const loading = projectPatchPending ||
             regionClonePending ||
             regionDetailPatchPending;
 
         return (
-            <div className={styles.regionDetailsContainer}>
-                { pending && <LoadingAnimation /> }
+            <Faram
+                onChange={this.handleFaramChange}
+                className={styles.regionDetailsContainer}
+                onValidationFailure={this.handleValidationFailure}
+                onValidationSuccess={this.handleValidationSuccess}
+                schema={this.schema}
+                value={faramValues}
+                error={faramErrors}
+                disabled={loading}
+            >
+                { loading && <LoadingAnimation /> }
                 <Header />
                 <Content />
                 <DeleteRegionConfirm />
                 <CloneAndEditRegionConfirm />
-            </div>
+            </Faram>
         );
     }
 }

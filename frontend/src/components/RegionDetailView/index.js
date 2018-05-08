@@ -87,7 +87,6 @@ export default class RegionDetailView extends React.PureComponent {
         ];
 
         const headingText = _ts('countries', 'regionGeneralInfoLabel');
-        console.warn(this.props.regionDetail);
 
         return (
             <div className={classNames.join(' ')}>

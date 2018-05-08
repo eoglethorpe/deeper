@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import TextInput from '../../vendor/react-store/components/Input/TextInput';
+import NonFieldErrors from '../../vendor/react-store/components/Input/NonFieldErrors';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import FaramGroup from '../../vendor/react-store/components/Input/Faram/FaramGroup';
 
@@ -39,6 +40,7 @@ export default class RegionDetail extends React.PureComponent {
                         {_ts('countries', 'regionGeneralInfoLabel')}
                     </h4>
                 </header>
+                <NonFieldErrors faramElement />
                 <div className={styles.inputContainer}>
                     <TextInput
                         faramElementName="code"

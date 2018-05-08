@@ -31,9 +31,9 @@ export default class RegionGetRequest {
                 return;
             }
             const regionDetails = {
-                formValues: { ...response },
-                formErrors: {},
-                formFieldErrors: {},
+                faramValues: response,
+                faramErrors: {},
+                hasErrors: false,
                 pristine: false,
                 id: response.id,
                 public: response.public,

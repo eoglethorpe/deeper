@@ -53,7 +53,7 @@ export default class RegionDetailPatchRequest {
 
     fatal = () => {
         this.props.setRegionDetailsErrors({
-            faramErrors: { errors: [_ts('countries', 'regionPatchErrorText')] },
+            faramErrors: { $internal: [_ts('countries', 'regionPatchErrorText')] },
             regionId: this.props.regionId,
         });
     }
