@@ -80,7 +80,7 @@ export default class StringManagement extends React.PureComponent {
     static defaultProps = defaultProps;
 
     static keyExtractor = e => e.id;
-    static keyExtractor2 = e => e.name;
+    static keyExtractor2 = e => e.id;
 
     constructor(props) {
         super(props);

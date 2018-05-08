@@ -1,5 +1,4 @@
 import localforage from 'localforage';
-<<<<<<< HEAD
 import { createTransform } from 'redux-persist';
 
 const myTransform = createTransform(
