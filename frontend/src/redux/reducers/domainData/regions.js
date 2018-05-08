@@ -214,7 +214,7 @@ const addAdminLevelForRegion = (state, action) => {
 
 const setRegionDetails = (state, action) => {
     const { regionId, regionDetails, projectId } = action;
-    const regionDetailValues = regionDetails.formValues || {};
+    const regionDetailValues = regionDetails.faramValues || {};
     const settings = {
         regions: {
             [regionId]: { $auto: {

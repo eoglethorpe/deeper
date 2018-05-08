@@ -3,6 +3,7 @@
 .region-detail-form {
     display: flex;
     position: relative;
+    justify-content: flex-start;
     flex-direction: column;
 
     .header {

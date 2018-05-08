@@ -17,6 +17,8 @@ import {
     unSetRegionAction,
     activeUserSelector,
     setRegionDetailsAction,
+    changeRegionDetailsAction,
+    setRegionDetailsErrorsAction,
     routeUrlSelector,
 } from '../../../redux';
 import _ts from '../../../ts';
@@ -51,6 +53,8 @@ const propTypes = {
     countryId: PropTypes.number.isRequired,
     activeUser: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     setRegionDetails: PropTypes.func.isRequired,
+    changeRegionDetails: PropTypes.func.isRequired,
+    setRegionDetailsErrors: PropTypes.func.isRequired,
 
     routeUrl: PropTypes.string.isRequired,
 };
@@ -76,6 +80,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = dispatch => ({
     unSetRegion: params => dispatch(unSetRegionAction(params)),
     setRegionDetails: params => dispatch(setRegionDetailsAction(params)),
+    changeRegionDetails: params => dispatch(changeRegionDetailsAction(params)),
+    setRegionDetailsErrors: params => dispatch(setRegionDetailsErrorsAction(params)),
 });
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -249,53 +255,32 @@ export default class CountryDetail extends React.PureComponent {
         }
         const regionDetailPatchRequest = new RegionDetailPatchRequest({
             setRegionDetails: this.props.setRegionDetails,
+            setRegionDetailsErrors: this.props.setRegionDetailsErrors,
+            regionId: this.props.countryId,
             setState: v => this.setState(v),
         });
         this.regionDetailPatchRequest = regionDetailPatchRequest.create(regionId, data);
         this.regionDetailPatchRequest.start();
     }
 
-    failureCallback = (formFieldErrors, faramErrors) => {
-        const regionDetails = {
-            faramValues: { ...this.props.regionDetail.faramValues },
-            formFieldErrors: { ...formFieldErrors },
-            faramErrors: { ...faramErrors },
-            pristine: true,
-        };
-        this.props.setRegionDetails({
-            regionDetails,
+    handleValidationFailure = (faramErrors) => {
+        this.props.setRegionDetailsErrors({
+            faramErrors,
             regionId: this.props.countryId,
         });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         this.startRequestForRegionDetailPatch(this.props.countryId, values);
     };
 
-    handleFaramChange = (faramValues, formFieldErrors, faramErrors) => {
-        const regionDetails = {
+    handleFaramChange = (faramValues, faramErrors) => {
+        this.props.changeRegionDetails({
             faramValues,
-            formFieldErrors,
             faramErrors,
-            pristine: true,
-        };
-
-        const { projectId } = this.props;
-
-        if (projectId) {
-            this.props.setRegionDetails({
-                regionDetails,
-                regionId: this.props.countryId,
-                projectId,
-            });
-        } else {
-            this.props.setRegionDetails({
-                regionDetails,
-                regionId: this.props.countryId,
-            });
-        }
+            regionId: this.props.countryId,
+        });
     };
-
 
     deleteActiveCountry = (confirm) => {
         if (confirm) {
@@ -314,8 +299,6 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            faramErrors = {},
-            formFieldErrors = {},
             faramValues = {},
             pristine = false,
         } = this.props.regionDetail;
@@ -373,6 +356,7 @@ export default class CountryDetail extends React.PureComponent {
         const {
             deletePending,
             dataLoading,
+            patchPending,
         } = this.state;
 
         const {
@@ -388,7 +372,7 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props.regionDetail;
 
         const HeaderWithTabs = this.renderHeader;
-        const loading = deletePending || dataLoading;
+        const loading = patchPending || deletePending || dataLoading;
 
         return (
             <Fragment>
@@ -405,43 +389,42 @@ export default class CountryDetail extends React.PureComponent {
                         }
                     }
                 />
-                <div className={`${className} ${styles.countryDetail}`}>
-                    <Faram
-                        onChange={this.handleFaramChange}
-                        onValidationFailure={this.handleValidationFailure}
-                        onValidationSuccess={this.handleValidationSuccess}
-                        schema={this.schema}
-                        value={faramValues}
-                        error={faramErrors}
-                        disabled={loading}
-                    >
-                        { loading &&
-                            <LoadingAnimation
-                                className={styles.loadingAnimation}
-                                large
+                <Faram
+                    className={`${className} ${styles.countryDetail}`}
+                    onChange={this.handleFaramChange}
+                    onValidationFailure={this.handleValidationFailure}
+                    onValidationSuccess={this.handleValidationSuccess}
+                    schema={this.schema}
+                    value={faramValues}
+                    error={faramErrors}
+                    disabled={loading}
+                >
+                    { loading &&
+                        <LoadingAnimation
+                            className={styles.loadingAnimation}
+                            large
+                        />
+                    }
+                    { !activeUser.isSuperuser ? (
+                        <div className={styles.detailsNoEdit}>
+                            <RegionDetailView
+                                className={styles.regionDetailBox}
+                                countryId={countryId}
                             />
-                        }
-                        { !activeUser.isSuperuser ? (
-                            <div className={styles.detailsNoEdit}>
-                                <RegionDetailView
-                                    className={styles.regionDetailBox}
-                                    countryId={countryId}
-                                />
-                                <div className={styles.mapContainer}>
-                                    <RegionMap regionId={countryId} />
-                                </div>
+                            <div className={styles.mapContainer}>
+                                <RegionMap regionId={countryId} />
                             </div>
-                        ) : (
-                            <Fragment>
-                                <HeaderWithTabs />
-                                <MultiViewContainer
-                                    useHash
-                                    views={this.views}
-                                />
-                            </Fragment>
-                        )}
-                    </Faram>
-                </div>
+                        </div>
+                    ) : (
+                        <Fragment>
+                            <HeaderWithTabs />
+                            <MultiViewContainer
+                                useHash
+                                views={this.views}
+                            />
+                        </Fragment>
+                    )}
+                </Faram>
             </Fragment>
         );
     }

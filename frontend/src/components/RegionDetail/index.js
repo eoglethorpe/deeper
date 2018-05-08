@@ -52,9 +52,7 @@ export default class RegionDetail extends React.PureComponent {
                         placeholder={_ts('countries', 'countryNamePlaceholder')}
                         className={styles.textInput}
                     />
-                </div>
-                <FaramGroup faramElementName="regionalGroups" >
-                    <div className={styles.inputContainer}>
+                    <FaramGroup faramElementName="regionalGroups" >
                         <TextInput
                             faramElementName="wbRegion"
                             label={_ts('countries', 'wbRegionLabel')}
@@ -91,8 +89,8 @@ export default class RegionDetail extends React.PureComponent {
                             placeholder={_ts('countries', 'unGeoSubregionPlaceholer')}
                             className={styles.textInput}
                         />
-                    </div>
-                </FaramGroup>
+                    </FaramGroup>
+                </div>
             </div>
         );
     }

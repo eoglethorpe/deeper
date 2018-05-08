@@ -1,8 +1,9 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
+    alterResponseErrorToFaramError,
+
     createUrlForRegion,
     createParamsForRegionPatch,
-    transformResponseErrorToFormError,
 } from '../../../rest';
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -20,9 +21,11 @@ export default class RegionDetailPatchRequest {
         try {
             schema.validate(response, 'regionPatchResponse');
             const regionDetails = {
-                formValues: { ...response },
-                formErrors: {},
-                formFieldErrors: {},
+                id: response.id,
+                public: response.public,
+                versionId: response.versionId,
+                faramValues: { ...response },
+                faramErrors: {},
                 pristine: false,
             };
             this.props.setRegionDetails({
@@ -41,21 +44,17 @@ export default class RegionDetailPatchRequest {
     }
 
     failure = (response) => {
-        const {
-            formFieldErrors,
-            formErrors,
-        } = transformResponseErrorToFormError(response.errors);
-        this.props.setState({
-            formFieldErrors,
-            formErrors,
-            pending: false,
+        const faramErrors = alterResponseErrorToFaramError(response.errors);
+        this.props.setRegionDetailsErrors({
+            faramErrors,
+            regionId: this.props.regionId,
         });
     }
 
     fatal = () => {
-        this.props.setState({
-            formErrors: { errors: [_ts('countries', 'regionPatchErrorText')] },
-            pending: false,
+        this.props.setRegionDetailsErrors({
+            faramErrors: { errors: [_ts('countries', 'regionPatchErrorText')] },
+            regionId: this.props.regionId,
         });
     }
 
@@ -63,8 +62,8 @@ export default class RegionDetailPatchRequest {
         const regionDetailPatchRequest = new FgRestBuilder()
             .url(createUrlForRegion(regionId))
             .params(() => createParamsForRegionPatch(data))
-            .preLoad(() => { this.props.setState({ pending: true }); })
-            .postLoad(() => { this.props.setState({ pending: false }); })
+            .preLoad(() => { this.props.setState({ patchPending: true }); })
+            .postLoad(() => { this.props.setState({ patchPending: false }); })
             .success(this.success(regionId))
             .failure(this.failure)
             .fatal(this.fatal)
