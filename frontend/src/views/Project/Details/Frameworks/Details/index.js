@@ -9,6 +9,14 @@ import AccentButton from '../../../../../vendor/react-store/components/Action/Bu
 import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
+import Faram, {
+    requiredCondition,
+} from '../../../../../vendor/react-store/components/Input/Faram';
+import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
+import SuccessButton from '../../../../../vendor/react-store/components/Action/Button/SuccessButton';
+import NonFieldErrors from '../../../../../vendor/react-store/components/Input/NonFieldErrors';
+import TextInput from '../../../../../vendor/react-store/components/Input/TextInput';
+import TextArea from '../../../../../vendor/react-store/components/Input/TextArea';
 
 import {
     createParamsForProjectPatch,
@@ -33,7 +41,6 @@ import schema from '../../../../../schema';
 import notify from '../../../../../notify';
 import _ts from '../../../../../ts';
 
-import ProjectAfForm from './ProjectAfForm';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -73,11 +80,17 @@ export default class ProjectAfDetail extends React.PureComponent {
             cloneConfirmModalShow: false,
             useConfirmModalShow: false,
 
-            formValues: { ...frameworkDetails },
-            formErrors: {},
-            formFieldErrors: {},
+            faramValues: { ...frameworkDetails },
+            faramErrors: {},
             pristine: false,
             pending: false,
+        };
+
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+                description: [],
+            },
         };
     }
 
@@ -211,38 +224,35 @@ export default class ProjectAfDetail extends React.PureComponent {
         this.setState({ useConfirmModalShow: true });
     }
 
-    handleFormCancel = () => {
+    handlefaramCancel = () => {
         const { frameworkDetails } = this.props;
 
         this.setState({
-            formValues: { ...frameworkDetails },
-            formErrors: {},
-            formFieldErrors: {},
+            faramValues: { ...frameworkDetails },
+            faramErrors: {},
 
             pristine: false,
             pending: false,
         });
     };
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    // faram RELATED
+    handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
+    handleValidationFailure = (faramErrors) => {
         this.setState({
-            formFieldErrors,
-            formErrors,
+            faramErrors,
             pristine: false,
         });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         if (this.afPutRequest) {
             this.afPutRequest.stop();
         }
@@ -342,34 +352,62 @@ export default class ProjectAfDetail extends React.PureComponent {
         const {
             cloneConfirmModalShow,
             useConfirmModalShow,
-            formErrors,
-            formFieldErrors,
+            faramErrors,
             pristine,
             pending,
-            formValues,
+            faramValues,
         } = this.state;
 
         const Header = this.renderHeader;
+        const readOnly = !frameworkDetails.isAdmin;
 
         return (
             <div className={styles.analysisFrameworkDetail}>
                 { pending && <LoadingAnimation /> }
                 <Header />
-                <div className={styles.content}>
-                    <ProjectAfForm
-                        formValues={formValues}
-                        formErrors={formErrors}
-                        formFieldErrors={formFieldErrors}
-                        changeCallback={this.changeCallback}
-                        failureCallback={this.failureCallback}
-                        handleFormCancel={this.handleFormCancel}
-                        successCallback={this.successCallback}
-                        className={styles.afDetailForm}
-                        pristine={pristine}
-                        pending={pending}
-                        readOnly={!frameworkDetails.isAdmin}
+                <Faram
+                    className={styles.afDetailForm}
+                    onChange={this.handleFaramChange}
+                    onValidationFailure={this.handleValidationFailure}
+                    onValidationSuccess={this.handleValidationSuccess}
+                    schema={this.schema}
+                    value={faramValues}
+                    error={faramErrors}
+                    disabled={pending}
+                >
+                    { !readOnly &&
+                        <div className={styles.actionButtons}>
+                            <DangerButton
+                                onClick={this.handlefaramCancel}
+                                disabled={pending || !pristine}
+                            >
+                                {_ts('project', 'modalRevert')}
+                            </DangerButton>
+                            <SuccessButton
+                                disabled={pending || !pristine}
+                                type="submit"
+                            >
+                                {_ts('project', 'modalSave')}
+                            </SuccessButton>
+                        </div>
+                    }
+                    <NonFieldErrors faramElement />
+                    <TextInput
+                        label={_ts('project', 'addAfTitleLabel')}
+                        faramElementName="title"
+                        placeholder={_ts('project', 'addAfTitlePlaceholder')}
+                        className={styles.name}
+                        readOnly={readOnly}
                     />
-                </div>
+                    <TextArea
+                        label={_ts('project', 'projectDescriptionLabel')}
+                        faramElementName="description"
+                        placeholder={_ts('project', 'projectDescriptionPlaceholder')}
+                        className={styles.description}
+                        rows={3}
+                        readOnly={readOnly}
+                    />
+                </Faram>
                 <Confirm
                     show={useConfirmModalShow}
                     onClose={useConfirm => this.handleAfUse(

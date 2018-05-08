@@ -1,6 +1,6 @@
 @import '../../../../../stylesheets/base';
 
-$af-detail-form-width: 240px;
+$af-detail-form-width: 480px;
 $height-header: 39px;
 
 .analysis-framework-detail {
@@ -28,12 +28,33 @@ $height-header: 39px;
         }
     }
 
-    .content {
+    .af-detail-form {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        padding: $spacing-medium;
+        width: $af-detail-form-width;
         height: calc(100% - #{$height-header});
 
-        .af-detail-form {
-            display: block;
-            width: $af-detail-form-width;
+        .action-buttons {
+            display: flex;
+            flex-shrink: 0;
+            justify-content: flex-end;
+
+            button {
+                margin-left: $spacing-large;
+            }
+        }
+
+        .name,
+        .description {
+            width: 100%;
+        }
+
+        .description {
+            :global .input {
+                resize: none;
+            }
         }
     }
 }

@@ -337,43 +337,41 @@ export default class ProjectCeDetail extends React.PureComponent {
             <div className={styles.categoryEditorDetail}>
                 { pending && <LoadingAnimation /> }
                 <Header />
-                <div className={styles.content}>
-                    <Faram
-                        className={styles.ceDetailForm}
-                        onChange={this.handleFaramChange}
-                        onValidationFailure={this.handleValidationFailure}
-                        onValidationSuccess={this.handleValidationSuccess}
-                        schema={this.schema}
-                        value={faramValues}
-                        error={faramErrors}
-                        disabled={pending}
-                    >
-                        { !readOnly &&
-                            <div className={styles.actionButtons}>
-                                <DangerButton
-                                    onClick={this.handlefaramCancel}
-                                    disabled={pending || !pristine}
-                                >
-                                    {_ts('project', 'modalRevert')}
-                                </DangerButton>
-                                <SuccessButton
-                                    disabled={pending || !pristine}
-                                    type="submit"
-                                >
-                                    {_ts('project', 'modalSave')}
-                                </SuccessButton>
-                            </div>
-                        }
-                        <NonFieldErrors faramElement />
-                        <TextInput
-                            label={_ts('project', 'addCeTitleLabel')}
-                            faramElementName="title"
-                            placeholder={_ts('project', 'addCeTitlePlaceholder')}
-                            className={styles.name}
-                            readOnly={readOnly}
-                        />
-                    </Faram>
-                </div>
+                <Faram
+                    className={styles.ceDetailForm}
+                    onChange={this.handleFaramChange}
+                    onValidationFailure={this.handleValidationFailure}
+                    onValidationSuccess={this.handleValidationSuccess}
+                    schema={this.schema}
+                    value={faramValues}
+                    error={faramErrors}
+                    disabled={pending}
+                >
+                    { !readOnly &&
+                        <div className={styles.actionButtons}>
+                            <DangerButton
+                                onClick={this.handlefaramCancel}
+                                disabled={pending || !pristine}
+                            >
+                                {_ts('project', 'modalRevert')}
+                            </DangerButton>
+                            <SuccessButton
+                                disabled={pending || !pristine}
+                                type="submit"
+                            >
+                                {_ts('project', 'modalSave')}
+                            </SuccessButton>
+                        </div>
+                    }
+                    <NonFieldErrors faramElement />
+                    <TextInput
+                        label={_ts('project', 'addCeTitleLabel')}
+                        faramElementName="title"
+                        placeholder={_ts('project', 'addCeTitlePlaceholder')}
+                        className={styles.name}
+                        readOnly={readOnly}
+                    />
+                </Faram>
                 <Confirm
                     show={useConfirmModalShow}
                     onClose={useConfirm => this.handleCeUse(

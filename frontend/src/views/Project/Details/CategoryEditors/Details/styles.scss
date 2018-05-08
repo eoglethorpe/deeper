@@ -29,26 +29,26 @@ $height-header: 39px;
         }
     }
 
-    .content {
+    .ce-detail-form {
+        display: flex;
+        position: relative;
+        flex-direction: column;
+        padding: $spacing-medium;
+        width: $ce-detail-form-width;
         height: calc(100% - #{$height-header});
 
-        .ce-detail-form {
+        .action-buttons {
             display: flex;
-            position: relative;
-            flex-direction: column;
-            padding: $spacing-medium;
-            width: $ce-detail-form-width;
+            flex-shrink: 0;
+            justify-content: flex-end;
 
-            .action-buttons {
-                display: flex;
-                flex-shrink: 0;
-                justify-content: flex-end;
-                margin-top: $spacing-medium;
-
-                button {
-                    margin-left: $spacing-medium;
-                }
+            button {
+                margin-left: $spacing-medium;
             }
+        }
+
+        .name {
+            width: 100%;
         }
     }
 }
