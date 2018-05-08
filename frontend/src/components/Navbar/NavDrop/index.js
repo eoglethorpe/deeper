@@ -143,6 +143,7 @@ export default class Navdrop extends React.PureComponent {
                     />
                 }
                 title={userName}
+                dropdownClassName={styles.userDropdown}
             >
                 <DropdownGroup>
                     <List

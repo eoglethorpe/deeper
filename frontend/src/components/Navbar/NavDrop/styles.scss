@@ -1,5 +1,9 @@
 @import '../../../stylesheets/base';
 
+.user-dropdown {
+    min-width: 196px;
+}
+
 .dropdown-item {
     display: flex;
     outline: none;
