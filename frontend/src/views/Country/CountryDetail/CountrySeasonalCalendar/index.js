@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import _ts from '../../../../ts';
+
 import styles from './styles.scss';
 
 const propTypes = {
@@ -13,8 +15,8 @@ export default class CountrySeasonalCalendar extends React.PureComponent {
     render() {
         const { countryId } = this.props;
 
-        const seasonalCalendarText = 'Seasonal calendar';
-        const underConstructionText = 'Under construction';
+        const seasonalCalendarText = _ts('countries', 'seasonalTabLabel');
+        const underConstructionText = _ts('common', 'underConstructionLabel');
 
         return (
             <div className={styles.seasonalCalendar}>

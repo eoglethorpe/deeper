@@ -555,7 +555,6 @@ const initialDevLangState = {
         1003: 'Error while trying to save region detail.',
         1004: 'Please wait while we process the text for this lead. It can take some time depending on the size of the lead.',
         251: 'DEEP supports .json, .geojson and shapefiles compressed in .zip',
-
         801: 'Show Visualization',
         802: 'Mark as pending',
         804: 'Mark as processed',
@@ -563,6 +562,7 @@ const initialDevLangState = {
         7000: 'Do you want to mark the lead as pending?',
         8001: 'Do you want to mark the lead as processed?',
         8002: 'Are you sure you want to continue?',
+        253: 'Under Construction',
 
         1005: 'Edit entries',
         9000: 'Priority issue',
@@ -769,6 +769,7 @@ const initialDevLangState = {
             select: 643,
             unselect: 644,
             altUser: 1200,
+            underConstructionLabel: 253,
             tableHeaderSelect: 643,
             tableHeaderType: 21,
             tableHeaderName: 103,

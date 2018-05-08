@@ -45,7 +45,6 @@ const propTypes = {
     }).isRequired,
     regionDetail: PropTypes.shape({
         faramValues: PropTypes.object,
-        formFieldErrors: PropTypes.object,
         faramErrors: PropTypes.object,
         pristine: PropTypes.bool,
     }),
@@ -63,7 +62,6 @@ const defaultProps = {
     className: '',
     regionDetail: {
         faramValues: {},
-        formFieldErrors: {},
         faramErrors: {},
         pristine: false,
     },

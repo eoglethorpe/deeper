@@ -17,5 +17,5 @@ export const regionDetailSelector = createSelector(
 
 export const generalDetailsForRegionSelector = createSelector(
     regionDetailSelector,
-    region => region.formValues || emptyObject,
+    region => region.faramValues || emptyObject,
 );

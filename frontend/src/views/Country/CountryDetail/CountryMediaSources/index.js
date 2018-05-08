@@ -14,7 +14,7 @@ export default class CountryMediaSources extends React.PureComponent {
 
     render() {
         const { countryId } = this.props;
-        const underConstructionText = 'Under construction';
+        const underConstructionText = _ts('common', 'underConstructionLabel');
         const mediaTabLabel = _ts('countries', 'mediaTabLabel');
 
         return (

@@ -2,35 +2,6 @@
 
 .country-population {
     display: flex;
-    position: relative;
-    flex-wrap: wrap;
-    padding: $spacing-medium-alt;
-
-    .action-buttons {
-        display: flex;
-        flex-basis: 100%;
-        justify-content: flex-end;
-
-        button {
-            margin-right: $spacing-medium-alt;
-        }
-    }
-
-    .population-container {
-        display: flex;
-        flex-basis: 100%;
-        flex-wrap: wrap;
-
-        .population,
-        .source {
-            flex-basis: 40%;
-            margin-right: $spacing-super-large;
-        }
-    }
-}
-
-.khatri-noob {
-    display: flex;
     align-items: center;
     flex-direction: column;
     flex-grow: 1;
