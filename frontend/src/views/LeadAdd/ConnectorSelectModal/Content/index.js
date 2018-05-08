@@ -38,7 +38,7 @@ export default class ConnectorContent extends React.PureComponent {
         this.connectorLeadsHeader = [
             {
                 key: 'selected',
-                label: _ts('leads', 'selectLabel'),
+                label: _ts('addLeads', 'selectLabel'),
                 order: 1,
                 modifier: row => (
                     <Checkbox
@@ -56,12 +56,12 @@ export default class ConnectorContent extends React.PureComponent {
             },
             {
                 key: 'title',
-                label: _ts('leads', 'titleLabel'),
+                label: _ts('addLeads', 'titleLabel'),
                 order: 2,
             },
             {
                 key: 'publishedOn',
-                label: _ts('leads', 'datePublishedLabel'),
+                label: _ts('addLeads', 'datePublishedLabel'),
                 order: 3,
                 modifier: row => (
                     <FormattedDate

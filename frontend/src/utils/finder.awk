@@ -21,6 +21,8 @@ BEGIN {
         class = capture[1]
         label = capture[2]
 
+        # print class label
+
         # classes[label] = class
         uniqueClasses[class] = "true"
 
@@ -28,7 +30,7 @@ BEGIN {
         labels[class][labelsLen] = label
 
         filenameLen = filenameLens[label]++
-        filenames[label][filenameLen] = file " " linenumber
+        filenames[class][label][filenameLen] = file " " linenumber
 
         $0 = substr($0, RSTART+RLENGTH)
     }
@@ -51,8 +53,8 @@ END {
             } else {
                 print SP SP "'" label "': ["
                 lastVal = label
-                for (filenameId in filenames[label]) {
-                    filename = filenames[label][filenameId]
+                for (filenameId in filenames[class][label]) {
+                    filename = filenames[class][label][filenameId]
                     print SP SP SP "'" filename "',"
                 }
                 print SP SP "],"

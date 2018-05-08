@@ -31,6 +31,7 @@ const initialSiloDomainData = {
             */
         ],
         /*
+        hidePreview: false,
         leadRests: {},
         leadUploads: {},
         leadDriveRests: {},

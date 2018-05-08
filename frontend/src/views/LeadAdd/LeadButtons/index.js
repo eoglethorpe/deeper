@@ -391,7 +391,7 @@ export default class LeadButtons extends React.PureComponent {
         return (
             <div className={styles.addLeadButtons}>
                 <h3 className={styles.heading}>
-                    {_ts('leads', 'addSourceFromLabel')}
+                    {_ts('addLeads', 'addSourceFromLabel')}
                 </h3>
                 <GooglePicker
                     className={styles.addLeadBtn}
@@ -405,7 +405,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.googleDrive} />
                     <p>
-                        {_ts('leads', 'googleDriveLabel')}
+                        {_ts('addLeads', 'googleDriveLabel')}
                     </p>
                 </GooglePicker>
                 <DropboxChooser
@@ -420,7 +420,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.dropbox} />
                     <p>
-                        {_ts('leads', 'dropboxLabel')}
+                        {_ts('addLeads', 'dropboxLabel')}
                     </p>
                 </DropboxChooser>
                 <FileInput
@@ -432,7 +432,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.upload} />
                     <p>
-                        {_ts('leads', 'localDiskLabel')}
+                        {_ts('addLeads', 'localDiskLabel')}
                     </p>
                 </FileInput>
                 <Button
@@ -442,7 +442,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.globe} />
                     <p>
-                        {_ts('leads', 'websiteLabel')}
+                        {_ts('addLeads', 'websiteLabel')}
                     </p>
                 </Button>
                 <Button
@@ -452,7 +452,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.clipboard} />
                     <p>
-                        {_ts('leads', 'textLabel')}
+                        {_ts('addLeads', 'textLabel')}
                     </p>
                 </Button>
                 <Button
@@ -462,7 +462,7 @@ export default class LeadButtons extends React.PureComponent {
                 >
                     <span className={iconNames.link} />
                     <p>
-                        {_ts('leads', 'connectorsLabel')}
+                        {_ts('addLeads', 'connectorsLabel')}
                     </p>
                 </Button>
                 {connectorSelectModalShow &&

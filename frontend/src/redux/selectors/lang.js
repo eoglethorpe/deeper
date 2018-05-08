@@ -1,6 +1,5 @@
 import { createSelector } from 'reselect';
 import devLang from '../initial-state/dev-lang';
-import { groupList } from '../../vendor/react-store/utils/common';
 
 const emptyObject = {};
 const emptyArray = [];
@@ -244,6 +243,29 @@ export const problemsWithStringsSelector = createSelector(
     },
 );
 
+export const problemCountsWithStringsSelector = createSelector(
+    problemsWithStringsSelector,
+    problems => Object.keys(problems).reduce(
+        (acc, key) => {
+            const problemValues = Object.values(problems[key]);
+
+            let errorCount = 0;
+            let warningCount = 0;
+            problemValues.forEach((problem) => {
+                if (problem.type === 'error') {
+                    errorCount += problem.instances.length;
+                } else if (problem.type === 'warning') {
+                    warningCount += problem.instances.length;
+                }
+            });
+
+            acc[key] = { errorCount, warningCount };
+            return acc;
+        },
+        {},
+    ),
+);
+
 export const allStringsSelector = createSelector(
     selectedStringsSelector,
     duplicatedStringsSelector,
@@ -288,10 +310,10 @@ export const linkStringsSelector = createSelector(
 
 export const linkKeysSelector = createSelector(
     usageMapSelector,
-    usedMaps => Object.keys(usedMaps),
+    usedMaps => Object.keys(usedMaps).sort(),
 );
 
 export const linkNamesSelector = createSelector(
     usageMapSelector,
-    usedMaps => Object.keys(usedMaps),
+    usedMaps => Object.keys(usedMaps).sort(),
 );

@@ -43,7 +43,7 @@ export default class ApplyAll extends React.PureComponent {
                     <AccentButton
                         className={styles.applyButton}
                         transparent
-                        title={_ts('leads', 'applyAllButtonTitle')}
+                        title={_ts('addLeads', 'applyAllButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllClick(identiferName)}
                         tabIndex="-1"
@@ -53,7 +53,7 @@ export default class ApplyAll extends React.PureComponent {
                     <WarningButton
                         className={styles.applyButton}
                         transparent
-                        title={_ts('leads', 'applyAllBelowButtonTitle')}
+                        title={_ts('addLeads', 'applyAllBelowButtonTitle')}
                         disabled={disabled}
                         onClick={() => onApplyAllBelowClick(identiferName)}
                         tabIndex="-1"

@@ -4,10 +4,12 @@ $radius-button-border: 2px;
 
 .action-buttons {
     display: flex;
+    align-items: center;
     flex-shrink: 0;
 
     .movement-buttons {
-        margin-right: $spacing-medium;
+        flex-shrink: 0;
+        margin: 0 $spacing-medium;
 
         >button:first-child {
             margin-right: $spacing-extra-small-alt;

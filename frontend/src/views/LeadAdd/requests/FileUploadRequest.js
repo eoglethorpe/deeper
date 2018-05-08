@@ -77,7 +77,7 @@ export default class FileUploadRequest {
             },
             faramErrors: {
                 $internal: [
-                    `${_ts('leads', 'fileUploadFailText')} ${response.errors.file[0]}`,
+                    `${_ts('addLeads', 'fileUploadFailText')} ${response.errors.file[0]}`,
                 ],
             },
             uiState: { serverError: false },

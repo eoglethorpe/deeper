@@ -14,6 +14,7 @@ import {
 } from '../../vendor/react-store/utils/common';
 import { CoordinatorBuilder } from '../../vendor/react-store/utils/coordinate';
 import List from '../../vendor/react-store/components/View/List';
+import Message from '../../vendor/react-store/components/View/Message';
 import BoundError from '../../vendor/react-store/components/General/BoundError';
 
 import AppError from '../../components/AppError';
@@ -272,12 +273,9 @@ export default class LeadAdd extends React.PureComponent {
                     </div>
                     {
                         addLeadViewLeads.length === 0 ? (
-                            <div className={styles.nolead}>
-                                <h2>
-                                    {/* FIXME: use Message component */}
-                                    { _ts('leads', 'noLeadsText') }
-                                </h2>
-                            </div>
+                            <Message>
+                                { _ts('addLeads', 'noLeadsText') }
+                            </Message>
                         ) : (
                             <List
                                 data={addLeadViewLeads}
