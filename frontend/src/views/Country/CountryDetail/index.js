@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import { connect } from 'react-redux';
 import { Prompt } from 'react-router-dom';
 
+import Faram, { requiredCondition } from '../../../vendor/react-store/components/Input/Faram';
 import DangerButton from '../../../vendor/react-store/components/Action/Button/DangerButton';
 import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
 import MultiViewContainer from '../../../vendor/react-store/components/View/MultiViewContainer';
@@ -10,10 +11,6 @@ import Confirm from '../../../vendor/react-store/components/View/Modal/Confirm';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import WarningButton from '../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../vendor/react-store/components/View/LoadingAnimation';
-import Form, {
-    requiredCondition,
-} from '../../../vendor/react-store/components/Input/Form';
-
 import {
     countryDetailSelector,
     regionDetailSelector,
@@ -275,6 +272,31 @@ export default class CountryDetail extends React.PureComponent {
         this.startRequestForRegionDetailPatch(this.props.countryId, values);
     };
 
+    handleFaramChange = (formValues, formFieldErrors, formErrors) => {
+        const regionDetails = {
+            formValues,
+            formFieldErrors,
+            formErrors,
+            pristine: true,
+        };
+
+        const { projectId } = this.props;
+
+        if (projectId) {
+            this.props.setRegionDetails({
+                regionDetails,
+                regionId: this.props.countryId,
+                projectId,
+            });
+        } else {
+            this.props.setRegionDetails({
+                regionDetails,
+                regionId: this.props.countryId,
+            });
+        }
+    };
+
+
     deleteActiveCountry = (confirm) => {
         if (confirm) {
             const { countryDetail } = this.props;
@@ -311,27 +333,18 @@ export default class CountryDetail extends React.PureComponent {
                                 <DangerButton onClick={this.handleDeleteButtonClick}>
                                     {_ts('countries', 'deleteCountryButtonLabel')}
                                 </DangerButton>
-                                <Form
-                                    failureCallback={this.failureCallback}
-                                    successCallback={this.successCallback}
-                                    schema={this.schema}
-                                    fieldErrors={formFieldErrors}
-                                    formErrors={formErrors}
-                                    value={formValues}
+                                <WarningButton
+                                    disabled={!pristine}
+                                    onClick={this.handleDiscardButtonClick}
                                 >
-                                    <WarningButton
-                                        disabled={!pristine}
-                                        onClick={this.handleDiscardButtonClick}
-                                    >
-                                        {_ts('countries', 'discardButtonLabel')}
-                                    </WarningButton>
-                                    <SuccessButton
-                                        type="submit"
-                                        disabled={!pristine}
-                                    >
-                                        {_ts('countries', 'saveButtonLabel')}
-                                    </SuccessButton>
-                                </Form>
+                                    {_ts('countries', 'discardButtonLabel')}
+                                </WarningButton>
+                                <SuccessButton
+                                    type="submit"
+                                    disabled={!pristine}
+                                >
+                                    {_ts('countries', 'saveButtonLabel')}
+                                </SuccessButton>
                             </Fragment>
                         }
                         <Confirm
@@ -369,7 +382,9 @@ export default class CountryDetail extends React.PureComponent {
         } = this.props;
 
         const {
-            pristine,
+            formErrors = {},
+            formValues = {},
+            pristine = false,
         } = this.props.regionDetail;
 
         const HeaderWithTabs = this.renderHeader;
@@ -391,31 +406,41 @@ export default class CountryDetail extends React.PureComponent {
                     }
                 />
                 <div className={`${className} ${styles.countryDetail}`}>
-                    { loading &&
-                        <LoadingAnimation
-                            className={styles.loadingAnimation}
-                            large
-                        />
-                    }
-                    { !activeUser.isSuperuser ? (
-                        <div className={styles.detailsNoEdit}>
-                            <RegionDetailView
-                                className={styles.regionDetailBox}
-                                countryId={countryId}
+                    <Faram
+                        onChange={this.handleFaramChange}
+                        onValidationFailure={this.handleValidationFailure}
+                        onValidationSuccess={this.handleValidationSuccess}
+                        schema={this.schema}
+                        value={formValues}
+                        error={formErrors}
+                        disabled={loading}
+                    >
+                        { loading &&
+                            <LoadingAnimation
+                                className={styles.loadingAnimation}
+                                large
                             />
-                            <div className={styles.mapContainer}>
-                                <RegionMap regionId={countryId} />
+                        }
+                        { !activeUser.isSuperuser ? (
+                            <div className={styles.detailsNoEdit}>
+                                <RegionDetailView
+                                    className={styles.regionDetailBox}
+                                    countryId={countryId}
+                                />
+                                <div className={styles.mapContainer}>
+                                    <RegionMap regionId={countryId} />
+                                </div>
                             </div>
-                        </div>
-                    ) : (
-                        <Fragment>
-                            <HeaderWithTabs />
-                            <MultiViewContainer
-                                useHash
-                                views={this.views}
-                            />
-                        </Fragment>
-                    )}
+                        ) : (
+                            <Fragment>
+                                <HeaderWithTabs />
+                                <MultiViewContainer
+                                    useHash
+                                    views={this.views}
+                                />
+                            </Fragment>
+                        )}
+                    </Faram>
                 </div>
             </Fragment>
         );
