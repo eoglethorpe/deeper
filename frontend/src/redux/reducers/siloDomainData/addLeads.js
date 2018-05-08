@@ -36,6 +36,47 @@ export const LA__LEAD_REMOVE_SAVED = 'siloDomainData/LA__LEAD_REMOVE_SAVED';
 
 export const LA__SET_CONNECTORS = 'siloDomainData/LA__SET_CONNECTORS';
 
+export const LA__SET_REMOVE_MODAL_STATE = 'siloDomainData/LA__SET_LEAD_REMOVE_MODAL_STATE ';
+export const LA__UNSET_REMOVE_MODAL_STATE = 'siloDomainData/LA__UNSET_LEAD_REMOVE_MODAL_STATE ';
+
+export const LA__SET_LEAD_REST = 'siloDomainData/LA__SET_LEAD_REST';
+export const LA__SET_LEAD_UPLOADS = 'siloDomainData/LA__SET_LEAD_UPLOADS';
+export const LA__SET_LEAD_DRIVE_REST = 'siloDomainData/LA__SET_LEAD_DRIVE_REST';
+export const LA__SET_LEAD_DROPBOX_REST = 'siloDomainData/LA__SET_LEAD_DROPBOX_REST';
+
+
+export const addLeadViewSetRemoveModalStateAction = ({ show, mode, leadId }) => ({
+    type: LA__SET_REMOVE_MODAL_STATE,
+    show,
+    mode,
+    leadId,
+});
+export const addLeadViewUnsetRemoveModalStateAction = () => ({
+    type: LA__UNSET_REMOVE_MODAL_STATE,
+});
+
+
+export const addLeadViewSetLeadRestsAction = ({ leadIds, value }) => ({
+    type: LA__SET_LEAD_REST,
+    leadIds,
+    value,
+});
+export const addLeadViewSetLeadUploadsAction = ({ leadIds, value }) => ({
+    type: LA__SET_LEAD_UPLOADS,
+    leadIds,
+    value,
+});
+export const addLeadViewSetLeadDriveRestsAction = ({ leadIds, value }) => ({
+    type: LA__SET_LEAD_DRIVE_REST,
+    leadIds,
+    value,
+});
+export const addLeadViewSetLeadDropboxRestsAction = ({ leadIds, value }) => ({
+    type: LA__SET_LEAD_DROPBOX_REST,
+    leadIds,
+    value,
+});
+
 // ACTION-CREATOR
 
 export const addLeadViewSetFiltersAction = filters => ({
@@ -57,7 +98,6 @@ export const addLeadViewAddLeadsAction = leads => ({
     leads,
 });
 
-// FIXME: changed this
 export const addLeadViewLeadChangeAction = ({
     leadId, faramValues, faramErrors, uiState,
 }) => ({
@@ -448,6 +488,53 @@ const addLeadViewSetConnectors = (state, action) => {
     return update(state, settings);
 };
 
+
+// creator
+const addLeadViewSetTransient = (transientType, transientAttr) => (state, action) => {
+    const { leadIds, value } = action;
+
+    const updateSettings = leadIds.reduce(
+        (acc, leadId) => {
+            acc[leadId] = { $auto: {
+                [transientAttr]: { $set: value },
+            } };
+            return acc;
+        },
+        {},
+    );
+
+    const settings = {
+        addLeadView: { $auto: {
+            [transientType]: { $auto: updateSettings },
+        } },
+    };
+    return update(state, settings);
+};
+
+const addLeadViewSetRemoveModalState = (state, action) => {
+    const { show, mode, leadId } = action;
+    const settings = {
+        addLeadView: { $auto: {
+            removeModalState: {
+                $set: {
+                    show,
+                    mode,
+                    leadId,
+                },
+            },
+        } },
+    };
+    return update(state, settings);
+};
+const addLeadViewUnsetRemoveModalState = (state) => {
+    const settings = {
+        addLeadView: {
+            removeModalState: { $set: undefined },
+        },
+    };
+    return update(state, settings);
+};
+
 // REDUCER MAP
 
 const reducers = {
@@ -464,5 +551,11 @@ const reducers = {
     [LA__COPY_ALL_BELOW]: addLeadViewCopyAll('below'),
     [LA__LEAD_REMOVE_SAVED]: addLeadViewRemoveSavedLeads,
     [LA__SET_CONNECTORS]: addLeadViewSetConnectors,
+    [LA__SET_LEAD_REST]: addLeadViewSetTransient('leadRests', 'pending'),
+    [LA__SET_LEAD_UPLOADS]: addLeadViewSetTransient('leadUploads', 'progress'),
+    [LA__SET_LEAD_DRIVE_REST]: addLeadViewSetTransient('leadDriveRests', 'pending'),
+    [LA__SET_LEAD_DROPBOX_REST]: addLeadViewSetTransient('leadDropboxRests', 'pending'),
+    [LA__SET_REMOVE_MODAL_STATE]: addLeadViewSetRemoveModalState,
+    [LA__UNSET_REMOVE_MODAL_STATE]: addLeadViewUnsetRemoveModalState,
 };
 export default reducers;

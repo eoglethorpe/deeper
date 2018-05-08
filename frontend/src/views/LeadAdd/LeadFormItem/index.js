@@ -119,7 +119,7 @@ export default class LeadFormItem extends React.PureComponent {
                 const webInfo = response;
 
                 const leadValues = leadAccessor.getFaramValues(this.props.lead);
-                const leadFieldErrors = leadAccessor.getFieldErrors(this.props.lead);
+                const leadFieldErrors = leadAccessor.getFaramErrors(this.props.lead);
 
                 const values = { ...leadValues };
                 const formFieldErrors = { ...leadFieldErrors };

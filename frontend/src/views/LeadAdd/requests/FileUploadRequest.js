@@ -1,5 +1,4 @@
 import { UploadBuilder } from '../../../vendor/react-store/utils/upload';
-import update from '../../../vendor/react-store/utils/immutable-update';
 import { leadAccessor } from '../../../entities/lead';
 
 import {
@@ -14,14 +13,12 @@ export default class FileUploadRequest {
             uploadCoordinator,
             addLeadViewLeadChange,
             getLeadFromId,
-            setState,
-            getState,
+            setLeadUploads,
         } = params;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.uploadCoordinator = uploadCoordinator;
         this.getLeadFromId = getLeadFromId;
-        this.setState = setState;
-        this.getState = getState;
+        this.setLeadUploads = setLeadUploads;
     }
 
     create = ({ file, leadId }) => {
@@ -41,15 +38,9 @@ export default class FileUploadRequest {
 
     // CALLBACKS
     handleLeadUploadPreLoad = leadId => () => {
-        // FOR UPLOAD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: 0 },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+        this.setLeadUploads({
+            leadIds: [leadId],
+            value: 0,
         });
     }
 
@@ -66,15 +57,9 @@ export default class FileUploadRequest {
             uiState: { serverError: false },
         });
 
-        // FOR UPLAOD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: undefined },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+        this.setLeadUploads({
+            leadIds: [leadId],
+            value: undefined,
         });
 
         this.uploadCoordinator.notifyComplete(leadId);
@@ -98,34 +83,18 @@ export default class FileUploadRequest {
             uiState: { serverError: false },
         });
 
-        // FOR UPLAOD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: undefined },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+        this.setLeadUploads({
+            leadIds: [leadId],
+            value: undefined,
         });
 
         this.uploadCoordinator.notifyComplete(leadId);
     }
 
     handleLeadUploadProgress = leadId => (progress) => {
-        const theLeadUpload = this.getState('leadUploads')[leadId];
-        if (!theLeadUpload || theLeadUpload.progress === progress) {
-            return;
-        }
-        // FOR UPLAOD
-        this.setState((state) => {
-            const uploadSettings = {
-                [leadId]: { $auto: {
-                    progress: { $set: progress },
-                } },
-            };
-            const leadUploads = update(state.leadUploads, uploadSettings);
-            return { leadUploads };
+        this.setLeadUploads({
+            leadIds: [leadId],
+            value: progress,
         });
     }
 }

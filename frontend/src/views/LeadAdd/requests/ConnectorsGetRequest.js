@@ -1,8 +1,9 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForConnectorsOfProject,
 } from '../../../rest';
+import _ts from '../../../ts';
 
 import schema from '../../../schema';
 import notify from '../../../notify';
@@ -33,9 +34,9 @@ export default class ConnectorsGetRequest {
 
     failure = () => {
         notify.send({
-            title: this.props.notificationStrings('connectorTitle'),
+            title: _ts('notification', 'connectorTitle'),
             type: notify.type.ERROR,
-            message: this.props.notificationStrings('connectorGetFailure'),
+            message: _ts('notification', 'connectorGetFailure'),
             duration: notify.duration.MEDIUM,
         });
     }
@@ -47,7 +48,7 @@ export default class ConnectorsGetRequest {
     create = (projectId) => {
         const connectorsRequest = new FgRestBuilder()
             .url(createUrlForConnectorsOfProject(projectId))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ dataLoading: true }); })
             .postLoad(() => { this.props.setState({ dataLoading: false }); })
             .success(this.success(projectId))

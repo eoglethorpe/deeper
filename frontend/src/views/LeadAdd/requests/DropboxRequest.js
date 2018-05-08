@@ -1,5 +1,4 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
-import update from '../../../vendor/react-store/utils/immutable-update';
 import schema from '../../../schema';
 import { leadAccessor } from '../../../entities/lead';
 
@@ -14,12 +13,12 @@ export default class DropboxRequest {
             dropboxUploadCoordinator,
             addLeadViewLeadChange,
             getLeadFromId,
-            setState,
+            setLeadDropboxRests,
         } = params;
         this.dropboxUploadCoordinator = dropboxUploadCoordinator;
         this.addLeadViewLeadChange = addLeadViewLeadChange;
         this.getLeadFromId = getLeadFromId;
-        this.setState = setState;
+        this.setLeadDropboxRests = setLeadDropboxRests;
     }
 
     create = ({ leadId, title, fileUrl }) => {
@@ -49,15 +48,9 @@ export default class DropboxRequest {
                 uiState: { pristine: false, serverError: false },
             });
 
-            // FOR UPLAOD
-            this.setState((state) => {
-                const uploadSettings = {
-                    [leadId]: { $auto: {
-                        pending: { $set: undefined },
-                    } },
-                };
-                const leadDropboxRests = update(state.leadDropboxRests, uploadSettings);
-                return { leadDropboxRests };
+            this.setLeadDropboxRests({
+                leadIds: [leadId],
+                value: undefined,
             });
 
             this.dropboxUploadCoordinator.notifyComplete(leadId);

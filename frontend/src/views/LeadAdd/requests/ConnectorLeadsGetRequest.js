@@ -1,7 +1,7 @@
 import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import { randomString } from '../../../vendor/react-store/utils/common';
 import {
-    createParamsForUser,
+    createParamsForGet,
     createUrlForConnectorleads,
 } from '../../../rest';
 import _ts from '../../../ts';
@@ -53,7 +53,7 @@ export default class ConnectorLeadsRequest {
     create = (connectorId) => {
         const connectorLeadsRequest = new FgRestBuilder()
             .url(createUrlForConnectorleads(connectorId))
-            .params(createParamsForUser)
+            .params(createParamsForGet)
             .preLoad(() => { this.props.setState({ connectorLeadsLoading: true }); })
             .postLoad(() => { this.props.setState({ connectorLeadsLoading: false }); })
             .success(this.success(connectorId))
