@@ -1,7 +1,7 @@
 @import '../../../../../stylesheets/base';
 @import '../../../../../stylesheets/modal';
 
-$ce-detail-form-width: 240px;
+$ce-detail-form-width: 480px;
 $height-header: 39px;
 
 .category-editor-detail {
@@ -33,8 +33,22 @@ $height-header: 39px;
         height: calc(100% - #{$height-header});
 
         .ce-detail-form {
-            display: block;
+            display: flex;
+            position: relative;
+            flex-direction: column;
+            padding: $spacing-medium;
             width: $ce-detail-form-width;
+
+            .action-buttons {
+                display: flex;
+                flex-shrink: 0;
+                justify-content: flex-end;
+                margin-top: $spacing-medium;
+
+                button {
+                    margin-left: $spacing-medium;
+                }
+            }
         }
     }
 }

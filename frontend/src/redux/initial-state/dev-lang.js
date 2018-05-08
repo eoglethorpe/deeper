@@ -635,6 +635,7 @@ const initialDevLangState = {
         1123: 'You need project admin rights to change this setting.',
         1124: 'Remove project',
         1125: 'Error while fetching projects of current user',
+        1126: 'Error while trying to save project.',
     },
     links: {
         af: {
@@ -1345,6 +1346,7 @@ const initialDevLangState = {
             stringManagement: 5572,
         },
         project: {
+            projectSaveFailure: 1126,
             headerProjects: 173,
             addProjectButtonLabel: 301,
             searchProjectPlaceholder: 302,

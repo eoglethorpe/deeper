@@ -9,6 +9,13 @@ import AccentButton from '../../../../../vendor/react-store/components/Action/Bu
 import WarningButton from '../../../../../vendor/react-store/components/Action/Button/WarningButton';
 import LoadingAnimation from '../../../../../vendor/react-store/components/View/LoadingAnimation';
 import Confirm from '../../../../../vendor/react-store/components/View/Modal/Confirm';
+import Faram, {
+    requiredCondition,
+} from '../../../../../vendor/react-store/components/Input/Faram';
+import DangerButton from '../../../../../vendor/react-store/components/Action/Button/DangerButton';
+import SuccessButton from '../../../../../vendor/react-store/components/Action/Button/SuccessButton';
+import NonFieldErrors from '../../../../../vendor/react-store/components/Input/NonFieldErrors';
+import TextInput from '../../../../../vendor/react-store/components/Input/TextInput';
 
 import {
     createParamsForProjectPatch,
@@ -34,7 +41,6 @@ import {
     pathNames,
 } from '../../../../../constants';
 
-import Form from './Form';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -74,11 +80,16 @@ export default class ProjectCeDetail extends React.PureComponent {
             cloneConfirmModalShow: false,
             useConfirmModalShow: false,
 
-            formValues: { ...ceDetails },
-            formErrors: {},
-            formFieldErrors: {},
+            faramValues: { ...ceDetails },
+            faramErrors: {},
             pristine: false,
             pending: false,
+        };
+
+        this.schema = {
+            fields: {
+                title: [requiredCondition],
+            },
         };
     }
 
@@ -190,37 +201,34 @@ export default class ProjectCeDetail extends React.PureComponent {
         this.setState({ useConfirmModalShow: true });
     }
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    // faram RELATED
+    handleFaramChange = (values, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues: values,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
+    handleValidationFailure = (faramErrors) => {
         this.setState({
-            formFieldErrors,
-            formErrors,
+            faramErrors,
             pristine: false,
         });
     };
 
-    handleFormCancel = () => {
+    handlefaramCancel = () => {
         const { ceDetails } = this.props;
 
         this.setState({
-            formValues: { ...ceDetails },
-            formErrors: {},
-            formFieldErrors: {},
+            faramValues: { ...ceDetails },
+            faramErrors: {},
             pristine: false,
             pending: false,
         });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         if (this.cePutRequest) {
             this.cePutRequest.stop();
         }
@@ -316,33 +324,55 @@ export default class ProjectCeDetail extends React.PureComponent {
         const {
             cloneConfirmModalShow,
             useConfirmModalShow,
-            formErrors,
-            formFieldErrors,
+            faramErrors,
             pristine,
             pending,
-            formValues,
+            faramValues,
         } = this.state;
 
         const Header = this.renderHeader;
+        const readOnly = !ceDetails.isAdmin;
 
         return (
             <div className={styles.categoryEditorDetail}>
                 { pending && <LoadingAnimation /> }
                 <Header />
                 <div className={styles.content}>
-                    <Form
-                        formValues={formValues}
-                        formErrors={formErrors}
-                        formFieldErrors={formFieldErrors}
-                        changeCallback={this.changeCallback}
-                        failureCallback={this.failureCallback}
-                        handleFormCancel={this.handleFormCancel}
-                        successCallback={this.successCallback}
+                    <Faram
                         className={styles.ceDetailForm}
-                        pristine={pristine}
-                        pending={pending}
-                        readOnly={!ceDetails.isAdmin}
-                    />
+                        onChange={this.handleFaramChange}
+                        onValidationFailure={this.handleValidationFailure}
+                        onValidationSuccess={this.handleValidationSuccess}
+                        schema={this.schema}
+                        value={faramValues}
+                        error={faramErrors}
+                        disabled={pending}
+                    >
+                        { !readOnly &&
+                            <div className={styles.actionButtons}>
+                                <DangerButton
+                                    onClick={this.handlefaramCancel}
+                                    disabled={pending || !pristine}
+                                >
+                                    {_ts('project', 'modalRevert')}
+                                </DangerButton>
+                                <SuccessButton
+                                    disabled={pending || !pristine}
+                                    type="submit"
+                                >
+                                    {_ts('project', 'modalSave')}
+                                </SuccessButton>
+                            </div>
+                        }
+                        <NonFieldErrors faramElement />
+                        <TextInput
+                            label={_ts('project', 'addCeTitleLabel')}
+                            faramElementName="title"
+                            placeholder={_ts('project', 'addCeTitlePlaceholder')}
+                            className={styles.name}
+                            readOnly={readOnly}
+                        />
+                    </Faram>
                 </div>
                 <Confirm
                     show={useConfirmModalShow}
