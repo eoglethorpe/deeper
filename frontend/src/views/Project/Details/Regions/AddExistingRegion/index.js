@@ -9,12 +9,12 @@ import DangerButton from '../../../../../vendor/react-store/components/Action/Bu
 import PrimaryButton from '../../../../../vendor/react-store/components/Action/Button/PrimaryButton';
 import NonFieldErrors from '../../../../../vendor/react-store/components/Input/NonFieldErrors';
 import TabularSelectInput from '../../../../../vendor/react-store/components/Input/TabularSelectInput';
-import Form, {
+import Faram, {
     requiredCondition,
-} from '../../../../../vendor/react-store/components/Input/Form';
+} from '../../../../../vendor/react-store/components/Input/Faram';
 
 import {
-    transformResponseErrorToFormError,
+    alterResponseErrorToFaramError,
     createParamsForProjectPatch,
     createUrlForProject,
 } from '../../../../../rest';
@@ -73,14 +73,13 @@ export default class AddExistingRegion extends React.PureComponent {
             projectOptions,
         } = props;
 
-        const formValues = {
+        const faramValues = {
             regions: [],
         };
 
         this.state = {
-            formErrors: {},
-            formFieldErrors: {},
-            formValues,
+            faramErrors: {},
+            faramValues,
 
             pending: false,
             pristine: false,
@@ -122,6 +121,7 @@ export default class AddExistingRegion extends React.PureComponent {
         const projectPatchRequest = new FgRestBuilder()
             .url(createUrlForProject(projectId))
             .params(() => createParamsForProjectPatch(newProjectDetails))
+            .postLoad(() => this.setState({ pristine: false }))
             .success((response) => {
                 try {
                     schema.validate(response, 'project');
@@ -149,14 +149,8 @@ export default class AddExistingRegion extends React.PureComponent {
                     message: _ts('notification', 'countryCreateFailure'),
                     duration: notify.duration.MEDIUM,
                 });
-                const {
-                    formFieldErrors,
-                    formErrors,
-                } = transformResponseErrorToFormError(response.errors);
-                this.setState({
-                    formFieldErrors,
-                    formErrors,
-                });
+                const faramErrors = alterResponseErrorToFaramError(response.errors);
+                this.setState({ faramErrors });
             })
             .fatal(() => {
                 notify.send({
@@ -166,31 +160,27 @@ export default class AddExistingRegion extends React.PureComponent {
                     duration: notify.duration.MEDIUM,
                 });
                 this.setState({
-                    formErrors: { errors: ['Error while trying to save project.'] },
+                    faramErrors: { $internal: [_ts('project', 'projectSaveFailure')] },
                 });
             })
             .build();
         return projectPatchRequest;
     };
 
-    // FORM RELATED
-    changeCallback = (values, formFieldErrors, formErrors) => {
+    // faram RELATED
+    handleFaramChange = (values, faramErrors) => {
         this.setState({
-            formValues: values,
-            formFieldErrors,
-            formErrors,
+            faramValues: values,
+            faramErrors,
             pristine: true,
         });
     };
 
-    failureCallback = (formFieldErrors, formErrors) => {
-        this.setState({
-            formFieldErrors,
-            formErrors,
-        });
+    handleValidationFailure = (faramErrors) => {
+        this.setState({ faramErrors });
     };
 
-    successCallback = (values) => {
+    handleValidationSuccess = (values) => {
         const {
             projectId,
             projectDetails,
@@ -216,16 +206,12 @@ export default class AddExistingRegion extends React.PureComponent {
             regionsKeys,
         );
         this.projectPatchRequest.start();
-
-        // FIXME: probably move this to callback of request
-        this.setState({ pristine: false });
     };
 
     render() {
         const {
-            formErrors,
-            formFieldErrors,
-            formValues,
+            faramErrors,
+            faramValues,
 
             pending,
             pristine,
@@ -236,24 +222,20 @@ export default class AddExistingRegion extends React.PureComponent {
         const { className } = this.props;
 
         return (
-            <Form
+            <Faram
                 className={`${className} ${styles.addRegionForm}`}
-                changeCallback={this.changeCallback}
-                failureCallback={this.failureCallback}
-                successCallback={this.successCallback}
+                onChange={this.handleFaramChange}
+                onValidationFailure={this.handleValidationFailure}
+                onValidationSuccess={this.handleValidationSuccess}
                 schema={this.schema}
-                value={formValues}
-                formErrors={formErrors}
-                fieldErrors={formFieldErrors}
+                value={faramValues}
+                faramErrors={faramErrors}
                 disabled={pending}
             >
                 { pending && <LoadingAnimation /> }
-                <NonFieldErrors
-                    className={styles.nonFieldErrors}
-                    formerror=""
-                />
+                <NonFieldErrors faramElement />
                 <TabularSelectInput
-                    formname="regions"
+                    faramElementName="regions"
                     className={styles.tabularSelect}
                     blackList={regionsBlackList}
                     options={regionOptions}
@@ -272,7 +254,7 @@ export default class AddExistingRegion extends React.PureComponent {
                         {_ts('project', 'modalUpdate')}
                     </PrimaryButton>
                 </div>
-            </Form>
+            </Faram>
         );
     }
 }

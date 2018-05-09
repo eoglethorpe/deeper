@@ -453,8 +453,8 @@ export default class ProjectRegionDetail extends React.PureComponent {
 
         return (
             <Faram
-                onChange={this.handleFaramChange}
                 className={styles.regionDetailsContainer}
+                onChange={this.handleFaramChange}
                 onValidationFailure={this.handleValidationFailure}
                 onValidationSuccess={this.handleValidationSuccess}
                 schema={this.schema}
