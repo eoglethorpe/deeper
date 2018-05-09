@@ -48,6 +48,7 @@ export const renderWidget = (k, data) => {
 
     return (
         <Component
+            className="widget"
             {...commonProps}
             {...typeSpecificProps[fieldType]}
         />
