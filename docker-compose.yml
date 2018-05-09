@@ -32,6 +32,3 @@ services:
             - ./media:/media
         ports:
             - '3000:3000'
-        depends_on:
-            - db
-            - redis

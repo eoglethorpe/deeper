@@ -22,6 +22,6 @@ fi
 
 if [ "${PROG_TYPE}" == "react" ]; then
     cd frontend
-    yarn add --force node-sass@4.7.2
+    yarn add --dev --force node-sass@4.7.2
     yarn start
 fi
