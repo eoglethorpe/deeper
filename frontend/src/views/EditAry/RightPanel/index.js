@@ -7,6 +7,7 @@ import FixedTabs from '../../../vendor/react-store/components/View/FixedTabs';
 import SuccessButton from '../../../vendor/react-store/components/Action/Button/SuccessButton';
 import Faram, {
     requiredCondition,
+    dateCondition,
 } from '../../../vendor/react-store/components/Input/Faram';
 import { getObjectChildren } from '../../../vendor/react-store/utils/common';
 import { median, sum, bucket } from '../../../vendor/react-store/utils/stats';
@@ -218,7 +219,11 @@ export default class RightPanel extends React.PureComponent {
         const dynamicFields = {};
         Object.keys(aryTemplateMetadata).forEach((key) => {
             aryTemplateMetadata[key].fields.forEach((field) => {
-                dynamicFields[field.id] = [requiredCondition];
+                if (field.fieldType === 'date') {
+                    dynamicFields[field.id] = [requiredCondition, dateCondition];
+                } else {
+                    dynamicFields[field.id] = [requiredCondition];
+                }
             });
         });
 
@@ -257,7 +262,11 @@ export default class RightPanel extends React.PureComponent {
         Object.keys(aryTemplateMethodology).forEach((key) => {
             const methodologyGroup = aryTemplateMethodology[key];
             methodologyGroup.fields.forEach((field) => {
-                dynamicFields[field.id] = [requiredCondition];
+                if (field.fieldType === 'date') {
+                    dynamicFields[field.id] = [requiredCondition, dateCondition];
+                } else {
+                    dynamicFields[field.id] = [requiredCondition];
+                }
             });
         });
         schema.fields.attributes.member.fields = dynamicFields;
