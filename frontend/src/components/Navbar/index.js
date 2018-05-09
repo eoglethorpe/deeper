@@ -244,8 +244,8 @@ export default class Navbar extends React.PureComponent {
                     className={styles.brand}
                 >
                     <ReactSVG
-                        wrapperClassName={styles.iconWrapper}
-                        className={styles.icon}
+                        className={styles.iconWrapper}
+                        svgClassName={styles.icon}
                         path={logo}
                     />
                     <div className={styles.title}>

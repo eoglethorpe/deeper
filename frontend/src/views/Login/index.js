@@ -133,7 +133,12 @@ export default class Login extends React.PureComponent {
         const query = RestRequest.parseUrlParams(location.hash.replace('#', ''));
         // Login User with HID access_token
         if (query.access_token) {
-            const params = createParamsForTokenCreateHid(query);
+            const params = createParamsForTokenCreateHid({
+                accessToken: query.access_token,
+                expiresIn: query.expires_in,
+                state: query.state,
+                tokenType: query.token_type,
+            });
             this.login({ url: urlForTokenCreateHid, params });
         }
     }
@@ -234,7 +239,7 @@ export default class Login extends React.PureComponent {
             <div className={styles.login}>
                 <div className={styles.deepContainer}>
                     <ReactSVG
-                        className={styles.logo}
+                        svgClassName={styles.logo}
                         path={logo}
                     />
                     <h2 className={styles.heading}>

@@ -33,7 +33,13 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     componentDidMount() {
-        const { attribute, data, api, entryId, id } = this.props;
+        const {
+            attribute,
+            data,
+            api,
+            entryId,
+            id,
+        } = this.props;
         if (data) {
             if ((attribute || emptyObject).selectedScale === undefined) {
                 const newSelectedScale = data.value;

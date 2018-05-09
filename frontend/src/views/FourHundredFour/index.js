@@ -26,7 +26,7 @@ export default class FourHundredFour extends React.PureComponent {
         return (
             <div className={styles.fourHundredFour}>
                 <ReactSVG
-                    className={styles.deepLogo}
+                    svgClassName={styles.deepLogo}
                     path={logo}
                 />
                 <h1 className={styles.heading}>

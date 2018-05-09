@@ -100,7 +100,7 @@ export const userGroupProjectSelector = createSelector(
         Object.keys(projects)
             .reduce(
                 (acc, projectId) => {
-                    const userGroups = (projects[projectId] || emptyObject).userGroups;
+                    const { userGroups } = projects[projectId] || emptyObject;
                     const hasUserGroup = userGroups && userGroups.find(
                         userGroup => (userGroup.id === userGroupId),
                     );

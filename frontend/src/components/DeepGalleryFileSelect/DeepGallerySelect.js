@@ -172,8 +172,8 @@ export default class DgSelect extends React.PureComponent {
     }
 
     getTableData = ({ galleryFiles, selected, searchInputValue }) => {
-        const filterdGalleryFiles = galleryFiles.filter(file =>
-            caseInsensitiveSubmatch(file.title, searchInputValue),
+        const filterdGalleryFiles = galleryFiles.filter(
+            file => caseInsensitiveSubmatch(file.title, searchInputValue),
         );
 
         return filterdGalleryFiles.map(file => (

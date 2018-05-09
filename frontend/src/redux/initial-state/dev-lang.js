@@ -1,5 +1,6 @@
 const initialDevLangState = {
     strings: {
+        1000000: 'Unused String this is',
         1: 'Owner',
         2: 'Created',
         3: 'Published',
@@ -1470,6 +1471,7 @@ const initialDevLangState = {
             modalCreate: 179,
         },
         user: {
+            badbadlink: 1212121121,
             firstNameLabel: 150,
             firstNamePlaceholder: 151,
             lastNameLabel: 152,

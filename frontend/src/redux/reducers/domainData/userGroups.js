@@ -183,7 +183,8 @@ const unsetUserMembership = (state, action) => {
 
     const memberships = ((state.userGroups[userGroupId] || {}).memberships || []);
     const groupMembershipArrayIndex = memberships.findIndex(
-        membership => (membership.id === membershipId));
+        membership => (membership.id === membershipId),
+    );
 
     if (groupMembershipArrayIndex !== -1) {
         const settings = {

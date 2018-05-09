@@ -252,7 +252,9 @@ export default class RegionAdminLevel extends React.PureComponent {
             }
             const { activeAdminLevelDelete } = this.state;
             this.requestForAlDelete = this.createAlDeleteRequest(
-                activeAdminLevelDelete.id, this.props.countryId);
+                activeAdminLevelDelete.id,
+                this.props.countryId,
+            );
             this.requestForAlDelete.start();
         }
 

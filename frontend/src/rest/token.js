@@ -26,13 +26,18 @@ export const createParamsForTokenRefresh = ({ refresh }) => ({
 });
 
 export const urlForTokenCreateHid = `${wsEndpoint}/token/hid/`;
-export const createParamsForTokenCreateHid = ({ access_token, expires_in, state, token_type }) => ({
+export const createParamsForTokenCreateHid = ({
+    accessToken,
+    expiresIn,
+    state,
+    tokenType,
+}) => ({
     method: POST,
     headers: commonHeaderForPostExternal,
     body: JSON.stringify({
-        accessToken: access_token,
-        expiresIn: expires_in,
+        accessToken,
+        expiresIn,
         state,
-        tokenType: token_type,
+        tokenType,
     }),
 });

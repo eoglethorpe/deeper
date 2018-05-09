@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
@@ -11,11 +11,14 @@ import {
 } from '../../vendor/react-store/utils/common';
 import ListView from '../../vendor/react-store/components/View/List/ListView';
 import Table from '../../vendor/react-store/components/View/Table';
+import PrimaryButton from '../../vendor/react-store/components/Action/Button/PrimaryButton';
 import SuccessButton from '../../vendor/react-store/components/Action/Button/SuccessButton';
 import DangerButton from '../../vendor/react-store/components/Action/Button/DangerButton';
+import WarningButton from '../../vendor/react-store/components/Action/Button/WarningButton';
 import VerticalTabs from '../../vendor/react-store/components/View/VerticalTabs';
 import Message from '../../vendor/react-store/components/View/Message';
 import SelectInput from '../../vendor/react-store/components/Input/SelectInput';
+
 import {
     allStringsSelector,
     linkStringsSelector,
@@ -28,6 +31,8 @@ import {
     setSelectedLanguageAction,
     setFallbackLanguageAction,
 } from '../../redux';
+import _ts from '../../ts';
+import { iconNames } from '../../constants';
 
 import styles from './styles.scss';
 
@@ -130,6 +135,25 @@ export default class StringManagement extends React.PureComponent {
                 ),
                 modifier: a => (a.duplicates ? a.duplicates : '-'),
             },
+            {
+                key: 'actions',
+                label: 'Actions',
+                order: 5,
+                modifier: () => (
+                    <Fragment>
+                        <DangerButton
+                            iconName={iconNames.delete}
+                            transparent
+                            smallVerticalPadding
+                        />
+                        <WarningButton
+                            iconName={iconNames.edit}
+                            transparent
+                            smallVerticalPadding
+                        />
+                    </Fragment>
+                ),
+            },
         ];
 
         this.stringsTableDefaultSort = {
@@ -167,6 +191,18 @@ export default class StringManagement extends React.PureComponent {
                 order: 4,
                 sortable: true,
                 comparator: (a, b) => compareNumber(a.refs, b.refs),
+            },
+            {
+                key: 'actions',
+                label: 'Actions',
+                order: 5,
+                modifier: () => (
+                    <WarningButton
+                        iconName={iconNames.edit}
+                        transparent
+                        smallVerticalPadding
+                    />
+                ),
             },
         ];
 
@@ -281,6 +317,8 @@ export default class StringManagement extends React.PureComponent {
             return null;
         }
 
+        console.warn(_ts('user', 'goodLink'));
+
         const className = `
             ${styles.problem}
             ${styles[currentProblem.type]}
@@ -297,6 +335,33 @@ export default class StringManagement extends React.PureComponent {
                 <ListView
                     className={styles.instances}
                     data={currentProblem.instances}
+                    keyExtractor={d => d}
+                    modifier={(key, d) => (
+                        <div key={key}>
+                            {d}
+                            { currentProblem.title === 'Unused string' &&
+                                <DangerButton
+                                    transparent
+                                    smallVerticalPadding
+                                    iconName={iconNames.delete}
+                                />
+                            }
+                            { currentProblem.title === 'Undefined link' &&
+                                <SuccessButton
+                                    transparent
+                                    smallVerticalPadding
+                                    iconName={iconNames.add}
+                                />
+                            }
+                            { currentProblem.title === 'Bad link' &&
+                                <WarningButton
+                                    transparent
+                                    smallVerticalPadding
+                                    iconName={iconNames.edit}
+                                />
+                            }
+                        </div>
+                    )}
                 />
             </div>
         );
@@ -370,6 +435,11 @@ export default class StringManagement extends React.PureComponent {
                         />
                     </div>
                     <div className={styles.actionButtons}>
+                        <PrimaryButton
+                            disabled
+                        >
+                            Add new string
+                        </PrimaryButton>
                         <DangerButton
                             disabled
                         >

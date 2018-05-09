@@ -27,7 +27,6 @@ const propTypes = {
 };
 
 const defaultProps = {
-    className: '',
     title: '',
     geoOptionsByRegion: {},
     geoOptionsById: {},
@@ -95,7 +94,9 @@ export default class GeoModal extends React.PureComponent {
                     acc[geoOption.adminLevel].push(v);
                 }
                 return acc;
-            }, {});
+            },
+            {},
+        );
 
         const groupedValue = Object.entries(adminLevels).sort(l => l[0] - l[1]).map(
             al => ({
