@@ -226,10 +226,6 @@ export default class DgSelect extends React.PureComponent {
     handleUploadButton = (files) => {
         const file = files[0];
 
-        this.setState({
-            pending: true,
-        });
-
         if (this.uploader) {
             this.uploader.stop();
         }
@@ -240,6 +236,7 @@ export default class DgSelect extends React.PureComponent {
             .params(() => createParamsForFileUpload({
                 projects: this.props.projects,
             }))
+            .preLoad(() => this.setState({ pending: true }))
             .postLoad(() => this.setState({ pending: false }))
             .success((response) => {
                 this.setState({
