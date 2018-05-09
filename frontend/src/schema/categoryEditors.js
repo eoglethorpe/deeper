@@ -11,6 +11,7 @@ const categoryEditorSchema = [];
         fields: {
             title: { type: 'string', required: true },
             isAdmin: { type: 'boolean', required: true },
+            projects: { type: 'array.uint' },
             data: { type: 'object' },
         },
     };

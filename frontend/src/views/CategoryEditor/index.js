@@ -521,10 +521,7 @@ export default class CategoryEditor extends React.PureComponent {
                     message={_ts('common', 'youHaveUnsavedChanges')}
                 />
                 <div className={styles.left}>
-                    <DocumentPanel
-                        projectId={projectId}
-                        className={styles.documentPanel}
-                    />
+                    <DocumentPanel className={styles.documentPanel} />
                 </div>
                 <div className={styles.right}>
                     <header className={styles.header}>

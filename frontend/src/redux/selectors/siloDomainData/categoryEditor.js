@@ -39,6 +39,11 @@ export const categoryEditorViewSelector = createSelector(
     view => view.data || emptyObject,
 );
 
+export const categoryEditorProjectsSelector = createSelector(
+    categoryEditorViewFromRouteSelector,
+    view => view.projects || emptyList,
+);
+
 export const categoriesSelector = createSelector(
     categoryEditorViewSelector,
     view => view.categories || emptyList,

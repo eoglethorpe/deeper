@@ -11,6 +11,7 @@ import {
     categoryEditorDocumentsSelector,
     setCeFilesAction,
     ceIdFromRouteSelector,
+    categoryEditorProjectsSelector,
 } from '../../../../redux';
 import DeepGalleryFileSelect from '../../../../components/DeepGalleryFileSelect';
 import { iconNames } from '../../../../constants';
@@ -20,11 +21,11 @@ import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
-    projectId: PropTypes.number.isRequired,
     selectedFiles: PropTypes.arrayOf(PropTypes.shape({
         id: PropTypes.number.idRequired,
         title: PropTypes.string,
     })),
+    projects: PropTypes.arrayOf(PropTypes.number).isRequired,
     setCeDeepGalleryFiles: PropTypes.func.isRequired,
     categoryEditorId: PropTypes.number.isRequired,
 };
@@ -37,6 +38,7 @@ const defaultProps = {
 const mapStateToProps = (state, props) => ({
     selectedFiles: categoryEditorDocumentsSelector(state, props),
     categoryEditorId: ceIdFromRouteSelector(state, props),
+    projects: categoryEditorProjectsSelector(state, props),
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -67,14 +69,6 @@ export default class DocumentSelect extends React.PureComponent {
                 pristine: false,
             });
         }
-    }
-
-    getGalleryParams = () => {
-        const { projectId } = this.props;
-
-        return {
-            project: projectId,
-        };
     }
 
     handleModalClose = (galleryFiles = []) => {
@@ -143,6 +137,7 @@ export default class DocumentSelect extends React.PureComponent {
     render() {
         const {
             className,
+            projects,
         } = this.props;
 
         const {
@@ -178,7 +173,7 @@ export default class DocumentSelect extends React.PureComponent {
                 <DeepGalleryFileSelect
                     show={showGallerySelectModal}
                     onClose={this.handleModalClose}
-                    params={this.getGalleryParams()}
+                    projects={projects}
                 />
             </div>
         );

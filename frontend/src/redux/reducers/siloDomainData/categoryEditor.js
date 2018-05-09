@@ -183,7 +183,7 @@ const buildSettings = (indices, action, value, wrapper) => (
 // REDUCER
 
 const setCategoryEditor = (state, action) => {
-    const { categoryEditor: { id, data, versionId, title } } = action;
+    const { categoryEditor: { id, data, versionId, title, projects } } = action;
 
     const settings = {
         categoryEditorView: {
@@ -191,6 +191,7 @@ const setCategoryEditor = (state, action) => {
                 id: { $set: id },
                 data: { $set: data },
                 title: { $set: title },
+                projects: { $set: projects },
                 versionId: { $set: versionId },
                 pristine: { $set: true },
             } },

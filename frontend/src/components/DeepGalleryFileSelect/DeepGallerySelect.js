@@ -8,6 +8,8 @@ import {
     compareDate,
 } from '../../vendor/react-store/utils/common';
 import { FgRestBuilder } from '../../vendor/react-store/utils/rest';
+import { UploadBuilder } from '../../vendor/react-store/utils/upload';
+import FileInput from '../../vendor/react-store/components/Input/FileInput';
 import Table from '../../vendor/react-store/components/View/Table';
 import LoadingAnimation from '../../vendor/react-store/components/View/LoadingAnimation';
 import ModalHeader from '../../vendor/react-store/components/View/Modal/Header';
@@ -22,6 +24,10 @@ import SearchInput from '../../vendor/react-store/components/Input/SearchInput';
 import {
     createUrlForGalleryFiles,
     createParamsForGet,
+
+    urlForUpload,
+    createParamsForFileUpload,
+    transformAndCombineResponseErrors,
 } from '../../rest';
 import {
     userGalleryFilesSelector,
@@ -34,7 +40,7 @@ import _ts from '../../ts';
 import styles from './styles.scss';
 
 const propTypes = {
-    params: PropTypes.object, // eslint-disable-line react/forbid-prop-types
+    projects: PropTypes.arrayOf(PropTypes.number),
     onClose: PropTypes.func.isRequired,
 
     setUserGalleryFiles: PropTypes.func.isRequired,
@@ -44,7 +50,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    params: {},
+    projects: undefined,
     galleryFiles: [],
 };
 
@@ -122,17 +128,21 @@ export default class DgSelect extends React.PureComponent {
             this.userGalleryFilesRequest.stop();
         }
 
-        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(this.props.params);
+        this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+            projects: this.props.projects,
+        });
         this.userGalleryFilesRequest.start();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.params !== this.props.params) {
+        if (nextProps.projects !== this.props.projects) {
             if (this.userGalleryFilesRequest) {
                 this.userGalleryFilesRequest.stop();
             }
 
-            this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles(nextProps.params);
+            this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+                projects: nextProps.projects,
+            });
             this.userGalleryFilesRequest.start();
         }
     }
@@ -141,10 +151,12 @@ export default class DgSelect extends React.PureComponent {
         if (this.userGalleryFilesRequest) {
             this.userGalleryFilesRequest.stop();
         }
+        if (this.uploader) {
+            this.uploader.stop();
+        }
     }
 
     onClose = () => {
-        this.setState({ selected: [] });
         this.props.onClose([]);
     }
 
@@ -157,7 +169,6 @@ export default class DgSelect extends React.PureComponent {
         ));
 
         this.props.onClose(selectedGalleryFiles);
-        this.setState({ selected: [] });
     }
 
     getTableData = ({ galleryFiles, selected, searchInputValue }) => {
@@ -208,6 +219,47 @@ export default class DgSelect extends React.PureComponent {
             })
             .build();
         return userGalleryFilesRequest;
+    }
+
+    handleUploadButton = (files) => {
+        const file = files[0];
+
+        if (this.uploader) {
+            this.uploader.stop();
+        }
+
+        this.uploader = new UploadBuilder()
+            .file(file)
+            .url(urlForUpload)
+            .params(() => createParamsForFileUpload({
+                projects: this.props.projects,
+            }))
+            .preLoad(() => this.setState({ pending: true }))
+            .postLoad(() => this.setState({ pending: false }))
+            .success((response) => {
+                this.setState({
+                    selected: [...this.state.selected, response.id],
+                });
+
+                if (this.userGalleryFilesRequest) {
+                    this.userGalleryFilesRequest.stop();
+                }
+
+                this.userGalleryFilesRequest = this.createRequestForUserGalleryFiles({
+                    projects: this.props.projects,
+                });
+                this.userGalleryFilesRequest.start();
+            })
+            .failure((response) => {
+                const message = transformAndCombineResponseErrors(response.errors);
+                console.error(message);
+            })
+            .fatal(() => {
+                console.error('Couldn\t upload file');
+            })
+            .build();
+
+        this.uploader.start();
     }
 
     handleFileSelection = (file) => {
@@ -308,9 +360,15 @@ export default class DgSelect extends React.PureComponent {
                 />
             </ModalBody>,
             <ModalFooter key="footer">
-                <Button
-                    onClick={this.onClose}
+                <FileInput
+                    className={styles.fileInput}
+                    onChange={this.handleUploadButton}
+                    value=""
+                    showStatus={false}
                 >
+                    {_ts('common', 'uploadFileButtonLabel')}
+                </FileInput>
+                <Button onClick={this.onClose}>
                     {_ts('common', 'cancelButtonLabel')}
                 </Button>
                 <PrimaryButton
