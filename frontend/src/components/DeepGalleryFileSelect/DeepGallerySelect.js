@@ -157,7 +157,6 @@ export default class DgSelect extends React.PureComponent {
     }
 
     onClose = () => {
-        this.setState({ selected: [] });
         this.props.onClose([]);
     }
 
@@ -170,7 +169,6 @@ export default class DgSelect extends React.PureComponent {
         ));
 
         this.props.onClose(selectedGalleryFiles);
-        this.setState({ selected: [] });
     }
 
     getTableData = ({ galleryFiles, selected, searchInputValue }) => {
