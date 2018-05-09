@@ -52,6 +52,7 @@ $height-additional-documents: 256px;
 
             .widget-group {
                 display: flex;
+                flex-basis: 20%;
                 flex-direction: column;
                 flex-shrink: 0;
 
@@ -71,6 +72,12 @@ $height-additional-documents: 256px;
                     flex-grow: 1;
                     padding: $spacing-medium;
                     overflow-y: auto;
+                }
+
+                :global {
+                    .widget {
+                        margin: $spacing-small-alt 0;
+                    }
                 }
             }
         }

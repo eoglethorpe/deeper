@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import Faram, {
     requiredCondition,
     urlCondition,
+    dateCondition,
 } from '../../../../vendor/react-store/components/Input/Faram';
 import NonFieldErrors from '../../../../vendor/react-store/components/Input/NonFieldErrors';
 import SelectInput from '../../../../vendor/react-store/components/Input/SelectInput';
@@ -122,7 +123,7 @@ export default class LeadForm extends React.PureComponent {
                         source: [requiredCondition],
                         confidentiality: [requiredCondition],
                         assignee: [requiredCondition],
-                        publishedOn: [requiredCondition],
+                        publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
 
@@ -136,7 +137,7 @@ export default class LeadForm extends React.PureComponent {
                         source: [requiredCondition],
                         confidentiality: [requiredCondition],
                         assignee: [requiredCondition],
-                        publishedOn: [requiredCondition],
+                        publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
 
@@ -151,7 +152,7 @@ export default class LeadForm extends React.PureComponent {
                         source: [requiredCondition],
                         confidentiality: [requiredCondition],
                         assignee: [requiredCondition],
-                        publishedOn: [requiredCondition],
+                        publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
 

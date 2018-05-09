@@ -23,8 +23,8 @@ $color-text-disabled-on-light: rgba(0, 0, 0, .3);
 $color-text-disabled-on-dark: rgba(255, 255, 255, .2);
 $color-text-disabled: get-color($color-text-disabled-on-light, $color-text-disabled-on-dark);
 
-$color-text-label-on-light: rgba(0, 0, 0, .5);
-$color-text-label-on-dark: rgba(255, 255, 255, .4);
+$color-text-label-on-light: rgba(0, 0, 0, .6);
+$color-text-label-on-dark: rgba(255, 255, 255, .5);
 $color-text-label: get-color($color-text-label-on-light, $color-text-label-on-dark);
 
 $color-primary-light: #1676d3;

@@ -22,6 +22,7 @@ import DateInput from '../../../../vendor/react-store/components/Input/DateInput
 import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import Faram, {
     requiredCondition,
+    dateCondition,
 } from '../../../../vendor/react-store/components/Input/Faram';
 
 import {
@@ -198,8 +199,8 @@ export default class ProjectGeneral extends React.PureComponent {
         this.schema = {
             fields: {
                 title: [requiredCondition],
-                startDate: [],
-                endDate: [],
+                startDate: [dateCondition],
+                endDate: [dateCondition],
                 description: [],
                 regions: [],
                 userGroups: [],

@@ -1,8 +1,8 @@
 @import '../../../../stylesheets/base';
 
 $width-action-buttons: 48px;
-$height-center: 196px;
-$height-bottom: 144px;
+$height-center: 240px;
+$height-bottom: 196px;
 
 .methodology {
     display: flex;
@@ -80,6 +80,12 @@ $height-bottom: 144px;
                     .action-buttons {
                         @extend %action-buttons;
                     }
+
+                    :global {
+                        .widget {
+                            margin: $spacing-small-alt 0;
+                        }
+                    }
                 }
             }
         }
@@ -119,6 +125,10 @@ $height-bottom: 144px;
                 .title {
                     @extend %header;
                     padding: $spacing-extra-small $spacing-medium;
+                }
+
+                .list-view {
+                    padding: $spacing-small 0;
                 }
             }
         }

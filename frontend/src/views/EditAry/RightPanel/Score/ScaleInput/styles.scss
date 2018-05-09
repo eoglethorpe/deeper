@@ -13,6 +13,7 @@ $height-value-active: 30px;
     min-height: $height-value-active;
 
     .value {
+        transition: $duration-transition-medium all ease-in-out;
         margin: 0 $spacing-extra-small;
         outline: 0;
         border: 0;
