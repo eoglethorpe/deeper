@@ -1,11 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import ScaleInput from '../../../vendor/react-store/components/Input/ScaleInput';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import WidgetError from '../../../components/WidgetError';
-
-import styles from './styles.scss';
 
 const propTypes = {
     attribute: PropTypes.object, // eslint-disable-line react/forbid-prop-types
@@ -22,43 +20,40 @@ const emptyList = [];
 
 @BoundError(WidgetError)
 export default class ScaleViewWidget extends React.PureComponent {
-    static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    getActiveSelectionClassName = (key) => {
-        const { attribute = emptyObject } = this.props;
-        const { selectedScale } = attribute;
-
-        const classNames = [
-            styles.scaleUnit,
-        ];
-
-        if (selectedScale === key) {
-            classNames.push(styles.selected);
-        }
-
-        return classNames.join(' ');
+    constructor(props) {
+        super(props);
+        this.createScaleUnits(props);
     }
 
-    getScale = (key, data) => (
-        <button
-            key={key}
-            title={data.title}
-            className={this.getActiveSelectionClassName(key)}
-            style={{ backgroundColor: data.color }}
-        />
-    )
+    componentWillReceiveProps(nextProps) {
+        const { data: newData } = nextProps.data;
+        const { data: oldData } = this.props;
+
+        if (oldData !== newData) {
+            this.createScaleUnits(nextProps);
+        }
+    }
+
+    createScaleUnits = ({ data = emptyObject }) => {
+        const scaleUnits = data.scaleUnits || emptyList;
+        const tempScaleUnits = {};
+        scaleUnits.forEach((s) => {
+            tempScaleUnits[s.key] = s;
+        });
+        this.scaleUnits = tempScaleUnits;
+    }
 
     render() {
-        const { data = emptyObject } = this.props;
+        const { selectedScale } = this.props.attribute;
 
         return (
-            <ListView
-                className={styles.list}
-                data={data.scaleUnits || emptyList}
-                keyExtractor={ScaleViewWidget.rowKeyExtractor}
-                modifier={this.getScale}
+            <ScaleInput
+                options={this.scaleUnits}
+                value={selectedScale}
+                readOnly
             />
         );
     }

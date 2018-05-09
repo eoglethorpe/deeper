@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import ListView from '../../../vendor/react-store/components/View/List/ListView';
+import ScaleInput from '../../../vendor/react-store/components/Input/ScaleInput';
 
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
 import WidgetError from '../../../components/WidgetError';
-import styles from './styles.scss';
 
 const propTypes = {
     id: PropTypes.number.isRequired,
@@ -16,7 +15,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    attribute: undefined,
+    attribute: {},
     data: undefined,
 };
 
@@ -25,7 +24,6 @@ const emptyList = [];
 
 @BoundError(WidgetError)
 export default class ScaleTaggingList extends React.PureComponent {
-    static rowKeyExtractor = d => d.key;
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -51,50 +49,21 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        const {
-            attribute: newAttribute,
-            data: newData,
-        } = nextProps;
+        const { data: newData } = nextProps.data;
+        const { data: oldData } = this.props;
 
-        const {
-            attribute: oldAttribute,
-            data: oldData,
-        } = this.props;
-
-        if (oldAttribute !== newAttribute || oldData !== newData) {
+        if (oldData !== newData) {
             this.createScaleUnits(nextProps);
         }
     }
 
-    getActiveSelectionClassName = (scaleUnit) => {
-        const classNames = [
-            styles.scaleUnit,
-        ];
-
-        if (scaleUnit.selected) {
-            classNames.push(styles.selected);
-        }
-
-        return classNames.join(' ');
-    }
-
-    getScale = (key, scaleUnit) => (
-        <button
-            key={key}
-            onClick={() => this.handleScaleClick(key)}
-            title={scaleUnit.title}
-            className={this.getActiveSelectionClassName(scaleUnit)}
-            style={{ backgroundColor: scaleUnit.color }}
-        />
-    )
-
-    createScaleUnits = ({ data = emptyObject, attribute = emptyObject }) => {
+    createScaleUnits = ({ data = emptyObject }) => {
         const scaleUnits = data.scaleUnits || emptyList;
-        const { selectedScale } = attribute;
-        this.scaleUnits = scaleUnits.map(s => ({
-            ...s,
-            selected: selectedScale === s.key,
-        }));
+        const tempScaleUnits = {};
+        scaleUnits.forEach((s) => {
+            tempScaleUnits[s.key] = s;
+        });
+        this.scaleUnits = tempScaleUnits;
     }
 
     handleScaleClick = (selectedScale) => {
@@ -106,12 +75,13 @@ export default class ScaleTaggingList extends React.PureComponent {
     }
 
     render() {
+        const { selectedScale } = this.props.attribute;
+
         return (
-            <ListView
-                className={styles.list}
-                data={this.scaleUnits}
-                keyExtractor={ScaleTaggingList.rowKeyExtractor}
-                modifier={this.getScale}
+            <ScaleInput
+                options={this.scaleUnits}
+                value={selectedScale}
+                onChange={this.handleScaleClick}
             />
         );
     }
