@@ -1,5 +1,8 @@
 @import '../../stylesheets/base.scss';
 
+$height-orgchart-modal: 80vh;
+$width-orgchart-modal: 80%;
+
 .organigram-with-list {
     display: flex;
     flex-direction: column;
@@ -22,5 +25,19 @@
 
     .list-input {
         flex-grow: 1;
+    }
+}
+
+.orgchart-modal {
+    width: $width-orgchart-modal;
+    height: $height-orgchart-modal;
+
+    .body {
+        display: flex;
+        flex-direction: column;
+
+        .orgchart {
+            flex-grow: 1;
+        }
     }
 }

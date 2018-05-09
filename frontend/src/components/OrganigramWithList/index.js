@@ -103,11 +103,13 @@ export default class OrganigramWithList extends React.PureComponent {
             return null;
         }
 
+        // FIXME: Use strings
         return (
-            <Modal>
+            <Modal className={styles.orgchartModal}>
                 <ModalHeader title={title} />
-                <ModalBody>
+                <ModalBody className={styles.body}>
                     <OrgChart
+                        className={styles.orgchart}
                         data={data[0] || emptyObject}
                         labelAccessor={OrganigramWithList.labelSelector}
                         idAccessor={OrganigramWithList.idSelector}
