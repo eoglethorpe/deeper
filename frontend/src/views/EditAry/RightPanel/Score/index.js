@@ -7,6 +7,7 @@ import iconNames from '../../../../constants/iconNames';
 import Numeral from '../../../../vendor/react-store/components/View/Numeral';
 import List from '../../../../vendor/react-store/components/View/List';
 import ListView from '../../../../vendor/react-store/components/View/List/ListView';
+import ScaleInput from '../../../../vendor/react-store/components/Input/ScaleInput';
 
 import {
     assessmentPillarsSelector,
@@ -16,7 +17,6 @@ import {
     assessmentSectorsSelector,
 } from '../../../../redux';
 
-import ScaleInput from './ScaleInput';
 import ScaleMatrixInput from './ScaleMatrixInput';
 import styles from './styles.scss';
 

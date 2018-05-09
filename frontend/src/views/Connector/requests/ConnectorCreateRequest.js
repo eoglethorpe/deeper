@@ -4,7 +4,7 @@ import { FgRestBuilder } from '../../../vendor/react-store/utils/rest';
 import {
     createParamsForConnectorCreate,
     alterResponseErrorToFaramError,
-    urlForConnectors,
+    urlForConnectorsFull,
 } from '../../../rest';
 import { pathNames } from '../../../constants';
 import _ts from '../../../ts';
@@ -68,7 +68,7 @@ export default class ConnectorCreateRequest {
 
     create = (newConnector) => {
         const connectorsRequest = new FgRestBuilder()
-            .url(urlForConnectors)
+            .url(urlForConnectorsFull)
             .params(createParamsForConnectorCreate(newConnector))
             .preLoad(() => { this.props.setState({ dataLoading: true }); })
             .postLoad(() => { this.props.setState({ dataLoading: false }); })

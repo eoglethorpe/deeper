@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import update from '../../../vendor/react-store/utils/immutable-update';
 
+import ScaleInput from '../../../vendor/react-store/components/Input/ScaleInput';
 import ColorInput from '../../../vendor/react-store/components/Input/ColorInput';
 import TextInput from '../../../vendor/react-store/components/Input/TextInput';
 import Button from '../../../vendor/react-store/components/Action/Button';
@@ -13,7 +14,6 @@ import Modal from '../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../vendor/react-store/components/View/Modal/Header';
 import ModalBody from '../../../vendor/react-store/components/View/Modal/Body';
 import ModalFooter from '../../../vendor/react-store/components/View/Modal/Footer';
-import ListView from '../../../vendor/react-store/components/View/List/ListView';
 import SortableList from '../../../vendor/react-store/components/View/SortableList';
 import { randomString } from '../../../vendor/react-store/utils/common';
 import BoundError from '../../../vendor/react-store/components/General/BoundError';
@@ -59,6 +59,16 @@ export default class ScaleFrameworkList extends React.PureComponent {
             title,
         };
         this.props.editAction(this.handleEdit);
+        this.createScaleUnits(props);
+    }
+
+    componentWillReceiveProps(nextProps) {
+        const { data: newData } = nextProps.data;
+        const { data: oldData } = this.props;
+
+        if (oldData !== newData) {
+            this.createScaleUnits(nextProps);
+        }
     }
 
     getSelectedScaleStyle = (key) => {
@@ -69,6 +79,15 @@ export default class ScaleFrameworkList extends React.PureComponent {
         }
         const styleNames = scaleUnitStyle.map(d => styles[d]);
         return styleNames.join(' ');
+    }
+
+    createScaleUnits = ({ data = emptyObject }) => {
+        const scaleUnits = data.scaleUnits || emptyList;
+        const tempScaleUnits = {};
+        scaleUnits.forEach((s) => {
+            tempScaleUnits[s.key] = s;
+        });
+        this.scaleUnits = tempScaleUnits;
     }
 
     handleScaleUnitSortChange = (scaleUnits) => {
@@ -99,6 +118,7 @@ export default class ScaleFrameworkList extends React.PureComponent {
 
         this.setState({
             showEditModal: false,
+            defaultScaleUnit: data.value,
             scaleUnits: data.scaleUnits || emptyList,
             title,
         });
@@ -194,15 +214,6 @@ export default class ScaleFrameworkList extends React.PureComponent {
             ],
         });
     }
-
-    renderScale = (key, data) => (
-        <button
-            key={key}
-            title={data.title}
-            className={this.getSelectedScaleStyle(key)}
-            style={{ backgroundColor: data.color }}
-        />
-    )
 
     renderDragHandle = () => {
         const dragStyle = [styles.dragHandle];
@@ -338,18 +349,18 @@ export default class ScaleFrameworkList extends React.PureComponent {
     }
 
     render() {
-        const { scaleUnits } = this.state;
+        const { defaultScaleUnit } = this.state;
         const EditModal = this.renderEditModal;
 
-        return ([
-            <ListView
-                key="content"
-                className={styles.list}
-                data={scaleUnits}
-                keyExtractor={ScaleFrameworkList.rowKeyExtractor}
-                modifier={this.renderScale}
-            />,
-            <EditModal key="modal" />,
-        ]);
+        return (
+            <Fragment>
+                <ScaleInput
+                    options={this.scaleUnits}
+                    value={defaultScaleUnit}
+                    readOnly
+                />
+                <EditModal key="modal" />
+            </Fragment>
+        );
     }
 }
