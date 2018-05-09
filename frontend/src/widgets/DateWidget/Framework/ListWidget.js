@@ -145,6 +145,7 @@ export default class DateFrameworkList extends React.PureComponent {
             <div className={styles.list}>
                 <DateInput
                     className={styles.dateInput}
+                    onChange={this.noop}
                     showHintAndError={false}
                     disabled
                 />

@@ -11,7 +11,7 @@ const propTypes = {
 };
 
 const defaultProps = {
-    attribute: undefined,
+    attribute: {},
     data: undefined,
 };
 
