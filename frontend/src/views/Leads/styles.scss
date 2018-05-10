@@ -78,31 +78,48 @@
                     }
                 }
 
+                $mime-column-width: 48px;
+
                 :global {
+                    .cell {
+                        padding: $spacing-extra-small $spacing-small;
+
+                        &.created_by,
+                        &.assignee {
+                            color: $color-text-label;
+                            font-size: $font-size-small;
+                        }
+
+                        &.actions {
+                            padding: 0;
+                        }
+                    }
+
                     .attachmentMimeType {
-                        width: 64px;
+                        width: $mime-column-width;
                     }
 
                     .title {
-                        width: 40%;
+                        width: auto;
                     }
 
                     .actions {
-                        width: 200px;
+                        white-space: nowrap;
                     }
 
                     .created_at {
-                        width: 150px;
+                        date,
+                        time {
+                            white-space: nowrap;
+                        }
                     }
 
-                    .confidentiality,
-                    .status,
                     .published_on {
-                        width: 100px;
+                        white-space: nowrap;
                     }
 
                     .no_of_entries {
-                        width: 80px;
+                        width: auto;
                     }
 
                     .created_at,

@@ -1,22 +1,43 @@
 @import '../../../stylesheets/base';
 
-%link {
+%base {
     display: inline-block;
-    padding: 0 $spacing-small;
+    padding: $spacing-extra-small $spacing-small;
+}
+
+%link {
+    @extend %base;
     color: $color-text-label;
 }
 
-.edit-link,
-.add-entry-link,
-.add-assessment-link {
-    @extend %link;
-}
+.action-buttons {
+    display: flex;
 
-.add-entry-link {
-    color: $color-accent;
-}
+    .action-group {
+        flex-shrink: 0;
 
-.add-assessment-link {
-    color: $color-info;
+        &:not(:last-child) {
+            border-right: $width-separator-thin solid $color-separator;
+            padding: 0 $spacing-extra-small;
+        }
+
+        button {
+            @extend %base;
+        }
+
+        .edit-link,
+        .add-entry-link,
+        .add-assessment-link {
+            @extend %link;
+        }
+
+        .add-entry-link {
+            color: $color-accent;
+        }
+
+        .add-assessment-link {
+            color: $color-info;
+        }
+    }
 }
 

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Fragment } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
 import { reverseRoute } from '../../../vendor/react-store/utils/common';
@@ -18,6 +18,7 @@ import _ts from '../../../ts';
 import styles from './styles.scss';
 
 const propTypes = {
+    className: PropTypes.string,
     row: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
     activeProject: PropTypes.number.isRequired,
     onSearchSimilarLead: PropTypes.func.isRequired,
@@ -27,6 +28,7 @@ const propTypes = {
 };
 
 const defaultProps = {
+    className: '',
 };
 
 
@@ -96,78 +98,85 @@ export default class ActionButtons extends React.PureComponent {
             onMarkProcessed,
             onMarkPending,
             row,
+            className,
         } = this.props;
 
+        const containerClassName = [
+            className,
+            styles.actionButtons,
+            'action-buttons',
+        ].join(' ');
+
         return (
-            <Fragment>
-                <SuccessButton
-                    tabIndex="-1"
-                    title={_ts('leads', 'markAsProcessedTitle')}
-                    iconName={iconNames.check}
-                    onClick={() => onMarkProcessed(row)}
-                    smallVerticalPadding
-                    transparent
-                    disabled={row.status !== 'pending'}
-                />
-                <WarningButton
-                    tabIndex="-1"
-                    title={_ts('leads', 'markAsPendingTitle')}
-                    iconName={iconNames.undo}
-                    onClick={() => onMarkPending(row)}
-                    smallVerticalPadding
-                    transparent
-                    disabled={row.status !== 'processed'}
-                />
-                <Button
-                    tabIndex="-1"
-                    title={_ts('leads', 'searchSimilarLeadButtonTitle')}
-                    onClick={() => onSearchSimilarLead(row)}
-                    smallVerticalPadding
-                    transparent
-                >
-                    <i className={iconNames.search} />
-                </Button>
-                <DangerButton
-                    tabIndex="-1"
-                    title={_ts('leads', 'removeLeadLeadButtonTitle')}
-                    onClick={() => onRemoveLead(row)}
-                    smallVerticalPadding
-                    transparent
-                >
-                    <i className={iconNames.delete} />
-                </DangerButton>
-                <Link
-                    className={styles.editLink}
-                    tabIndex="-1"
-                    title={_ts('leads', 'editLeadButtonTitle')}
-                    to={links.editLead}
-                >
-                    <i className={iconNames.edit} />
-                </Link>
-                <Cloak
-                    requireAssessmentTemplate
-                    render={
-                        () => (
-                            <Link
-                                className={styles.addAssessmentLink}
-                                tabIndex="-1"
-                                title={_ts('leads', 'addAssessmentFromLeadButtonTitle')}
-                                to={links.addAssessment}
-                            >
-                                <i className={iconNames.forward} />
-                            </Link>
-                        )
-                    }
-                />
-                <Link
-                    className={styles.addEntryLink}
-                    tabIndex="-1"
-                    title={_ts('leads', 'addEntryFromLeadButtonTitle')}
-                    to={links.editEntries}
-                >
-                    <i className={iconNames.forward} />
-                </Link>
-            </Fragment>
+            <div className={containerClassName}>
+                <div className={styles.actionGroup}>
+                    <SuccessButton
+                        tabIndex="-1"
+                        title={_ts('leads', 'markAsProcessedTitle')}
+                        iconName={iconNames.check}
+                        onClick={() => onMarkProcessed(row)}
+                        transparent
+                        disabled={row.status !== 'pending'}
+                    />
+                    <WarningButton
+                        tabIndex="-1"
+                        title={_ts('leads', 'markAsPendingTitle')}
+                        iconName={iconNames.undo}
+                        onClick={() => onMarkPending(row)}
+                        transparent
+                        disabled={row.status !== 'processed'}
+                    />
+                </div>
+                <div className={styles.actionGroup}>
+                    <Button
+                        tabIndex="-1"
+                        title={_ts('leads', 'searchSimilarLeadButtonTitle')}
+                        onClick={() => onSearchSimilarLead(row)}
+                        transparent
+                        iconName={iconNames.search}
+                    />
+                    <DangerButton
+                        tabIndex="-1"
+                        title={_ts('leads', 'removeLeadLeadButtonTitle')}
+                        onClick={() => onRemoveLead(row)}
+                        transparent
+                        iconName={iconNames.delete}
+                    />
+                    <Link
+                        className={styles.editLink}
+                        tabIndex="-1"
+                        title={_ts('leads', 'editLeadButtonTitle')}
+                        to={links.editLead}
+                    >
+                        <i className={iconNames.edit} />
+                    </Link>
+                </div>
+                <div className={styles.actionGroup}>
+                    <Cloak
+                        requireAssessmentTemplate
+                        render={
+                            () => (
+                                <Link
+                                    className={styles.addAssessmentLink}
+                                    tabIndex="-1"
+                                    title={_ts('leads', 'addAssessmentFromLeadButtonTitle')}
+                                    to={links.addAssessment}
+                                >
+                                    <i className={iconNames.forward} />
+                                </Link>
+                            )
+                        }
+                    />
+                    <Link
+                        className={styles.addEntryLink}
+                        tabIndex="-1"
+                        title={_ts('leads', 'addEntryFromLeadButtonTitle')}
+                        to={links.editEntries}
+                    >
+                        <i className={iconNames.forward} />
+                    </Link>
+                </div>
+            </div>
         );
     }
 }
