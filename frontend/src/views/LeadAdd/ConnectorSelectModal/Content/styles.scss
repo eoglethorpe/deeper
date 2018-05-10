@@ -3,10 +3,29 @@
 .connector-content {
     display: flex;
     position: relative;
+    flex-direction: column;
     height: 100%;
     overflow-y: auto;
 
+    .header {
+        display: flex;
+        flex-shrink: 0;
+        justify-content: flex-end;
+        background-color: $color-background-header;
+        padding: $spacing-extra-small $spacing-small;
+
+        .right-container {
+            .settings-link {
+                display: block;
+                padding: $spacing-small;
+                font-size: $font-size-large;
+            }
+        }
+    }
+
     .table {
+        flex-grow: 1;
+
         :global {
             .selected {
                 width: 56px;
