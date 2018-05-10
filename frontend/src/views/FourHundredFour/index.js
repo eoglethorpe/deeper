@@ -33,7 +33,8 @@ export default class FourHundredFour extends React.PureComponent {
                     {_ts('fourHundredFour', 'errorFourHundredFour')}
                 </h1>
                 <p className={styles.message}>
-                    {_ts('fourHundredFour', 'message1')}<br />
+                    {_ts('fourHundredFour', 'message1')}
+                    <br />
                     {_ts('fourHundredFour', 'message2')}
                 </p>
                 <Link
