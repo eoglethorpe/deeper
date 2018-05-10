@@ -4,19 +4,27 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ShellRunPlugin = require('./shellrun-plugin');
 
 const getEnvVariables = require('./env.js');
+
+const appBase = process.cwd();
+const appSrc = path.resolve(appBase, 'src/');
+const appDist = path.resolve(appBase, 'build/');
+const appIndexJs = path.resolve(appBase, 'src/index.js');
+const appIndexHtml = path.resolve(appBase, 'public/index.html');
 
 module.exports = (env) => {
     const ENV_VARS = getEnvVariables(env);
 
     return {
-        entry: './src/index.js',
+        entry: appIndexJs,
         output: {
-            path: path.resolve(__dirname, 'dist'),
+            path: appDist,
             publicPath: '/',
-            chunkFilename: '[name].[chunkhash].js',
-            filename: '[name].[chunkhash].js',
+            chunkFilename: 'js/[name].[chunkhash].js',
+            filename: 'js/[name].[chunkhash].js',
+            sourceMapFilename: 'sourcemaps/[file].map',
         },
 
         mode: 'development',
@@ -35,14 +43,16 @@ module.exports = (env) => {
             host: '0.0.0.0',
             port: 3000,
             overlay: true,
+            watchOptions: {
+                ignored: /node_modules/,
+            },
         },
-
 
         module: {
             rules: [
                 {
                     test: /\.(js|jsx)$/,
-                    include: path.resolve(__dirname, 'src'),
+                    include: appSrc,
                     use: [
                         'babel-loader',
                         'eslint-loader',
@@ -50,7 +60,7 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.scss$/,
-                    include: path.resolve(__dirname, 'src'),
+                    include: appSrc,
                     use: [
                         'style-loader',
                         {
@@ -59,7 +69,6 @@ module.exports = (env) => {
                                 importLoaders: 1,
                                 modules: true,
                                 camelCase: true,
-                                sourceMap: true,
                                 localIdentName: '[name]_[local]_[hash:base64]',
                             },
                         },
@@ -68,7 +77,14 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.(png|jpg|gif|svg)$/,
-                    use: ['file-loader'],
+                    use: [
+                        {
+                            loader: 'file-loader',
+                            options: {
+                                name: 'assets/[hash].[ext]',
+                            },
+                        },
+                    ],
                 },
             ],
         },
@@ -80,17 +96,28 @@ module.exports = (env) => {
                 exclude: /node_modules/,
                 failOnError: false,
                 allowAsyncCycles: false,
-                cwd: process.cwd(),
+                cwd: appBase,
             }),
-            new CleanWebpackPlugin(['dist']),
+            new CleanWebpackPlugin([appDist], { root: appBase }),
             new HtmlWebpackPlugin({
-                template: './public/index.html',
+                template: appIndexHtml,
                 filename: './index.html',
                 chunksSortMode: 'none',
             }),
             new MiniCssExtractPlugin({
-                filename: '[name].css',
-                chunkFilename: '[id].css',
+                filename: 'css/[name].css',
+                chunkFilename: 'css/[id].css',
+            }),
+            new ShellRunPlugin({
+                messageBefore: 'Generating language map.',
+                command: `
+                    find ${appSrc} -name *.js |
+                        xargs /usr/bin/gawk -f ${appSrc}/utils/finder.awk > usage.tmp &&
+                        mkdir -p ${appSrc}/generated &&
+                        rsync -c usage.tmp ${appSrc}/generated/usage.js;
+                        rm usage.tmp;
+                `,
+                messageAfter: 'Done.',
             }),
         ],
     };

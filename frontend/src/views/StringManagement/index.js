@@ -317,8 +317,6 @@ export default class StringManagement extends React.PureComponent {
             return null;
         }
 
-        console.warn(_ts('user', 'goodLink'));
-
         const className = `
             ${styles.problem}
             ${styles[currentProblem.type]}

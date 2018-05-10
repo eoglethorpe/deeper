@@ -4,7 +4,7 @@
     "description": "Deep",
     "main": "index.js",
     "scripts": {
-        "start": "webpack-dev-server --mode development --config config/webpack.dev.js --history-api-fallback --env.NODE_ENV=development --history-api-fallback",
+        "start": "webpack-dev-server --mode development --config config/webpack.dev.js --history-api-fallback --env.NODE_ENV=development --history-api-fallback --progress",
         "build": "webpack --mode production --config config/webpack.prod.js --env.NODE_ENV=production"
     },
     "sideEffects": false,
