@@ -39,7 +39,6 @@ import _ts from '../../ts';
 import notify from '../../notify';
 
 import FormSaveRequest from './requests/FormSaveRequest';
-import LeadGroupsGetRequest from './requests/LeadGroupsGetRequest';
 
 import LeadActions from './LeadActions';
 import LeadFilter from './LeadFilter';
@@ -148,12 +147,6 @@ export default class LeadAdd extends React.PureComponent {
             .build();
     }
 
-    componentWillMount() {
-        if (this.props.projectId) {
-            this.startConnectorsRequest(this.props.projectId);
-        }
-    }
-
     componentDidMount() {
         this.props.addLeadViewRemoveSavedLeads();
 
@@ -201,17 +194,6 @@ export default class LeadAdd extends React.PureComponent {
 
     handleFormSubmitFailure = (id) => {
         this.formCoordinator.notifyComplete(id, true);
-    }
-
-    startConnectorsRequest = (projectId) => {
-        if (this.requestForLeadGroups) {
-            this.requestForLeadGroups.stop();
-        }
-        const requestForLeadGroups = new LeadGroupsGetRequest({
-            setState: v => this.setState(v),
-        });
-        this.requestForLeadGroups = requestForLeadGroups.create(projectId);
-        this.requestForLeadGroups.start();
     }
 
     // RENDER

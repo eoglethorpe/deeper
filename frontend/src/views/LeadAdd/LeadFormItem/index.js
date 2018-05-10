@@ -183,7 +183,6 @@ export default class LeadFormItem extends React.PureComponent {
             lead,
             onFormSubmitSuccess,
         } = this.props;
-        console.warn(newValues);
         if (this.leadSaveRequest) {
             this.leadSaveRequest.stop();
         }
@@ -351,9 +350,12 @@ export default class LeadFormItem extends React.PureComponent {
             return null;
         }
 
+        const leadValues = leadAccessor.getFaramValues(this.props.lead);
+
         return (
             <AddLeadGroup
                 onModalClose={this.handleAddLeadGroupModalClose}
+                projectId={leadValues.project}
             />
         );
     }

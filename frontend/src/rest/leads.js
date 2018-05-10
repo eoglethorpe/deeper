@@ -28,6 +28,12 @@ export const createParamsForLeadCreate = data => ({
     body: JSON.stringify(data),
 });
 
+export const createParamsForLeadGroupCreate = data => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify(data),
+});
+
 export const createParamsForLeadEdit = data => ({
     method: PUT,
     headers: commonHeaderForPost,

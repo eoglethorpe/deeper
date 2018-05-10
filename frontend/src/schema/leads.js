@@ -93,4 +93,21 @@ const leadSchema = [];
     leadSchema.push({ name, schema });
 }
 
+{
+    const name = 'leadGroup';
+    const schema = {
+        doc: {
+            name: 'LeadGroup',
+            description: 'One of the main entities',
+        },
+        fields: {
+            id: { type: 'uint', required: true },
+            project: { type: 'uint' },
+            title: { type: 'string', required: true },
+            versionId: { type: 'uint', required: true },
+        },
+    };
+    leadSchema.push({ name, schema });
+}
+
 export default leadSchema;

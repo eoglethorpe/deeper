@@ -639,9 +639,12 @@ const initialDevLangState = {
         1126: 'Failed to save project.',
         1127: 'Failed to create new category editor.',
         1128: 'Failed to create new framework.',
-        1129: 'Lead Group',
+        1129: 'Group',
         1130: 'Progress reports of June',
         1131: 'Add Lead Group',
+        1132: 'Failed to create lead group',
+        1133: 'Lead Group',
+        1134: 'Lead group created successfully.',
     },
     links: {
         af: {
@@ -1123,6 +1126,7 @@ const initialDevLangState = {
         },
         addLeads: {
             noConnectorsLabel: 1115,
+            leadGroupCreateFailure: 1132,
             modalCancelLabel: 61,
             modalAddLabel: 301,
             addLeadGroupTitleLabel: 13,
@@ -1210,6 +1214,8 @@ const initialDevLangState = {
             connectorTitle: 1113,
             connectorGetFailure: 1112,
             connectorCreateTitle: 1106,
+            leadGroupTitle: 1133,
+            leadGroupCreateSuccess: 1134,
             connectorCreateSuccess: 1107,
             connectorSourcesTitle: 1109,
             connectorPatchSuccess: 1117,

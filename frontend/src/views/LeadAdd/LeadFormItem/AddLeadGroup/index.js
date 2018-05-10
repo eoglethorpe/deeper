@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { connect } from 'react-redux';
 
 import Modal from '../../../../vendor/react-store/components/View/Modal';
 import ModalHeader from '../../../../vendor/react-store/components/View/Modal/Header';
@@ -12,14 +13,20 @@ import PrimaryButton from '../../../../vendor/react-store/components/Action/Butt
 import Faram, {
     requiredCondition,
 } from '../../../../vendor/react-store/components/Input/Faram';
+import {
+    addLeadGroupOfProjectAction,
+} from '../../../../redux';
 
 import _ts from '../../../../ts';
+import LeadGroupCreateRequest from '../../requests/LeadGroupCreateRequest';
 
 import styles from './styles.scss';
 
 const propTypes = {
     className: PropTypes.string,
+    projectId: PropTypes.number,
     onModalClose: PropTypes.func.isRequired,
+    addLeadGroup: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
@@ -27,6 +34,11 @@ const defaultProps = {
     projectId: undefined,
 };
 
+const mapDispatchToProps = dispatch => ({
+    addLeadGroup: params => dispatch(addLeadGroupOfProjectAction(params)),
+});
+
+@connect(undefined, mapDispatchToProps)
 export default class AddLeadGroup extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
@@ -51,6 +63,19 @@ export default class AddLeadGroup extends React.PureComponent {
     componentWillUnmount() {
     }
 
+    startLeadGroupCreateRequest = (newLeadGroup) => {
+        if (this.requestForLeadGroupCreate) {
+            this.requestForLeadGroupCreate.stop();
+        }
+        const requestForLeadGroupCreate = new LeadGroupCreateRequest({
+            setState: v => this.setState(v),
+            handleModalClose: this.props.onModalClose,
+            addLeadGroup: this.props.addLeadGroup,
+        });
+        this.requestForLeadGroupCreate = requestForLeadGroupCreate.create(newLeadGroup);
+        this.requestForLeadGroupCreate.start();
+    }
+
     // faram RELATED
     handleFaramChange = (faramValues, faramErrors) => {
         this.setState({
@@ -65,7 +90,11 @@ export default class AddLeadGroup extends React.PureComponent {
     };
 
     handleValidationSuccess = (values) => {
-        console.warn(values);
+        const newLeadGroup = {
+            ...values,
+            project: this.props.projectId,
+        };
+        this.startLeadGroupCreateRequest(newLeadGroup);
     };
 
     render() {
@@ -82,6 +111,7 @@ export default class AddLeadGroup extends React.PureComponent {
             <Modal>
                 <ModalHeader title={_ts('addLeads', 'addLeadGroupModalTitle')} />
                 <ModalBody>
+                    {pending && <LoadingAnimation />}
                     <Faram
                         className={`${className} ${styles.addLeadGroup}`}
                         onChange={this.handleFaramChange}
@@ -92,7 +122,6 @@ export default class AddLeadGroup extends React.PureComponent {
                         error={faramErrors}
                         disabled={pending}
                     >
-                        { pending && <LoadingAnimation /> }
                         <NonFieldErrors faramElement />
                         <TextInput
                             label={_ts('addLeads', 'addLeadGroupTitleLabel')}
