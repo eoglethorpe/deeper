@@ -75,7 +75,7 @@ export default class HomeScreen extends React.PureComponent {
         return (
             <div className={styles.homeScreen}>
                 <ReactSVG
-                    className={styles.deepLogo}
+                    svgClassName={styles.deepLogo}
                     path={logo}
                 />
                 <p>

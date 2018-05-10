@@ -75,8 +75,7 @@ export default class LeadForm extends React.PureComponent {
     static keySelector = d => (d || {}).key
     static labelSelector = d => (d || {}).value
 
-    static setDefaultValues = (props) => {
-        const { leadOptions, lead, activeUser } = props;
+    static setDefaultValues = (leadOptions, lead, activeUser, onChange) => {
         const values = leadAccessor.getFaramValues(lead);
         const activeUserId = activeUser.userId;
 
@@ -108,7 +107,7 @@ export default class LeadForm extends React.PureComponent {
         }
 
         if (valuesChanged) {
-            props.onChange(newValues);
+            onChange(newValues);
         }
     }
 
@@ -175,13 +174,15 @@ export default class LeadForm extends React.PureComponent {
     }
 
     componentDidMount() {
-        LeadForm.setDefaultValues(this.props);
+        const { leadOptions, lead, activeUser, onChange } = this.props;
+        LeadForm.setDefaultValues(leadOptions, lead, activeUser, onChange);
     }
 
     componentWillReceiveProps(nextProps) {
         const { leadOptions: oldLeadOptions } = this.props;
         if (nextProps.leadOptions !== oldLeadOptions) {
-            LeadForm.setDefaultValues(nextProps);
+            const { leadOptions, lead, activeUser, onChange } = nextProps;
+            LeadForm.setDefaultValues(leadOptions, lead, activeUser, onChange);
         }
     }
 

@@ -11,7 +11,9 @@ class ShellRun {
     // Configure your plugin with options...
 
     apply(compiler) {
-        compiler.plugin('compile', (/* params */) => {
+        const hooks = compiler.hooks;
+
+        const compileFn = () => {
             if (this.opt.messageBefore) {
                 console.log(this.opt.messageBefore);
             }
@@ -19,18 +21,22 @@ class ShellRun {
             if (this.opt.messageAfter) {
                 console.log(this.opt.messageAfter);
             }
-        });
+        };
+        hooks.compile.tap('shellrun-plugin', compileFn);
 
-        compiler.plugin('watch-run', (watching, done) => {
-            const changedTimes = watching.compiler.watchFileSystem.watcher.mtimes;
+        const watchFn = (watching, done) => {
+            const changedTimes = watching.watchFileSystem.watcher.mtimes;
             const changedFiles = Object.keys(changedTimes)
                 .map(file => `\n  ${file}`)
                 .join('');
             if (changedFiles.length) {
                 console.log('New build triggered, files changed:', changedFiles);
             }
-            done();
-        });
+            if (done) {
+                done();
+            }
+        };
+        hooks.watchRun.tap('shellrun-plugin', watchFn);
     }
 }
 

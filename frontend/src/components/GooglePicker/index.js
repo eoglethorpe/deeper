@@ -97,8 +97,7 @@ export default class GooglePicker extends React.Component {
                 console.warn('Google Auth Response:', error);
                 this.props.onAuthenticate(undefined);
             }
-        },
-        );
+        });
     }
 
     pollForReadyState = () => {

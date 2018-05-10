@@ -7,9 +7,9 @@ const state = '12345';
 // TODO: Add configs for local, dev and production
 // TODO: Add three types of env variable local, dev and production
 // instead of just development and production
-let clientId = process.env.HID_CLIENT_ID;
-let redirectUrl = process.env.HID_CLIENT_REDIRECT_URL;
-let hidAuthUrl = process.env.HID_AUTH_URI;
+let clientId = process.env.REACT_APP_HID_CLIENT_ID;
+let redirectUrl = process.env.REACT_APP_HID_CLIENT_REDIRECT_URL;
+let hidAuthUrl = process.env.REACT_APP_HID_AUTH_URI;
 
 if (process.env.REACT_APP_HID_CLIENT_ID) {
     clientId = process.env.REACT_APP_HID_CLIENT_ID;

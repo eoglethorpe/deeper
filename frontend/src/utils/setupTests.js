@@ -1,7 +1,16 @@
+import Enzyme from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+
 import raf from './tempPolyfills'; // eslint-disable-line no-unused-vars
 
-// NOTE: the relative import must be before other imports in this case
-import { configure } from 'enzyme'; // eslint-disable-line import/first
-import Adapter from 'enzyme-adapter-react-16'; // eslint-disable-line import/first
+// React 16 Enzyme adapter
+Enzyme.configure({ adapter: new Adapter() });
 
-configure({ adapter: new Adapter() });
+jest.mock('mapbox-gl', () => undefined);
+
+/*
+// Make Enzyme functions available in all test files without importing
+global.shallow = shallow;
+global.render = render;
+global.mount = mount;
+*/

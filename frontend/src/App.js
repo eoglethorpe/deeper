@@ -117,6 +117,7 @@ export default class App extends React.PureComponent {
             .failure((response) => {
                 console.info('FAILURE:', response);
                 const { stopSiloTasks } = this.props;
+
                 stopSiloTasks();
                 logout();
             })

@@ -161,7 +161,8 @@ const unsetUserProjectMembership = (state, action) => {
 
     const memberships = ((state.projects[projectId] || emptyObject).memberships || emptyList);
     const membershipArrayIndex = memberships.findIndex(
-        membership => (membership.id === memberId));
+        membership => (membership.id === memberId),
+    );
 
     if (membershipArrayIndex !== -1) {
         const settings = {

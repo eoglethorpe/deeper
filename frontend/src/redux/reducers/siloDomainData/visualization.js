@@ -20,7 +20,7 @@ export const setLeadVisualizationAction = ({
 // UTILS
 const getHierarchialTopic = (keywords) => {
     const topic = keywords.reduce((acc, keyword) => {
-        if (keyword[1] > acc.size && isNaN(parseInt(keyword[0], 10))) {
+        if (keyword[1] > acc.size && Number.isNaN(parseInt(keyword[0], 10))) {
             acc.name = keyword[0];
             acc.size = Math.round(keyword[1] * 100);
         }

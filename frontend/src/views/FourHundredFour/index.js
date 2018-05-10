@@ -26,14 +26,15 @@ export default class FourHundredFour extends React.PureComponent {
         return (
             <div className={styles.fourHundredFour}>
                 <ReactSVG
-                    className={styles.deepLogo}
+                    svgClassName={styles.deepLogo}
                     path={logo}
                 />
                 <h1 className={styles.heading}>
                     {_ts('fourHundredFour', 'errorFourHundredFour')}
                 </h1>
                 <p className={styles.message}>
-                    {_ts('fourHundredFour', 'message1')}<br />
+                    {_ts('fourHundredFour', 'message1')}
+                    <br />
                     {_ts('fourHundredFour', 'message2')}
                 </p>
                 <Link

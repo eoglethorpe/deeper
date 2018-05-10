@@ -35,7 +35,7 @@ export default class Dashboard extends React.PureComponent {
                 </p>
                 <div className={styles.content}>
                     <ReactSVG
-                        className={styles.deepLogo}
+                        svgClassName={styles.deepLogo}
                         path={logo}
                     />
                     <div className={styles.deepText} >

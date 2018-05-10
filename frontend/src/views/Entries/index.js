@@ -207,19 +207,6 @@ export default class Entries extends React.PureComponent {
         return attribute && attribute.data;
     }
 
-    getItemView = (item) => {
-        const Component = this.widgets.find(
-            w => w.id === item.widgetId,
-        ).listComponent;
-
-        return (
-            <Component
-                data={item.data}
-                attribute={item.attribute}
-            />
-        );
-    }
-
     createRequestForEntries = (projectId, filters = {}, activePage) => {
         const entriesRequestOffset = (activePage - 1) * MAX_ENTRIES_PER_REQUEST;
         const entriesRequestLimit = MAX_ENTRIES_PER_REQUEST;

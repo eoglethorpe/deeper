@@ -63,13 +63,14 @@ export default class EntriesListing extends React.PureComponent {
         }
 
         const widgetProps = attr.widgetObj.properties.data;
-        const sectors = widgetProps.sectors;
+        const { sectors } = widgetProps;
 
         const selectedSectorIds = Object.values(attr.data).reduce(
             (acc, b) => [
                 ...acc,
                 ...Object.values(b).reduce((acc2, c) => [...acc2, ...Object.keys(c)], [])],
-            []);
+            [],
+        );
         const selectedSectors = selectedSectorIds.map(id => sectors.find(s => s.id === id));
 
         return {
