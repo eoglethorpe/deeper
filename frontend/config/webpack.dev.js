@@ -3,33 +3,46 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CircularDependencyPlugin = require('circular-dependency-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+const getEnvVariables = require('./env.js');
 
 module.exports = (env) => {
-    const NODE_ENV = env.NODE_ENV ? env.NODE_ENV : 'development';
-
-    const reducerFn = (acc, key) => {
-        acc[`process.env.${key}`] = JSON.stringify(process.env[key]);
-        return acc;
-    };
-    const initialVal = { 'process.env.NODE_ENV': JSON.stringify(NODE_ENV) };
-
-    const envVars = Object.keys(process.env)
-        .filter(v => v.startsWith('REACT_APP_'))
-        .reduce(reducerFn, initialVal);
-
-    const devMode = NODE_ENV === 'development';
+    const ENV_VARS = getEnvVariables(env);
 
     return {
-        devtool: 'cheap-eval-source-map',
+        entry: './src/index.js',
+        output: {
+            path: path.resolve(__dirname, 'dist'),
+            publicPath: '/',
+            chunkFilename: '[name].[chunkhash].js',
+            filename: '[name].[chunkhash].js',
+        },
+
+        mode: 'development',
+        performance: {
+            hints: 'warning',
+        },
+        stats: {
+            assets: true,
+            colors: true,
+            errors: true,
+            errorDetails: true,
+            hash: true,
+        },
+        devtool: 'cheap-module-eval-source-map',
         devServer: {
             host: '0.0.0.0',
             port: 3000,
+            overlay: true,
         },
+
+
         module: {
             rules: [
                 {
                     test: /\.(js|jsx)$/,
-                    exclude: /node_modules/,
+                    include: path.resolve(__dirname, 'src'),
                     use: [
                         'babel-loader',
                         'eslint-loader',
@@ -37,14 +50,17 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.scss$/,
+                    include: path.resolve(__dirname, 'src'),
                     use: [
-                        devMode ? 'style-loader' : MiniCssExtractPlugin.loader,
+                        'style-loader',
                         {
                             loader: require.resolve('css-loader'),
                             options: {
-                                importLoaders: 2,
+                                importLoaders: 1,
                                 modules: true,
                                 camelCase: true,
+                                sourceMap: true,
+                                localIdentName: '[name]_[local]_[hash:base64]',
                             },
                         },
                         require.resolve('sass-loader'),
@@ -52,38 +68,30 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.(png|jpg|gif|svg)$/,
-                    use: [
-                        {
-                            loader: 'file-loader',
-                            options: {},
-                        },
-                    ],
+                    use: ['file-loader'],
                 },
             ],
         },
         plugins: [
+            new webpack.DefinePlugin({
+                'process.env': ENV_VARS,
+            }),
             new CircularDependencyPlugin({
                 exclude: /node_modules/,
                 failOnError: false,
                 allowAsyncCycles: false,
                 cwd: process.cwd(),
             }),
+            new CleanWebpackPlugin(['dist']),
             new HtmlWebpackPlugin({
                 template: './public/index.html',
                 filename: './index.html',
                 chunksSortMode: 'none',
             }),
             new MiniCssExtractPlugin({
-                filename: devMode ? '[name].css' : '[name].[hash].css',
-                chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+                filename: '[name].css',
+                chunkFilename: '[id].css',
             }),
-            new webpack.DefinePlugin(envVars),
         ],
-        output: {
-            publicPath: '/',
-            chunkFilename: '[name].[chunkhash].js',
-            filename: '[name].[chunkhash].js',
-            path: path.resolve(__dirname, 'dist'),
-        },
     };
 };

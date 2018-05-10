@@ -4,9 +4,10 @@
     "description": "Deep",
     "main": "index.js",
     "scripts": {
-        "start": "webpack-dev-server --mode development --config config/webpack.base.config.js --history-api-fallback --env.NODE_ENV=development",
-        "build": "webpack --mode production --config config/webpack.prod.config.js --env.NODE_ENV=production --progress"
+        "start": "webpack-dev-server --mode development --config config/webpack.dev.js --history-api-fallback --env.NODE_ENV=development --history-api-fallback",
+        "build": "webpack --mode production --config config/webpack.prod.js --env.NODE_ENV=production"
     },
+    "sideEffects": false,
     "keywords": [],
     "author": "",
     "license": "ISC",
@@ -20,6 +21,7 @@
         "babel-loader": "^8.0.0-beta.2",
         "babel-preset-env": "^1.6.1",
         "circular-dependency-plugin": "^5.0.2",
+        "clean-webpack-plugin": "^0.1.19",
         "css-loader": "^0.28.11",
         "eslint": "^4.19.1",
         "eslint-config-airbnb": "^16.1.0",
