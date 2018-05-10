@@ -11,6 +11,7 @@ const leadSchema = [];
         fields: {
             sourceType: { type: 'string' }, // set is required later
             assignee: { type: 'array.uint' },
+            leadGroup: { type: 'uint' },
             assigneeDetails: { type: 'array.user-s' },
             attachment: { type: 'object' }, // file url
             confidentiality: { type: 'string', required: true },
@@ -82,9 +83,10 @@ const leadSchema = [];
             description: 'Filter options of leads for project',
         },
         fields: {
-            assignee: { type: 'array.keyValuePair' },
             status: { type: 'array.keyValuePairSS' },
             project: { type: 'array.keyValuePair' },
+            assignee: { type: 'array.keyValuePair' },
+            leadGroup: { type: 'array.keyValuePair' },
             confidentiality: { type: 'array.keyValuePairSS' },
         },
     };

@@ -16,8 +16,23 @@
     }
 
     .title,
+    .lead-group-container,
     .source {
-        flex-basis: calc(50% - #{$spacing-medium});
+        flex-basis: calc(100% / 3 - #{$spacing-medium});
+        padding: $spacing-medium 0;
+    }
+
+    .lead-group-container {
+        display: flex;
+        align-items: center;
+
+        .lead-group {
+            flex-grow: 1;
+        }
+
+        button {
+            flex-shrink: 0;
+        }
     }
 
     .confidentiality,

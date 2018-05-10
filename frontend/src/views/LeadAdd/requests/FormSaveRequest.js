@@ -30,6 +30,7 @@ export default class FormSaveRequest {
         const serverId = leadAccessor.getServerId(lead);
         const leadId = leadAccessor.getKey(lead);
 
+        console.warn(newValues);
         let url;
         let params;
         if (serverId) {

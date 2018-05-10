@@ -77,6 +77,7 @@ export default class ActionButtons extends React.PureComponent {
                     publishedOn: row.publishedOn,
                     attachment: row.attachment,
                     website: row.website,
+                    leadGroup: row.leadGroup,
                     url: row.url,
                     text: row.text,
                 },

@@ -639,6 +639,9 @@ const initialDevLangState = {
         1126: 'Failed to save project.',
         1127: 'Failed to create new category editor.',
         1128: 'Failed to create new framework.',
+        1129: 'Lead Group',
+        1130: 'Progress reports of June',
+        1131: 'Add Lead Group',
     },
     links: {
         af: {
@@ -1121,6 +1124,10 @@ const initialDevLangState = {
         addLeads: {
             noConnectorsLabel: 1115,
             modalCancelLabel: 61,
+            modalAddLabel: 301,
+            addLeadGroupTitleLabel: 13,
+            addLeadGroupTitlePlaceholder: 1130,
+            addLeadGroupModalTitle: 1131,
             modalSelectLabel: 9919,
             fileUploadFailText: 7501,
             filterPublisher: 5,
@@ -1145,6 +1152,7 @@ const initialDevLangState = {
             projectLabel: 31,
             publisherLabel: 5,
             confidentialityLabel: 7,
+            leadGroupLabel: 1129,
             assigneeLabel: 6,
             urlLabel: 32,
             websiteLabel: 33,

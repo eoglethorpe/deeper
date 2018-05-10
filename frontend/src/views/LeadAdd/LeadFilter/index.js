@@ -151,9 +151,7 @@ export default class LeadFilter extends React.PureComponent {
         const { filters, isFilterEmpty } = this.props;
 
         return (
-            <div
-                className={styles.leadFilters}
-            >
+            <div className={styles.leadFilters}>
                 <SearchInput
                     label={_ts('addLeads', 'placeholderSearch')}
                     onChange={this.handleSearchChange}
