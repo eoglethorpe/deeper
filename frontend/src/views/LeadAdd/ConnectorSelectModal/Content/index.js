@@ -1,10 +1,16 @@
 import PropTypes from 'prop-types';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
+import { reverseRoute } from '../../../../vendor/react-store/utils/common';
 import LoadingAnimation from '../../../../../src/vendor/react-store/components/View/LoadingAnimation';
 import Table from '../../../../vendor/react-store/components/View/Table';
 import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 import Checkbox from '../../../../vendor/react-store/components/Input/Checkbox';
+import {
+    iconNames,
+    pathNames,
+} from '../../../../constants';
 import _ts from '../../../../ts';
 
 import ConnectorLeadsGetRequest from '../../requests/ConnectorLeadsGetRequest';
@@ -101,6 +107,7 @@ export default class ConnectorContent extends React.PureComponent {
         const {
             connectorLeads = [],
             className,
+            connectorId,
         } = this.props;
         const { connectorLeadsLoading } = this.state;
 
@@ -108,6 +115,17 @@ export default class ConnectorContent extends React.PureComponent {
         return (
             <div className={classNames} >
                 { connectorLeadsLoading && <LoadingAnimation large /> }
+                <header className={styles.header} >
+                    <div className={styles.rightContainer}>
+                        <Link
+                            className={styles.settingsLink}
+                            target="_blank"
+                            to={reverseRoute(pathNames.connectors, { connectorId })}
+                        >
+                            <span className={iconNames.settings} />
+                        </Link>
+                    </div>
+                </header>
                 <Table
                     className={styles.table}
                     data={connectorLeads}

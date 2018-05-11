@@ -89,6 +89,7 @@ const iconNames = {
     camera: 'ion-camera',
     textFormat: 'ion-ios-circle-filled',
     chrome: 'ion-social-chrome',
+    settings: 'ion-android-settings',
 };
 
 export default iconNames;
