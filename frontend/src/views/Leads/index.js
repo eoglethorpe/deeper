@@ -310,7 +310,6 @@ export default class Leads extends React.PureComponent {
         ) {
             this.leadRequest.stop();
 
-
             const request = new LeadsRequest({
                 setState: params => this.setState(params),
                 setLeads: this.props.setLeads,
