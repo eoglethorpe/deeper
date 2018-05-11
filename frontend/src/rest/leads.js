@@ -14,10 +14,21 @@ export const urlForWebsiteFetch = `${wsEndpoint}/lead-website-fetch/`;
 export const createUrlForLead = leadId => `${urlForLead}${leadId}/`;
 export const createUrlForLeadDelete = leadId => `${urlForLead}${leadId}/`;
 
+// Lead Groups
+const leadGroupsMiniFields = ['id', 'title', 'project', 'version_id'];
+export const urlForLeadGroups = `${wsEndpoint}/lead-groups/?${p({ fields: leadGroupsMiniFields })}`;
+export const createUrlForLeadGroupsOfProject = projectId => `${urlForLeadGroups}&project=${projectId}`;
+
 // GET [For cache response]
 export const createUrlForWebsiteFetch = url => `${wsEndpoint}/lead-website-fetch/?${p({ url })}`;
 
 export const createParamsForLeadCreate = data => ({
+    method: POST,
+    headers: commonHeaderForPost,
+    body: JSON.stringify(data),
+});
+
+export const createParamsForLeadGroupCreate = data => ({
     method: POST,
     headers: commonHeaderForPost,
     body: JSON.stringify(data),

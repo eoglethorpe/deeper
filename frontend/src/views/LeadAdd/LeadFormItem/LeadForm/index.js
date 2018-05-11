@@ -15,6 +15,7 @@ import TextArea from '../../../../vendor/react-store/components/Input/TextArea';
 import HiddenInput from '../../../../vendor/react-store/components/Input/HiddenInput';
 import DateInput from '../../../../vendor/react-store/components/Input/DateInput';
 import LoadingAnimation from '../../../../vendor/react-store/components/View/LoadingAnimation';
+import Button from '../../../../vendor/react-store/components/Action/Button';
 import FormattedDate from '../../../../vendor/react-store/components/View/FormattedDate';
 
 import {
@@ -24,6 +25,7 @@ import {
 } from '../../../../entities/lead';
 import { InternalGallery } from '../../../../components/DeepGallery';
 import { activeUserSelector } from '../../../../redux';
+import { iconNames } from '../../../../constants';
 import _ts from '../../../../ts';
 
 import ApplyAll, { ExtractThis } from './ApplyAll';
@@ -48,6 +50,7 @@ const propTypes = {
     onChange: PropTypes.func.isRequired,
     onApplyAllClick: PropTypes.func.isRequired,
     onApplyAllBelowClick: PropTypes.func.isRequired,
+    onAddLeadGroupClick: PropTypes.func.isRequired,
 
     isSaveDisabled: PropTypes.bool.isRequired,
     isFormDisabled: PropTypes.bool.isRequired,
@@ -125,6 +128,7 @@ export default class LeadForm extends React.PureComponent {
                         publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
+                        leadGroup: [],
 
                         attachment: [requiredCondition],
                     },
@@ -139,6 +143,7 @@ export default class LeadForm extends React.PureComponent {
                         publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
+                        leadGroup: [],
 
                         url: [requiredCondition, urlCondition],
                         website: [requiredCondition],
@@ -154,6 +159,7 @@ export default class LeadForm extends React.PureComponent {
                         publishedOn: [requiredCondition, dateCondition],
                         sourceType: [requiredCondition],
                         project: [requiredCondition],
+                        leadGroup: [],
 
                         text: [requiredCondition],
                     },
@@ -189,6 +195,8 @@ export default class LeadForm extends React.PureComponent {
     handleApplyAllClick = name => this.props.onApplyAllClick(name);
 
     handleApplyAllBelowClick= name => this.props.onApplyAllBelowClick(name);
+
+    handleAddLeadGroupClick = () => this.props.onAddLeadGroupClick();
 
     submit = () => {
         if (this.formRef && !this.props.isSaveDisabled) {
@@ -299,7 +307,6 @@ export default class LeadForm extends React.PureComponent {
                     label={_ts('addLeads', 'titleLabel')}
                     placeholder={_ts('addLeads', 'titlePlaceHolderLabel')}
                 />
-
                 <ApplyAll
                     className={styles.source}
                     disabled={isApplyAllDisabled}
@@ -313,6 +320,31 @@ export default class LeadForm extends React.PureComponent {
                         placeholder={_ts('addLeads', 'publisherPlaceHolderLabel')}
                     />
                 </ApplyAll>
+                <div className={styles.leadGroupContainer}>
+                    <ApplyAll
+                        className={styles.leadGroup}
+                        disabled={isApplyAllDisabled}
+                        identiferName="leadGroup"
+                        onApplyAllClick={this.handleApplyAllClick}
+                        onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                    >
+                        <SelectInput
+                            faramElementName="leadGroup"
+                            keySelector={LeadForm.keySelector}
+                            label={_ts('addLeads', 'leadGroupLabel')}
+                            labelSelector={LeadForm.labelSelector}
+                            options={leadOptions.leadGroup}
+                            placeholder={_ts('addLeads', 'selectInputPlaceholderLabel')}
+                            showHintAndError
+                            showLabel
+                        />
+                    </ApplyAll>
+                    <Button
+                        onClick={this.handleAddLeadGroupClick}
+                        iconName={iconNames.add}
+                        transparent
+                    />
+                </div>
                 <ApplyAll
                     className={styles.confidentiality}
                     disabled={isApplyAllDisabled}
@@ -387,7 +419,6 @@ export default class LeadForm extends React.PureComponent {
                         />,
                     ])
                 }
-
             </Faram>
         );
     }

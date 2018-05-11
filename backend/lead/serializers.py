@@ -6,6 +6,7 @@ from user.serializers import SimpleUserSerializer
 from user_resource.serializers import UserResourceSerializer
 from gallery.serializers import SimpleFileSerializer
 from .models import (
+    LeadGroup,
     Lead,
     LeadPreviewImage,
 )
@@ -16,6 +17,17 @@ class SimpleLeadSerializer(RemoveNullFieldsMixin,
     class Meta:
         model = Lead
         fields = ('id', 'title', 'source', 'created_at', 'created_by')
+
+
+class LeadGroupSerializer(RemoveNullFieldsMixin,
+                          DynamicFieldsMixin, UserResourceSerializer):
+    leads = SimpleLeadSerializer(source='lead_set',
+                                 many=True,
+                                 read_only=True)
+
+    class Meta:
+        model = LeadGroup
+        fields = ('__all__')
 
 
 class LeadSerializer(RemoveNullFieldsMixin,

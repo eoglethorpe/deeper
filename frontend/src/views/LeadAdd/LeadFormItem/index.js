@@ -35,6 +35,7 @@ import {
 import _ts from '../../../ts';
 
 import LeadForm from './LeadForm';
+import AddLeadGroup from './AddLeadGroup';
 import styles from './styles.scss';
 
 const propTypes = {
@@ -88,6 +89,7 @@ export default class LeadFormItem extends React.PureComponent {
             pendingExtraction: false,
 
             showApplyModal: false,
+            showAddLeadGroupModal: false,
             applyMode: undefined, // all or below
             applyAttribute: undefined, // attribute to apply
         };
@@ -234,6 +236,14 @@ export default class LeadFormItem extends React.PureComponent {
         });
     }
 
+    handleAddLeadGroupClick = () => {
+        this.setState({ showAddLeadGroupModal: true });
+    }
+
+    handleAddLeadGroupModalClose = () => {
+        this.setState({ showAddLeadGroupModal: false });
+    }
+
     handleApplyModal = (confirm) => {
         if (confirm) {
             const {
@@ -333,6 +343,23 @@ export default class LeadFormItem extends React.PureComponent {
         }
     }
 
+    renderAddLeadGroupModal = () => {
+        const { showAddLeadGroupModal } = this.state;
+
+        if (!showAddLeadGroupModal) {
+            return null;
+        }
+
+        const leadValues = leadAccessor.getFaramValues(this.props.lead);
+
+        return (
+            <AddLeadGroup
+                onModalClose={this.handleAddLeadGroupModalClose}
+                projectId={leadValues.project}
+            />
+        );
+    }
+
     render() {
         const {
             active,
@@ -355,6 +382,7 @@ export default class LeadFormItem extends React.PureComponent {
         const disableResize = type === LEAD_TYPE.text;
 
         const LeadPreview = this.renderLeadPreview;
+        const AddLeadGroupModal = this.renderAddLeadGroupModal;
 
         return (
             <ResizableV
@@ -373,6 +401,7 @@ export default class LeadFormItem extends React.PureComponent {
                             onSuccess={this.handleFormSuccess}
                             onApplyAllClick={this.handleApplyAllClick}
                             onApplyAllBelowClick={this.handleApplyAllBelowClick}
+                            onAddLeadGroupClick={this.handleAddLeadGroupClick}
                             isExtractionLoading={this.state.pendingExtraction}
                             isExtractionDisabled={!this.state.isUrlValid}
                             onExtractClick={this.handleExtractClick}
@@ -391,6 +420,7 @@ export default class LeadFormItem extends React.PureComponent {
                                 }
                             </p>
                         </Confirm>
+                        <AddLeadGroupModal />
                     </Fragment>
                 }
                 bottomChild={

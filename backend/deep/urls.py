@@ -43,6 +43,7 @@ from geo.views import (
     GeoOptionsView,
 )
 from lead.views import (
+    LeadGroupViewSet,
     LeadViewSet,
     LeadPreviewViewSet,
     LeadOptionsView,
@@ -70,6 +71,7 @@ from ary.views import (
     AssessmentOptionsView,
     AssessmentTemplateViewSet,
     LeadAssessmentViewSet,
+    LeadGroupAssessmentViewSet,
 )
 from category_editor.views import (
     CategoryEditorViewSet,
@@ -147,6 +149,8 @@ router.register(r'admin-levels', AdminLevelViewSet,
                 base_name='admin_level')
 
 # Lead routers
+router.register(r'lead-groups', LeadGroupViewSet,
+                base_name='lead_group')
 router.register(r'leads', LeadViewSet,
                 base_name='lead')
 router.register(r'lead-previews', LeadPreviewViewSet,
@@ -179,6 +183,8 @@ router.register(r'assessments', AssessmentViewSet,
                 base_name='assessment')
 router.register(r'lead-assessments', LeadAssessmentViewSet,
                 base_name='lead_assessment')
+router.register(r'lead-group-assessments', LeadGroupAssessmentViewSet,
+                base_name='lead_group_assessment')
 router.register(r'assessment-templates', AssessmentTemplateViewSet,
                 base_name='assessment_template')
 
